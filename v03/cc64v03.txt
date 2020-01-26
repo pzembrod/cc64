@@ -1,0 +1,23 @@
+
+Hello all,
+
+here at last is the first (more or less) working Version of the C64
+C-compiler cc64.
+
+I'm sorry that the release comes almost half a year late. In the end
+of the development I came across some really nasty disk errors which
+in the end proved to come from a SpeedDos bug (the Floppy speeder I use).
+Took me a lot of time to find that out ... and inbetween I had to
+finish my diploma thesis (which went well after all). Anyway, when I
+had the distribution disk prepared, I found one new bug, and then my
+'64 broke down. So I decided to send the compiler around just the
+same; to be honest I was pretty fed up with it after a few weeks of
+nothing but debugging a bug that wasn't mine. The problem still there
+is that the compiler seems to be unable to link static variables, but
+I hope it will still give You some fun. Just use local automatic
+variables and all shoud work fine. I'll fix that bug as soon as I can.
+
+Have fun. Please send any bug reports or comments to me.
+
+Philip Zembrod
+zem@iwm.fhg.de

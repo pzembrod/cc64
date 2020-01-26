@@ -1,0 +1,13 @@
+
+Hello all,
+
+this is an intermediate version of the C64 C-compiler cc64. 
+I've fixed the worst bugs, including the 'division bug'. V0.3
+calculates y/x if You write x/y and y%x instead of x%y.
+
+I hope a really good version will be ready soon.
+
+Have fun. Please send any bug reports or comments to me.
+
+Philip Zembrod
+zem@iwm.fhg.de

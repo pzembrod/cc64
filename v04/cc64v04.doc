@@ -1,0 +1,240 @@
+
+About cc64
+----------
+cc64 is a small C compiler for the C-64. The current version V0.3 is
+still in beta test stage. The same applies to the text editor peddi,
+version 0.1.
+cc64 and peddi may be freely copied, providing that this documentation
+is passed along as well.
+cc64 and peddi both come with ABSOLUTELY NO WARRANTY. I will take no
+responsibility for any damage resulting in any way from the use of
+cc64 or peddi.
+
+What is there
+-------------
+cc64 comes as three programs:
+peddi0.1 -- a small text editor
+cc64v0,3 -- the compiler
+cc64v0.3pe -- compiler and editor together in one program
+They're all written in FORTH and compiled around a 60 blocks long
+FORTH kernel. Then there is
+c-charset -- load it ,8,1 and activate it with SYS52027. It will patch
+a few ASCII characters such as braces and backslash into the 64's
+charset. It will be re-activated each time peddi or cc64v0.3pe is started.
+bl02.x -- The base library, assembler source, object code, static
+variable initialization and header file. See library description below.
+io.c/o/i/h -- an extended library giving access to the 64's basic i/o
+calls. On the distribution disk it is present compiled with an
+out-of-date base library. Change the #include statement at the
+beginning into #include <bl02.h> and recompile it before use.
+t3.c -- a little test program. Will not compile properly because of
+the static variable i declared in the beginning. Just remove that
+declaration and it should compile correctly and run "hello, world".
+
+How to use it
+-------------
+As said, cc64 and peddi are written in FORTH. After starting them
+You'll get an OK prompt, and HELP will list You the availible commands.
+Some commands require numeric parameters; those must be entered _before_
+the command. We're FORTH, so we're RPN (reversed polish notation). The
+commands are:
+help      -- list all commands
+cc file.c -- start the compiler for the program file.c
+ed file   -- edit file
+cat file  -- type the contents of file on the screen
+dos       -- read and print the floppy's error channel
+dos xxx   -- send the command xxx to the floppy
+dir       -- list the directory
+mem       -- show the compiler's memory setup
+xxx set-himem -- set the limit of the compiler's memory to xxx. Don't
+          change this to a value greater than $cbd0 if You want to use
+          c-charset. xxx may be a decimal number or a hex number,
+          preceeded by a $
+xxx set-heap -- sets the heap to xxx links. For each function in a C
+          program that is used before it is defined (a prototype must
+          exist before the first call) one link is needed.
+xxx set-hash -- sets the hash table size for global symbols. Needs at
+          least one element per global symbol in a C program. Should
+          be sized a bit generous otherwise hashing will be inefficient.
+xxx set-symtab -- sets the symbol table size (used both for local and
+          global symbols). Must be increased if You run into a Symbol
+          table overflow error.
+xxx set-code -- sets the size of the code buffer. The code for any C
+          function being compiled must fit into this buffer. Otherwise
+          You get a function too long error. Then increase the code
+          buffer size or split the long function up in two or more.
+The size of the static buffer is determined by the remaining memory.
+This size is not critical. It should be positive, though. :)
+xxx yyy set-stacks -- sets the size of data and return stack and
+          resets the system. The stacks'size determine the maximum
+          depth of arithmetic expressions and the maximum number of
+          nested compound statements the compiler can handle. Stack
+          overflows are checked; I hope those checks are reliable.
+          If the compiler should behave strangely on a complicated
+          (i.e. deeply nested) expression RELOAD IT FROM DISK and set
+          the stack sizes to higher values.
+saveall name -- saves the complete compiler together with its actual
+          memory settings.
+bye       -- leave to basic
+
+Peddi - how to use
+------------------
+Peddi is a small full screen, scrolling PETSCII editor. No limit in line
+length (exept memory). Memory overflow is signalled by a double flash
+of the screen border.
+You call peddi with
+ ed filename
+The peddi key bindings:
+cursor keys - as usual
+return - split line
+shift-return - goto begin of next line
+del - del left of cursor or join lines
+inst - insert a blank line
+home - redraw screen
+clr - kill line
+F1 - 20 lines up
+F7 - 20 lines down
+ctrl-a - begin of line
+ctrl-e - end of line
+ctrl-d - del under cursor
+ctrl-@ - del to cursor
+ctrl-^ - del from cursor
+ctrl-p - clear line
+ctrl-w - save text
+ctrl-x - exit and save text
+ctrl-c - quit without saving
+
+Known bugs
+----------
+Just one, though a pretty bad one. The linker cannot handle static
+variables so far. So only programs which just use local automatic
+variables are compiled correctly. I'll fix that as soon as I can.
+Please report any other bugs You find to me. Mail to zem@iwm.fhg.de
+
+Code layout and library concept
+-------------------------------
+Since I didn't want to write a symbolic linker cc64 uses a library
+concept different from that of normal C compilers. It is more like
+that of Turbo Pascal 3.0: The code is compiled next to a fixed runtime
+module. But You can choose which module You want and extend any
+existing module.
+The selection of the module to use is done by a special preprocessor
+command: #special cc64
+It must appear in a program before the first code or variable is
+generated and is usually the first command in the library's header
+file. So all You have to do is to include the header file of the
+module/library You want to use. Put this #include as the first
+statement in Your programs.
+For those interested in the technical details: The #special cc64
+command tells the compiler the addresses of the software stack pointer
+and an additional zero page pointer the compiled code shall use, then
+the library's first address, the address of the jumplist described
+below, the library's last address + 1, the first address and the last
+address + 1 of the library's static variables, and the name of the
+library without extension (i.e. bl02 in case of the base library on
+the distribution disk). This way the compiler is completely flexible
+concerning the surrounding in which the compiled code shall run, and
+by creation of a suitable runtime library it is no problem to create
+programs which will run in the 64's BASIC memory (as bl02 does), or
+use all memory from $0801 to $d000, or just $c000 to $d000, or run on
+any other 6502-based computer.
+If You want to write Your own base library, this is what You must know:
+Th compiler accesses the library via a jumplist. This list has the
+following structure:
+
+jumplist
+main.adr   .word 0   ; Here the main()-function's address is inserted
+                     ; by the compiler. The lib's init routine should
+                     ; call main() by a jmp (main.adr)
+code.last  .word 0   ; At these addresses the compiler places the last
+init.first .word 0   ; address + 1 of the generated code and the first
+init.last  .word 0   ; address and the last address + 1 of the static
+; variables. Statics are allocated from the end of the used memory
+; downwards. The statics' initialization values are stored by the
+; compiler from code.last and in reversed order. Your initialization
+; routine should copy (code.last) to (init.last) - 1, (code.last) + 1 to
+; (init.last) - 2 and so an. Mark: there may be no static variables,
+; then init.first will be equal to init.last.
+           jmp (zp)   ; Just have this explicitly standing here; it is
+                      ; used to emulate jsr (zp). zp is the second zero
+                      ; page pointer used by the compiler.
+           jmp switch ; Is called with a/x containing a 16 bit value.
+                      ; Following the calling jsr-instruction is a data
+                      ; structure described below containing values
+                      ; and addresses to jump to if a/x matches a value.
+                      ; The switch routine should find that data
+                      ; structure and jump to the corresponding
+                      ; address if a/x matches a value in the list.
+                      ; If no value matches it should jump behind the list.
+           jmp mult   ; Should multiply (signed) the content of a/x
+                      ; (a:lo-byte, x:hi-byte) with the integer in zp/zp+1
+                      ; leaving the result in a/x.
+           jmp divmod ; Should divide (signed) zp/zp+1 by a/x, leaving
+                      ; the result in a/x and the remainder in zp/zp+1.
+           jmp shl    ; Should arithmetically shift left a/x by y bits.
+           jmp shr    ; Should arithmetically shift right a/x by y bits.
+
+This jumplist may be positioned anywhere in the library; it's address
+must be told to the compiler with the described #special command.
+The Your library should have a init routine which finally will call
+the program's main()-function. In which way this routine is called is up
+to You. bl02 uses a BASIC line to start init. If You want programs to
+run in $c000-$d000, You might want init to stand at the beginning of
+the library so You can call Your programs with SYS49152.
+However, the init routine should do two things before calling main()
+with a jmp (main.adr) instruction. It should copy the static
+variables' initialization values to the variables' actual addresses as
+described above. And it should set the software stack pointer to an
+initial value. The software stack is used for the allocation of local
+variables and grows to high addresses. Its stack pointer therefore
+should be set either to the code.last address or to
+code.last + init.last - init.first, i.e. behind the statics'
+initialization values. The former gives more memory for local
+variables, but the software stack will destroy the init values. bl02
+employs the latter alternative.
+
+Supported subset of the C language
+----------------------------------
+cc64 is based on the old K&R standard. No ANSI, sorry. There are,
+however, some restrictions. Only int and char as basic data types are
+supported. No structs, no unions, only one level of pointer (nothing
+like char **p). No type casts. No goto. #define can only give a
+numeric value to a macro. No proper text substitution. No macros with
+parameters. No #undef. No #ifdef/#ifndef. No typedef, no enum. That's
+it, I think.
+
+C extensions
+------------
+There are two non-standard declaration forms in cc64. They both
+include an operator, /= and *=.
+With /= an explicit value is assigned to a symbol, e.g.
+extern int i /= 0x9ffe ;
+extern char fgetc() /= 0xa02 ;
+They usually are not used explicitly in programs but appear in library
+header files (see below).
+cc64 supports a special kind of functions. They only take one argument
+and can be called very fast without any software stack manipulation,
+just with the parameter in a/x. They will normally be written in
+assembler and are declared with *=, e.g.
+extern char getchar() *= 0xffcf ;
+Such standard functions can be included in a base library.
+There's one problem. If You put a standard function's address into a
+function pointer and call the function pointer, the parameter won't be
+passed properly. This will probably be dealt with in the next compiler
+version. Btw, I'd like any comments if You consider this necessary.
+The solution would disable such elegant declarations as of getchar()
+above.
+
+Building libraries
+------------------
+Base libraries can easily be expanded with C code. If You compile a C
+file which contains no main() function then a new library is
+generated. A header file is automatically generated with a
+#special cc64 line and declarations of all C functions compiled. The
+new library can be used as a new base library, and all contained C
+functions can be used.
+
+So, I hope that's enough. Have fun with cc64, and don't hesitate to
+contact me if any problems, bugs or questions arise.
+
+Philip Zembrod, zem@iwm.fhg.de
