@@ -1,0 +1,32 @@
+
+This directory contains the original sources from which cc64v04 was
+built. cc64 was written with and for ultraForth 3.8 which uses a
+source format typical for classical Forth systems, namely direct
+block access on disk, organizing the disk blocks into 1k chunks of
+source code called screens. cc64's source spans two 1541 disks of Forth
+screens:
+
+cc64src1.d64
+cc64src2.d64
+
+Because Forth screens on a d64 image are slightly cumbersome to read on
+a modern computer, I wrote a small utility that converts an untraForth
+screen d64 image into a regular ascii file, with annotation comments
+where each screen aka block starts:
+
+ufscr2file.c
+
+With this, the screen disks were converted:
+
+cc64src1.fth
+cc64src2.fth
+
+These files aren't actually compilable Forth sources because the order
+in which the screens are compiled isn't from screen 0 to screen 169.
+Instead, the load screen on each disk/file which defines the order
+of compiling the sources is block 2, 3 or 4, depending on the desired
+compile mode/goal (development, testing or final).
+
+One of my next goals is to split the sources into several files and to
+get (or build) an ultra/volksForth version that can compile from files
+rather than from screen disks.
