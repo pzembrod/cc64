@@ -1,0 +1,63 @@
+This file describes how cc64v04 is built from source using the
+VICE emulator on Linux.
+
+Precondition: A working VICE installation with C64 kernal, basic,
+chargen and dos1541 roms.
+  x64
+should yield a C64 running inside VICE. Enabling drive 8 as 1541 should
+work.
+
+Run
+ build-cc64.sh
+
+Type
+  load "uF*",8
+  run
+
+This should result in a prompt
+  ultraFORTH-83 3.82-C64
+
+Type
+  1 drive 1 load
+
+This will adapt the memory configuration for maximum Forth code memory
+size, and will reset the Forth system after it's done.
+
+Type
+  1 drive 4 load 2 drive 4 load
+
+You should get the following messages:
+
+transient forth assembler
+  ASSEMBLER exists module errormessages
+
+module errorhandler
+module memman
+module listman
+module file-i/o
+module fileman
+module input
+module scanner
+module symtab
+module codehandler
+module assembler
+module preprocessor
+
+module codegen
+module parser:
+submodule expression  EXPRESSION exists
+submodule statement
+submodule definition  ID-BUF exists
+module pass2
+module invoke
+module shell
+  ok
+
+Type
+  1 load
+
+Type
+  saveall cc64v05
+
+to save the new cc64 binary to the current directory.
+After that you can close the emulator.
