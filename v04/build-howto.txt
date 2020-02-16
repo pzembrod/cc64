@@ -54,7 +54,10 @@ module shell
   ok
 
 Type
-  savesystem cc64v04new
+  1 load
+
+Type
+  saveall cc64v05
 
 to save the new cc64 binary to the current directory.
 After that you can close the emulator.
