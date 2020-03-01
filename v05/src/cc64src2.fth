@@ -3193,9 +3193,9 @@ forth definitions
 
 \ *** Block No. 114, Hexblock 72
 
-\   pass2 :                    07may95pz
+\   pass2 :                    14jan96pz
 
-| : (link-statics  ( filename n -- )
+| : (link-statics  ( n filename -- )
      over 0=
         IF ." no need to link "
         count type cr  drop exit THEN
@@ -3209,10 +3209,10 @@ forth definitions
      code-file p2closefile ;
 
 | : link-statics  ( -- )
-     statics.last @ statics.libfirst @
-     - lib.initname (link-statics
      statics.libfirst @ statics.first @
-     - static-name (link-statics ;
+     - static-name (link-statics
+     statics.last @ statics.libfirst @
+     - lib.initname (link-statics ;
 
 
 
