@@ -757,12 +757,12 @@ remove-inits         6
 
 \ *** Block No. 27, Hexblock 1b
 
-\   errormessages              07may95pz
+\   errormessages              01mar20pz
 
 ~ x *preprocess-in-string*
      x" preprocessor call in string"
 ~ x *memsetup*
-    x" bad memory setup: no code space"
+  x" bad memory setup: no static space"
 ~ x *nolayout*  x" no '#pragma cc64'"
 ~ x *bad-main*  x" main's no function"
 ~ x *link*      x" linker file error"
