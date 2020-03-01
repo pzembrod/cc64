@@ -1,5 +1,5 @@
 
-/* ufscr2file.c, (c) Philip Zembrod, 1995, 2007, 2019 */
+/* ufscr2file.c, (c) Philip Zembrod, 1995, 2007, 2019, 2020 */
 
 /* Converts a D64 disk image of a C64 ultraFORTH src screen disk
  * to an ASCII-File, in the first place for viewing, later perhaps also
@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "petscii.h"
 
 int nextchar(FILE *in) {
   /* Note: The track & sector count is a hack; it is only correct up to
@@ -30,14 +32,6 @@ int nextchar(FILE *in) {
         }
       }
     } while(skip);
-  return(c);
-}
-
-int petscii2ascii(int c) {
-  if(c >= 0x41 && c <= 0x5a) return(c + 0x20);
-  if(c >= 0xc0 && c <= 0xda) return(c - 0x80);
-  if(c >= 0xdb && c <= 0xdf) return(c - 0x60);
-  if(c < 0x20) return(0x20);
   return(c);
 }
 

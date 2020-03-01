@@ -3,9 +3,11 @@ bindir = $(HOME)/bin
 
 all: ufscr2file
 
-ufscr2file: ufscr2file.o
+ufscr2file: ufscr2file.o petscii.o
 
 ufscr2file.o: ufscr2file.c
+
+petscii.o: petscii.c
 
 install: ufscr2file
 	cp $+ $(bindir)/
