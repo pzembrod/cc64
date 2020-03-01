@@ -3613,7 +3613,7 @@ Code bye   $37 # lda  $1 sta
 
 \ *** Block No. 129, Hexblock 81
 
-\   shell: cold' logo          07may95pz
+\   shell: cold' logo          01mar20pz
 
 | Code charset  here 6 + jsr xyNext jmp
                  $cbfa ) jmp end-code
@@ -3628,8 +3628,8 @@ Code bye   $37 # lda  $1 sta
 
 | : .logo  ( -- )
      ."     running" cr
-     ." cc64 C compiler V0.4" cr
-     ." 1995 by Philip Zembrod" cr
+     ." cc64 C compiler V0.5" cr
+     ." 2020 by Philip Zembrod" cr
      $cbfc 2@  $65021103. d= not ?exit
      ." C charset in use" cr ;
 
