@@ -3,6 +3,9 @@ bindir = $(HOME)/bin
 
 all: ufscr2file
 
+clean:
+	rm ufscr2file *.o *.fth
+
 ufscr2file: ufscr2file.o petscii.o
 
 ufscr2file.o: ufscr2file.c
