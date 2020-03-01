@@ -56,6 +56,9 @@ module shell
 Type
   shell 1 load
 
+This will cold-start ultraFORTH with the new-built cc64,
+showing the message "cc64 C compiler V0.5"
+
 Type
   saveall cc64v05
 
