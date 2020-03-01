@@ -1,4 +1,9 @@
 
 /* Simple petscii to ascii conversion routines. */
 
-int petscii2ascii(int c);
+#ifndef PETSCII_H
+#define PETSCII_H
+
+extern int petscii2ascii(int c);
+
+#endif

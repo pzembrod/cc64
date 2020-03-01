@@ -24,3 +24,10 @@ test_ufscr2file_file: ufscr2file
 test_ufscr2file_stdout: ufscr2file
 	./ufscr2file testdata/testsrc.d64 >stdout.fth
 	diff stdout.fth testdata/testsrc.fth
+
+test_petscii: petscii_test
+	./petscii_test
+
+petscii_test: petscii_test.o petscii.o
+
+petscii_test.o: petscii_test.c petscii.h cheat.h

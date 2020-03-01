@@ -1,9 +1,5 @@
-Copyright (c) 1989-2019, Philip Zembrod
-Copyright (c) 1985-2006, Forthgesellschaft e.V. (www.forth-ev.de) All rights
-reserved.
-
-The cc64 compiler contain parts of ultraForth aka volksForth which is
-owned by the Forthgesellschaft e.V.
+Copyright (c) 1989-2020, Philip Zembrod
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -29,3 +25,18 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+The cc64 compiler contain parts of ultraForth aka volksForth which is
+produced by the the German Forthgesellschaft e.V. Its sources are made
+available under the BSD 2-clause license.
+See https://sourceforge.net/projects/volksforth
+
+
+The tools directory of cc64 contains the cheat.h file from the
+CHEAT testing framework which is made available under the
+BSD 2-clause license.
+See https://github.com/Tuplanolla/cheat
+Copyright (c) 2012, Guillermo "Tordek" Freschi
+Copyright (c) 2013, Sampsa "Tuplanolla" Kiiskinen
+All rights reserved.
