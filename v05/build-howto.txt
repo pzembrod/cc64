@@ -54,7 +54,7 @@ module shell
   ok
 
 Type
-  1 load
+  shell 1 load
 
 Type
   saveall cc64v05
