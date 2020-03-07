@@ -4,7 +4,7 @@ bindir = $(HOME)/bin
 all: ufscr2file
 
 clean:
-	rm ufscr2file *.o *.fth
+	rm ufscr2file petscii_test *.o *.fth
 
 ufscr2file: ufscr2file.o petscii.o
 
@@ -15,7 +15,7 @@ petscii.o: petscii.c
 install: ufscr2file
 	cp $+ $(bindir)/
 
-test: test_ufscr2file_file test_ufscr2file_stdout
+test: test_ufscr2file_file test_ufscr2file_stdout test_petscii
 
 test_ufscr2file_file: ufscr2file
 	./ufscr2file testdata/testsrc.d64 file.fth
