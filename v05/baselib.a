@@ -1,0 +1,256 @@
+
+; cc64 runtime module
+; to run in c64 at $0801-$a000
+
+; philip zembrod, 10.05.1994
+; last change :   07.05.2020
+
+!addr   zp      = $fb
+!addr   base    = $fd
+!addr   zp1     = $22
+!addr   zp2     = $24
+
+!addr   strout  = $ab1e
+!addr   ready   = $e37b
+
+        *= $0801
+
+aa_lib_first
+        !word baslink
+        !word 2020
+        !pet $9e, " 2081:", $8f, " cc64 rt-lib v0.5", 0
+baslink !word 0
+
+        jmp init
+
+aa_lib_jumplist
+main_adr   !word 0  ; the start addr of the main() function
+code_last  !word 0
+init_first !word 0
+init_last  !word 0
+
+        jmp (zp)
+        jmp switch
+        jmp mult
+        jmp divmod
+        jmp shl
+        jmp shr
+
+init    lda code_last
+        sta base
+        lda code_last + 1
+        sta base + 1
+        lda init_last
+        sta zp2
+        ldx init_last + 1
+        stx zp2 + 1
+        ldy #0
+init1   cmp init_first
+        bne init2
+        cpx init_first + 1
+init2   beq init5
+        sec
+        sbc #1
+        bcs init3
+        dex
+init3   sta zp2
+        stx zp2 + 1
+        lda (base),y
+        sta (zp2),y
+        inc base
+        bne init4
+        inc base + 1
+init4   lda zp2
+        jmp init1
+
+init5   jmp (main_adr)
+
+switch  tay
+        pla
+        clc
+        adc #1
+        sta zp
+        pla
+        adc #0
+        sta zp+1
+        tya
+        ldy #0
+switch1 pha
+        lda (zp),y
+        sta zp1
+        iny
+        ora (zp),y
+        beq switch5
+        lda (zp),y
+        sta zp1+1
+        iny
+        bne switch2
+        inc zp+1
+switch2 pla
+        cmp (zp),y
+        php
+        iny
+        plp
+        bne switch4
+        pha
+        txa
+        cmp (zp),y
+        bne switch3
+        pla
+        jmp (zp1)
+switch3 pla
+switch4 iny
+        bne switch1
+        inc zp+1
+        jmp switch1
+
+switch5 sec
+        tya
+        adc zp
+        bcc switch6
+        inc zp+1
+switch6 jmp (zp)
+
+
+
+mult    stx zp1 + 1
+        lsr zp1 + 1
+        ror
+        sta zp1     ; multiplikator
+
+        lda #0
+        sta zp2
+        ldx #16
+mu1     bcc mu2
+        tay
+        lda zp2
+        clc
+        adc zp
+        sta zp2
+        tya
+        adc zp + 1
+mu2     ror
+        ror zp2
+        ror zp1 + 1
+        ror zp1
+        dex
+        bne mu1
+;       tay
+        lda zp1
+        ldx zp1 + 1  ; lo-word produkt
+;       tya
+;       tax
+;       lda zp2      ; hi-word produkt
+        rts
+
+
+negate  clc
+        eor #$ff
+        adc #1
+        tay
+        txa
+        eor #$ff
+        adc #0
+        tax
+        tya
+        rts
+
+divmod  stx zp2 + 1 ; sign of divident
+        bit zp2 + 1
+        bpl div1
+        jsr negate
+div1    tay         ; save divident-lo
+        txa
+        eor zp + 1  ; sign of divisor
+        asl
+        ror zp2     ; sign of result
+        bit zp + 1  ; sign of divisor
+        bpl div2
+        clc         ; negate divisor
+        lda zp      ; in zp/zp+1
+        eor #$ff
+        adc #1
+        sta zp
+        lda zp + 1
+        eor #$ff
+        adc #0
+        sta zp + 1
+div2    tya      ; restore divident-lo
+        ldy #0
+        sty zp1
+        sty zp1 + 1
+div3    cpx zp + 1
+        bne div4
+        cmp zp
+div4    bcc div5
+        asl zp
+        rol zp + 1
+        iny
+        bpl div3
+        lda #<div_zero
+        ldy #>div_zero
+        jsr strout
+        jmp ready
+
+div5    dey
+        bmi div8
+        lsr zp + 1
+        ror zp
+        cpx zp + 1
+        bne div6
+        cmp zp
+div6    php
+        bcc div7
+        sbc zp
+        pha
+        txa
+        sbc zp + 1
+        tax
+        pla
+div7    plp
+        rol zp1
+        rol zp1 + 1
+        bcc div5
+        brk  ; remove this some day :)
+
+div8    bit zp2 + 1
+        bpl div9
+        jsr negate
+div9    sta zp
+        stx zp + 1
+        lda zp1
+        ldx zp1 + 1
+        bit zp2
+        bpl div10
+        jsr negate
+div10   rts
+
+
+shl     iny
+shl1    dey
+        beq div10
+        asl
+        pha
+        txa
+        rol
+        tax
+        pla
+        jmp shl1
+
+
+shr     iny
+shr1    dey
+        beq div10
+        pha
+        txa
+        asl
+        txa
+        ror
+        tax
+        pla
+        ror
+        jmp shr1
+
+div_zero !pet "division by zero", $0d, 0
+
+aa_lib_last
