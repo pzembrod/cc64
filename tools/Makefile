@@ -1,7 +1,7 @@
 # Where to put the executable for the command 'gcc'.
 bindir = $(HOME)/bin
 
-all: ufscr2file
+all: ufscr2file petscii2ascii
 
 clean:
 	rm ufscr2file petscii_test *.o *.fth
@@ -10,9 +10,13 @@ ufscr2file: ufscr2file.o petscii.o
 
 ufscr2file.o: ufscr2file.c
 
+petscii2ascii: petscii2ascii.o petscii.o
+
+petscii2ascii.o: petscii2ascii.c
+
 petscii.o: petscii.c
 
-install: ufscr2file
+install: ufscr2file petscii2ascii
 	cp $+ $(bindir)/
 
 test: test_ufscr2file_file test_ufscr2file_stdout test_petscii
