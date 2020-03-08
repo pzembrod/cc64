@@ -19,6 +19,9 @@ helloworld.c: helloworld.c.4pet
 
 kernal-io.c: kernal-io.c.4pet
 
+charset: charset.a
+	acme -f cbm -l charset.sym -o charset charset.a
+
 %.c: %.c.4pet
 	ascii2petscii $< $@
 
