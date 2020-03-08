@@ -21,8 +21,10 @@ CHEAT_TEST(a2p_newline,
   cheat_assert(ascii2petscii(0x0a) == 0x0d);
 )
 
+// TODO: Figure out what role underscore plays in the cc64 Forth
+// sources. There 0xa4 seems to be used as underscore.
 CHEAT_TEST(a2p_underscore,
-  cheat_assert(ascii2petscii('_') == 0xa4);
+  cheat_assert(ascii2petscii('_') == '_');
 )
 
 
