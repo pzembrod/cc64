@@ -1,7 +1,7 @@
 
-/* petscii2ascii.c, (c) Philip Zembrod, 2020 */
+/* ascii2petscii.c, (c) Philip Zembrod, 2020 */
 
-/* Converts a PETSCII file to ASCII, as needed by cc64. */
+/* Converts a ASCII file to PETSCII, as needed by cc64. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   }
   int c;
   while((c = fgetc(in)) != EOF) {
-    fputc(petscii2ascii(c), out);
+    fputc(ascii2petscii(c), out);
   }
   return(0);
 }
