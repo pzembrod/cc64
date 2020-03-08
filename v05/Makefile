@@ -1,6 +1,9 @@
 
 all: baselib.o baselib.h
 
+clean:
+	rm baselib.o baselib.sym baselib.h
+
 
 baselib.o baselib.sym: baselib.a
 	acme -l baselib.sym -o baselib.o baselib.a
