@@ -21,7 +21,10 @@
 cc64_lib_start
         !word baslink
         !word 2020
-        !pet $9e, " 2081:", $8f, " cc64 rt-lib v0.5", 0
+        !byte $9e
+        !pet " 2081:"
+        !byte $8f
+        !pet " cc64 rt-lib v0.5", 0
 baslink !word 0
 
         jmp init
