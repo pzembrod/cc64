@@ -1,0 +1,219 @@
+
+; Generates a C capable char rom image for (e.g.) use with an emulator.
+
+; Copies the character ROM ($d000-$dfff) to $c000-cfff, patches
+; in the charactes \^_{|}~, and then saves $c000-$cfff to disk.
+
+; philip zembrod , 12.3.2020
+
+!addr    zp1      = $22
+!addr    zp2      = $24
+
+!addr    charrom  = $d000
+!addr    charram  = $c000
+         charram_size = $1000
+!addr    charram_lowercase = charram + $800
+!addr    charram_end = charram + charram_size
+
+!addr    readst   = $ffb7
+!addr    setlfs   = $ffba
+!addr    setnam   = $ffbd
+!addr    basout   = $ffd2
+!addr    save     = $ffd8
+
+        *= $0801
+
+        !word baslink
+        !word 2020
+        !byte $9e
+        !pet " 2082:"
+        !byte $8f
+        !pet " cc64 char-rom-gen", 0
+baslink !word 0
+
+        jmp init
+
+charlist
+        !byte $1c
+        !byte %00000000
+        !byte %01100000
+        !byte %00110000
+        !byte %00011000
+        !byte %00001100
+        !byte %00000110
+        !byte %00000011
+        !byte %00000000
+
+        !byte $1e
+        !byte %00000000
+        !byte %00011000
+        !byte %00111100
+        !byte %01100110
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+
+        !byte $1f
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %11111111
+
+        !byte $5b
+        !byte %00001100
+        !byte %00011000
+        !byte %00011000
+        !byte %00110000
+        !byte %00011000
+        !byte %00011000
+        !byte %00001100
+        !byte %00000000
+
+        !byte $5c
+        !byte %00011000
+        !byte %00011000
+        !byte %00011000
+        !byte %00000000
+        !byte %00011000
+        !byte %00011000
+        !byte %00011000
+        !byte %00000000
+
+        !byte $5d
+        !byte %00110000
+        !byte %00011000
+        !byte %00011000
+        !byte %00001100
+        !byte %00011000
+        !byte %00011000
+        !byte %00110000
+        !byte %00000000
+
+        !byte $5e
+        !byte %00000000
+        !byte %00110010
+        !byte %01111110
+        !byte %01001100
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+
+        !byte $20
+
+init    lda #$41
+        ;jsr basout
+        sei
+        lda $01
+        pha
+        and #%11111011
+        sta $01
+
+        lda #<charrom
+        sta zp1
+        lda #>charrom
+        sta zp1 + 1
+        lda #<charram
+        sta zp2
+        lda #>charram
+        sta zp2 + 1
+        ldx #>charram_size
+        ldy #0
+
+copyloop lda (zp1),y
+        sta (zp2),y
+        iny
+        bne copyloop
+        inc zp1 + 1
+        inc zp2 + 1
+        dex
+        bne copyloop
+
+        pla
+        sta $01
+        cli
+
+        ldx #0
+patchloop
+        lda # >charram_lowercase >>> 3
+        sta zp1 + 1
+        lda charlist,x
+        inx
+        cmp #$20
+        beq save_charset
+        asl
+        rol zp1 + 1
+        asl
+        rol zp1 + 1
+        asl
+        rol zp1 + 1
+        sta zp1
+
+        ldy #0
+rowloop lda charlist,x
+        inx
+        pha  ; push copy to use for inverse character
+        sta (zp1),y
+        iny
+        cpy #8
+        bne rowloop
+
+        dey
+        lda zp1 + 1
+        ora #$04  ; switch to inverse character set
+        sta zp1 + 1
+
+inverse_rowloop
+        pla  ; pull copy
+        eor #$ff     ; invert
+        sta (zp1),y
+        dey
+        bpl inverse_rowloop
+
+        jmp patchloop
+
+save_charset 
+        lda #1
+        ldx #8
+        ldy #1
+        jsr setlfs
+        lda #filename_end-filename
+        ldx #<filename
+        ldy #>filename
+        jsr setnam
+        lda #<charram
+        sta zp1
+        lda #>charram
+        sta zp1 + 1
+        lda #zp1
+        ldx #<charram_end
+        ldy #>charram_end
+        jsr save
+        bcs error
+        rts
+
+error   pha
+        ldy #0
+error_loop
+        lda error_message, y
+        beq error_code
+        jsr basout
+        iny
+        jmp error_loop
+error_code
+        pla
+        clc
+        adc #$30
+        jsr basout
+        rts
+
+filename !pet "c-chargen"
+filename_end
+
+error_message
+        !pet "error during save. error code: ", 0

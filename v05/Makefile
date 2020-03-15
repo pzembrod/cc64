@@ -1,9 +1,10 @@
 
-all: baselib.o baselib.h helloworld.c kernal-io.c
+all: baselib.o baselib.h helloworld.c kernal-io.c c-charset c-char-rom-gen
 
 clean:
 	rm -f baselib.o baselib.sym baselib.h baselib.h.4pet
 	rm -f helloworld.c kernal-io.c
+	rm -f c-charset c-char-rom-gen
 
 
 baselib.o baselib.sym: baselib.a
@@ -19,8 +20,11 @@ helloworld.c: helloworld.c.4pet
 
 kernal-io.c: kernal-io.c.4pet
 
-charset: charset.a
-	acme -f cbm -l charset.sym -o charset charset.a
+c-charset: c-charset.a
+	acme -f cbm -l c-charset.sym -o c-charset c-charset.a
+
+c-char-rom-gen: c-char-rom-gen.a
+	acme -f cbm -o c-char-rom-gen c-char-rom-gen.a
 
 %.c: %.c.4pet
 	ascii2petscii $< $@
