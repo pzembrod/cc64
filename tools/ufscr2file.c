@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "openfiles.h"
 #include "petscii.h"
 
 int nextchar(FILE *in) {
@@ -70,24 +71,12 @@ int printblock(FILE *in, FILE *out, int n) {
     
 int main(int argc, char *argv[]) {
   FILE *in, *out;
+  int error = openfiles(&in, &out, argc, argv,
+      "usage: %s file.d64 [outfile]\n");
+  if (error) {
+    return(error);
+  }
   int block;
-  if(argc<2 || argc>3) {
-    fprintf(stderr, "usage: %s file.d64 [outfile]\n", argv[0]);
-    return(argc!=1);
-  }
-  if((in=fopen(argv[1],"r"))==NULL) {
-    fprintf(stderr, "%s: can't open %s\n", argv[0], argv[1]);
-    return(1);
-  }
-  if(argc==3) {
-    out = fopen(argv[2], "w");
-    if(out == NULL) {
-      fprintf(stderr, "%s: can't open %s\n", argv[0], argv[2]);
-      return(1);
-    }
-  } else {
-    out = stdout;
-  }
   for(block = 0; block < 170; block++)
     if(printblock(in, out, block))
       return(1);

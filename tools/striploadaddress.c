@@ -1,7 +1,7 @@
 
-/* ascii2petscii.c, (c) Philip Zembrod, 2020 */
+/* striploadaddress.c, (c) Philip Zembrod, 2020 */
 
-/* Converts a ASCII file to PETSCII, as needed by cc64. */
+/* Strips the first 2 bytes from a file. */
 
 #include <stdio.h>
 
@@ -17,8 +17,10 @@ int main(int argc, char *argv[]) {
     return(error);
   }
   int c;
+  if (fgetc(in) == EOF) return 1;
+  if (fgetc(in) == EOF) return 1;
   while((c = fgetc(in)) != EOF) {
-    fputc(ascii2petscii(c), out);
+    fputc(c, out);
   }
   return(0);
 }
