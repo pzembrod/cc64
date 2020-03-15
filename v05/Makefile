@@ -1,5 +1,5 @@
 
-all: baselib.o baselib.h.S00 helloworld.c.S00 kernal-io.c.S00 c-charset c-char-rom-gen
+all: baselib.o baselib.h.S00 baselib.o.P00 helloworld.c.S00 kernal-io.c.S00 c-charset c-char-rom-gen
 
 clean:
 	rm -f baselib.o baselib.sym baselib.h.S00 baselib.h
@@ -25,6 +25,9 @@ c-charset: c-charset.a
 
 c-char-rom-gen: c-char-rom-gen.a
 	acme -f cbm -o c-char-rom-gen c-char-rom-gen.a
+
+baselib.o.P00: baselib.o
+	bin2p00 baselib.o baselib.o.P00
 
 %.c.S00: %.c
 	txt2s00 $< $@
