@@ -6,8 +6,7 @@ tools =  ascii2petscii bin2p00 petscii2ascii striploadaddress txt2s00 ufscr2file
 all: $(tools)
 
 clean:
-	rm -f ascii2petscii petscii2ascii striploadaddress
-	rm -f ufscr2file petscii_test
+	rm -f  $(tools)
 	rm -f *.o test_*.fth
 
 
