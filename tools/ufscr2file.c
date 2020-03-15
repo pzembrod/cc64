@@ -68,7 +68,7 @@ int printblock(FILE *in, FILE *out, int n) {
   }
   return(0);
 }
-    
+
 int main(int argc, char *argv[]) {
   FILE *in, *out;
   int error = openfiles(&in, &out, argc, argv,

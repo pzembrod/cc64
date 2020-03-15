@@ -8,7 +8,7 @@
 #include "openfiles.h"
 #include "petscii.h"
 
-    
+
 int main(int argc, char *argv[]) {
   FILE *in, *out;
   int error = openfiles(&in, &out, argc, argv,
