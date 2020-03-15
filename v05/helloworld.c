@@ -1,1 +1,23 @@
-#INCLUDE "BASELIB.H"EXTERN PUTCHAR() *= 0XFFD2 ;INT PUTS(S)CHAR *S;Û  WHILE(*S != 0)     PUTCHAR(*S++);ÝMAIN()Û  INT I;  FOR(I=1;I<=4;++I)    Û      PUTS("HELLO, WORLD!\N");    ÝÝ
+
+#include "baselib.h"
+
+extern putchar() *= 0xffd2 ;
+
+int puts(s)
+char *s;
+{
+  while(*s != 0)
+     putchar(*s++);
+}
+
+main()
+{
+  int i;
+  for(i=1;i<=4;++i)
+    {
+      puts("hello, world!\n");
+    }
+}
+
+
+
