@@ -1,5 +1,5 @@
 
-all: baselib.o baselib.h helloworld.c kernal-io.c c-charset c-char-rom-gen
+all: baselib.o baselib.h.S00 helloworld.c.S00 kernal-io.c.S00 c-charset c-char-rom-gen
 
 clean:
 	rm -f baselib.o baselib.sym baselib.h.S00 baselib.h
