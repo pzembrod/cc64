@@ -19,6 +19,9 @@ variable is generated and is usually contained in the runtime module's .h file.
 Selecting the desired runtime module happens by including the module's .h
 file at the beginning of a module.
 
+For details about the `#pragma cc64` directive see the section about the
+[runtime module interface](#runtime-module-interface).
+
 
 ## Runtime module files
 
@@ -40,8 +43,8 @@ an executable binary but a new, extended runtime module containing everything
 the base runtime module contains, plus the new compiled code. This can be used
 to write extended runtime libraries in C.
 
-Compiling a file *module-name*.c will produce *module-name*.h, *module-name*.o
-and *module-name*.i as output files.
+Compiling a file *module-name*.c without a main() function will produce
+*module-name*.h, *module-name*.o and *module-name*.i as output files.
 
 
 ## Runtime module interface

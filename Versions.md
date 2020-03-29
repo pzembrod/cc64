@@ -28,6 +28,6 @@ on 6-Oct-1994 and 3-Nov-1995, respectively.
 Thanks go to Craig Bruce at this point for keeping the archive on
 <http://csbruce.com/cbm/ftp/c64/programming/>.
 
-I keep v03 and v04 here mainly for reference. I don't recommend doing anything
-with the files in there.
+I keep v03 and v04 here mainly for the record. I don't recommend doing anything
+with them.
 
