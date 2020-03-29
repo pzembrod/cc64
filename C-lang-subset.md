@@ -38,7 +38,8 @@ cc64 supports two non-standard `extern` declarations.
 extern int i /= 0x9ffe;
 extern char fgetc() /= 0xa02;
 ```
-declares a static int variable at location 0x9ffe and a char-valued function
+declares a static int variable at storage location 0x9ffe and a
+char-valued function fgetc() at code location 0xa02.
 
 This is indended for use in header files for enhanced 
 [runtime libraries](Runtime-libs.md) and not for use in hand-written C code.
