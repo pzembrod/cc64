@@ -49,22 +49,28 @@ Compiling a file *module-name*.c without a main() function will produce
 
 ## Runtime module interface
 
-For those interested in the technical details: The #special cc64
-command tells the compiler the addresses of the software stack pointer
-and an additional zero page pointer the compiled code shall use, then
-the library's first address, the address of the jumplist described
-below, the library's last address + 1, the first address and the last
-address + 1 of the library's static variables, and the name of the
-library without extension (i.e. bl02 in case of the base library on
-the distribution disk). This way the compiler is completely flexible
-concerning the surrounding in which the compiled code shall run, and
-by creation of a suitable runtime library it is no problem to create
-programs which will run in the 64's BASIC memory (as bl02 does), or
-use all memory from $0801 to $d000, or just $c000 to $d000, or run on
-any other 6502-based computer.
-If You want to write Your own base library, this is what You must know:
-Th compiler accesses the library via a jumplist. This list has the
-following structure:
+Key to cc64's interface to the runtime module based on which compiled code is
+generated is the `#pragma cc64` directive. It takes 7 integer and one string
+parameter and has the following form:
+
+`#pragma cc64` *cc-sp*, *zp*, *rt-start*, *rt-jumplist*, *rt-end*,
+*statics-start*, *statics-end*, *rt-basename*
+
+The integer params are all memory addresses, typically given in hex.
+
+*cc-sp*: a zero page address pair used as stack pointer for C local variables  
+*zp*: a second zero page address pair that the compiled code may use  
+*rt-start*: the first code address of the runtime module  
+*rt-jumplist*: the address of the runtime modules jump list (see below)  
+*rt-end*: the first free code address after the end of the runtime module  
+*statics-start*: the lowest address of the runtime module's static vars  
+*statics-end*: the hightest address + 1 of the runtime module's static vars  
+*rt-basename*: the base filename of the runtime module. *basename*.o is then the
+code, *basename*.i the initialzation values of the module's static vars. (Of
+course *basename*.h is the header file containing the module's symbol
+definitions and the #pragma cc64 directive.)
+
+The compiler accesses the library via a jump list with the following structure:
 
 jumplist
 main.adr   .word 0   ; Here the main()-function's address is inserted
@@ -77,7 +83,7 @@ init.last  .word 0   ; address and the last address + 1 of the static
 ; downwards. The statics' initialization values are stored by the
 ; compiler from code.last and in reversed order. Your initialization
 ; routine should copy (code.last) to (init.last) - 1, (code.last) + 1 to
-; (init.last) - 2 and so an. Mark: there may be no static variables,
+; (init.last) - 2 and so an. Mind: there may be no static variables,
 ; then init.first will be equal to init.last.
            jmp (zp)   ; Just have this explicitly standing here; it is
                       ; used to emulate jsr (zp). zp is the second zero
@@ -117,3 +123,9 @@ initialization values. The former gives more memory for local
 variables, but the software stack will destroy the init values. bl02
 employs the latter alternative.
 
+This way the compiler is completely flexible
+concerning the surrounding in which the compiled code shall run, and
+by creation of a suitable runtime library it is no problem to create
+programs which will run in the 64's BASIC memory (as bl02 does), or
+use all memory from $0801 to $d000, or just $c000 to $d000, or run on
+any other 6502-based computer.
