@@ -17,6 +17,7 @@ parameter declaration. Sorry.
 - Only one level of pointer (nothing like char **p). Only 1-dim arrays,
 accordingly.
 - No goto.
+- No nested switch statements.
 - No real preprocessor.
 - - `#define` just defines a constant on the compiler level. There's no
 text substitution as such.
