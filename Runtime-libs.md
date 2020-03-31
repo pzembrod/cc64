@@ -47,62 +47,131 @@ Compiling a file *module-name*.c without a main() function will produce
 *module-name*.h, *module-name*.o and *module-name*.i as output files.
 
 
+## Code and memory layout
+
+New code is generated as non-relocatable binary code, starting at the first
+free address after the runtime module's code. Static variables are allocated
+starting at the end of the available memory and growing downwards.
+With this layout, in the case of one contiguous memory area for both code and
+data (e.g. $0801 - $a000 on the C64), code and statics can grow towards each
+other, the local variable stack can live between them, and yet the compiler
+can allocate an absolute address to each static variable the moment it is
+defined, when the length of the code is not yet known.
+
+The same layout approach also works for separate code and data memory (e.g.
+code in ROM). The only difference is that the runtime module must then
+initialize the local variable stack pointer not to the end of the code but
+to the beginning of the available RAM.
+
+The local variable stack grows upwards.
+
+The initialization values for the static variables are written to a separate
+file during the first compiler pass, and because statics are allocated from
+the end of the available memory, the initalization value file contains the
+intitialization data *in reverse order*. During the (very simple) second
+compiler pass, the reverse order init data are attached to the end of the code,
+so the copy loop that writes the data into the static variable memory reverse
+the order again while doing so.
+
+
 ## Runtime module interface
 
 Key to cc64's interface to the runtime module based on which compiled code is
-generated is the `#pragma cc64` directive. It takes 7 integer and one string
-parameter and has the following form:
+generated is the `#pragma cc64` directive. It takes 7 integer parameters
+(all memory addresses, typically given in hex) and one string
+parameter. It has the following form:
 
 `#pragma cc64` *cc-sp*, *zp*, *rt-start*, *rt-jumplist*, *rt-end*,
 *statics-start*, *statics-end*, *rt-basename*
 
-The integer params are all memory addresses, typically given in hex.
-
-*cc-sp*: a zero page address pair used as stack pointer for C local variables  
-*zp*: a second zero page address pair that the compiled code may use  
-*rt-start*: the first code address of the runtime module  
-*rt-jumplist*: the address of the runtime modules jump list (see below)  
-*rt-end*: the first free code address after the end of the runtime module  
-*statics-start*: the lowest address of the runtime module's static vars  
-*statics-end*: the hightest address + 1 of the runtime module's static vars  
-*rt-basename*: the base filename of the runtime module. *basename*.o is then the
+- *cc-sp*:
+- - a zero page address pair used as stack pointer for C local variables
+- *zp*:
+- - a second zero page address pair that the compiled code may use
+- *rt-start*:
+- - the first code address of the runtime module
+- *rt-jumplist*:
+- - the address of the runtime modules jump list (see below)
+- *rt-end*:
+- - the first free code address after the end of the runtime module
+- *statics-start*:
+- - the lowest address of the runtime module's static vars
+- *statics-end*:
+- - the hightest address + 1 of the runtime module's static vars
+- *rt-basename*:
+- - the base filename of the runtime module. *basename*.o is then the
 code, *basename*.i the initialzation values of the module's static vars. (Of
 course *basename*.h is the header file containing the module's symbol
 definitions and the #pragma cc64 directive.)
 
-The compiler accesses the library via a jump list with the following structure:
+The jumplist mentioned above is used by the compiler to accesses the runtime
+module.  
+The jumplist has the following structure:
 
-jumplist
-main.adr   .word 0   ; Here the main()-function's address is inserted
-                     ; by the compiler. The lib's init routine should
-                     ; call main() by a jmp (main.adr)
-code.last  .word 0   ; At these addresses the compiler places the last
-init.first .word 0   ; address + 1 of the generated code and the first
-init.last  .word 0   ; address and the last address + 1 of the static
-; variables. Statics are allocated from the end of the used memory
-; downwards. The statics' initialization values are stored by the
-; compiler from code.last and in reversed order. Your initialization
-; routine should copy (code.last) to (init.last) - 1, (code.last) + 1 to
-; (init.last) - 2 and so an. Mind: there may be no static variables,
-; then init.first will be equal to init.last.
-           jmp (zp)   ; Just have this explicitly standing here; it is
-                      ; used to emulate jsr (zp). zp is the second zero
-                      ; page pointer used by the compiler.
-           jmp switch ; Is called with a/x containing a 16 bit value.
-                      ; Following the calling jsr-instruction is a data
-                      ; structure described below containing values
-                      ; and addresses to jump to if a/x matches a value.
-                      ; The switch routine should find that data
-                      ; structure and jump to the corresponding
-                      ; address if a/x matches a value in the list.
-                      ; If no value matches it should jump behind the list.
-           jmp mult   ; Should multiply (signed) the content of a/x
-                      ; (a:lo-byte, x:hi-byte) with the integer in zp/zp+1
-                      ; leaving the result in a/x.
-           jmp divmod ; Should divide (signed) zp/zp+1 by a/x, leaving
-                      ; the result in a/x and the remainder in zp/zp+1.
-           jmp shl    ; Should arithmetically shift left a/x by y bits.
-           jmp shr    ; Should arithmetically shift right a/x by y bits.
+```
+rt_jumplist
+main_adr   .word 0
+code_last  .word 0
+statics_first .word 0
+statics_last  .word 0
+           jmp (zp)
+           jmp switch
+           jmp mult
+           jmp divmod
+           jmp shl
+           jmp shr
+```
+
+The first part of the jumplist is a list of 4 addresses:
+
+- `rt_jumplist`
+- - This address (equal to main_addr, of course) is #pragma cc64's 4th param
+and the runtime module's anchor for the compiler.
+- `main_adr`
+- - Here the main()-function's address is inserted by the compiler. The
+runtime module's initialization calls main() with a jmp (main.adr).
+- `code_last`
+- - Here the last address + 1 of the generated code is inserted by the compiler.
+- `statics_first`
+- - Here the first address of the generated code is inserted by the compiler.
+- `statics_last`
+- - Here the last address + 1 of the generated code is inserted by the compiler.
+
+As described above, statics are allocated from the end of the used memory
+downwards. The statics' initialization values are placed by the
+compiler from code_last upwards and in reversed order.
+The initialization routine copies (code_last) to (init_last) - 1,
+(code_last) + 1 to  (init_last) - 2 and so an to reverse the order again.
+In case of no static variables, init_first will be equal to init_last.
+
+After the addresses follows a list of 6 jmp instructions:
+
+- `jmp (zp)`
+- - This it is used to emulate `jsr (zp)`. zp is the second zero
+page pointer used by the compiler.
+- `jmp switch`
+- - Code generated for switch statements consists of loading into a/x
+the 16 bit value to match to case statements and a jsr to this address.
+Following the calling jsr-instruction will be an array of pairs of 16 bit
+values, one pair per case statement. The second value in each pair is the case
+value, and the first value is the address to jump to in case of a match.
+A 16-bit 0 value marks the end of the list. It is followed by either a jump to
+the default branch or just the code following the switch statement.
+Hence, the `switch` routine gets the start of the list by pulling the jsr
+instruction's return address from the stack and adding 1 to it.
+It then compares a/x to the 2nd value of each pair, jumps to the pair's first
+address in case of match, and in case of no match jumps behind the terminating
+0 at the end of the list.
+- jmp mult
+- - Multiplies (signed) the content of a/x with the integer in zp/zp+1,
+leaving the result in a/x.
+- jmp divmod
+- - Divides (signed) zp/zp+1 by a/x, leaving the result in a/x and the
+remainder in zp/zp+1.
+- jmp shl
+- - Arithmetically shifts left a/x by y bits.
+- jmp shr
+- - Arithmetically shifts right a/x by y bits.
 
 This jumplist may be positioned anywhere in the library; it's address
 must be told to the compiler with the described #special command.
