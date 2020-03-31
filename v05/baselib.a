@@ -30,10 +30,10 @@ baslink !word 0
         jmp init
 
 cc64_lib_jumplist
-main_adr   !word 0  ; the start addr of the main() function
-code_last  !word 0
-init_first !word 0
-init_last  !word 0
+main_adr      !word 0  ; the start addr of the main() function
+code_last     !word 0
+statics_first !word 0
+statics_last  !word 0
 
         jmp (cc64_zp)
         jmp switch
@@ -46,14 +46,14 @@ init    lda code_last
         sta cc64_sp
         lda code_last + 1
         sta cc64_sp + 1
-        lda init_last
+        lda statics_last
         sta tmp_zp2
-        ldx init_last + 1
+        ldx statics_last + 1
         stx tmp_zp2 + 1
         ldy #0
-init1   cmp init_first
+init1   cmp statics_first
         bne init2
-        cpx init_first + 1
+        cpx statics_first + 1
 init2   beq init5
         sec
         sbc #1
@@ -69,7 +69,12 @@ init3   sta tmp_zp2
 init4   lda tmp_zp2
         jmp init1
 
-init5   jmp (main_adr)
+init5   
+;        lda code_last
+;        sta cc64_sp
+;        lda code_last + 1
+;        sta cc64_sp + 1
+        jmp (main_adr)
 
 switch  tay
         pla
@@ -111,6 +116,7 @@ switch4 iny
         jmp switch1
 
 switch5 sec
+;        iny
         tya
         adc cc64_zp
         bcc switch6
