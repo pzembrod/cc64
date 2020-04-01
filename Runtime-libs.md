@@ -76,10 +76,10 @@ the order again while doing so.
 
 ## Runtime module interface
 
-Key to cc64's interface to the runtime module based on which compiled code is
-generated is the `#pragma cc64` directive. It takes 7 integer parameters
-(all memory addresses, typically given in hex) and one string
-parameter. It has the following form:
+cc64 gets the details about memory layout and the runtime module that it needs
+to generate code from the `#pragma cc64` directive.
+`#pragma cc64` takes 7 integer parameters, all memory addresses usually given
+in hex, and one string parameter, a file base name. It has the following form:
 
 `#pragma cc64` *cc-sp*, *zp*, *rt-start*, *rt-jumplist*, *rt-end*,
 *statics-start*, *statics-end*, *rt-basename*
@@ -104,9 +104,9 @@ code, *basename*.i the initialzation values of the module's static vars. (Of
 course *basename*.h is the header file containing the module's symbol
 definitions and the #pragma cc64 directive.)
 
-The jumplist mentioned above is used by the compiler to accesses the runtime
+The jumplist mentioned above is the compiler's interface into the runtime
 module.  
-The jumplist has the following structure:
+It has the following structure:
 
 ```
 rt_jumplist
@@ -173,28 +173,8 @@ remainder in zp/zp+1.
 - jmp shr
 - - Arithmetically shifts right a/x by y bits.
 
-This jumplist may be positioned anywhere in the library; it's address
-must be told to the compiler with the described #special command.
-The Your library should have a init routine which finally will call
-the program's main()-function. In which way this routine is called is up
-to You. bl02 uses a BASIC line to start init. If You want programs to
-run in $c000-$d000, You might want init to stand at the beginning of
-the library so You can call Your programs with SYS49152.
-However, the init routine should do two things before calling main()
-with a jmp (main.adr) instruction. It should copy the static
-variables' initialization values to the variables' actual addresses as
-described above. And it should set the software stack pointer to an
-initial value. The software stack is used for the allocation of local
-variables and grows to high addresses. Its stack pointer therefore
-should be set either to the code.last address or to
-code.last + init.last - init.first, i.e. behind the statics'
-initialization values. The former gives more memory for local
-variables, but the software stack will destroy the init values. bl02
-employs the latter alternative.
+The jumplist may be positioned anywhere in the library.
 
-This way the compiler is completely flexible
-concerning the surrounding in which the compiled code shall run, and
-by creation of a suitable runtime library it is no problem to create
-programs which will run in the 64's BASIC memory (as bl02 does), or
-use all memory from $0801 to $d000, or just $c000 to $d000, or run on
-any other 6502-based computer.
+A cc64 binary is started by calling the runtime module's init routine which
+initializes the static variables as described above, initializes the locals
+stack pointer and then jumps, via the jumplist, to the main function.
