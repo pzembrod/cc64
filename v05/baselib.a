@@ -69,12 +69,7 @@ init3   sta tmp_zp2
 init4   lda tmp_zp2
         jmp init1
 
-init5   
-;        lda code_last
-;        sta cc64_sp
-;        lda code_last + 1
-;        sta cc64_sp + 1
-        jmp (main_adr)
+init5   jmp (main_adr)
 
 switch  tay
         pla
