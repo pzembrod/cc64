@@ -5,7 +5,7 @@ cc64 was inspired by Ron Cain and James E. Hendrix'
 8080 CPUs and supports a similar subset of the C language.
 
 
-## C subset
+## C language limitations
 
 - cc64 uses the old K&R standard. No ANSI, not even for function
 parameter declaration. Sorry.
@@ -14,10 +14,12 @@ parameter declaration. Sorry.
 - No structs, no unions.
 - No typedef, no enum.
 - No type casts.
-- Only one level of pointer (nothing like char **p). Only 1-dim arrays,
+- Only one level of pointer (nothing like `char **p`). Only 1-dim arrays,
 accordingly.
 - No goto.
 - No nested switch statements.
+- No implicit `int f(int i)` function declaration.
+All functions must be declared or defined before first calling them.
 - No real preprocessor.
 - - `#define` just defines a constant on the compiler level. There's no
 text substitution as such.
