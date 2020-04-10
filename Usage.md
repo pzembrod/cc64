@@ -14,9 +14,10 @@ cc64 and peddi are written in Forth and use the Forth command line as shell.
 The main consequence of this is that all numeric parameters to commands are
 entered in RPN (reversed polish notation) - _before_ the command.
 
-Another heads-up: For v05 I'm still using the old ultraForth which has German
-messages, namely the message "Haeh?" on error which means as much as "What?".
-I will eventually switch to the newer volksForth.
+A heads-up: For v05 I'm still using the old ultraForth which has German
+messages, namely the syntax error message "Haeh?" on error which means as much
+as "What?".
+I will eventually switch to the newer volksForth with English messages.
 
 The full set of commands listed below is only available in the combined
 compiler and editor binary `cc64v05pe`. The standalone compiler and editor
@@ -32,7 +33,10 @@ can be given either in decimal or, with a preceeding $, in hex.
 - `help`
 - - shows a list of all commands
 - `cc` _file.c_
-- - compiles file.c
+- - compiles _file.c_, producing
+- - - a binary executable _file_ if _file.c_ contains a `main()` function
+- - - an extended runtime library consisting of _file.h_, _file.i_, _file.o_
+otherwise
 - `ed` _file_
 - - opens _file_ in the text editor
 - `cat` _file_
