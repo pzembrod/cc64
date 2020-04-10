@@ -1,5 +1,5 @@
 
-p00files = baselib.o.P00 cc64v05.P00
+p00files = baselib.o.P00 cc64v05.P00 devenv-uF83.P00
 s00files = baselib.h.S00 helloworld.c.S00 kernal-io.c.S00
 
 all: baselib.o $(p00files) $(s00files) c-charset c-char-rom-gen
