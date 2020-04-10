@@ -1,60 +1,121 @@
 # Usage
 
-As said, cc64 and peddi are written in FORTH. After starting them
-You'll get an OK prompt, and HELP will list You the availible commands.
-Some commands require numeric parameters; those must be entered _before_
-the command. We're FORTH, so we're RPN (reversed polish notation). The
-commands are:
+## Binaries
 
-```
-help      -- list all commands
-cc file.c -- compile file.c
-ed file   -- edit file (only available in the combined compiler+editor binary)
-cat file  -- type the contents of file on the screen
-dos       -- read and print the floppy's error channel
-dos xxx   -- send the command xxx to the floppy
-dir       -- list the directory
-mem       -- show the compiler's memory setup
-xxx set-himem -- set the limit of the compiler's memory to xxx. Don't
-          change this to a value greater than $cbd0 if You want to use
-          c-charset. xxx may be a decimal number or a hex number,
-          preceeded by a $
-xxx set-heap -- sets the heap to xxx links. For each function in a C
-          program that is used before it is defined (a prototype must
-          exist before the first call) one link is needed.
-xxx set-hash -- sets the hash table size for global symbols. Needs at
-          least one element per global symbol in a C program. Should
-          be sized a bit generous otherwise hashing will be inefficient.
-xxx set-symtab -- sets the symbol table size (used both for local and
-          global symbols). Must be increased if You run into a Symbol
-          table overflow error.
-xxx set-code -- sets the size of the code buffer. The code for any C
-          function being compiled must fit into this buffer. Otherwise
-          You get a function too long error. Then increase the code
-          buffer size or split the long function up in two or more.
-The size of the static buffer is determined by the remaining memory.
-This size is not critical. It should be positive, though. :)
-xxx yyy set-stacks -- sets the size of data and return stack and
-          resets the system. The stacks'size determine the maximum
-          depth of arithmetic expressions and the maximum number of
-          nested compound statements the compiler can handle. Stack
-          overflows are checked; I hope those checks are reliable.
-          If the compiler should behave strangely on a complicated
-          (i.e. deeply nested) expression RELOAD IT FROM DISK and set
-          the stack sizes to higher values.
-saveall name -- saves the complete compiler together with its actual
-          memory settings.
-bye       -- leave to basic
-```
+There are 3 main binaries:
 
-Peddi - how to use
-------------------
+- cc64v05 - the standalone compiler
+- peddiv02 - the standalone editor
+- cc64v05pe - compiler and editor combined
+
+## Shell
+
+cc64 and peddi are written in Forth and use the Forth command line as shell.
+The main consequence of this is that all numeric parameters to commands are
+entered in RPN (reversed polish notation) - _before_ the command.
+
+Another heads-up: For v05 I'm still using the old ultraForth which has German
+messages, namely the message "Haeh?" on error which means as much as "What?".
+I will eventually switch to the newer volksForth.
+
+The full set of commands listed below is only available in the combined
+compiler and editor binary `cc64v05pe`. The standalone compiler and editor
+binaries only offer the corresponding subset of commands.
+
+Numeric parameters, listed below as n, nnn or mmm, are 16 bit integers and
+can be given either in decimal or, with a preceeding $, in hex.
+
+## Commands
+
+### Main commands
+
+- `help`
+- - shows a list of all commands
+- `cc` _file.c_
+- - compiles file.c
+- `ed` _file_
+- - opens _file_ in the text editor
+- `cat` _file_
+- - displays the content of _file_ on the screen
+- `bye`
+- - exits cc64
+
+### Disk commands
+
+- `dos`
+- - reads and prints the error channel of the cc64's configured main disk drive
+(see `device?` and `device` below)
+- `dos` _xxx_
+- - sends the command _xxx_ to cc64's configured main disk drive
+- `dir`
+- - lists the directory of cc64's configured main disk drive
+- `device?`
+- - shows the device number of the disk drive cc64 uses for source files and
+compilation outputs, and the device number of the auxiliary disk drive where
+cc64 places temporary files during compile. By default these are the same,
+and there's only a reason to change that if space on the main drive becomes
+an issue. Note: Currently the `dos` command only works on the main drive.
+- _n_ `device`
+- - configures cc64 to use device _n_ as main disk drive
+- _n_ `auxdev`
+- - configures cc64 to use device _n_ as auxiliary disk drive for temp files
+
+### Memory commands
+
+- `mem`
+- - displays the compiler's memory setup
+- _nnn_ `set-himem`
+- - sets the upper limit of the compiler's memory to _nnn_. Default value is
+$cbd0. The memory $cbd0-$cfff is needed by [c-charset](#c-charset) which cc64
+recognizes and activates if it is installed. If a c-chargen rom generated by
+[c-char-rom-gen](#c-char-rom-gen) is used, e.g. in an emulator, or if no C
+charset (which provides the characters \^_{|}~) is desired, then himem can be
+set to $d000.
+- _nnn_ `set-heap`
+- - sets the heap to _nnn_ elements. One heap element is needed for each forward
+function reference, i.e. for each function that is called before it is defined.
+A prototype, i.e. a declaraion, must exist before a function can be called.
+- _nnn_ `set-hash`
+- - sets the hash table size for global symbols. Needs at least one element per
+compiled global symbol and should be sized reasonably generous for hasing to
+be efficient. I'm sorry to say I don't have data yet, though.
+- _nnn_ `set-symtab`
+- - sets the symbol table size in bytes. This is used both for local and
+global symbols and must be increased if a symbol table overflow error occurs.
+- _nnn_ `set-code`
+- - sets the size of the code buffer in bytes. The compiled code for each
+individual compiled function must fit completely into this buffer. Otherwise,
+a function too long error is thrown.
+- - The remaining memory aka staticbuffer is used to buffer initialization values
+of static variables. Its size isn't critical as it is flushed to file when full;
+it just needs to be positive.
+- _nnn_ _mmm_ `set-stacks`
+- - sets the size of data stack (_nnn_ bytes) and return stack (_mmm_ bytes)
+and resets the system. Note that the sizes shown by `mem` will be _nnn_ minus 6
+and _mmm_ plus 6.  
+The stack sizes determine the maximum depth of arithmetic expressions and the
+maximum number of nested compound statements the compiler can handle. cc64 has
+a recursive descend parser.  
+Stack overflows are checked but I am not 100% sure how reliable these checks
+are, and alas again I don't have any data to guide by yet.  
+Should the compiler behave strangely on some deeply nested code, it should
+be reloaded freshly from disk, and the stack sizes set to higher values.
+- `saveall` _name_
+- - saves the complete compiler together with its actual memory settings to a
+new file _name_
+
+
+## Peddi
+
 Peddi is a small full screen, scrolling PETSCII editor. No limit in line
 length (exept memory). Memory overflow is signalled by a double flash
 of the screen border.
 You call peddi with
+
  `ed filename`
-The peddi key bindings:
+
+Inside the editor, there are these key bindings:
+```
 cursor keys - as usual
 return - split line
 shift-return - goto begin of next line
@@ -73,4 +134,4 @@ ctrl-p - clear line
 ctrl-w - save text
 ctrl-x - exit and save text
 ctrl-c - quit without saving
-
+```
