@@ -4,9 +4,9 @@
 
 There are 3 main binaries:
 
-- cc64v05 - the standalone compiler
-- peddiv02 - the standalone editor
-- cc64v05pe - compiler and editor combined
+- `cc64v05` - the standalone compiler
+- `peddiv02` - the standalone editor
+- `cc64v05pe` - compiler and editor combined
 
 ## Shell
 
@@ -135,3 +135,45 @@ ctrl-w - save text
 ctrl-x - exit and save text
 ctrl-c - quit without saving
 ```
+
+## Character set
+
+C needs a few characters that the C64 charset doesn't contain: \^_{|}~  
+cc64 comes with 2 options to fix this, a RAM and a ROM based. Both patch only
+the lower/upper case charset, not the upper-case/graphic charset.
+
+### c-charset
+
+This is the RAM based option.
+
+`c-charset` is a small assembler program starting at $cb3b. When loaded and
+started, it will set up a patched charset in RAM from $d000 and move the
+screen memory to $cc00. A small routine which can switch on again
+the patched charset together with the moved screen memory lives from
+$cbdf-$cfff and is detected and used by cc64 if present. That's why cc64's
+default himem is $cbd0, not $d000.
+
+Installation:
+
+```
+load "c-charset",8,1
+sys 52027
+```
+
+Reactivation:
+
+```
+sys 52191
+```
+
+### c-char-rom-gen
+
+This is the ROM based option.
+
+`c-char-rom-gen` is an assembler program running from basic start which, when
+run, will the ROM charset into RAM (at $c000), patch the needed characters,
+and then save the RAM $c000-$cfff to disk in a file named `c-chargen` which
+then can be used by an emulator as chargen or programmed into an (E)EPROM and
+used in a real C64.
+
+The vice wrapper script `run-cc64.sh` uses this c-chargen.
