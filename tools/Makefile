@@ -1,7 +1,9 @@
 # Where to put the executable for the command 'gcc'.
 bindir = $(HOME)/bin
 
-tools =  ascii2petscii bin2p00 petscii2ascii striploadaddress txt2s00 ufscr2file
+imagetools = bin2p00 bin2t64 txt2s00
+filetools =  ascii2petscii petscii2ascii striploadaddress ufscr2file
+tools = $(imagetools) $(filetools)
 
 all: $(tools)
 
@@ -18,6 +20,11 @@ ascii2petscii.o: ascii2petscii.c openfiles.h petscii.h
 bin2p00: bin2p00.o petscii.o openfiles.o
 
 bin2p00.o: bin2p00.c openfiles.h petscii.h
+
+
+bin2t64: bin2t64.o petscii.o openfiles.o
+
+bin2t64.o: bin2t64.c openfiles.h petscii.h
 
 
 petscii2ascii: petscii2ascii.o petscii.o openfiles.o
