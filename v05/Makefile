@@ -1,8 +1,11 @@
 
 p00files = baselib.o.P00 cc64v05.P00 devenv-uF83.P00
 s00files = baselib.h.S00 helloworld.c.S00 kernal-io.c.S00
+t64files = cc64v05.T64
+charsetfiles = c-charset c-char-rom-gen
 
-all: baselib.o $(p00files) $(s00files) c-charset c-char-rom-gen
+
+all: baselib.o $(p00files) $(s00files) $(t64files) $(charsetfiles)
 
 clean:
 	rm -f baselib.o baselib.sym baselib.h.S00 baselib.h
@@ -11,6 +14,8 @@ clean:
 
 
 cc64v05.P00: cc64v05
+
+cc64v05.T64: cc64v05
 
 baselib.o baselib.sym: baselib.a
 	acme -f cbm -l baselib.sym -o baselib.o baselib.a
@@ -38,6 +43,9 @@ c-char-rom-gen: c-char-rom-gen.a
 
 %.P00: %
 	bin2p00 $< $@
+
+%.T64: %
+	bin2t64 $< $@
 
 %.c.S00: %.c
 	txt2s00 $< $@

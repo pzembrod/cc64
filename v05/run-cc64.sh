@@ -12,3 +12,4 @@ x64 \
   -fs8savep00 \
   -fs8hidecbm \
   -chargen c-chargen \
+  -autostart cc64v05.T64 \
