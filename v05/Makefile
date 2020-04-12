@@ -1,7 +1,7 @@
 
 p00files = baselib.o.P00 cc64v05.P00 devenv-uF83.P00
 s00files = baselib.h.S00 helloworld.c.S00 kernal-io.c.S00
-t64files = cc64v05.T64
+t64files = cc64v05.T64 devenv-uF83.T64
 charsetfiles = c-charset c-char-rom-gen
 
 
@@ -16,6 +16,8 @@ clean:
 cc64v05.P00: cc64v05
 
 cc64v05.T64: cc64v05
+
+devenv-uF83.T64: devenv-uF83
 
 baselib.o baselib.sym: baselib.a
 	acme -f cbm -l baselib.sym -o baselib.o baselib.a
