@@ -3697,11 +3697,11 @@ immediate
 
 \ *** Block No. 132, Hexblock 84
 
+\ include loadscreen           02sep19pz
 
+  : mark ;
 
-
-
-
+  1 3 +thru
 
 
 
@@ -3725,85 +3725,85 @@ immediate
 
 \ *** Block No. 133, Hexblock 85
 
+\   fload-dev freadline        19aug19pz
 
+  create fload-dev  8 ,
+  create fload-2nd  1 ,
+| 132 constant /fib
+  create fib /fib allot
+  variable #fib
 
+| : eol? ( c -- f )
+   dup 0= swap #cr = or IF 0 exit THEN
+   i/o-status? IF 1 exit THEN  -1 ;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| : freadline ( -- eof )
+ fload-dev @ fload-2nd @ busin
+ fib /fib bounds
+ DO bus@ dup eol? under
+     IF I c! ELSE drop THEN
+ dup 0<
+   IF drop ELSE I + fib - #fib ! UNLOOP
+   i/o-status? busoff exit THEN
+ LOOP /fib #fib !
+ ." warning: line exceeds max " /fib .
+ cr ." extra chars ignored" cr
+ BEGIN bus@ eol? 1+ UNTIL
+ i/o-status? busoff ;
 
 \ *** Block No. 134, Hexblock 86
 
+\   fload-open  fload-close    19aug19pz
 
+| : fload-open ( addr c -- )
+ fload-dev @
+ fload-2nd @ 1+ dup fload-2nd !
+ busopen
+ 2dup cr type bustype
+ " ,s,r" count bustype busoff ;
 
+| : fload-close ( -- )
+ fload-dev @ fload-2nd @
+ dup 1- fload-2nd !
+ busclose ;
 
+  : factive? ( -- flag )
+ fload-2nd @ 1 > ;
 
+  : fload-close-all ( -- )
+ factive? IF 2 fload-2nd @ DO
+   fload-dev @ I busclose  -1 +LOOP
+ 1 fload-2nd ! THEN ;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  : \ ( -- )
+ blk @ IF [compile] \ exit THEN
+ #tib @ >in ! ; immediate
 
 \ *** Block No. 135, Hexblock 87
 
+\   include                    02sep19pz
 
+ create >tib-orig >tib @ ,
 
+  : (include-error ( -- )
+ fload-close-all
+ >tib-orig @ >tib ! #tib off
+ ['] (error errorhandler !
+ (error ;
 
+  : interpret-via-fib
+ BEGIN freadline >r  >in off
+ #fib @ #tib !  interpret  r> UNTIL ;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  : include ( -- )
+ blk @ Abort" no include from blk"
+ ['] (include-error errorhandler !
+ bl parse  fload-open
+ fib >tib !
+   interpret-via-fib
+ fload-close
+ factive? 0= IF >tib-orig @ >tib ! THEN
+ #tib off >in off ;
 
 
 
