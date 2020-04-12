@@ -1,0 +1,35 @@
+This file describes how the basis for building cc64, the slightly
+enhances ultraForth system uf-build-base is built from the plain
+vanilla uF83-382-c64 ultraForth core.
+
+In the cc64/v05 directory, run
+ build-uf-build-base.sh
+
+Type
+  load "uF83-382-c64",8
+  run
+
+This should result in a prompt
+  ultraFORTH-83 3.82-C64
+
+Type
+  1 drive 1 load
+
+This will adapt the memory configuration for maximum Forth code memory
+size, and will reset the Forth system after it's done.
+
+Type
+  1 drive 130 load 132 load
+
+This will load savesystem and the include word set.
+At the end you should get a message
+
+£ exists ok
+
+Type
+  savesystem uf-build-base
+
+Exit Vice and, in the same cc64/v05 directory, type
+  make
+
+This will re-generate uf-build-base.P00 and uf-build-base.T64.

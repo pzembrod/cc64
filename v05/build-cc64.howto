@@ -1,0 +1,51 @@
+This file describes how cc64v05 is build using the uf-build-base
+ultraForth core adapted for building cc64.
+
+In the cc64/v05 directory, run
+ build-cc64.sh
+
+Type
+  include build-cc64.fth
+
+To accelerate, you can now enable warp mode by pressing alt-w.
+
+You should get the following messages:
+
+transient forth assembler
+  ASSEMBLER exists module errormessages
+
+module errorhandler
+module memman
+module listman
+module file-i/o
+module fileman
+module input
+module scanner
+module symtab
+module codehandler
+module assembler
+module preprocessor
+
+module codegen
+module parser:
+submodule expression  EXPRESSION exists
+submodule statement
+submodule definition  ID-BUF exists
+module pass2
+module invoke
+module shell
+
+Then ultraForth will cold-start with the new-built cc64,
+showing the message "cc64 C compiler V0.5"
+
+If you enabled warp mode, disable it again now by again pressing alt-w.
+
+Type
+  saveall cc64v05
+
+to save the new cc64 binary to the current directory.
+
+Exit Vice and, in the same cc64/v05 directory, type
+  make
+
+This will re-generate cc64v05.P00 and cc64v05.T64.

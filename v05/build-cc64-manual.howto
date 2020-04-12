@@ -1,5 +1,8 @@
-This file describes how cc64v04 is built from source using the
-VICE emulator on Linux.
+Deprecated.
+
+This file describes how cc64v05 was built from source using the
+VICE emulator on Linux, based on the plain vanilla uF83-382-c64
+ultraForth core, with relatively many manual steps.
 
 Precondition: A working VICE installation with C64 kernal, basic,
 chargen and dos1541 roms.
@@ -8,7 +11,18 @@ should yield a C64 running inside VICE. Enabling drive 8 as 1541 should
 work.
 
 Run
- build-cc64.sh
+x64 \
+  -virtualdev \
+  +truedrive \
+  -drive8type 1541 \
+  -drive9type 1541 \
+  -drive10type 1541 \
+  -drive11type 1541 \
+  -fs8 . \
+  -fs8hidecbm \
+  -9 ./src/cc64src1.d64 \
+  -10 ./src/cc64src2.d64 \
+  -11 ./src/peddi_src.d64
 
 Type
   load "uF*",8
