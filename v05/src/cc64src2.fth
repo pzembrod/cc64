@@ -225,9 +225,13 @@ _
 
 \ *** Block No. 8, Hexblock 8
 
-\ savesystem                   03sep94pz
+\ savesystem                   12apr20pz
 
 \needs savesystem (
+
+\needs savesysdev  | defer savesysdev
+' dev IS savesysdev
+
 \\ )
 
 | : (savsys ( adr len -- )
@@ -243,10 +247,6 @@ _
  here over - (savsys  busoff
  dev 2 busclose
  0 (drv ! derror? abort" save-error" ;
-
-
-
-
 
 
 

@@ -3641,29 +3641,29 @@ immediate
 
 \ *** Block No. 130, Hexblock 82
 
-\ savesystem                   12may94pz
+\ savesystem                   12apr20pz
 
 \needs savesystem (
 \\ )
+
+  defer savesysdev
+  : dev8 8 ;  ' dev8 IS savesysdev
+
+
 | : (savsys ( adr len -- )
  [ Assembler ] Next  [ Forth ]
  ['] pause  dup push  !  \ singletask
  i/o push  i/o off  bustype ;
 
-~ : savesystem   \ name muss folgen
- save  8 2 busopen  0 parse bustype
+  : savesystem   \ name muss folgen
+ save  savesysdev 2 busopen
+ 0 parse bustype
  " ,p,w" count bustype  busoff
- 8 2 busout  origin $17 -
+ savesysdev 2 busout  origin $17 -
  dup  $100 u/mod  swap bus! bus!
  here over - (savsys  busoff
- 8 2 busclose
+ savesysdev 2 busclose
  0 (drv ! derror? abort" save-error" ;
-
-
-
-
-
-
 
 
 
