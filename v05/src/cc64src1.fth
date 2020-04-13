@@ -2269,7 +2269,7 @@ make flushstatic ( -- )
 
 \ *** Block No. 81, Hexblock 51
 
-\   fileman:                   13sep94pz
+\   fileman:                   13apr20pz
 
 make close-files  ( -- )
       source-file  fclose
@@ -2277,11 +2277,11 @@ make close-files  ( -- )
       close-outfiles ;
 
 make scratchfiles ( -- )
-     ." scratching temporary files" cr
-     dev 15 busout
-     " s0:%%*" count bustype busoff ;
-
-
+  ." scratching temporary files" cr
+  dev 15 busout
+  " s0:%%code" count bustype busoff
+  dev 15 busout
+  " s0:%%init" count bustype busoff ;
 
 
 
