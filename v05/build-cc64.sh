@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+txt2s00 notdone notdone.S00
+
 x64 \
   -virtualdev \
   +truedrive \
@@ -14,3 +16,15 @@ x64 \
   -10 ./src/cc64src2.d64 \
   -11 ./src/peddi_src.d64 \
   -autostart uf-build-base.T64 \
+  -keybuf "include build-cc64.fth\nsaveall cc64v05\ndos s0:notdone\n" \
+  -warp \
+  &
+
+while  test -f notdone.S00
+  do sleep 1
+done
+sleep 1
+
+kill %1
+
+make
