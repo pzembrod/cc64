@@ -1,3 +1,5 @@
+Deprecated. Superseeded by using the -keybuf Vice command line flag.
+
 This file describes how cc64v05 is build using the uf-build-base
 ultraForth core adapted for building cc64.
 

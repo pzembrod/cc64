@@ -1,4 +1,4 @@
-Deprecated.
+Deprecated. Superseeded by using the build-cc64.fth Forth script.
 
 This file describes how cc64v05 was built from source using the
 VICE emulator on Linux, based on the plain vanilla uF83-382-c64
