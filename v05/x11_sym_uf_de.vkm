@@ -259,12 +259,15 @@ ssharp         7 1 8
 # ctrl
 Tab            7 2 8
 ISO_Left_Tab   7 2 8
+Control_L      7 2 8
+Control_R      7 2 8
 # shift+2
 quotedbl       7 3 8
 # space
 space          7 4 8
 # cbm
-Control_L      7 5 8
+# Control_L      7 5 8
+Alt_L      7 5 8
 # run/stop
 Escape         7 7 8
 
