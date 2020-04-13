@@ -1,5 +1,6 @@
 #!/bin/bash
-# Run Vice emulator with charset adapted for use with C as generated
+# Run ultraForth development environment aka uF with editor and tools,
+# in Vice emulator with charset adapted for use with C as generated
 # by c-char-rom-gen, namely including the chars \^_{|}~ needed by C.
 
 set -e
@@ -18,4 +19,7 @@ x64 \
   -10 ./src/cc64src2.d64 \
   -11 ./src/peddi_src.d64 \
   -chargen c-chargen \
+  -symkeymap ./x11_sym_uf_de.vkm \
+  -keymap 2 \
   -autostart devenv-uF83.T64 \
+
