@@ -169,11 +169,11 @@ here constant ]text
 
 \ *** Block No. 6, Hexblock 6
 
-\   combined logo              07may95pz
+\   combined logo              14apr20pz
 
 | : .logo  ( -- )
    [ ' 'restart >body @ , ]
-   ." peddi text editor V0.2 present"
+   ." peddi text editor V0.3 present"
    cr ;
 
 ' .logo IS 'restart
@@ -197,7 +197,7 @@ here constant ]text
 
 \ *** Block No. 7, Hexblock 7
 
-\   shell: cold' logo          07may95pz
+\   shell: cold' logo          14apr20pz
 
 | create charset    here here 2- !
    also assembler   here 6 +  $20 c, ,
@@ -215,7 +215,7 @@ here constant ]text
 
 | : .logo  ( -- )
      ."     running" cr
-     ." peddi text editor V0.2" cr
+     ." peddi text editor V0.3" cr
      ." 1995 by Philip Zembrod" cr
      $cbfc 2@  $65021103. d= not ?exit
      ." C charset in use" cr ;
@@ -253,7 +253,7 @@ here constant ]text
 
 \ *** Block No. 9, Hexblock 9
 
-\   shell: cold' logo          07may95pz
+\   shell: cold' logo          14apr20pz
 
   : device  ( n -- )
      dev# c! ;
@@ -273,7 +273,7 @@ here constant ]text
 
 | : .logo  ( -- )
      ."     running" cr
-     ." peddi text editor V0.2" cr
+     ." peddi text editor V0.3" cr
      ." 1995 by Philip Zembrod" cr ;
 
 ' .logo IS 'restart

@@ -1,9 +1,9 @@
 
-p00files = baselib.o.P00 cc64v05.P00 cc64v05pe.P00 devenv-uF83.P00 peddi02.P00 uf-build-base.P00
+p00files = baselib.o.P00 cc64v05.P00 cc64v05pe.P00 devenv-uF83.P00 peddi03.P00 uf-build-base.P00
 s00c_files = baselib.h.S00 helloworld.c.S00 kernal-io.c.S00
 s00fth_files = build-cc64.fth.S00 build-cc64pe.fth.S00 build-peddi.fth.S00
 s00files = $(s00c_files) $(s00fth_files)
-t64files = cc64v05.T64 cc64v05pe.T64 devenv-uF83.T64 peddi02.T64 uf-build-base.T64
+t64files = cc64v05.T64 cc64v05pe.T64 devenv-uF83.T64 peddi03.T64 uf-build-base.T64
 charsetfiles = c-charset c-char-rom-gen
 
 
@@ -23,9 +23,9 @@ cc64v05pe.P00: cc64v05pe
 
 cc64v05pe.T64: cc64v05pe
 
-peddi02.P00: peddi02
+peddi03.P00: peddi03
 
-peddi02.T64: peddi02
+peddi03.T64: peddi03
 
 devenv-uF83.P00: devenv-uF83
 
