@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+keybuf="$1"
+
 txt2s00 notdone notdone.S00
 
 x64 \
@@ -16,7 +18,7 @@ x64 \
   -10 ./src/cc64src2.d64 \
   -11 ./src/peddi_src.d64 \
   -autostart uf-build-base.T64 \
-  -keybuf "include build-cc64.fth\nsaveall cc64v05\ndos s0:notdone\n" \
+  -keybuf "$keybuf" \
   -warp \
   &
 
