@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-make build-cc64pe.fth
+make build-cc64pe.fth.S00
 touch cc64v05pe
 
 ./build-in-vice.sh \

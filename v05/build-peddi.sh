@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-make build-peddi.fth
+make build-peddi.fth.S00
 touch peddi03
 
 ./build-in-vice.sh \
