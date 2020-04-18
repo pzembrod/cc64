@@ -5,14 +5,21 @@ s00fth_files = build-cc64.fth.S00 build-cc64pe.fth.S00 build-peddi.fth.S00
 s00files = $(s00c_files) $(s00fth_files)
 t64files = cc64v05.T64 cc64v05pe.T64 devenv-uF83.T64 peddi03.T64 uf-build-base.T64
 charsetfiles = c-charset c-char-rom-gen
+x00files = $(p00files) $(s00files)
+subdirs = c64files-dir cc64-srcs
 
-
-all: rt-c64-0801.o $(p00files) $(s00files) $(t64files) $(charsetfiles)
+all: rt-c64-0801.o $(x00files) $(t64files) $(charsetfiles) $(subdirs)
 
 clean:
 	rm -f rt-c64-0801.o rt-c64-0801.sym rt-c64-0801.h.S00 rt-c64-0801.h
 	rm -f helloworld.c.S00 kernal-io.c.S00
 	rm -f c-charset c-char-rom-gen
+
+c64files-dir:
+	$(MAKE) -C c64files
+
+cc64-srcs:
+	$(MAKE) -C src
 
 
 cc64v05.P00: cc64v05
