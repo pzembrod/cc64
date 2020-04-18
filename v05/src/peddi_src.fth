@@ -281,9 +281,15 @@ here constant ]text
 
 \ *** Block No. 10, Hexblock a
 
-\ savesystem                   07may95pz
+\ savesystem                   17apr20pz
 
 \needs savesystem (
+
+\needs savesysdev  | defer savesysdev
+' dev IS savesysdev
+
+' savesystem        alias saveall
+
 \\ )
 
 | : (savsys ( adr len -- )
@@ -299,12 +305,6 @@ here constant ]text
  here over - (savsys  busoff
  dev 2 busclose
  0 (drv ! derror? abort" save-error" ;
-
-
-
-
-
-
 
 
 \ *** Block No. 11, Hexblock b
@@ -1037,7 +1037,7 @@ Label end  SP x) sta  tya  1 # ldy
 
 \ *** Block No. 37, Hexblock 25
 
-\   loadtext                   07may95pz
+\   loadtext                   17apr20pz
 
 | : (loadtext  ( -- )
      #cr  ]text 1-  dup text( !
@@ -1050,7 +1050,7 @@ Label end  SP x) sta  tya  1 # ldy
         1+ )text ! THEN  1 mem? drop ;
 
 | : loadtext  ( -- )
-     dev 2 busopen
+     dev 2 busopen   dev 8 - (drv !
      filename count bustype
      " ,s,r"  count bustype busoff
      page  derror?
@@ -1065,14 +1065,14 @@ Label end  SP x) sta  tya  1 # ldy
 
 \ *** Block No. 38, Hexblock 26
 
-\   savesystem                 07may95pz
+\   savesystem                 18apr20pz
 
 | : (savetext  ( -- flag )
      cr ." writing " filename
      count type cr cr
-     dev 15 busout " s0:/" count
+     dev 15 busout " s0:." count
      bustype filename count bustype
-     busoff  dev 15 busout " r0:/"
+     busoff  dev 15 busout " r0:."
      count bustype filename count 2dup
      bustype ascii =  bus! bustype
      busoff   \ derror? ?dup ?exit
