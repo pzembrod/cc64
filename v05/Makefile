@@ -1,16 +1,16 @@
 
-p00files = baselib.o.P00 cc64v05.P00 cc64v05pe.P00 devenv-uF83.P00 peddi03.P00 uf-build-base.P00
-s00c_files = baselib.h.S00 helloworld.c.S00 kernal-io.c.S00
+p00files = rt-c64-0801.o.P00 cc64v05.P00 cc64v05pe.P00 devenv-uF83.P00 peddi03.P00 uf-build-base.P00
+s00c_files = rt-c64-0801.h.S00 helloworld.c.S00 kernal-io.c.S00
 s00fth_files = build-cc64.fth.S00 build-cc64pe.fth.S00 build-peddi.fth.S00
 s00files = $(s00c_files) $(s00fth_files)
 t64files = cc64v05.T64 cc64v05pe.T64 devenv-uF83.T64 peddi03.T64 uf-build-base.T64
 charsetfiles = c-charset c-char-rom-gen
 
 
-all: baselib.o $(p00files) $(s00files) $(t64files) $(charsetfiles)
+all: rt-c64-0801.o $(p00files) $(s00files) $(t64files) $(charsetfiles)
 
 clean:
-	rm -f baselib.o baselib.sym baselib.h.S00 baselib.h
+	rm -f rt-c64-0801.o rt-c64-0801.sym rt-c64-0801.h.S00 rt-c64-0801.h
 	rm -f helloworld.c.S00 kernal-io.c.S00
 	rm -f c-charset c-char-rom-gen
 
@@ -36,16 +36,18 @@ uf-build-base.P00: uf-build-base
 uf-build-base.T64: uf-build-base
 
 
-baselib.o baselib.sym: baselib.a
-	acme -f cbm -l baselib.sym -o baselib.o baselib.a
+rt-c64-0801.o rt-c64-0801.sym: rt-c64-0801.a
+	acme -f cbm -l rt-c64-0801.sym -o rt-c64-0801.o rt-c64-0801.a
 
-baselib.o.P00: baselib.o
+rt-c64-0801.i.P00: rt-c64-0801.i
 
-baselib.h: baselib.sym generate_pragma_cc64.awk
-	awk -f generate_pragma_cc64.awk -F '$$' baselib.sym >baselib.h
-	cat baselib.h
+rt-c64-0801.o.P00: rt-c64-0801.o
 
-baselib.h.S00: baselib.h
+rt-c64-0801.h: rt-c64-0801.sym generate_pragma_cc64.awk
+	awk -f generate_pragma_cc64.awk -F '$$' rt-c64-0801.sym >rt-c64-0801.h
+	cat rt-c64-0801.h
+
+rt-c64-0801.h.S00: rt-c64-0801.h
 
 
 helloworld.c.S00: helloworld.c

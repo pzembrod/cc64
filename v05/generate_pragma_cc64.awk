@@ -1,5 +1,5 @@
 
-# Extracts cc64 baselib addresses from acme assembler symbol listing
+# Extracts runtime module addresses from acme assembler symbol listing
 # and writes them out in a #pragma cc64 line.
 
 BEGIN {
