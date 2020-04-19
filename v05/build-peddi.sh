@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-make build-peddi.fth.S00
-touch peddi03
+make c64files-dir 
 
 ./build-in-vice.sh \
-   "include build-peddi.fth\nsaveall peddi03\ndos s0:notdone\n"
+   "include build-peddi.fth\nsaveall peddi03\n"

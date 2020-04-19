@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-make build-cc64pe.fth.S00
-touch cc64v05pe
+make c64files-dir 
 
 ./build-in-vice.sh \
-   "include build-cc64pe.fth\nsaveall cc64v05pe\ndos s0:notdone\n"
+   "include build-cc64pe.fth\nsaveall cc64v05pe\n"

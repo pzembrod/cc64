@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
-keybuf="$1"
-
-txt2s00 notdone notdone.S00
+keybuf=""
+if [ -n "$1" ]
+then
+  keybuf="${1}dos s0:notdone\n"
+  ascii2petscii notdone c64files/notdone
+fi
 
 x64 \
   -virtualdev \
@@ -12,8 +15,7 @@ x64 \
   -drive9type 1541 \
   -drive10type 1541 \
   -drive11type 1541 \
-  -fs8 . \
-  -fs8hidecbm \
+  -fs8 c64files \
   -9 ./src/cc64src1.d64 \
   -10 ./src/cc64src2.d64 \
   -11 ./src/peddi_src.d64 \
@@ -22,11 +24,17 @@ x64 \
   -warp \
   &
 
-while  test -f notdone.S00
-  do sleep 1
-done
-sleep 1
 
-kill %1
+if [ -n "$keybuf" ]
+then
+  while [ -f c64files/notdone ]
+    do sleep 1
+  done
+  sleep 1
+
+  kill %1
+fi
+
+wait %1 || echo "x64 returned $?"
 
 make
