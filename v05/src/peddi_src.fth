@@ -113,7 +113,7 @@ here constant ]text
 
 \ *** Block No. 4, Hexblock 4
 
-\ peddi loadscreen for cc64    07may95pz
+\ peddi loadscreen for cc64    19apr20pz
 
   onlyforth  decimal
 | vocabulary peddi
@@ -134,7 +134,7 @@ here constant ]text
 
    6 load   \ combined logo
 
-   1 load   \ save & set memory
+   \ 1 load   \ save & set memory
 
 
 
