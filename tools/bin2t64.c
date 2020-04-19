@@ -39,12 +39,15 @@ int main(int argc, char *argv[]) {
   fputc(1, out); fputc(0, out);  // max # of dir entries
   fputc(1, out); fputc(0, out);  // # of used dir entries
   fputc(0, out); fputc(0, out);  // unused
-  char* p = filename;
+  char* basename = filename;
+  while(*basename) ++basename;
+  while(basename > filename && *(basename - 1) != '/') --basename;
+  char* p = basename;
   while(*p) {
     fputc(*p, out);
     ++p;
   }
-  for(int i = p - filename; i < 24; ++i) {
+  for(int i = p - basename; i < 24; ++i) {
     fputc(0x20, out);
   }
 
@@ -64,12 +67,12 @@ int main(int argc, char *argv[]) {
   fputc(0, out); fputc(0, out);  // offset hi word
   fputc(0, out); fputc(0, out);  // unused
   fputc(0, out); fputc(0, out);  // unused
-  p = filename;
+  p = basename;
   while(*p) {
     fputc(ascii2petscii(*p), out);
     ++p;
   }
-  for(int i = p - filename; i < 16; ++i) {
+  for(int i = p - basename; i < 16; ++i) {
     fputc(0x20, out);
   }
   
