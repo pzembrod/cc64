@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
-keybuf="$1"
-
-ascii2petscii notdone c64files/notdone
+keybuf=""
+if [ -n "$1" ]
+then
+  keybuf="${1}dos s0:notdone\n"
+  ascii2petscii notdone c64files/notdone
+fi
 
 x64 \
   -virtualdev \
@@ -21,11 +24,17 @@ x64 \
   -warp \
   &
 
-while  test -f c64files/notdone
-  do sleep 1
-done
-sleep 1
 
-kill %1
+if [ -n "$keybuf" ]
+then
+  while [ -f c64files/notdone ]
+    do sleep 1
+  done
+  sleep 1
+
+  kill %1
+fi
+
+wait %1 || echo "x64 returned $?"
 
 make
