@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-make c64files-dir 
+basedir="$(dirname "${BASH_SOURCE[0]}")"
 
-./build-in-vice.sh \
+"${basedir}/build-in-vice.sh" \
    "include build-cc64.fth\nsaveall cc64v05\n"

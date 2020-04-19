@@ -1,18 +1,18 @@
 
-p00files = rt-c64-0801.o.P00 cc64v05.P00 cc64v05pe.P00 devenv-uF83.P00 peddi03.P00 uf-build-base.P00
-s00c_files = rt-c64-0801.h.S00 helloworld.c.S00 kernal-io.c.S00
-s00fth_files = build-cc64.fth.S00 build-cc64pe.fth.S00 build-peddi.fth.S00
-s00files = $(s00c_files) $(s00fth_files)
-t64files = cc64v05.T64 cc64v05pe.T64 devenv-uF83.T64 peddi03.T64 uf-build-base.T64
+cc64t64files = cc64v05.T64 cc64v05pe.T64 peddi03.T64
+etct64files = devenv-uF83.T64 uf-build-base.T64
 charsetfiles = c-charset c-char-rom-gen
-x00files = $(p00files) $(s00files)
 subdirs = c64files-dir cc64-srcs
+cc64srcs = src/cc64src1.d64 src/cc64src2.d64
+peddisrc = src/peddi_src.d64
 
-all: rt-c64-0801.o $(x00files) $(t64files) $(charsetfiles) $(subdirs)
+
+cc64: $(cc64t64files)
+
+etc: rt-c64-0801.o $(etct64files) $(charsetfiles) $(subdirs)
 
 clean:
-	rm -f rt-c64-0801.o rt-c64-0801.sym rt-c64-0801.h.S00 rt-c64-0801.h
-	rm -f helloworld.c.S00 kernal-io.c.S00
+	rm -f rt-c64-0801.o rt-c64-0801.sym rt-c64-0801.h
 	rm -f c-charset c-char-rom-gen
 
 c64files-dir:
@@ -22,23 +22,26 @@ cc64-srcs:
 	$(MAKE) -C src
 
 
-cc64v05.P00: cc64v05
+c64files/cc64v05: $(cc64srcs) c64files/build-cc64.fth \
+ build-cc64.sh uf-build-base.T64
+	./build-cc64.sh
 
-cc64v05.T64: cc64v05
+c64files/cc64v05pe: $(cc64srcs) $(peddisrc) c64files/build-cc64pe.fth \
+ build-cc64pe.sh uf-build-base.T64
+	./build-cc64pe.sh
 
-cc64v05pe.P00: cc64v05pe
+c64files/peddi03: $(peddisrc) c64files/build-peddi.fth \
+ build-peddi.sh uf-build-base.T64
+	./build-peddi.sh
 
-cc64v05pe.T64: cc64v05pe
 
-peddi03.P00: peddi03
+cc64v05.T64: c64files/cc64v05
 
-peddi03.T64: peddi03
+cc64v05pe.T64: c64files/cc64v05pe
 
-devenv-uF83.P00: devenv-uF83
+peddi03.T64: c64files/peddi03
 
 devenv-uF83.T64: devenv-uF83
-
-uf-build-base.P00: uf-build-base
 
 uf-build-base.T64: uf-build-base
 
@@ -46,23 +49,9 @@ uf-build-base.T64: uf-build-base
 rt-c64-0801.o rt-c64-0801.sym: rt-c64-0801.a
 	acme -f cbm -l rt-c64-0801.sym -o rt-c64-0801.o rt-c64-0801.a
 
-rt-c64-0801.i.P00: rt-c64-0801.i
-
-rt-c64-0801.o.P00: rt-c64-0801.o
-
 rt-c64-0801.h: rt-c64-0801.sym generate_pragma_cc64.awk
 	awk -f generate_pragma_cc64.awk -F '$$' rt-c64-0801.sym >rt-c64-0801.h
 	cat rt-c64-0801.h
-
-rt-c64-0801.h.S00: rt-c64-0801.h
-
-
-helloworld.c.S00: helloworld.c
-
-kernal-io.c.S00: kernal-io.c
-
-
-build-cc64.fth.S00: build-cc64.fth
 
 
 c-charset: c-charset.a
@@ -72,17 +61,8 @@ c-char-rom-gen: c-char-rom-gen.a
 	acme -f cbm -o c-char-rom-gen c-char-rom-gen.a
 
 
-%.P00: %
-	bin2p00 $< $@
-
-%.T64: %
+%.T64: c64files/%
 	bin2t64 $< $@
 
-%.c.S00: %.c
-	txt2s00 $< $@
-
-%.h.S00: %.h
-	txt2s00 $< $@
-
-%.fth.S00: %.fth
-	txt2s00 $< $@
+c64files/%.fth: %.fth
+	ascii2petscii $< $@
