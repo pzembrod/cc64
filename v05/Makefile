@@ -45,6 +45,8 @@ devenv-uF83.T64: devenv-uF83
 
 uf-build-base.T64: uf-build-base
 
+uF83-382-c64.T64: uF83-382-c64
+
 
 rt-c64-0801.o rt-c64-0801.sym: rt-c64-0801.a
 	acme -f cbm -l rt-c64-0801.sym -o rt-c64-0801.o rt-c64-0801.a
@@ -62,6 +64,9 @@ c-char-rom-gen: c-char-rom-gen.a
 
 
 %.T64: c64files/%
+	bin2t64 $< $@
+
+%.T64: %
 	bin2t64 $< $@
 
 c64files/%.fth: %.fth

@@ -3725,10 +3725,10 @@ immediate
 
 \ *** Block No. 133, Hexblock 85
 
-\   fload-dev freadline        19aug19pz
+\   fload-dev freadline        25apr20pz
 
   create fload-dev  8 ,
-  create fload-2nd  1 ,
+  create fload-2nd  15 ,
 | 132 constant /fib
   create fib /fib allot
   variable #fib
@@ -3753,27 +3753,27 @@ immediate
 
 \ *** Block No. 134, Hexblock 86
 
-\   fload-open  fload-close    19aug19pz
+\   fload-open  fload-close    25apr20pz
 
 | : fload-open ( addr c -- )
  fload-dev @
- fload-2nd @ 1+ dup fload-2nd !
+ fload-2nd @ 1- dup fload-2nd !
  busopen
  2dup cr type bustype
  " ,s,r" count bustype busoff ;
 
 | : fload-close ( -- )
  fload-dev @ fload-2nd @
- dup 1- fload-2nd !
+ dup 1+ fload-2nd !
  busclose ;
 
   : factive? ( -- flag )
- fload-2nd @ 1 > ;
+ fload-2nd @ 15 < ;
 
   : fload-close-all ( -- )
- factive? IF 2 fload-2nd @ DO
+ factive? IF 15 fload-2nd @ DO
    fload-dev @ I busclose  -1 +LOOP
- 1 fload-2nd ! THEN ;
+ 15 fload-2nd ! THEN ;
 
   : \ ( -- )
  blk @ IF [compile] \ exit THEN

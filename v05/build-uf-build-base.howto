@@ -1,3 +1,6 @@
+Deprecated. Superseeded bei now automated build-uf-build-base.sh
+
+
 This file describes how the basis for building cc64, the slightly
 enhances ultraForth system uf-build-base is built from the plain
 vanilla uF83-382-c64 ultraForth core.
@@ -30,6 +33,4 @@ Type
   savesystem uf-build-base
 
 Exit Vice and, in the same cc64/v05 directory, type
-  make
-
-This will re-generate uf-build-base.P00 and uf-build-base.T64.
+  make uf-build-base.T64
