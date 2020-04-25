@@ -7,5 +7,4 @@ x64 \
   -drive8type 1541 \
   -drive9type 1541 \
   -fs8 . \
-  -fs8hidecbm \
   -9 ./src/cc64src1.d64 \
