@@ -1457,7 +1457,7 @@ _
 
 \ *** Block No. 52, Hexblock 34
 
-\   parser: primary            22feb91pz
+\   parser: primary            26apr20pz
 
 | : std-arguments ( -- )
      assign put-std-argument
@@ -1470,9 +1470,8 @@ _
 
 | : primary() ( obj1 -- obj2 )
      %stdfctn is?
-        IF ascii ) #char# comes?
-           IF 0 do-numatom
-           ELSE std-arguments
+        IF ascii ) #char# comes? not
+           IF std-arguments
            ascii ) #char# expect THEN
         do-std-call
         ELSE prepare-call
@@ -1480,6 +1479,7 @@ _
            IF arguments
            ascii ) #char# expect THEN
         do-call THEN ;
+
 
 
 
