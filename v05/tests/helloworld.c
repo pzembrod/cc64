@@ -14,7 +14,7 @@ char *s;
 main()
 {
   int i;
-  open(1,8,2, "test,s,w");
+  open(1,8,2, "helloworld.out,s,w");
   _chkout(1);
   for(i=1;i<=3;++i)
     {

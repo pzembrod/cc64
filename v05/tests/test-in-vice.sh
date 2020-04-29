@@ -18,9 +18,9 @@ x64 \
   -chargen "${basedir}/../c-chargen" \
   -symkeymap "${basedir}/../x11_sym_uf_de.vkm" \
   -autostart "${basedir}/helloworld.T64" \
+  -keybuf "$keybuf" \
   &
 
-#  -keybuf "$keybuf" \
 
 #  -warp \
 
