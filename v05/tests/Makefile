@@ -3,7 +3,7 @@
 rt_files = c64files/rt-c64-0801.h c64files/rt-c64-0801.i \
   c64files/rt-c64-0801.o c64files/kernal-io.h
 
-all: helloworld.test
+all: helloworld.test helloworld-3.test
 
 clean:
 	rm -f c64files/*
@@ -23,3 +23,7 @@ c64files/kernal-io.h: kernal-io.h
 
 helloworld.test: helloworld.c  ../cc64v05.T64 $(rt_files)
 	./run-test.sh helloworld
+
+helloworld-3.test: helloworld-3.c  ../cc64v05.T64 $(rt_files)
+	./run-test.sh helloworld-3
+

@@ -3,11 +3,13 @@ set -e
 
 basedir="$(dirname "${BASH_SOURCE[0]}")"
 
-keybuf=""
+run=""
 if [ -n "$1" ]
 then
-  keybuf="$1"
   ascii2petscii "${basedir}/../notdone" "${basedir}/c64files/notdone"
+  keybuf='open1,8,15,"s0:notdone":close1\n'
+  autostart="${basedir}/$1.T64"
+  run="-autostart $autostart -keybuf $keybuf"
 fi
 
 x64 \
@@ -17,10 +19,8 @@ x64 \
   -fs8 "${basedir}/c64files" \
   -chargen "${basedir}/../c-chargen" \
   -symkeymap "${basedir}/../x11_sym_uf_de.vkm" \
-  -autostart "${basedir}/helloworld.T64" \
-  -keybuf "$keybuf" \
+  $run \
   &
-
 
 #  -warp \
 
