@@ -2,6 +2,14 @@
 extern _chrout() *= 0xffd2 ;
 extern char _chrin() *= 0xffcf ;
 extern _getin() *= 0xffe4 ;
+
+int puts(s)
+char *s;
+{
+  while(*s != 0)
+     _chrout(*s++);
+}
+
 extern int __chkin() *= 0xffc6 ;
 extern int __chkout() *= 0xffc9 ;
 

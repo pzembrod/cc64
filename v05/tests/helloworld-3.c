@@ -2,15 +2,6 @@
 #include "rt-c64-0801.h"
 #include "kernal-io.h"
 
-extern putchar() *= 0xffd2 ;
-
-int puts(s)
-char *s;
-{
-  while(*s != 0)
-     putchar(*s++);
-}
-
 main()
 {
   int i;
