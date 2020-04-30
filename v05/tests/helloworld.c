@@ -1,17 +1,11 @@
 
-#include "rt-c64-0801.h"
-#include "kernal-io.h"
+#include "t-header.h"
 
-char* testOut;
-
-name()
-{
-  testOut = "helloworld.out,s,w";
-}
+char *name() { return "helloworld.out,s,w"; }
 
 test()
 {
   puts("hello, world!\n");
 }
 
-#include "test.h"
+#include "test-main.h"

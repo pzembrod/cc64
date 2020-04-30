@@ -1,7 +1,8 @@
 
 
 rt_files = c64files/rt-c64-0801.h c64files/rt-c64-0801.i \
-  c64files/rt-c64-0801.o c64files/kernal-io.h c64files/test.h
+  c64files/rt-c64-0801.o c64files/kernal-io.h \
+  c64files/test-setup.h c64files/test-main.h
 
 all: helloworld.test helloworld-3.test
 
@@ -27,3 +28,5 @@ helloworld.test: helloworld.c  ../cc64v05.T64 $(rt_files)
 helloworld-3.test: helloworld-3.c  ../cc64v05.T64 $(rt_files)
 	./run-test.sh helloworld-3
 
+forward.test: forward-test.c ../cc64v05.T64 $(rt_files)
+	./do-test.sh forward

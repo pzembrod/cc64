@@ -5,7 +5,7 @@
 main()
 {
   int i;
-  open(1,8,2, "helloworld-3.out,s,w");
+  _open(1,8,2, "helloworld-3.out,s,w");
   _chkout(1);
   for(i=1;i<=3;++i)
     {
