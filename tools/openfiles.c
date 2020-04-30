@@ -7,7 +7,9 @@ int openfiles(FILE **in, FILE **out, int argc, char *argv[],
     fprintf(stderr, "usage: %s infile [outfile]\n", argv[0]);
     return(argc!=1);
   }
-  if((*in=fopen(argv[1],"r"))==NULL) {
+  if(argv[1][0] == '-' && argv[1][1] == 0) {
+    *in = stdin;
+  } else if((*in=fopen(argv[1],"r"))==NULL) {
     fprintf(stderr, "%s: can't open %s\n", argv[0], argv[1]);
     return(1);
   }
