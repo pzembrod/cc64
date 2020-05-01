@@ -1,17 +1,20 @@
 
-tests = $(patsubst %-test.c,%-result.txt,$(wildcard *-test.c))
+test_results = $(patsubst %-test.c,%-result.txt,$(wildcard *-test.c))
 rt_files = $(patsubst ../%,c64files/%,$(wildcard ../rt-c64-0801.[hio]))
 
-all: $(tests)
+all: report.txt
 
-$(tests): ../cc64v05.T64 $(rt_files) *.sh *.h
+report.txt: $(test_results)
+	cat $^ >$@
 
-$(tests): %-result.txt: %-test.c %.golden
+$(test_results): ../cc64v05.T64 $(rt_files) *.sh *.h
+
+$(test_results): %-result.txt: %-test.c %.golden
 	./do-test.sh $*
 
 clean:
 	rm -f c64files/*
-	rm -f *.out *.T64 *-result.txt *-generated.c tmp.result
+	rm -f *.out *.T64 *-result.txt *-generated.c tmp.result report.txt
 
 c64files/rt-c64-0801.h: ../rt-c64-0801.h
 	ascii2petscii $< $@
