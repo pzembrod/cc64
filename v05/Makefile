@@ -12,6 +12,9 @@ cc64: $(cc64t64files)
 etc: rt-c64-0801.o $(etct64files) $(charsetfiles) $(subdirs)
 
 clean:
+	rm -f rt-c64-0801.sym c-charset.sym
+
+veryclean: clean
 	rm -f rt-c64-0801.o rt-c64-0801.sym rt-c64-0801.h
 	rm -f c-charset c-char-rom-gen
 
@@ -62,6 +65,9 @@ c-charset: c-charset.a
 c-char-rom-gen: c-char-rom-gen.a
 	acme -f cbm -o c-char-rom-gen c-char-rom-gen.a
 
+c-chargen: c-char-rom-gen
+	x64 -virtualdev +truedrive -drive8type 1541 -fs8 . \
+	-keybuf 'load"c-char-rom-gen",8\nrun\n'
 
 %.T64: c64files/%
 	bin2t64 $< $@
