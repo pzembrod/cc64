@@ -5,7 +5,7 @@
 There are 3 main binaries:
 
 - `cc64v05` - the standalone compiler
-- `peddiv02` - the standalone editor
+- `peddiv03` - the standalone editor
 - `cc64v05pe` - compiler and editor combined
 
 ## Shell
