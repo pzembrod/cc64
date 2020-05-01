@@ -1,14 +1,17 @@
 
+tests = $(patsubst %-test.c,%-result.txt,$(wildcard *-test.c))
+rt_files = $(patsubst ../%,c64files/%,$(wildcard ../rt-c64-0801.[hio]))
 
-rt_files = c64files/rt-c64-0801.h c64files/rt-c64-0801.i \
-  c64files/rt-c64-0801.o c64files/kernal-io.h \
-  c64files/test-setup.h c64files/test-main.h
+all: $(tests)
 
-all: helloworld.test helloworld-3.test
+$(tests): ../cc64v05.T64 $(rt_files) *.sh *.h
+
+$(tests): %-result.txt: %-test.c %.golden
+	./do-test.sh $*
 
 clean:
 	rm -f c64files/*
-	rm -f *.out *.T64
+	rm -f *.out *.T64 *-result.txt *-generated.c tmp.result
 
 c64files/rt-c64-0801.h: ../rt-c64-0801.h
 	ascii2petscii $< $@
@@ -18,15 +21,3 @@ c64files/rt-c64-0801.i: ../rt-c64-0801.i
 
 c64files/rt-c64-0801.o: ../rt-c64-0801.o
 	cp $< $@
-
-c64files/%.h: %.h
-	ascii2petscii $< $@
-
-helloworld.test: helloworld.c  ../cc64v05.T64 $(rt_files)
-	./run-test.sh helloworld
-
-helloworld-3.test: helloworld-3.c  ../cc64v05.T64 $(rt_files)
-	./run-test.sh helloworld-3
-
-forward.test: forward-test.c ../cc64v05.T64 $(rt_files)
-	./do-test.sh forward
