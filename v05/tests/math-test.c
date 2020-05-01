@@ -1,6 +1,7 @@
 
-#include "itoa.h"
-
 math_test() {
-  puts(itoa((-32768) / 10)); putc('\n');
+  println(itoa(2 + 3));
+  println(itoa(-32767 / 10));
+  println(itoa((-32768) / 10));
+  println(itoa(-(32767 / 10)));
 }
