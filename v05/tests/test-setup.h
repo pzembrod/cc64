@@ -1,13 +1,13 @@
 
 #include "rt-c64-0801.h"
 
-extern _chrout() *= 0xffd2 ;
+extern putc() *= 0xffd2 ;
 
 int puts(s)
 char *s;
 {
   while(*s != 0)
-     _chrout(*s++);
+     putc(*s++);
 }
 
 extern __chkout() *= 0xffc9 ;

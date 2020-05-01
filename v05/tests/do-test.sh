@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build test binary
-echo "char *name() { return \"$1.out,s,w\"; } test() { $1 (); }" \
+echo "char *name(){ return \"$1.out,s,w\"; } test(){ ${1}_test (); }" \
  | cat test-setup.h "$1"-test.c - test-main.h \
  | tee "$1"-generated.c \
  | ascii2petscii - c64files/"$1".c

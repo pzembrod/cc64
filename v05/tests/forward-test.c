@@ -1,7 +1,7 @@
 
 extern function();
 
-forward()
+forward_test()
 {
   puts("forward\n"); /* TODO: replace with: function(); */
 }
