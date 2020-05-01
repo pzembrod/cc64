@@ -10,15 +10,15 @@ char *s;
      _chrout(*s++);
 }
 
-extern int __chkout() *= 0xffc9 ;
+extern __chkout() *= 0xffc9 ;
 
-int _chkout(lfn)
+_chkout(lfn)
 int lfn;
-{ return(__chkout(lfn<<8)); }
+{ __chkout(lfn<<8); }
 
-extern int _close() *= 0xffc3 ;
+extern _close() *= 0xffc3 ;
 extern _clrchn() *= 0xffcc ;
-extern char __open() *= 0xffc0 ;
+extern __open() *= 0xffc0 ;
 
 extern char _kernal_fnam_len /= 0xb7;
 extern char _kernal_lfn /= 0xb8;
@@ -26,7 +26,7 @@ extern char _kernal_sa /= 0xb9;
 extern char _kernal_fa /= 0xba;
 extern int _kernal_fnam /= 0xbb;
 
-int _open(lfn, fa, sa, fnam)
+_open(lfn, fa, sa, fnam)
 char lfn, fa, sa;
 char *fnam;
 {
@@ -37,5 +37,5 @@ char *fnam;
   _kernal_fa = fa;
   _kernal_sa = sa;
   _kernal_fnam = fnam;
-  return(__open());
+  __open();
 }
