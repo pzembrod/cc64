@@ -72,3 +72,26 @@ int i;
   buffer[n] = 0;
   return buffer;
 }
+
+int failedAsserts = 0;
+
+assert(actual, expected, message)
+int actual;
+int expected;
+char *message;
+{
+  if (actual != expected) {
+    println(message);
+    ++failedAsserts;
+  }
+}
+
+evaluateAsserts() {
+  if (failedAsserts) {
+    puts(itoa(failedAsserts));
+    println(" assert(s) failed.");
+  } else {
+    println("No assert failed.");
+  }
+  failedAsserts = 0;
+}
