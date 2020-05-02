@@ -9,7 +9,8 @@ peddisrc = src/peddi_src.d64
 
 cc64: $(cc64t64files)
 
-etc: rt-c64-0801.o $(etct64files) $(charsetfiles) $(subdirs)
+etc: rt-c64-0801.o rt-c64-0801.h \
+ $(etct64files) $(charsetfiles) $(subdirs)
 
 clean:
 	rm -f rt-c64-0801.sym c-charset.sym
@@ -17,6 +18,8 @@ clean:
 veryclean: clean
 	rm -f rt-c64-0801.o rt-c64-0801.sym rt-c64-0801.h
 	rm -f c-charset c-char-rom-gen
+	rm -f c64files/cc64v05 c64files/cc64v05pe c64files/peddi03
+	rm -f cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
 c64files-dir:
 	$(MAKE) -C c64files
