@@ -81,7 +81,9 @@ int expected;
 char *message;
 {
   if (actual != expected) {
-    println(message);
+    puts("Assert failed: "); puts(message);
+    puts(" Expected: "); puts(itoa(expected));
+    puts(" Actual: "); println(itoa(actual));
     ++failedAsserts;
   }
 }
