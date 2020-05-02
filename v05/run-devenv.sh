@@ -1,6 +1,6 @@
 #!/bin/bash
 # Run ultraForth development environment aka uF with editor and tools,
-# in Vice emulator with charset adapted for use with C as generated
+# in VICE emulator with charset adapted for use with C as generated
 # by c-char-rom-gen, namely including the chars \^_{|}~ needed by C.
 
 set -e

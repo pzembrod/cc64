@@ -32,5 +32,5 @@ At the end you should get a message
 Type
   savesystem uf-build-base
 
-Exit Vice and, in the same cc64/v05 directory, type
+Exit VICE and, in the same cc64/v05 directory, type
   make uf-build-base.T64

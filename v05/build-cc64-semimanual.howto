@@ -1,4 +1,4 @@
-Deprecated. Superseeded by using the -keybuf Vice command line flag.
+Deprecated. Superseeded by using the -keybuf VICE command line flag.
 
 This file describes how cc64v05 is build using the uf-build-base
 ultraForth core adapted for building cc64.
@@ -47,7 +47,7 @@ Type
 
 to save the new cc64 binary to the current directory.
 
-Exit Vice and, in the same cc64/v05 directory, type
+Exit VICE and, in the same cc64/v05 directory, type
   make
 
 This will re-generate cc64v05.P00 and cc64v05.T64.
