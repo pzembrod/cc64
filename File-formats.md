@@ -87,6 +87,12 @@ in most VICE configs and so keep PETSCII and ASCII files separate: PETSCII
 files live in c64files/ and ASCII files in the main directory. Makefiles
 handle the conversion as needed.
 
+### Running on a real C64
+
+As a corrolary, the contents of the v05/c64files dir is all that should be
+needed to run cc64 on a real C64. Transferring the content of this dir onto
+a C64-readable disk or disk image should do the trick.
+
 ### Autostarting T64 images in VICE
 
 For scripted building of cc64 from source, and scripted running of tests,
