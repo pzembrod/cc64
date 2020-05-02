@@ -7,16 +7,40 @@ This is the first open-sourced version, and the one I intend to maintain
 for the near future. The main purpose of this version is to consolidate
 development after moving from real C64 to emulator and Linux.
 This involved switching from Dirk Zabel's excellent assembler ASSI/M
-I had been using on the C64 to the 
+I had been using on the C64 to the
 [ACME cross-assembler](https://sourceforge.net/p/acme-crossass/wiki/Home/),
 and some simple ascii-petscii conversion tooling to facilitate writing
-C64 sources on Linux.
+C64 sources on Linux. It also involved getting the build automated and adding
+a first suite of smoke tests. This has progressed enough by now that I feel
+I can start to iterate on the compiler itself without too much fear of breaking
+something.
 
-Forth sources are still kept in the ultraFORTH screen format on d64
-disk images, though they are also available in ASCII file form, but that
-is for the time being only for the purpose of reading by humans.
-As a next major step I plan to build from file-based
-Forth sources and deprecate the Forth screen d64 disk images.
+Most of the Forth sources are still kept in the ultraFORTH screen format on d64
+disk images, though they are also available in ASCII file form for reading by
+humans. Going forward I plan to slowly migrate the sources from which cc64 is
+built to ASCII Forth source files. This should also facilitate unit testing
+of the compiler itself, and bug fixes.
+
+The goal is to eventually deprecate the
+ultraFORTH screen d64 disk images, and to build cc64 on top of a Forth core
+without the code for reading screen sources, as that would save quite a bit of
+size for the cc64 binary (which is built on top of the ultraFORTH core).
+See [Emulator and file formats](File-formats.md) for details on the different
+file formats involved.
+
+Another goal is to eventually build cc64 e.g. on GForth to produce a cross
+compiler hosted on Linux.
+
+Known bug fixes in v05:
+
+* Linking static variables works correctly now.
+* Assembler functions declared with *= can now be called even without
+passing a parameter.
+
+Known bugs in v05:
+
+* Compiling functions after they have previously been declared as extern
+(needed for calling functions before they are defined) ist broken.
 
 
 ## v03 and v04
