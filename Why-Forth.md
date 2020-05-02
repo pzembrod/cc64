@@ -1,8 +1,8 @@
 # Why Forth?
 
-The reason for writing cc64 in Forth were initially the compact code that Forth
-generates, and the fact that ultraFORTH was by far the most powerful development
-environment for the C64 that I could get hold of back in 1989.
+The reason for writing cc64 in Forth were the compact code that Forth
+generates, and the fact that ultraFORTH was by far the most powerful
+development environment on the C64 that I could get hold of back in 1989.
 
 My first stab at writing an actual C compiler used Dirk Zabel's macro
 assembler ASSI/M. As far as I was aware, it was the flagship of C64 assemblers,
@@ -18,8 +18,9 @@ And the produced code was lengthy;
 I saw a risk that I would run out of C64 memory ere the compiler was ready.
 So I looked for alternatives.
 
-I probably ran across ultraFORTH in one of the two computer magazines I read
-then (64'er and c't), and decided
+I probably ran across
+[ultraFORTH aka volksFORTH](https://forth-ev.de/wiki/projects:volksforth)
+in one of the two computer magazines I read then (64'er and c't), and decided
 to try it out. And after struggling for a while with wrapping my mind around the
 concepts of Forth, esp. the part where you need to be aware which code runs at
 compile time and which at run time, I grew to like the language, and became
