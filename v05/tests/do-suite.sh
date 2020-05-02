@@ -28,6 +28,8 @@ touch suite.golden suite.silver
 for t in $tests; do
   echo "${t}-test:" >> suite.golden  
   cat ${t}.golden >> suite.golden
+  # suite.silver doesn't contain test sections, so diffing against it
+  # will highlight the test sections as well as actuall output diffs.
   cat ${t}.golden >> suite.silver
 done
 
@@ -42,5 +44,6 @@ result=$?
 test $result -eq 0 \
   && echo "suite PASS" > suite.result \
   || diff suite.silver suite.out > suite.result
+  # diff with suite.silver will additionally show test sections as diff.
 cat suite.result
 exit $result
