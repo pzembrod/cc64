@@ -8,8 +8,10 @@ keyboard differences between PCs and C64, and the fact that ultraFORTH sources
 aren't even files.
 
 This page describes cc64's integration via emulator into its hosting Linux.
+I apologize for the length of this page. It does cover the yield of
+several weekends' work, though.
 
-## Vice emulator
+## VICE emulator
 
 I'm using the
 [Versatile Commodore Emulator VICE](https://vice-emu.sourceforge.io/).
@@ -52,9 +54,66 @@ disks during build again, plus a drive 8 with virtually unlimited disk space.
 
 ### ASCII and PETSCII files
 
+I wanted to edit files, esp. C sources, for cc64 on Linux, which then had to be
+converted from ASCII to PETSCII. I couldn't find an existing converter that
+suited my needs, so I wrote two small tools, ascii2petscii and petscii2ascii,
+for this purpose.
+
+A subsequent problem was not to confuse the ASCII and PETSCII versions of the
+same files.
+
 ### P00 files vs. plain files in a subdir
 
-One common emulator file format are the so-called P00 files.
+One common emulator file format are the so-called P00 files. It is used in
+host-dir-backed virtual drives and contains, in a header, the file's name as
+seen from the emulator. The files' extension also marks the CBM file type:
+P00/01/02/... are prg files, S00/01/02/... are seq files etc.
+
+To keep ASCII and PETSCII C files apart, I tried this format: file.c would
+be ASCII and file.c.S00 would be the same in PETSCII. Again I wrote two small
+tools for this conversion: bin2p00 converts a binary file, e.g. a C64
+executable, into a P00 file, and txt2s00 converts an ASCII file, e.g. a
+C source, into a PETSCII S00 file.
+
+VICE can be configured to only show P00/S00 files from a directory to the
+emulated drive, and also to save files in P00/S00 format, too. This allowed
+for a clean separation of C64 and Linux files. Alas, it turned out that VICE
+doesn't handle renaming P00 files properly, and since Peddi maintains a backup
+version of the edited text file when saving, and uses file renaming for that,
+I decided that the rename issue was a show stopper for using P00 files.
+
+Instead I am now using a c64files/ subdirectory as backing dir for drive 8
+in most VICE configs and so keep PETSCII and ASCII files separate: PETSCII
+files live in c64files/ and ASCII files in the main directory. Makefiles
+handle the conversion as needed.
+
+### Autostarting T64 images in VICE
+
+For scripted building of cc64 from source, and scripted running of tests,
+I needed a way to start programs inside VICE from the command line. VICE does
+have an autostart option which can take a C64 program. It does so by creating
+and on-the-fly disk image containing just the autostarted program which is then
+loaded an run. Unfortunately this overrides any other drive config, so for my
+use case where I need up to 4 drives to build cc64, this didn't work.
+
+Fortunately, VICEs -autostart can also take T64 tape images. Then the first
+program from that tape image is loaded and run, and the disk drive config is
+left alone. This was what I needed, so I wrote yet another small tool, bin2t64,
+that turns a C64 program into a tape image.
+
+### Scripted workflows with VICE
+
+Autostarting ultraFORTH or cc64 inside VICE got me only half the way to a
+scripted build; the compile invocation still needed to be entered. Fortunately,
+VICE can fill the C64 keyboard buffer using the -keybuf option. Remarkably,
+this option can take more than 10 characters, the C64's keyboard buffer length.
+
+The final missing bit, stopping VICE again after a finished build or test run,
+is accomplished with a trick: The VICE wrapper scripts place a file named
+"notdone" into drive 8's directory and kill VICE when that file disappears.
+So the build and test scripts inside VICE can signal they're done by
+scratching the file "notdone".
+
 
 ## Forth sources
 
