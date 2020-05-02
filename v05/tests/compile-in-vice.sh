@@ -4,9 +4,11 @@ set -e
 basedir="$(dirname "${BASH_SOURCE[0]}")"
 
 keybuf=""
+warp=""
 if [ -n "$1" ]
 then
   keybuf="$1"
+  warp="-warp"
   ascii2petscii "${basedir}/../notdone" "${basedir}/c64files/notdone"
 fi
 
@@ -19,7 +21,7 @@ x64 \
   -symkeymap "${basedir}/../x11_sym_uf_de.vkm" \
   -autostart "${basedir}/../cc64v05.T64" \
   -keybuf "$keybuf" \
-  -warp \
+  $warp \
   &
 
 
