@@ -1,26 +1,26 @@
 
-cc64t64files = cc64v05.T64 cc64v05pe.T64 peddi03.T64
-etct64files = devenv-uF83.T64 uf-build-base.T64
-charsetfiles = c-charset c-char-rom-gen
-
+# cc64 sources and binaries
 cc64srcs = src/cc64src1.d64 src/cc64src2.d64
 peddisrc = src/peddi_src.d64
+d64_fth_files = $(patsubst %.d64, %.fth, $(cc64srcs) $(peddisrc))
+cc64_t64_files = cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
+# Forth binaries
+etc_t64_files = devenv-uF83.T64 uf-build-base.T64
+
+# cc64 runtime files
 rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o
 sample_files = helloworld.c kernal-io.c
 c64dir_files = $(rt_files) $(sample_files) c-charset
 
 
-subdirs = cc64-srcs
-
-
 all: cc64 c64dir etc
 
-cc64: $(cc64t64files)
+cc64: $(cc64_t64_files) $(d64_fth_files)
 
 c64dir: $(patsubst %, c64files/% , $(c64dir_files))
 
-etc: $(etct64files) $(charsetfiles) $(subdirs)
+etc: $(etc_t64_files) c-char-rom-gen
 
 
 clean:
@@ -31,11 +31,6 @@ veryclean: clean
 	rm -f c-charset c-char-rom-gen
 	rm -f c64files/cc64v05 c64files/cc64v05pe c64files/peddi03
 	rm -f cc64v05.T64 cc64v05pe.T64 peddi03.T64
-
-
-
-cc64-srcs:
-	$(MAKE) -C src
 
 
 # cc64 build rules
@@ -108,7 +103,7 @@ c-chargen: c-char-rom-gen
 	bin2t64 $< $@
 
 
-# Rules to populate c64files/
+# Rules, mostly generic, to populate c64files/
 
 c64files/%.fth: %.fth
 	ascii2petscii $< $@
@@ -127,3 +122,8 @@ c64files/%.o: %.o
 
 c64files/c-charset: c-charset
 	cp $< $@
+
+# Generic rules to update the .fth readable copies of the .d64 sources
+
+src/%.fth: src/%.d64
+		ufscr2file $< $@
