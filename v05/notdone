@@ -1,3 +1,5 @@
 Flag file:
 Build or test processes running in VICE signal that they are done
-by scratching the .S00 file generated from this file.
+by scratching this file's copy from the c64files/ dir.
+Corresponding build bash scripts watch for the existence of this
+file in c64files/ and terminate VICE after the file disappeared.
