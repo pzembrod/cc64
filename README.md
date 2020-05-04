@@ -1,7 +1,7 @@
 # cc64
 
-cc64 is a small-C compiler, written in [Forth](Why-Forth.md),
-targeting the 6502 CPU and hosted on the C64.
+cc64 is a [small-C](C-lang-subset.md) compiler,
+written in [Forth](Why-Forth.md), targeting the 6502 CPU and hosted on the C64.
 I wrote it during my university years;
 the majority of the code was written 1989-1991.
 
