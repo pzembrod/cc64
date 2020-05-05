@@ -6,8 +6,7 @@ I wrote it during my university years;
 the majority of the code was written 1989-1991.
 
 Motivated by buzzphp who's building a
-[C library for cc64](https://sourceforge.net/projects/cc64/) and writes that
-according to his tests cc64 produces faster code than cc65 and Power C,
+[C library for cc64](https://sourceforge.net/projects/cc64/),
 and also by Johan Kotlinski of
 [DurexForth](https://github.com/jkotlinski/durexforth) and
 [AcmeForth](https://github.com/jkotlinski/acmeforth),
