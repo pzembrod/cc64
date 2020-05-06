@@ -2,7 +2,11 @@
 test_results = $(patsubst %-test.c,%-result.txt,$(wildcard *-test.c))
 rt_files = $(patsubst ../%,c64files/%,$(wildcard ../rt-c64-0801.[hio]))
 
-all: report.txt
+all: suite separate-tests
+
+separate-tests: report.txt
+
+suite: suite.result
 
 report.txt: $(test_results)
 	cat $^ >$@

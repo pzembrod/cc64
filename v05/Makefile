@@ -33,6 +33,10 @@ veryclean: clean
 	rm -f cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
 
+test:
+	$(MAKE) -C tests suite
+
+
 # cc64 build rules
 
 c64files/cc64v05: $(cc64srcs) c64files/build-cc64.fth \
