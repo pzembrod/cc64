@@ -3,7 +3,7 @@
 
 extern putc() *= 0xffd2 ;
 
-puts(s)
+print(s)
 char *s;
 {
   while(*s != 0)
@@ -13,7 +13,7 @@ char *s;
 println(s)
 char *s;
 {
-  puts(s); putc('\n');
+  print(s); putc('\n');
 }
 
 extern __chkout() *= 0xffc9 ;
@@ -81,16 +81,16 @@ int expected;
 char *message;
 {
   if (actual != expected) {
-    puts("Assert failed: "); puts(message);
-    puts(" Expected: "); puts(itoa(expected));
-    puts(" Actual: "); println(itoa(actual));
+    print("Assert failed: "); print(message);
+    print(" Expected: "); print(itoa(expected));
+    print(" Actual: "); println(itoa(actual));
     ++failedAsserts;
   }
 }
 
 evaluateAsserts() {
   if (failedAsserts) {
-    puts(itoa(failedAsserts));
+    print(itoa(failedAsserts));
     println(" assert(s) failed.");
   } else {
     println("No assert failed.");

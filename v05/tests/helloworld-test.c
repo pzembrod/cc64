@@ -1,5 +1,5 @@
 
 helloworld_test()
 {
-  puts("hello, world!\n");
+  println("hello, world!");
 }
