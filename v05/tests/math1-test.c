@@ -1,5 +1,5 @@
 
-math_test() {
+math1_test() {
   assert(0 + 0, 0, "0 + 0");
   assert(1 + 0, 1, "1 + 0");
   assert(0 + 652, 652, "0 + 652");
