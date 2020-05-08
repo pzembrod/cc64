@@ -49,8 +49,8 @@ Known bugs in v05:
 ## v03 and v04
 
 v03 and v04 were the first two versions I published, without
-Forth soruces, as uploads to a public ftp server
-(ftp.funet.fi, IIRC, into /pub/cbm/c64/programming),
+Forth soruces, as uploads to
+ftp://ccnga.uwaterloo.ca/pub/cbm/INCOMING/programming,
 on 6-Oct-1994 and 3-Nov-1995, respectively.
 Thanks go to Craig Bruce at this point for keeping the archive on
 <http://csbruce.com/cbm/ftp/c64/programming/>.
