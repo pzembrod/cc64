@@ -1,0 +1,20 @@
+Before no-iteration while loop
+After no-iteration while loop
+Before 4-iteration while loop
+Iteration 4
+Iteration 3
+Iteration 2
+Iteration 1
+After 4-iteration while loop
+Before 3-2-iteration nested while loops
+Outer iteration 3
+Inner iteration 3 , 2
+Inner iteration 3 , 1
+Outer iteration 2
+Inner iteration 2 , 2
+Inner iteration 2 , 1
+Outer iteration 1
+Inner iteration 1 , 2
+Inner iteration 1 , 1
+After 3-2-iteration nested while loops
+No assert failed.
