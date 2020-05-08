@@ -1,0 +1,21 @@
+Before false-condition do loop
+This should be printed once.
+After false-condition do loop
+Before 4-iteration do loop
+Iteration 4
+Iteration 3
+Iteration 2
+Iteration 1
+After 4-iteration do loop
+Before 3-2-iteration nested do loops
+Outer iteration 3
+Inner iteration 3 , 2
+Inner iteration 3 , 1
+Outer iteration 2
+Inner iteration 2 , 2
+Inner iteration 2 , 1
+Outer iteration 1
+Inner iteration 1 , 2
+Inner iteration 1 , 1
+After 3-2-iteration nested do loops
+No assert failed.
