@@ -14,10 +14,10 @@ report.txt: $(test_results)
 $(test_results) suite.result: ../cc64v05.T64 $(rt_files) *.sh *.h
 
 $(test_results): %-result.txt: %-test.c %.golden
-	./do-test.sh $*
+	./run-test.sh $*
 
 suite.result: *-test.c *.golden
-	./do-suite.sh
+	./perform-suite.sh
 
 clean:
 	rm -f c64files/* suite.*
