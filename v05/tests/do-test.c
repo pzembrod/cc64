@@ -19,10 +19,16 @@ do_test() {
   println("Before 3-2-iteration nested do loops");
   do {
     print("Outer iteration "); println(itoa(i));
+    if (i == 2) {
+      --i;
+      continue;
+    }
     j = 2;
     do {
       print("Inner iteration "); print(itoa(i));
       print(" , "); println(itoa(j));
+      if (i == 1 && j == 2)
+        break;
       j--;
     } while(j);
     --i;

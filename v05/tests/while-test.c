@@ -19,10 +19,16 @@ while_test() {
   println("Before 3-2-iteration nested while loops");
   while(i) {
     print("Outer iteration "); println(itoa(i));
+    if (i == 2) {
+      i--;
+      continue;
+    }
     j = 2;
     while(j) {
       print("Inner iteration "); print(itoa(i));
       print(" , "); println(itoa(j));
+      if (i == 1 && j == 2)
+        break;
       j--;
     }
     --i;
