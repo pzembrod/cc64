@@ -1,8 +1,11 @@
 
 # cc64 sources and binaries
-cc64srcs = src/cc64src1.d64 src/cc64src2.d64
+cc64srcs_d64 = src/cc64src1.d64 src/cc64src2.d64
+cc64srcs_fth = src/cc64/*.fth
+cc64srcs_petscii = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_fth))
+cc64srcs = $(cc64srcs_d64) $(cc64srcs_petscii)
 peddisrc = src/peddi_src.d64
-d64_fth_files = $(patsubst %.d64, %.fth, $(cc64srcs) $(peddisrc))
+d64_fth_files = $(patsubst %.d64, %.fth, $(cc64srcs_d64) $(peddisrc))
 cc64_t64_files = cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
 # Forth binaries
@@ -50,7 +53,7 @@ slowtests:
 
 # cc64 build rules
 
-c64files/cc64v05: $(cc64srcs) c64files/build-cc64.fth \
+c64files/cc64v05: $(cc64srcs) \
  build-cc64.sh uf-build-base.T64
 	./build-cc64.sh
 
@@ -121,6 +124,9 @@ c-chargen: c-char-rom-gen
 # Rules, mostly generic, to populate c64files/
 
 c64files/%.fth: %.fth
+	ascii2petscii $< $@
+
+c64files/%.fth: src/*/%.fth
 	ascii2petscii $< $@
 
 c64files/%.c: %.c
