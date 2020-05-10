@@ -4,8 +4,11 @@ cc64srcs_d64 = src/cc64src1.d64 src/cc64src2.d64
 cc64srcs_fth = $(wildcard src/cc64/*.fth)
 cc64srcs_petscii = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_fth))
 cc64srcs = $(cc64srcs_d64) $(cc64srcs_petscii)
-peddisrc = src/peddi_src.d64
-d64_fth_files = $(patsubst %.d64, %.fth, $(cc64srcs_d64) $(peddisrc))
+peddisrc_d64 = src/peddi_src.d64
+peddisrcs_fth = $(wildcard src/peddi/*.fth)
+peddisrcs_petscii = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_fth))
+peddisrcs = $(peddisrc_d64) $(peddisrcs_petscii)
+d64_fth_files = $(patsubst %.d64, %.fth, $(cc64srcs_d64) $(peddisrc_d64))
 cc64_t64_files = cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
 # Forth binaries
@@ -29,7 +32,7 @@ etc: $(etc_t64_files) c-char-rom-gen
 
 
 clean:
-	rm -f rt-c64-0801.sym c-charset.sym
+	rm -f rt-c64-0801.sym c-charset.sym c64files/*.fth
 	$(MAKE) -C tests clean
 
 veryclean: clean
@@ -57,11 +60,11 @@ c64files/cc64v05: $(cc64srcs) \
  build-cc64.sh uf-build-base.T64
 	./build-cc64.sh
 
-c64files/cc64v05pe: $(cc64srcs) $(peddisrc) \
+c64files/cc64v05pe: $(cc64srcs) $(peddisrcs) \
  build-cc64pe.sh uf-build-base.T64
 	./build-cc64pe.sh
 
-c64files/peddi03: $(peddisrc) c64files/build-peddi.fth \
+c64files/peddi03: $(peddisrcs) \
  build-peddi.sh uf-build-base.T64
 	./build-peddi.sh
 
