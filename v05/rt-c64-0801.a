@@ -86,7 +86,7 @@ switch1 pha
         sta tmp_zp1
         iny
         ora (cc64_zp),y
-        beq switch5
+        beq switch_default
         lda (cc64_zp),y
         sta tmp_zp1+1
         iny
@@ -110,10 +110,12 @@ switch4 iny
         inc cc64_zp + 1
         jmp switch1
 
-switch5 sec
-;        iny
+switch_default
+        pla
+        sec  ; instead of iny and clc
         tya
         adc cc64_zp
+        sta cc64_zp
         bcc switch6
         inc cc64_zp + 1
 switch6 jmp (cc64_zp)
