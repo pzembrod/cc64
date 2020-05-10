@@ -2,13 +2,13 @@
 test_results = $(patsubst %-test.c,%-result.txt,$(wildcard *-test.c))
 rt_files = $(patsubst ../%,c64files/%,$(wildcard ../rt-c64-0801.[hio]))
 
-all: suite separate-tests
+alltests: fasttests slowtests
 
-separate-tests: report.txt
+slowtests: separate-tests.result
 
-suite: suite.result
+fasttests: suite.result
 
-report.txt: $(test_results)
+separate-tests.result: $(test_results)
 	cat $^ >$@
 
 $(test_results) suite.result: ../cc64v05.T64 $(rt_files) *.sh *.h
@@ -20,8 +20,8 @@ suite.result: *-test.c *.golden
 	./perform-suite.sh
 
 clean:
-	rm -f c64files/* suite.*
-	rm -f *.out *.T64 *-result.txt *-generated.c tmp.result report.txt
+	rm -f c64files/* suite.* separate-tests.result tmp.result
+	rm -f *.out *.T64 *-result.txt *-generated.c
 
 c64files/rt-c64-0801.h: ../rt-c64-0801.h
 	ascii2petscii $< $@

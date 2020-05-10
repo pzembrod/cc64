@@ -25,6 +25,7 @@ etc: $(etc_t64_files) c-char-rom-gen
 
 clean:
 	rm -f rt-c64-0801.sym c-charset.sym
+	$(MAKE) -C tests clean
 
 veryclean: clean
 	rm -f rt-c64-0801.[hio] rt-c64-0801.sym
@@ -33,8 +34,16 @@ veryclean: clean
 	rm -f cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
 
-test:
-	$(MAKE) -C tests suite
+test: fasttests
+
+alltests:
+	$(MAKE) -C tests alltests
+
+fasttests:
+	$(MAKE) -C tests fasttests
+
+slowtests:
+	$(MAKE) -C tests slowtests
 
 
 # cc64 build rules
