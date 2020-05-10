@@ -3781,15 +3781,10 @@ immediate
 
 \ *** Block No. 135, Hexblock 87
 
-\   include                    02sep19pz
+\   include                    10may20pz
 
  create >tib-orig >tib @ ,
-
-  : (include-error ( -- )
- fload-close-all
- >tib-orig @ >tib ! #tib off
- ['] (error errorhandler !
- (error ;
+ fib >tib !
 
   : interpret-via-fib
  BEGIN freadline >r  >in off
@@ -3797,13 +3792,18 @@ immediate
 
   : include ( -- )
  blk @ Abort" no include from blk"
- ['] (include-error errorhandler !
  bl parse  fload-open
- fib >tib !
    interpret-via-fib
  fload-close
- factive? 0= IF >tib-orig @ >tib ! THEN
  #tib off >in off ;
+
+
+
+
+
+
+
+
 
 
 
