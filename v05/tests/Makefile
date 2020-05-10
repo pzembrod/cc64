@@ -4,7 +4,7 @@ rt_files = $(patsubst ../%,c64files/%,$(wildcard ../rt-c64-0801.[hio]))
 
 tests: fasttests
 
-alltests: fasttests slowtests
+alltests: fasttests slowtests petests
 
 slowtests: separate-tests.result
 
