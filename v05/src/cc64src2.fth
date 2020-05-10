@@ -85,11 +85,12 @@ shell           &126
 
 \ *** Block No. 3, Hexblock 3
 
-\ testing loadscreen 2         13sep94pz
+\ testing loadscreen 2         10may20pz
 
   onlyforth  decimal
   compiler also definitions
-   blk/drv  err-blk ! \ for *compiler*
+ \ err-blk was broken. see issue 11.
+ \  blk/drv  err-blk ! \ for *compiler*
 
 \needs ~  | : ~   ;
 \needs .blk : .blk ( -)  blk @ ?dup  (
@@ -110,15 +111,15 @@ shell           &126
 
   onlyforth    5 load
 
-
 \ *** Block No. 4, Hexblock 4
 
-\ endcompile loadscreen 2      07may95pz
+\ endcompile loadscreen 2      10may20pz
 
   onlyforth  decimal  cr
   compiler also definitions
 
-   blk/drv  err-blk ! \ for *compiler*
+ \ err-blk was broken. see issue 11.
+ \  blk/drv  err-blk ! \ for *compiler*
 
    12 load \     codegen
    48 load \     parser
@@ -137,7 +138,6 @@ shell           &126
   ' noop is .status
 
   0 ink-pot !  15 ink-pot 2+ c!
-
 
 \ *** Block No. 5, Hexblock 5
 

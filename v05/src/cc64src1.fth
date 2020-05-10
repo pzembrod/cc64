@@ -757,7 +757,7 @@ remove-inits         6
 
 \ *** Block No. 27, Hexblock 1b
 
-\   errormessages              01mar20pz
+\   errormessages              10may20pz
 
 ~ x *preprocess-in-string*
      x" preprocessor call in string"
@@ -771,9 +771,10 @@ remove-inits         6
     x" object file too short"
 ~ x *stack*     x" stack overflow"
 ~ x *rstack*  x" return stack overflow"
-~ x (*compiler*   x" compiler error"
+~ x *compiler*   x" compiler error"
   endtab
 
+\\ see issue 11. this here was broken.
 ~ create err-blk  0 ,
 
 | : *compiler* ( -- )
@@ -781,7 +782,6 @@ remove-inits         6
      1024 * + [compile] literal
      compile err-blk  compile !
      compile (*compiler* ; immediate
-
 
 \ *** Block No. 28, Hexblock 1c
 
@@ -1569,7 +1569,7 @@ make printcontext  ( -- )
 
 \ *** Block No. 56, Hexblock 38
 
-\   errorhandler               11sep94pz
+\   errorhandler               10may20pz
 
 ~ : error ( errnum -- )
      errormessage swap string[]
@@ -1581,17 +1581,17 @@ make printcontext  ( -- )
 
 
 ~ : fatal ( errnum -- )
-     dup error  (*compiler* =
-       IF err-blk @ dup 1024 /
-       swap 1023 and ." location: blk "
-       . ."  line " . cr THEN
+     \ *compiler* error handling was
+     \ broken. See issue 11.
+     \ dup error  (*compiler* =
+     \   IF err-blk @ dup 1024 /
+     \  swap 1023 and ." location: blk "
+     \   . ."  line " . cr THEN
      close-files scratchfiles
      true abort" fatal error" ;
 
 ~ : ?fatal ( flag errnum -- )
      swap IF fatal ELSE drop THEN ;
-
-
 
 
 
