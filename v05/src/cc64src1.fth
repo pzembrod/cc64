@@ -1581,6 +1581,7 @@ make printcontext  ( -- )
 
 
 ~ : fatal ( errnum -- )
+     error
      \ *compiler* error handling was
      \ broken. See issue 11.
      \ dup error  (*compiler* =
@@ -1592,7 +1593,6 @@ make printcontext  ( -- )
 
 ~ : ?fatal ( flag errnum -- )
      swap IF fatal ELSE drop THEN ;
-
 
 
 \ *** Block No. 57, Hexblock 39
