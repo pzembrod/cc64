@@ -16,7 +16,9 @@ c64dir_files = $(rt_files) $(sample_files) c-charset
 
 all: cc64 c64dir etc
 
-cc64: $(cc64_t64_files) $(d64_fth_files)
+cc64: cc64src $(cc64_t64_files)
+
+cc64src: $(d64_fth_files)
 
 c64dir: $(patsubst %, c64files/% , $(c64dir_files))
 
