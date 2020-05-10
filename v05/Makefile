@@ -1,7 +1,7 @@
 
 # cc64 sources and binaries
 cc64srcs_d64 = src/cc64src1.d64 src/cc64src2.d64
-cc64srcs_fth = src/cc64/*.fth
+cc64srcs_fth = $(wildcard src/cc64/*.fth)
 cc64srcs_petscii = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_fth))
 cc64srcs = $(cc64srcs_d64) $(cc64srcs_petscii)
 peddisrc = src/peddi_src.d64
@@ -57,7 +57,7 @@ c64files/cc64v05: $(cc64srcs) \
  build-cc64.sh uf-build-base.T64
 	./build-cc64.sh
 
-c64files/cc64v05pe: $(cc64srcs) $(peddisrc) c64files/build-cc64pe.fth \
+c64files/cc64v05pe: $(cc64srcs) $(peddisrc) \
  build-cc64pe.sh uf-build-base.T64
 	./build-cc64pe.sh
 
