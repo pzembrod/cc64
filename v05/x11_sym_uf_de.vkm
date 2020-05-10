@@ -229,7 +229,7 @@ bracketright   6 2 1
 # clr/home
 Home           6 3 8
 # extra: altgr+\ -> clr/home
-backslash      6 3 8
+backslash      6 0 8
 # right shift
 Shift_R        6 4 4
 # =
