@@ -3,6 +3,7 @@ set -e
 
 basedir="$(dirname "${BASH_SOURCE[0]}")"
 
+cc64="cc64v05"
 keybuf=""
 warp=""
 if [ -n "$1" ]
@@ -12,6 +13,11 @@ then
   ascii2petscii "${basedir}/../notdone" "${basedir}/c64files/notdone"
 fi
 
+if [ -n "$2" ]
+then
+  cc64="$2"
+fi
+
 x64 \
   -virtualdev \
   +truedrive \
@@ -19,7 +25,7 @@ x64 \
   -fs8 "${basedir}/c64files" \
   -chargen "${basedir}/../c-chargen" \
   -symkeymap "${basedir}/../x11_sym_uf_de.vkm" \
-  -autostart "${basedir}/../cc64v05.T64" \
+  -autostart "${basedir}/../${cc64}.T64" \
   -keybuf "$keybuf" \
   $warp \
   &

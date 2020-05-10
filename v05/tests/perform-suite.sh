@@ -2,6 +2,11 @@
 
 tests=$(echo *-test.c| sed 's/-test\.c//g')
 goldens=*.golden
+cc64=""
+if [ -n "$1" ]
+then
+  cc64="$1"
+fi
 
 # Build test binary
 (
@@ -19,7 +24,7 @@ goldens=*.golden
   cat test-main.h
 ) | tee suite-generated.c | ascii2petscii - c64files/suite.c
 rm -f c64files/suite suite.T64
-./compile-in-vice.sh "cc suite.c\ndos s0:notdone\n"
+./compile-in-vice.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
 bin2t64 c64files/suite suite.T64
 
 # Build golden file
