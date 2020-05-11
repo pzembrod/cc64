@@ -230,14 +230,14 @@ div9    sta cc64_zp
         lda tmp_zp1
         ldx tmp_zp1 + 1
         bit tmp_zp2
-        bpl div10
+        bpl return
         jsr negate
-div10   rts
+return  rts
 
 
 shl     iny
 shl1    dey
-        beq div10
+        beq return
         asl
         pha
         txa
@@ -249,7 +249,7 @@ shl1    dey
 
 shr     iny
 shr1    dey
-        beq div10
+        beq return
         pha
         txa
         asl

@@ -11,6 +11,7 @@ BEGIN {
   statics_start = "";
   statics_end = "";
   lib_name = "";
+  return_label = "";
 }
 
 /cc64_sp/ {
@@ -42,6 +43,10 @@ BEGIN {
   split($2, a, /\s+/); statics_end = a[1];
 }
 
+/return/ {
+  split($2, a, /\s+/); return_label = a[1];
+}
+
 END {
   if (cc64_sp && cc64_zp && lib_start && lib_jumplist && lib_end &&
       statics_start && statics_end && lib_name) {
@@ -58,5 +63,8 @@ END {
            cc64_sp, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name) > "/dev/stderr";
     exit 1;
+  }
+  if (return_label) {
+    printf("\nint _identity() *= 0x%s;\n", return_label);
   }
 }
