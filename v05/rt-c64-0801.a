@@ -164,6 +164,7 @@ negate  clc
         tya
         rts
 
+
 ; dividend in a/x
 ; divisor in cc64_zp/+1
 divmod  stx tmp_zp2 + 1 ; sign of dividend
@@ -174,14 +175,22 @@ divmod  stx tmp_zp2 + 1 ; sign of dividend
         ; would be -32768 again.
 dividend_is_positive
         tay         ; save dividend-lo
-        lda cc64_zp + 1  ; sign of divisor
-        sta tmp_zp2
+        lda cc64_zp + 1
+        sta tmp_zp2      ; sign of divisor
         eor tmp_zp2 + 1  ; sign of dividend
         asl
         ror tmp_zp2  ; sign of result in bit7, sign of divisor in bit6
-        bit cc64_zp + 1  ; sign of divisor
-        bpl divisor_is_positive
-        jsr negate_cc64_zp
+        bit tmp_zp2  ; sign of divisor
+        bvc divisor_is_positive
+        clc
+        lda cc64_zp
+        eor #$ff
+        adc #1
+        sta cc64_zp
+        lda cc64_zp + 1
+        eor #$ff
+        adc #0
+        sta cc64_zp + 1
         ; TODO: Handle case where divisor was -32768. That negated
         ; would be -32768 again.
 divisor_is_positive
@@ -228,7 +237,7 @@ div_rol_result
 
 division_done  ; remainder is in a/x; result in tmp_zp1/+1
         ; in cc64_zp/+1 is shifted back positive divisor
-        cmp #0
+        tay
         bne div_handle_remainder
         cpx #0
         beq div_store_remainder
@@ -250,25 +259,23 @@ div_add_or_subtract_divisor
         bvs div_subtract_divisor
         clc
         adc cc64_zp
-        sta cc64_zp
+        tay
         txa
         adc cc64_zp + 1
-        sta cc64_zp + 1
-        jmp div_load_result
+        tax
+        jmp div_store_remainder
 
 div_subtract_divisor
         sec
         sbc cc64_zp
-        sta cc64_zp
+        tay
         txa
         sbc cc64_zp + 1
-        sta cc64_zp + 1
-        jmp div_load_result
+        tax
 
 div_store_remainder
-        sta cc64_zp
+        sty cc64_zp
         stx cc64_zp + 1
-div_load_result
         lda tmp_zp1
         ldx tmp_zp1 + 1
         bit tmp_zp2
@@ -301,18 +308,6 @@ shr1    dey
         pla
         ror
         jmp shr1
-
-negate_cc64_zp
-        clc
-        lda cc64_zp
-        eor #$ff
-        adc #1
-        sta cc64_zp
-        lda cc64_zp + 1
-        eor #$ff
-        adc #0
-        sta cc64_zp + 1
-        rts
 
 div_zero !pet "division by zero", $0d, 0
 
