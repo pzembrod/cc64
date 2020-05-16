@@ -164,69 +164,111 @@ negate  clc
         tya
         rts
 
-divmod  stx tmp_zp2 + 1 ; sign of divident
+; dividend in a/x
+; divisor in cc64_zp/+1
+divmod  stx tmp_zp2 + 1 ; sign of dividend
         bit tmp_zp2 + 1
-        bpl div1
+        bpl dividend_is_positive
         jsr negate
-div1    tay         ; save divident-lo
-        txa
-        eor cc64_zp + 1  ; sign of divisor
+        ; TODO: Handle case where divident was -32768. That negated
+        ; would be -32768 again.
+dividend_is_positive
+        tay         ; save dividend-lo
+        lda cc64_zp + 1  ; sign of divisor
+        sta tmp_zp2
+        eor tmp_zp2 + 1  ; sign of dividend
         asl
-        ror tmp_zp2     ; sign of result
+        ror tmp_zp2  ; sign of result in bit7, sign of divisor in bit6
         bit cc64_zp + 1  ; sign of divisor
-        bpl div2
-        clc         ; negate divisor
-        lda cc64_zp      ; in cc64_zp/cc64_zp + 1
-        eor #$ff
-        adc #1
-        sta cc64_zp
-        lda cc64_zp + 1
-        eor #$ff
-        adc #0
-        sta cc64_zp + 1
-div2    tya      ; restore divident-lo
+        bpl divisor_is_positive
+        jsr negate_cc64_zp
+        ; TODO: Handle case where divisor was -32768. That negated
+        ; would be -32768 again.
+divisor_is_positive
+        tya      ; restore dividend-lo
         ldy #0
         sty tmp_zp1
         sty tmp_zp1 + 1
-div3    cpx cc64_zp + 1
+
+; shift left divisor in cc64_zp/+1 until larger than dividend.
+div_shl_divisor
+        cpx cc64_zp + 1
         bne div4
         cmp cc64_zp
-div4    bcc div5
+div4    bcc div_loop
         asl cc64_zp
         rol cc64_zp + 1
         iny
-        bpl div3
+        bpl div_shl_divisor
         lda #<div_zero
         ldy #>div_zero
         jsr strout
         jmp ready
 
-div5    dey
-        bmi div8
+div_loop
+        dey
+        bmi division_done
         lsr cc64_zp + 1
         ror cc64_zp
         cpx cc64_zp + 1
         bne div6
         cmp cc64_zp
-div6    php
-        bcc div7
+div6    bcc div_rol_result
         sbc cc64_zp
         pha
         txa
         sbc cc64_zp + 1
         tax
         pla
-div7    plp
+        sec
+div_rol_result
         rol tmp_zp1
         rol tmp_zp1 + 1
-        bcc div5
-        brk  ; remove this some day :)
+        jmp div_loop
 
-div8    bit tmp_zp2 + 1
-        bpl div9
+division_done  ; remainder is in a/x; result in tmp_zp1/+1
+        ; in cc64_zp/+1 is shifted back positive divisor
+        cmp #0
+        bne div_handle_remainder
+        cpx #0
+        beq div_store_remainder
+
+div_handle_remainder
+        bit tmp_zp2 + 1
+        bpl div_positive_remainder
         jsr negate
-div9    sta cc64_zp
+div_positive_remainder
+        bit tmp_zp2
+        bpl div_store_remainder
+        inc tmp_zp1
+        bne div_add_or_subtract_divisor
+        inc tmp_zp1 + 1
+
+div_add_or_subtract_divisor
+        ; no need for bit instruction again; inc doesn't touch V flag
+        ; bit tmp_zp2
+        bvs div_subtract_divisor
+        clc
+        adc cc64_zp
+        sta cc64_zp
+        txa
+        adc cc64_zp + 1
+        sta cc64_zp + 1
+        jmp div_load_result
+
+div_subtract_divisor
+        sec
+        sbc cc64_zp
+        sta cc64_zp
+        txa
+        sbc cc64_zp + 1
+        sta cc64_zp + 1
+        jmp div_load_result
+
+div_store_remainder
+        sta cc64_zp
         stx cc64_zp + 1
+div_load_result
         lda tmp_zp1
         ldx tmp_zp1 + 1
         bit tmp_zp2
@@ -259,6 +301,18 @@ shr1    dey
         pla
         ror
         jmp shr1
+
+negate_cc64_zp
+        clc
+        lda cc64_zp
+        eor #$ff
+        adc #1
+        sta cc64_zp
+        lda cc64_zp + 1
+        eor #$ff
+        adc #0
+        sta cc64_zp + 1
+        rts
 
 div_zero !pet "division by zero", $0d, 0
 
