@@ -42,7 +42,7 @@ veryclean: clean
 	rm -f cc64v05.T64 cc64v05pe.T64 peddi03.T64
 
 
-test: fasttests
+test: cc64 fasttests
 
 alltests:
 	$(MAKE) -C tests alltests

@@ -1,5 +1,6 @@
 
   onlyforth  decimal  cr
+  | ' include alias forth-include
 
 | : ~  | ;
 
@@ -27,8 +28,12 @@
 
  2 drive
 
-   12 load \     codegen
-   48 load \     parser
+   \ 12 load \     codegen
+  forth-include codegen.fth
+
+  \ 48 load \     parser
+  forth-include parser.fth
+
   108 load \     pass2
   100 load \     invoke
     8 load \     savesystem
