@@ -34,7 +34,9 @@
   \ 48 load \     parser
   forth-include parser.fth
 
-  108 load \     pass2
+  \ 108 load \     pass2
+  forth-include pass2.fth
+
   100 load \     invoke
     8 load \     savesystem
 
