@@ -19,7 +19,7 @@ I saw a risk that I would run out of C64 memory ere the compiler was ready.
 So I looked for alternatives.
 
 I probably ran across
-[ultraFORTH aka volksFORTH](https://forth-ev.de/wiki/projects:volksforth)
+[UltraForth aka VolksVorth](https://forth-ev.de/wiki/projects:volksforth)
 in one of the two computer magazines I read then (64'er and c't), and decided
 to try it out. And after struggling for a while with wrapping my mind around the
 concepts of Forth, esp. the part where you need to be aware which code runs at
