@@ -21,9 +21,9 @@ forward_test()
   middle_function();
   forward_declared();
 
-  assert(prototype_address - middle_function < 0, -1,
+  assertTrue(prototype_address - middle_function < 0,
       "prototype function address < muddle function address");
-  assert(final_address - middle_function > 0, -1,
+  assertTrue(final_address - middle_function > 0,
       "final function address > muddle function address");
 
   evaluateAsserts();

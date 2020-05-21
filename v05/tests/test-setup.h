@@ -79,7 +79,7 @@ int i;
 
 int failedAsserts = 0;
 
-assert(actual, expected, message)
+assertEq(actual, expected, message)
 int actual;
 int expected;
 char *message;
@@ -88,6 +88,16 @@ char *message;
     print("Assert failed: "); print(message);
     print(" Expected: "); print(itoa(expected));
     print(" Actual: "); println(itoa(actual));
+    ++failedAsserts;
+  }
+}
+
+assertTrue(expression, message)
+int expression;
+char *message;
+{
+  if (!expression) {
+    print("Assert failed: "); println(message);
     ++failedAsserts;
   }
 }
