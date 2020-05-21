@@ -49,6 +49,14 @@
 ~ do$: compile$  ( -- adr )
         cp$[ .byte cp]$ ;
 
+\ obj in stack comments represents a data value in an expression and
+\ consists of two values: obj = val type
+\ val will be the actual value in case the expression so far is already
+\ known at compile time, or a placeholder in case the value is only
+\ known at run time.
+\ type represents the data type of the value, a bitmap made up of the
+\ definitions %int, %pointer, %function etc. from the beginning of
+\ codegen.fth.
 
 | : atom ( -- obj )
    #number# comes-a?
@@ -834,13 +842,13 @@
 
 \   parser: declare-fcnt/data  14mar91pz
 
-| : compare-types ( type1 type2 -- )
+| : check-types-equal ( type1 type2 -- )
      xor %decl.mask and
      *!=type* ?error ;
 
 | : declare ( type -- )
      id-buf findglobal ?dup
-        IF >type @ compare-types
+        IF >type @ check-types-equal
         ELSE drop *undef* error THEN ;
 
 | : extern-op?
@@ -939,7 +947,7 @@
 | : prototype ( type -- )
      unnestlocal
      id-buf findglobal ?dup
-        IF >type @ compare-types
+        IF >type @ check-types-equal
         ELSE %proto set  .label swap
         id-buf putglobal  dup >r  2!
         heap> ?dup
@@ -969,7 +977,7 @@
 
 | : adjust-prototype
     ( obj desc type -- obj desc )
-     2 pick compare-types   >r
+     2 pick check-types-equal   >r
      protos2resolve BEGIN dup
         @  dup 0= *compiler* ?fatal
         2+ @ r@ - WHILE  @ REPEAT

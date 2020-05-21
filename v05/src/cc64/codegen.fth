@@ -168,6 +168,9 @@
      [ %default  %constant set ]
      literal ;
 
+\ TODO: This could probably return a %const value; the address of the
+\ string is, after all, essentially known at compile time.
+
 | : do-stringatom ( adr -- obj )
      require-accu  .lda#
      [ %default %pointer set set-char ]
