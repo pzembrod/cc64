@@ -7,6 +7,7 @@ keybuf=""
 if [ -n "$1" ]
 then
   keybuf="${1}dos s0:notdone\n"
+  # The following could also just be a cp.
   ascii2petscii "${basedir}/notdone" "${basedir}/c64files/notdone"
 fi
 
