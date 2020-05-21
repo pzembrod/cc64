@@ -952,7 +952,7 @@
         id-buf putglobal  dup >r  2!
         heap> ?dup
            IF dup 2+  r> over !
-                  2+  .jmp-ahead swap !
+                  2+  .jmp-ahead 1+ swap !
            protos2resolve hook-into
            ELSE rdrop THEN
         THEN ;
@@ -978,11 +978,14 @@
 | : adjust-prototype
     ( obj desc type -- obj desc )
      2 pick check-types-equal   >r
-     protos2resolve BEGIN dup
-        @  dup 0= *compiler* ?fatal
+     ( obj )
+     protos2resolve BEGIN dup @
+        ( obj list/prev element )
+        dup 0= *compiler* ?fatal
         2+ @ r@ - WHILE  @ REPEAT
-     hook-out  2 pick over 2+ !
-     dup 4 + @  sort-in  hook-into ;
+     ( obj list/prev ) hook-out
+     ( obj element)  2 pick over 2+ !
+     dup 4 + @  sort-in  hook-into r> ;
 
 | : find/putglobal ( obj -- obj desc )
      id-buf findglobal ?dup
