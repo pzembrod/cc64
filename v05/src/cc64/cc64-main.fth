@@ -26,7 +26,7 @@
   84 load    \ assembler
  104 load    \ preprocessor
 
- 2 drive
+   \ 2 drive
 
    \ 12 load \     codegen
   forth-include codegen.fth
@@ -37,14 +37,22 @@
   \ 108 load \     pass2
   forth-include pass2.fth
 
-  100 load \     invoke
-    8 load \     savesystem
+  \ 100 load \     invoke
+  forth-include invoke.fth
+
+  \ \needs doesn't work yet with text file sources
+  \ needs savesysdev  | defer savesysdev
+  ' dev IS savesysdev
 
   onlyforth
+  \ 8 load \     savesystem
+  \ needs savesystem  forth-include savesystem.fth
+
   vocabulary shell
   compiler also  shell definitions
 
-  126 load \     shell
+  \ 126 load \     shell
+  forth-include shell.fth
 
   onlyforth
 
