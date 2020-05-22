@@ -1,5 +1,17 @@
 # Usage
 
+## Download
+
+Download either the file
+[v05/c64files.zip](https://github.com/pzembrod/cc64/blob/master/v05/c64files.zip)
+and unpack the content into a directory mapped as drive (preferably 8) of
+an emulator (I recommend VICE), or download the disk image
+[v05/c64files.d64](https://github.com/pzembrod/cc64/blob/master/v05/c64files.d64)
+and attach it to an emulator or write it onto a real 1541 disk.
+
+Note that the disk image contains the correct CBM file type (prg or seq) for
+the c sources and runtime files.
+
 ## Binaries
 
 There are 3 main binaries:
