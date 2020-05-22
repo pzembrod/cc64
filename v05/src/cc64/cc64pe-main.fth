@@ -7,7 +7,7 @@
  1 drive
 
   6 8 thru   \ unloop strcmp doer-make
- 120 load    \ transient assembler
+ forth-include trns6502asm.fth  \ 120 load    \ transient assembler
  129 load    \ 2@ 2! 2variable/constant
   vocabulary compiler
   compiler also definitions
@@ -23,8 +23,10 @@
   60 load    \ symboltable
   72 load    \ codehandler
   77 load    \ codeoutput
-  84 load    \ assembler
- 104 load    \ preprocessor
+  forth-include assembler.fth  \ 84 load    \ assembler
+
+  \ 104 load    \ preprocessor
+  forth-include preprocessor.fth
 
   \ 2 drive
 
