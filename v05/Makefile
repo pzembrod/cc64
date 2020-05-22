@@ -9,7 +9,8 @@ peddisrcs_fth = $(wildcard src/peddi/*.fth)
 peddisrcs_petscii = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_fth))
 peddisrcs = $(peddisrc_d64) $(peddisrcs_petscii)
 d64_fth_files = $(patsubst %.d64, %.fth, $(cc64srcs_d64) $(peddisrc_d64))
-cc64_t64_files = cc64v05.T64 cc64v05pe.T64 peddi03.T64
+cc64_binaries = cc64v05 cc64v05pe peddi03
+cc64_t64_files = $(patsubst %, %.T64, $(cc64_binaries))
 
 # Forth binaries
 etc_t64_files = devenv-uF83.T64 uf-build-base.T64
@@ -18,15 +19,21 @@ etc_t64_files = devenv-uF83.T64 uf-build-base.T64
 rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o
 sample_files = helloworld.c kernal-io.c
 c64dir_files = $(rt_files) $(sample_files) c-charset
+zipfile_content = $(patsubst %, c64files/% , $(c64dir_files) \
+ $(cc64_binaries))
 
 
-all: cc64 c64dir etc
+all: cc64 c64dir c64files.zip etc
 
 cc64: cc64src $(cc64_t64_files)
 
 cc64src: $(d64_fth_files)
 
 c64dir: $(patsubst %, c64files/% , $(c64dir_files))
+
+c64files.zip: $(zipfile_content)
+	rm c64files.zip
+	zip -r c64files.zip $(zipfile_content)
 
 etc: $(etc_t64_files) c-char-rom-gen
 
@@ -128,24 +135,28 @@ c-chargen: c-char-rom-gen
 
 c64files/%.fth: %.fth
 	ascii2petscii $< $@
+	touch -r $< $@
 
 c64files/%.fth: src/*/%.fth
 	ascii2petscii $< $@
+	touch -r $< $@
 
 c64files/%.c: %.c
 	ascii2petscii $< $@
+	touch -r $< $@
 
 c64files/%.h: %.h
 	ascii2petscii $< $@
+	touch -r $< $@
 
 c64files/%.i: %.i
-	cp $< $@
+	cp --preserve=timestamps $< $@
 
 c64files/%.o: %.o
-	cp $< $@
+	cp --preserve=timestamps $< $@
 
 c64files/c-charset: c-charset
-	cp $< $@
+	cp --preserve=timestamps $< $@
 
 # Generic rules to update the .fth readable copies of the .d64 sources
 
