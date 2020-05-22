@@ -19,8 +19,8 @@ etc_t64_files = devenv-uF83.T64 uf-build-base.T64
 rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o
 sample_files = helloworld.c kernal-io.c
 c64dir_files = $(rt_files) $(sample_files) c-charset
-zipfile_content = $(patsubst %, c64files/% , $(c64dir_files) \
- $(cc64_binaries))
+zipfile_content = $(patsubst %, c64files/% , \
+  $(c64dir_files) $(cc64_binaries))
 
 
 all: cc64 c64dir c64files.zip etc
@@ -32,8 +32,19 @@ cc64src: $(d64_fth_files)
 c64dir: $(patsubst %, c64files/% , $(c64dir_files))
 
 c64files.zip: $(zipfile_content)
-	rm c64files.zip
-	zip -r c64files.zip $(zipfile_content)
+	rm -f $@
+	zip -r $@ $(zipfile_content)
+
+c64files.d64: $(zipfile_content)
+	rm -f $@
+	c1541 -format cc64v05,cc d64 $@
+	c1541 -attach $@ $(patsubst %, -write c64files/%, $(cc64_binaries))
+	c1541 -attach $@ -write c64files/rt-c64-0801.h rt-c64-0801.h,s
+	c1541 -attach $@ -write c64files/rt-c64-0801.i
+	c1541 -attach $@ -write c64files/rt-c64-0801.o
+	c1541 -attach $@ -write c64files/c-charset
+	c1541 -attach $@ -write c64files/helloworld.c helloworld.c,s
+	c1541 -attach $@ -write c64files/kernal-io.c kernal-io.c,s
 
 etc: $(etc_t64_files) c-char-rom-gen
 
