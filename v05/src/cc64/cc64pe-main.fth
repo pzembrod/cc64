@@ -16,9 +16,8 @@
   \ 9 10 thru  \ strtab init
   forth-include strtab.fth
   forth-include init.fth
-  cr
-  24 load    \ errormessages
-  54 load    \ errorhandler
+  forth-include errormsgs.fth  \ 24 load    \ errormessages
+  forth-include errorhandler.fth  \ 54 load    \ errorhandler
   12 load    \ memman
   18 load    \ listman
  112 load    \ fileio
