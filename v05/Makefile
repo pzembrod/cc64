@@ -58,6 +58,7 @@ veryclean: clean
 	rm -f c-charset c-char-rom-gen
 	rm -f c64files/cc64v05 c64files/cc64v05pe c64files/peddi03
 	rm -f cc64v05.T64 cc64v05pe.T64 peddi03.T64
+	rm -f c64files.d64 c64files.zip
 
 
 test: cc64 fasttests
