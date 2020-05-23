@@ -19,10 +19,10 @@
   forth-include errorhandler.fth  \ 54 load    \ errorhandler
   forth-include memman.fth  \ 12 load    \ memman
   forth-include listman.fth  \ 18 load    \ listman
- 112 load    \ fileio
-  78 load    \ fileman
-  30 load    \ input
-  36 load    \ scanner
+  forth-include fileio.fth  \ 112 load    \ fileio
+  forth-include fileman.fth  \ 78 load    \ fileman
+  forth-include input.fth  \ 30 load    \ input
+  forth-include scanner.fth  \ 36 load    \ scanner
   60 load    \ symboltable
   72 load    \ codehandler
   77 load    \ codeoutput
