@@ -4,7 +4,7 @@
 
 | : ~  | ;
 
- 1 drive
+  \ 1 drive
 
   forth-include util-words.fth  \ 6 8 thru   \ unloop strcmp doer-make
   cr
@@ -12,8 +12,8 @@
   forth-include 2words.fth  \ 129 load    \ 2@ 2! 2variable/constant
   vocabulary compiler
   compiler also definitions
-  \ 9 10 thru  \ strtab init
-  forth-include strtab.fth
+
+  forth-include strtab.fth  \ 9 10 thru  \ strtab init
   forth-include init.fth
   forth-include errormsgs.fth  \ 24 load    \ errormessages
   forth-include errorhandler.fth  \ 54 load    \ errorhandler
@@ -23,13 +23,11 @@
   forth-include fileman.fth  \ 78 load    \ fileman
   forth-include input.fth  \ 30 load    \ input
   forth-include scanner.fth  \ 36 load    \ scanner
-  60 load    \ symboltable
-  72 load    \ codehandler
-  77 load    \ codeoutput
+  forth-include symboltable.fth  \ 60 load    \ symboltable
+  forth-include codehandler.fth  \ 72 load    \ codehandler
+  forth-include codeoutput.fth  \ 77 load    \ codeoutput
   forth-include vassembler.fth  \ 84 load    \ assembler
-
-  \ 104 load    \ preprocessor
-  forth-include preprocessor.fth
+  forth-include preprocessor.fth  \ 104 load    \ preprocessor
 
    \ 2 drive
 
