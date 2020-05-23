@@ -23,7 +23,7 @@
   60 load    \ symboltable
   72 load    \ codehandler
   77 load    \ codeoutput
-  forth-include assembler.fth  \ 84 load    \ assembler
+  forth-include vassembler.fth  \ 84 load    \ assembler
 
   \ 104 load    \ preprocessor
   forth-include preprocessor.fth

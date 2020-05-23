@@ -1,8 +1,11 @@
 \ *** Block No. 84, Hexblock 54
 
-\ assembler loadscreen         20sep94pz
+\ vassembler loadscreen        20sep94pz
 
-  cr .( module assembler ) cr
+  cr .( module vassembler ) cr
+
+\ assembler for the virtual machine on which codegen is based
+\ basicalls a slight abstraction, 16 bit, of the 6502.
 
 \ $zp wird implizit benutzt von
 \ - .not
@@ -17,7 +20,7 @@
 
 \ *** Block No. 85, Hexblock 55
 
-\   assembler: runtime         21aug94pz
+\   vassembler: runtime        21aug94pz
 
 | variable size   2 size !
 ~ variable >base
@@ -40,7 +43,7 @@
 
 \ *** Block No. 86, Hexblock 56
 
-\   assembler: parameter       25may91pz
+\   vassembler: parameter      25may91pz
 
 | $ff07 constant &
 | $ff17 constant &+1
@@ -68,7 +71,7 @@
 
 \ *** Block No. 87, Hexblock 57
 
-\   assembler: parameter ausw. 25may91pz
+\   vassembler: parameter ausw. 25may91pz
 
            ( par I -- step )
 | : 0+w,   drop     w,          2 ;
@@ -94,7 +97,7 @@
 
 \ *** Block No. 88, Hexblock 58
 
-\   assembler: a: a&: ;a       26may91pz
+\   vassembler: a: a&: ;a      26may91pz
 
 | : (a: ( -- sys )
      create  here 0 c, 20 assembler ;
@@ -120,7 +123,7 @@
 
 \ *** Block No. 89, Hexblock 59
 
-\   assembler: basics          26may91pz
+\   vassembler: basics         26may91pz
 
 ~ a&: .lda#   <& # lda  >& # ldx  ;a
 
@@ -148,7 +151,7 @@
 
 \ *** Block No. 90, Hexblock 5a
 
-\   assembler: basics          24may91pz
+\   vassembler: basics         24may91pz
 
 ~ a: .pop-zp  tay pla $zp+1 sta
                   pla $zp   sta  tya ;a
@@ -167,7 +170,7 @@
 
 \ *** Block No. 91, Hexblock 5b
 
-\   assembler: arithmetics     27may91pz
+\   vassembler: arithmetics    27may91pz
 
 ~ a: .not  $zp stx  0 # ldx  $zp ora
            0= ?[ dex ]? txa ;a
@@ -182,7 +185,7 @@
 
 \ *** Block No. 92, Hexblock 5c
 
-\   assembler: arithmetics     27may91pz
+\   vassembler: arithmetics    27may91pz
 
 ~ a&: .add#   clc  <& # adc  tay  txa
               >& # adc  tax  tya  ;a
@@ -206,7 +209,7 @@
 
 \ *** Block No. 93, Hexblock 5d
 
-\   assembler: arithmetics     24may91pz
+\   vassembler: arithmetics    24may91pz
 
 | a: .add-zp  clc  $zp adc  tay  txa
                  $zp+1 adc  tax  tya ;a
@@ -232,7 +235,7 @@
 
 \ *** Block No. 94, Hexblock 5e
 
-\   assembler: arithmetics     24may91pz
+\   vassembler: arithmetics    24may91pz
 
 | a&: .ldzp#  tay  <& # lda    $zp sta
                    >& # lda  $zp+1 sta
@@ -254,7 +257,7 @@
 
 \ *** Block No. 95, Hexblock 5f
 
-\   assembler: arithmetics     27may91pz
+\   vassembler: arithmetics    27may91pz
 
 | a: .tay   tay ;a
 | a: (.shl  $shl jsr ;a
@@ -282,7 +285,7 @@
 
 \ *** Block No. 96, Hexblock 60
 
-\   assembler: arithmetics     24may91pz
+\   vassembler: arithmetics    24may91pz
 
 | a&: .cmp#  0 # ldy   >& # cpx
              sec 0< ?[ clc ]?
@@ -306,7 +309,7 @@
 
 \ *** Block No. 97, Hexblock 61
 
-\   assembler: arithmetics     24may91pz
+\   vassembler: arithmetics    24may91pz
 
 ~ : .eq   .cmp    (.eq ;
 ~ : .ne   .cmp    (.ne ;
@@ -326,7 +329,7 @@
 
 \ *** Block No. 98, Hexblock 62
 
-\   assembler: 'sized'         18apr94pz
+\   vassembler: 'sized'        18apr94pz
 
 ~ : .size  size ! ;
 \ evtl noch bei size <>1,2 : error
@@ -352,7 +355,7 @@
 
 \ *** Block No. 99, Hexblock 63
 
-\   assembler: 'sized'         18apr94pz
+\   vassembler: 'sized'        18apr94pz
 
 | a&: .lda(base),&
    <& # ldy  $base )y lda  w: tax dey
@@ -380,7 +383,7 @@
 
 \ *** Block No. 100, Hexblock 64
 
-\   assembler: 'sized'         27may91pz
+\   vassembler: 'sized'        27may91pz
 
 ~ a&: .incr.s
        & inc w: 0= ?[ &+1 inc ]? ;w ;a
@@ -402,7 +405,7 @@
 
 \ *** Block No. 101, Hexblock 65
 
-\   assembler: jumps           24may91pz
+\   vassembler: jumps          24may91pz
 
 ~ a&: .jmp  & jmp ;a
        ' pc
