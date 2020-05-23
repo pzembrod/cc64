@@ -13,7 +13,10 @@
   cr
   vocabulary compiler
   compiler also definitions
-  9 10 thru  \ strtab init
+  \ 9 10 thru  \ strtab init
+  forth-include strtab.fth
+  forth-include init.fth
+  cr
   24 load    \ errormessages
   54 load    \ errorhandler
   12 load    \ memman
