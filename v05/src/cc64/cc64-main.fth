@@ -17,8 +17,8 @@
   forth-include init.fth
   forth-include errormsgs.fth  \ 24 load    \ errormessages
   forth-include errorhandler.fth  \ 54 load    \ errorhandler
-  12 load    \ memman
-  18 load    \ listman
+  forth-include memman.fth  \ 12 load    \ memman
+  forth-include listman.fth  \ 18 load    \ listman
  112 load    \ fileio
   78 load    \ fileman
   30 load    \ input
