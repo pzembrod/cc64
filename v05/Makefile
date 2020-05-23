@@ -23,7 +23,7 @@ zipfile_content = $(patsubst %, c64files/% , \
   $(c64dir_files) $(cc64_binaries))
 
 
-all: cc64 c64dir c64files.zip etc
+all: cc64 c64dir c64files.zip c64files.d64 etc
 
 cc64: cc64src $(cc64_t64_files)
 
