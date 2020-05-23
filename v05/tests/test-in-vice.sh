@@ -19,6 +19,7 @@ x64 \
   -fs8 "${basedir}/c64files" \
   -chargen "${basedir}/../c-chargen" \
   -symkeymap "${basedir}/../x11_sym_uf_de.vkm" \
+  -keymap 2 \
   $run \
   &
 
