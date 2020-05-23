@@ -26,7 +26,7 @@
   forth-include symboltable.fth  \ 60 load    \ symboltable
   forth-include codehandler.fth  \ 72 load    \ codehandler
   forth-include codeoutput.fth  \ 77 load    \ codeoutput
-  forth-include vassembler.fth  \ 84 load    \ assembler
+  forth-include v-assembler.fth  \ 84 load    \ assembler
   forth-include preprocessor.fth  \ 104 load    \ preprocessor
 
    \ 2 drive
