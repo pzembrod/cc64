@@ -12,5 +12,5 @@ $(test_results): %-result.txt: %.keybuf %.golden
 	./run-test.sh $*
 
 clean:
-	rm -f c64files/* separate-tests.result tmp.result
+	rm -f c64files/* c64files/.??* separate-tests.result tmp.result
 	rm -f *.out *-result.txt
