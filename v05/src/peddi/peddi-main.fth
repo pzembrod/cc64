@@ -1,8 +1,7 @@
 
   onlyforth  decimal
-  | ' include alias forth-include
 
-3 drive  \ 5 load
+\ 3 drive  \ 5 load
 
 \ *** Block No. 5, Hexblock 5
 
@@ -18,8 +17,8 @@
 | : text[   r0 @ ;
 | ' limit ALIAS ]text
 
-  forth-include ed-func.fth  \ 18 load   \ editor functions
-  forth-include ed-frame.fth  \ 12 load   \ editor framework
+  include ed-func.fth  \ 18 load   \ editor functions
+  include ed-frame.fth  \ 12 load   \ editor framework
 
   shell also definitions
 
@@ -27,7 +26,7 @@
 
 ' bye ALIAS bye
 
-  forth-include peddi-shell.fth  \ 7 10 thru  \ shell & savesystem
+  include peddi-shell.fth  \ 7 10 thru  \ shell & savesystem
   \ 2 load     \ set memory
   save
 
