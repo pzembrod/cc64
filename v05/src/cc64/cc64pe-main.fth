@@ -66,9 +66,41 @@
 
   save
 
- 3 drive
+\ 3 drive
 
- 4 load \ peddi
+\ 4 load \ peddi
+\ *** Block No. 4, Hexblock 4
+
+\ peddi loadscreen for cc64    19apr20pz
+
+  onlyforth  decimal
+| vocabulary peddi
+  compiler also peddi also definitions
+
+| ' lomem    alias text[
+| ' himem    alias ]text
+| ' dev      alias dev
+
+  onlyforth peddi also definitions
+
+  include ed-func.fth  \ 18 load   \ editor functions
+  include ed-frame.fth  \ 12 load   \ editor framework
+
+  shell also definitions
+
+' ed ALIAS ed
+
+\   6 load   \ combined logo
+\ *** Block No. 6, Hexblock 6
+
+\   combined logo              14apr20pz
+
+| : .logo  ( -- )
+   [ ' 'restart >body @ , ]
+   ." peddi text editor V0.3 present"
+   cr ;
+
+' .logo IS 'restart
 
   save
   $cbd0 set-himem
