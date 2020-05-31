@@ -52,6 +52,7 @@ etc: $(etc_t64_files) c-char-rom-gen
 clean:
 	rm -f rt-c64-0801.sym c-charset.sym c64files/*.fth
 	$(MAKE) -C tests clean
+	$(MAKE) -C tests/peddi clean
 
 veryclean: clean
 	rm -f rt-c64-0801.[hio] rt-c64-0801.sym
