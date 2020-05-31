@@ -8,7 +8,7 @@ separate-tests.result: $(test_results)
 
 $(test_results) suite.result: ../../peddi03.T64 *.sh
 
-$(test_results): %-result.txt: %.in %.golden
+$(test_results): %-result.txt: %.keybuf %.golden
 	./run-test.sh $*
 
 clean:

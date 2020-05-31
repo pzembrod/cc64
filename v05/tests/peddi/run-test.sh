@@ -2,8 +2,12 @@
 
 # Run peddi with script
 rm -f c64files/"$1".txt "$1".txt
+if [ -f "$1.before" ]
+then
+  ascii2petscii "$1.before" c64files/"$1".txt
+fi
 ./run-peddi.sh "$(printf "ed ${1}.txt\n\
-$(sed -e 's/\\n//g' -e 's/\\/\\\\/g' ${1}.in)")"
+$(sed -e 's/\\/\\\\/g' ${1}.keybuf | tr -d '\n')")"
 petscii2ascii c64files/"$1".txt "$1".out
 
 # Evaluate test output

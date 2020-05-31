@@ -10,7 +10,7 @@ if [ -n "$1" ]
 then
   # keybuf="$1"
   keybuf="${1}dos s0:notdone\n"
-  # warp="-warp"
+  warp="-warp"
   ascii2petscii "${basedir}/../../notdone" "${basedir}/c64files/notdone"
 fi
 
