@@ -1,0 +1,23 @@
+Before no-iteration for loop
+After no-iteration for loop
+Before for(;;) loop
+Iteration 3
+Iteration 2
+Iteration 1
+After for(;;) loop
+Before for(;;--i) loop
+Iteration 2
+Iteration 1
+Iteration 0
+After for(;;--i) loop
+Before for(;i;) loop
+Iteration 3
+Iteration 2
+Iteration 1
+After for(;i;) loop
+Before for(i = 3;;) loop
+Iteration 3
+Iteration 2
+Iteration 1
+After for(i = 3;;) loop
+No assert failed.

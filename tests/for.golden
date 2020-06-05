@@ -1,0 +1,23 @@
+Before no-iteration for loop
+After no-iteration for loop
+Before 4-iteration for loop
+Iteration 5
+Iteration 6
+Iteration 7
+Iteration 8
+After 4-iteration backward for loop
+Before 3-iteration backward for loop
+Iteration -17
+Iteration -18
+Iteration -19
+After 3-iteration backward for loop
+Before 3-2-iteration nested for loops
+Outer iteration 1
+Inner iteration 1 , 2
+Inner iteration 1 , 8
+Outer iteration 3
+Outer iteration 5
+Inner iteration 5 , 2
+Inner iteration 5 , 8
+After 3-2-iteration nested for loops
+No assert failed.
