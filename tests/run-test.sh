@@ -3,27 +3,31 @@ set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+testname="$1"
+
+test -d c64files || mkdir c64files
+
 # Build test binary
-echo "char *name(){ return \"$1.out,s,w\"; } test(){ ${1}_test (); }" \
- | cat test-setup.h "$1"-test.c - test-main.h \
- | tee "$1"-generated.c \
- | ascii2petscii - c64files/"$1".c
-rm -f c64files/"$1" "$1".T64
-./compile-in-vice.sh "cc "$1".c\ndos s0:notdone\n"
-bin2t64 c64files/"$1" "$1".T64
+echo "char *name(){ return \"${testname}.out,s,w\"; } test(){ ${testname}_test (); }" \
+ | cat test-setup.h "${testname}-test.c" - test-main.h \
+ | tee "${testname}-generated.c" \
+ | ascii2petscii - "c64files/${testname}.c"
+rm -f "c64files/${testname}" "${testname}.T64"
+./compile-in-vice.sh "cc ${testname}.c\ndos s0:notdone\n"
+bin2t64 "c64files/${testname}" "${testname}.T64"
 
 # Run test binary
-rm -f c64files/"$1".out "$1".out
-./test-in-vice.sh "$1"
-petscii2ascii c64files/"$1".out "$1".out
+rm -f "c64files/${testname}.out" "${testname}.out"
+./test-in-vice.sh "${testname}"
+petscii2ascii "c64files/${testname}.out" "${testname}.out"
 
 # Evaluate test output
-echo "Test: $1" > tmp.result
-diff "$1".golden "$1".out >> tmp.result
+echo "Test: ${testname}" > tmp.result
+diff "${testname}.golden" "${testname}.out" >> tmp.result
 result=$?
 test $result -eq 0 \
-  && echo "PASS: $1" >> tmp.result \
-  || echo "FAIL: $1" >> tmp.result
+  && echo "PASS: ${testname}" >> tmp.result \
+  || echo "FAIL: ${testname}" >> tmp.result
 cat tmp.result
-mv tmp.result "$1"-result.txt
+mv tmp.result "${testname}-result.txt"
 exit $result

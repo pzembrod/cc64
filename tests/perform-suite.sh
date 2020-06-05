@@ -5,11 +5,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 tests=$(echo *-test.c| sed 's/-test\.c//g')
 goldens=*.golden
-cc64=""
-if [ -n "$1" ]
-then
-  cc64="$1"
-fi
+cc64="$1"
+
+test -d c64files || mkdir c64files
 
 # Build test binary
 (

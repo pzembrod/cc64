@@ -24,7 +24,7 @@ $(test_results): %-result.txt: %-test.c %.golden
 	./run-test.sh $*
 
 suite.result: *-test.c *.golden
-	./perform-suite.sh
+	./perform-suite.sh cc64
 
 pesuite.result: *-test.c *.golden
 	./perform-suite.sh cc64pe
@@ -34,13 +34,17 @@ clean:
 	rm -f *.out *.T64 *-result.txt *-generated.c
 
 c64files/rt-c64-0801.h: ../c64files/rt-c64-0801.h
+	test -d c64files || mkdir c64files
 	cp $< $@
 
 c64files/rt-c64-0801.i: ../c64files/rt-c64-0801.i
+	test -d c64files || mkdir c64files
 	cp $< $@
 
 c64files/rt-c64-0801.o: ../c64files/rt-c64-0801.o
+	test -d c64files || mkdir c64files
 	cp $< $@
 
 c64files/%.h: %.h
+	test -d c64files || mkdir c64files
 	ascii2petscii $< $@
