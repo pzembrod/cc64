@@ -1,0 +1,176 @@
+
+; Dynamically adds characters needed for C to the C64 charset.
+
+; Copies the character ROM ($d000-$dfff) into the parallel RAM, patches
+; in the charactes \^_{|}~, and then switches the screen memory from
+; $0400 to $cc00 so the charset in RAM is used.
+
+; The start address is selected so that the code ends at $cbff, with
+; the last 6 bytes containing a signature that cc64 recognizes and
+; uses to switch to the RAM charset if it is present.
+
+; philip zembrod , 3.9.1994
+; letzte aenderung 8.3.2020
+
+        *= $cb3b
+
+basout   = $ffd2
+clrchn   = $ffcc
+
+        jmp init
+
+charlist
+        !byte $1c
+        !byte %00000000
+        !byte %01100000
+        !byte %00110000
+        !byte %00011000
+        !byte %00001100
+        !byte %00000110
+        !byte %00000011
+        !byte %00000000
+
+        !byte $1e
+        !byte %00000000
+        !byte %00011000
+        !byte %00111100
+        !byte %01100110
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+
+        !byte $1f
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %11111111
+
+        !byte $5b
+        !byte %00001100
+        !byte %00011000
+        !byte %00011000
+        !byte %00110000
+        !byte %00011000
+        !byte %00011000
+        !byte %00001100
+        !byte %00000000
+
+        !byte $5c
+        !byte %00011000
+        !byte %00011000
+        !byte %00011000
+        !byte %00000000
+        !byte %00011000
+        !byte %00011000
+        !byte %00011000
+        !byte %00000000
+
+        !byte $5d
+        !byte %00110000
+        !byte %00011000
+        !byte %00011000
+        !byte %00001100
+        !byte %00011000
+        !byte %00011000
+        !byte %00110000
+        !byte %00000000
+
+        !byte $5e
+        !byte %00000000
+        !byte %00110010
+        !byte %01111110
+        !byte %01001100
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+
+        !byte $20
+
+init    sei
+        lda $01
+        pha
+        lda #$33
+        sta $01
+
+        lda #$00
+        sta $22
+        lda #$d0
+        sta $23
+        ldx #$10
+        ldy #0
+
+init1   lda ($22),y
+        sta ($22),y
+        iny
+        bne init1
+        inc $23
+        dex
+        bne init1
+
+        lda #$34
+        sta $01
+        ldx #0
+
+init2   lda #$1b ; $d8 >> 3
+        sta $23
+        lda charlist,x
+        inx
+        cmp #$20
+        beq init5
+        asl
+        rol $23
+        asl
+        rol $23
+        asl
+        rol $23
+        sta $22
+
+        ldy #0
+init3   lda charlist,x
+        inx
+        pha
+        sta ($22),y
+        iny
+        cpy #8
+        bne init3
+
+        dey
+        lda $23
+        ora #$04
+        sta $23
+
+init4   pla
+        eor #$ff
+        sta ($22),y
+        dey
+        bpl init4
+
+        jmp init2
+
+init5   pla
+        sta $01
+        cli
+
+re_init lda #$cc
+        sta $0288
+
+        jsr clrchn
+        lda #$93 ; clr
+        jsr basout
+
+        lda #%00110111
+        sta $d018
+        lda $dd00
+        and #$fc
+        sta $dd00
+
+        rts
+
+magic   !word re_init, $6502, $1103
+
