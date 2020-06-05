@@ -97,7 +97,7 @@
 
 | : .logo  ( -- )
    [ ' 'restart >body @ , ]
-   ." peddi text editor V0.3 present"
+   ." peddi text editor present"
    cr ;
 
 ' .logo IS 'restart

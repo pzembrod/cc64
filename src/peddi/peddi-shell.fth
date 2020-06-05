@@ -19,7 +19,7 @@
 
 | : .logo  ( -- )
      ."     running" cr
-     ." peddi text editor V0.3" cr
+     ." peddi text editor V0.6" cr
      ." 1995 by Philip Zembrod" cr
      $cbfc 2@  $65021103. d= not ?exit
      ." C charset in use" cr ;

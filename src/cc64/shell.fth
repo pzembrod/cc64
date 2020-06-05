@@ -78,7 +78,7 @@ Code bye   $37 # lda  $1 sta
 
 | : .logo  ( -- )
      ."     running" cr
-     ." cc64 C compiler V0.5" cr
+     ." cc64 C compiler V0.6" cr
      ." 2020 by Philip Zembrod" cr
      $cbfc 2@  $65021103. d= not ?exit
      ." C charset in use" cr ;
