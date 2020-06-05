@@ -1,55 +1,38 @@
 # cc64 versions
 
+## current
+
+The main directory structure contains the current version of cc64 which is
+under active development and recommended for use.
+
+The older versions v03, v04 and v05 are living in the respective subdirs.
+
 
 ## v05
 
-This is the first open-sourced version, and the one I intend to maintain
-for the near future. The main purpose of this version is to consolidate
-development after moving from real C64 to emulator and Linux.
-This involved switching from Dirk Zabel's excellent assembler ASSI/M
-I had been using on the C64 to the
-[ACME cross-assembler](https://sourceforge.net/p/acme-crossass/wiki/Home/),
-and some simple ascii-petscii conversion tooling to facilitate writing
-C64 sources on Linux. It also involved getting the build automated and adding
-a first suite of smoke tests. This has progressed enough by now that I feel
-I can start to iterate on the compiler itself without too much fear of breaking
-something.
+v05 was the first open-sourced version and marks the transition from
+development on a real C64 with sources in UltraForth's screen format using
+direct 1541 disk block access to emulator-based development with sources
+in regular ASCII files. In v05 I also wrote a set of automated build scripts,
+the first set of automated tests for both compiler and editor, and some simple
+ascii-petscii conversion tooling to facilitate writing C64 sources on Linux.
+Some bugs were also fixes along the way, esp. the known bugs from v04.
 
-Most of the Forth sources are still kept in the ultraFORTH screen format on d64
-disk images, though they are also available in ASCII file form for reading by
-humans. Going forward I plan to slowly migrate the sources from which cc64 is
-built to ASCII Forth source files. This should also facilitate unit testing
-of the compiler itself, and bug fixes.
+On the C64 I had used Dirk Zabel's excellent ASSI/M assembler for the runtime
+library and a utility for patching the C64's charset. Moving to Linux I
+switched to the
+[ACME cross-assembler](https://sourceforge.net/p/acme-crossass/wiki/Home/).
 
-The goal is to eventually deprecate the
-ultraFORTH screen d64 disk images, and to build cc64 on top of a Forth core
-without the code for reading screen sources, as that would save quite a bit of
-size for the cc64 binary (which is built on top of the ultraFORTH core).
+v05 still contains the full sources in the UltraForth screen format on d64
+disk images, which are also available in readable ASCII format.
 See [Emulator and file formats](File-formats.md) for details on the different
 file formats involved.
-
-Another goal is to eventually build cc64 e.g. on GForth to produce a cross
-compiler hosted on Linux.
-
-Bug fixes in v05:
-
-* Linking static variables works correctly now.
-[fix](https://github.com/pzembrod/cc64/commit/92d96c83061e98274cbd2bdd284ab6e8e6d5c0c0#diff-09a338ea0cdb8481c5925164ea4253bf)
-* Assembler functions declared with *= can now be called even without
-passing a parameter.
-[fix](https://github.com/pzembrod/cc64/commit/f784de39d5751b58dc122b7bb789c3a14d08b017#diff-09a338ea0cdb8481c5925164ea4253bf)
-
-Known bugs in v05:
-
-* Compiling functions after they have previously been declared as extern
-(needed for calling functions before they are defined) ist broken.
-[issue 5](https://github.com/pzembrod/cc64/issues/5)
 
 
 ## v03 and v04
 
 v03 and v04 were the first two versions I published, without
-Forth soruces, as uploads to
+Forth sources, as uploads to
 ftp://ccnga.uwaterloo.ca/pub/cbm/INCOMING/programming,
 on 6-Oct-1994 and 3-Nov-1995, respectively.
 Thanks go to Craig Bruce at this point for keeping the archive on

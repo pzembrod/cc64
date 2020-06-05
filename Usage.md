@@ -3,10 +3,10 @@
 ## Download
 
 Download either the file
-[v05/c64files.zip](https://github.com/pzembrod/cc64/blob/master/v05/c64files.zip)
+[c64files.zip](https://github.com/pzembrod/cc64/blob/master/c64files.zip)
 and unpack the content into a directory mapped as drive (preferably 8) of
 an emulator (I recommend VICE), or download the disk image
-[v05/c64files.d64](https://github.com/pzembrod/cc64/blob/master/v05/c64files.d64)
+[c64files.d64](https://github.com/pzembrod/cc64/blob/master/c64files.d64)
 and attach it to an emulator or write it onto a real 1541 disk.
 
 Note that the disk image contains the correct CBM file type (prg or seq) for
@@ -16,9 +16,9 @@ the c sources and runtime files.
 
 There are 3 main binaries:
 
-- `cc64v05` - the standalone compiler
-- `peddiv03` - the standalone editor
-- `cc64v05pe` - compiler and editor combined
+- `cc64` - the standalone compiler
+- `peddi` - the standalone editor
+- `cc64pe` - compiler and editor combined
 
 ## Shell
 
@@ -26,13 +26,13 @@ cc64 and peddi are written in Forth and use the Forth command line as shell.
 The main consequence of this is that all numeric parameters to commands are
 entered in RPN (reversed polish notation) - _before_ the command.
 
-A heads-up: For v05 I'm still using the old ultraForth which has German
+A heads-up: So far I'm still using the old UltraForth which has German
 messages, namely the syntax error message "Haeh?" on error which means as much
 as "What?".
-I will eventually switch to the newer volksForth with English messages.
+I will eventually switch to the newer VolksForth with English messages.
 
 The full set of commands listed below is only available in the combined
-compiler and editor binary `cc64v05pe`. The standalone compiler and editor
+compiler and editor binary `cc64pe`. The standalone compiler and editor
 binaries only offer the corresponding subset of commands.
 
 Numeric parameters, listed below as n, nnn or mmm, are 16 bit integers and

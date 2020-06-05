@@ -89,9 +89,9 @@ handle the conversion as needed.
 
 ### Running on a real C64
 
-As a corrolary, the contents of the v05/c64files dir is all that should be
-needed to run cc64 on a real C64. Transferring the content of this dir onto
-a C64-readable disk or disk image should do the trick.
+As a corrolary, the contents of the c64files dir is all that should be
+needed to run cc64 on a real C64. They are available either as c64files.zip
+file or as c64files.d64 1541 disk image.
 
 ### Autostarting T64 images in VICE
 
@@ -125,7 +125,7 @@ scratching the file "notdone".
 
 ### Forth source screens
 
-UltraFORTH stores its sources in the classical Forth style, in so called
+UltraForth stores its sources in the classical Forth style, in so called
 screens. A screen is a 1k block of source, often directly stored on 1, 2, 4
 or 8 disk blocks, depending on the disk sector size, and just addressed by a
 block number. In this way you can handle source code on a bare-metal system
@@ -135,9 +135,9 @@ Because the C64 display has only 40 characters per line, ultraFORTH tweaks that
 a bit and treats a screen as 24 lines of 41 characters and 1 line of 40.
 Still no newlines.
 
-### UltraFORTH screens on a 1541
+### UltraForth screens on a 1541
 
-UltraFORTH stores 169 screens of source per 1541 disk, bypassing the file
+UltraForth stores 169 screens of source per 1541 disk, bypassing the file
 system, using block-read and block-write commands. The directory of such a disk
 is empty; all blocks are marked as allocated in the disk's BAM
 (Block Allocation Map). The cc64 sources lived on 2 disks (I outgrew the first
@@ -146,7 +146,7 @@ migrating to development on an emulator, on two D64 disk images,
 cc64src1.d64 and cc64src2.d64 in the v05/src directory. A third disk image
 contains the sources of the text editor Peddi.
 
-Now, looking at ultraFORTH screens in a D64 image from a modern machine,
+Now, looking at UltraForth screens in a D64 image from a modern machine,
 e.g. Linux, has two snags: One, the sources are in PETSCII, not ASCII. And two,
 they seem to consist of just one giant line. At best 2, in case the BAM and
 directory in the middle (track 18 sectors 0 and 1) of the disk happen to
@@ -180,7 +180,7 @@ out of space somewhere.
 ### Regular Forth source files
 
 Since the advent of ANS Forth in 1994, regular text files have been standardized
-as an alternative form of Forth sources, and they seem to be the more common
+as the preferred form of Forth sources, and they seem to be the more common
 from now. UltraFORTH  isn't ANS compliant (yet) and doesn't support text
 source files, but I hacked together a simplified version of the ANS word
 include; it lives in cc64src1.d64/fth blocks 132-135. I'm so far only using

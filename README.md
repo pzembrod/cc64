@@ -12,11 +12,13 @@ and also by Johan Kotlinski of
 [AcmeForth](https://github.com/jkotlinski/acmeforth),
 I am now finally open-sourcing the project.
 
-The current version to use is v0.5; see [Versions](Versions.md) for details.
+The current version is the one in the main directory.
+The subdirs v03, v04 and v05 contain older versions.
+See [Versions](Versions.md) for details.
 
-See [Usage](Usage.md) for how to use cc64; see also
+See [Usage](Usage.md) for how to use cc64.
+See
 [Emulator and file formats](File-formats.md) on the emulator setup I arrived at.
-It also explains which files to grab for running cc64 on a real C64.
 
 I hope you'll find cc64 fun to use; I definitely had - and am having -
 fun developing it.
