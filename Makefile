@@ -42,8 +42,8 @@ etc: $(forth_t64_files) emulator/c-char-rom-gen
 
 clean:
 	rm -f c64files/*.fth tmp/*
-	# $(MAKE) -C tests clean
-	# $(MAKE) -C tests/peddi clean
+	$(MAKE) -C tests clean
+	$(MAKE) -C tests/peddi clean
 
 veryclean: clean
 	rm -f c64files/*
