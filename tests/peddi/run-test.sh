@@ -3,6 +3,9 @@
 # Run peddi with script
 peddi="$1"
 testname="$2"
+
+test -d c64files || mkdir c64files
+
 rm -f "c64files/${testname}.txt" "${testname}.txt"
 if [ -f "${testname}.before" ]
 then
