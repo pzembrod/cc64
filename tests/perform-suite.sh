@@ -28,28 +28,31 @@ rm -f c64files/suite suite.T64
 ./compile-in-vice.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
 bin2t64 c64files/suite suite.T64
 
-# Build golden file
-rm -f suite.golden suite.silver
-touch suite.golden suite.silver
+# Build golden (and silver) file.
+# It is not named suite.golden so the make rules depending on *.golden
+# don't trigger on this generated golden file being new.
+rm -f suite.joined-golden suite.joined-silver
+touch suite.joined-golden suite.joined-silver
 for t in $tests; do
-  echo "${t}-test:" >> suite.golden  
-  cat ${t}.golden >> suite.golden
-  # suite.silver doesn't contain test sections, so diffing against it
+  echo "${t}-test:" >> suite.joined-golden  
+  cat ${t}.golden >> suite.joined-golden
+  # joined-silver doesn't contain test sections, so diffing against it
   # will highlight the test sections as well as actuall output diffs.
-  cat ${t}.golden >> suite.silver
+  cat ${t}.golden >> suite.joined-silver
 done
 
+suitename="${cc64}-suite"
 # Run test binary
-rm -f c64files/suite.out suite.out
+rm -f c64files/suite.out "${suitename}.out"
 ./test-in-vice.sh suite
-petscii2ascii c64files/suite.out suite.out
+petscii2ascii c64files/suite.out "${suitename}.out"
 
 # Evaluate test output
-diff suite.golden suite.out
+diff suite.joined-golden "${suitename}.out"
 result=$?
 test $result -eq 0 \
-  && echo "suite PASS" > suite.result \
-  || diff suite.silver suite.out > suite.result
+  && echo "${suitename} PASS" > "${suitename}.result" \
+  || diff suite.joined-silver "${suitename}.out" > "${suitename}.result"
   # diff with suite.silver will additionally show test sections as diff.
-cat suite.result
+cat "${suitename}.result"
 exit $result

@@ -9,28 +9,32 @@ alltests: fasttests slowtests petests
 
 slowtests: separate-tests.result
 
-fasttests: suite.result
+fasttests: cc64-suite.result
 
-petests: pesuite.result
+petests: cc64pe-suite.result
 
 separate-tests.result: $(test_results)
 	cat $^ >$@
 
-$(test_results) suite.result: ../emulator/cc64.T64 $(rt_files) *.sh *.h
+$(test_results) cc64-suite.result cc64pe-pesuite.result: \
+  $(rt_files) *.sh *.h
 
-pesuite.result: ../emulator/cc64pe.T64 $(rt_files) *.sh *.h
+$(test_results) cc64-suite.result: ../emulator/cc64.T64
+
+cc64pe-pesuite.result: ../emulator/cc64pe.T64
 
 $(test_results): %-result.txt: %-test.c %.golden
 	./run-test.sh $*
 
-suite.result: *-test.c *.golden
+cc64-suite.result: *-test.c *.golden
 	./perform-suite.sh cc64
 
-pesuite.result: *-test.c *.golden
+cc64pe-suite.result: *-test.c *.golden
 	./perform-suite.sh cc64pe
 
 clean:
 	rm -f c64files/* suite.* separate-tests.result tmp.result
+	rm -f cc64-suite.* cc64pe-suite.*
 	rm -f *.out *.T64 *-result.txt *-generated.c
 
 c64files/rt-c64-0801.h: ../c64files/rt-c64-0801.h
