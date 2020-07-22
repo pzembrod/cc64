@@ -96,6 +96,8 @@ emulator/uf-build-base.T64: forth/uf-build-base
 
 emulator/uF83-382-c64.T64: forth/uF83-382-c64
 
+emulator/c64-vf-390.T64: forth/c64-vf-390
+
 
 # Runtime module rules
 
