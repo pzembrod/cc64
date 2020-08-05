@@ -14,7 +14,7 @@ c64dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
 c64dir_files = $(patsubst %, c64files/% , $(c64dir_content))
 
 # Forth binaries
-forth_binaries = devenv-uF83 uF83-382-c64 uf-build-base
+forth_binaries = devenv-uF83
 forth_t64_files = $(patsubst %, emulator/%.T64, $(forth_binaries))
 
 
@@ -28,7 +28,7 @@ c64files.zip: $(c64dir_files)
 
 c64files.d64: $(c64dir_files)
 	rm -f $@
-	c1541 -format cc64v05,cc d64 $@
+	c1541 -format cc64,cc d64 $@
 	c1541 -attach $@ $(patsubst %, -write c64files/%, $(cc64_binaries))
 	c1541 -attach $@ -write c64files/rt-c64-0801.h rt-c64-0801.h,s
 	c1541 -attach $@ -write c64files/rt-c64-0801.i
@@ -56,6 +56,7 @@ test: cc64 fasttests
 
 alltests:
 	$(MAKE) -C tests alltests
+	$(MAKE) -C tests/peddi tests
 
 fasttests:
 	$(MAKE) -C tests fasttests
@@ -67,36 +68,22 @@ slowtests:
 # cc64 build rules
 
 c64files/cc64: $(cc64srcs_c64) \
- build/build-cc64.sh emulator/uf-build-base.T64
+ build/build-cc64.sh emulator/vf-build-base.T64
 	build/build-cc64.sh
 
 c64files/cc64pe: $(cc64srcs_c64) $(peddisrcs_c64) \
- build/build-cc64pe.sh emulator/uf-build-base.T64
+ build/build-cc64pe.sh emulator/vf-build-base.T64
 	build/build-cc64pe.sh
 
 c64files/peddi: $(peddisrcs_c64) \
- build/build-peddi.sh emulator/uf-build-base.T64
+ build/build-peddi.sh emulator/vf-build-base.T64
 	build/build-peddi.sh
 
 
-# cc64 T64 tape images
+# build base rule
 
-emulator/cc64.T64: c64files/cc64
-
-emulator/cc64pe.T64: c64files/cc64pe
-
-emulator/peddi.T64: c64files/peddi
-
-
-# Forth T64 tape images
-
-emulator/devenv-uF83.T64: forth/devenv-uF83
-
-emulator/uf-build-base.T64: forth/uf-build-base
-
-emulator/uF83-382-c64.T64: forth/uF83-382-c64
-
-emulator/c64-vf-390.T64: forth/c64-vf-390
+c64files/vf-build-base: forth/vf-lite-c64
+	cp $< $@
 
 
 # Runtime module rules

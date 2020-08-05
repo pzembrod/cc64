@@ -12,8 +12,8 @@
   : >lo/hi ( u -- lo hi )
      256 u/mod ;
 
-  : lo/hi> ( lo hi -- u )
-     255 and 256 * swap 255 and + ;
+  \ : lo/hi> ( lo hi -- u )
+  \    255 and 256 * swap 255 and + ;
 
   : >lo ( -- lo )
      255 and ;

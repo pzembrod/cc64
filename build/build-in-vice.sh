@@ -21,7 +21,7 @@ x64 \
   -drive10type 1541 \
   -drive11type 1541 \
   -fs8 "${basedir}/c64files" \
-  -autostart "${emulatordir}/uf-build-base.T64" \
+  -autostart "${emulatordir}/vf-build-base.T64" \
   -keybuf "$keybuf" \
   -warp \
   &

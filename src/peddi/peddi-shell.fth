@@ -1,13 +1,9 @@
-\ *** Block No. 7, Hexblock 7
-
-\   shell: cold' logo          14apr20pz
 
 | create charset    here here 2- !
    also assembler   here 6 +  $20 c, ,
    xyNext $4c c, ,  $cbfa     $6c c, ,
    toss
 
-\ needs 2@  | : 2@  dup 2+ @ swap @ ;
 | : 2@  dup 2+ @ swap @ ;
 
 | : init-shell  ( -- )
@@ -26,10 +22,6 @@
 
 ' .logo IS 'restart
 
-
-\ *** Block No. 8, Hexblock 8
-
-\   shell:                     03sep94pz
 
 : dir  ( -- )
    dev 0 busopen  ascii $ bus! busoff
@@ -54,26 +46,14 @@
    i/o-status? UNTIL busoff
    dev 2 busclose ;
 
+: device  ( n -- )
+  dev# c! ;
 
-\ *** Block No. 9, Hexblock 9
+: device?  ( -- )
+  ." actual device number is "
+  dev# c@ . ;
 
-\   shell: cold' logo          14apr20pz
-
-  : device  ( n -- )
-     dev# c! ;
-
-  : device?  ( -- )
-     ." actual device number is "
-     dev# c@ . ;
-
-  : help  ( -- )
-     ." available commands:" cr words ;
-
-
-\ *** Block No. 10, Hexblock a
-
-\ savesystem                   17apr20pz
-
-' dev IS savesysdev
+: help  ( -- )
+  ." available commands:" cr words ;
 
 ' savesystem        alias saveall

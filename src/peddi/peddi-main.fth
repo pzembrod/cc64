@@ -1,10 +1,6 @@
 
   onlyforth  decimal
 
-\ 3 drive  \ 5 load
-
-\ *** Block No. 5, Hexblock 5
-
 \ peddi loadscreen standalone  07may95pz
 
 | vocabulary peddi
@@ -17,8 +13,12 @@
 | : text[   r0 @ ;
 | ' limit ALIAS ]text
 
-  include ed-func.fth  \ 18 load   \ editor functions
-  include ed-frame.fth  \ 12 load   \ editor framework
+  include ed-func.fth   \ editor functions
+  include ed-frame.fth  \ editor framework
+
+  forth definitions
+  |  ' | alias ~
+  include savesystem.fth
 
   shell also definitions
 
@@ -26,8 +26,7 @@
 
 ' bye ALIAS bye
 
-  include peddi-shell.fth  \ 7 10 thru  \ shell & savesystem
-  \ 2 load     \ set memory
+  include peddi-shell.fth  \ shell & savesystem
   save
 
 | : relocate-tasks  ( newUP -- )
