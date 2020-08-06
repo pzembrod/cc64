@@ -6,12 +6,20 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 tests=$(echo *-test.c| sed 's/-test\.c//g')
 goldens=*.golden
 cc64="$1"
+host_target="$2"
 
-test -d c64files || mkdir c64files
+test -n "${host_target}" || host_target=c64_c64
+
+IFS=_ read host target <<< "$2"
+
+hostfiles="${host}files"
+targetfiles="${target}files"
+
+test -d "${targetfiles}" || mkdir "${targetfiles}"
 
 # Build test binary
 (
-  cat test-setup.h
+  cat "test-setup-${target}.h"
   echo "char *name(){ return \"suite.out,s,w\"; }"
   for t in $tests; do
     cat ${t}-test.c
@@ -23,10 +31,11 @@ test -d c64files || mkdir c64files
   done
   echo "}"
   cat test-main.h
-) | tee suite-generated.c | ascii2petscii - c64files/suite.c
-rm -f c64files/suite suite.T64
-./compile-in-vice.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
-bin2t64 c64files/suite suite.T64
+) | tee suite-generated.c | ascii2petscii - "${hostfiles}/suite.c"
+rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
+CC64HOST="${host}" ./compile-in-vice.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
+
+bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 
 # Build golden (and silver) file.
 # It is not named suite.golden so the make rules depending on *.golden
@@ -41,11 +50,11 @@ for t in $tests; do
   cat ${t}.golden >> suite.joined-silver
 done
 
-suitename="${cc64}-suite"
+suitename="${cc64}-suite-${host_target}"
 # Run test binary
-rm -f c64files/suite.out "${suitename}.out"
-./test-in-vice.sh suite
-petscii2ascii c64files/suite.out "${suitename}.out"
+rm -f "${targetfiles}/suite.out" "${suitename}.out"
+CC64TARGET="${target}" ./test-in-vice.sh suite
+petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"
 
 # Evaluate test output
 diff suite.joined-golden "${suitename}.out"

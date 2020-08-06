@@ -10,9 +10,9 @@ separate-tests.result: $(test_results)
 separate-pe-tests.result: $(pe_test_results)
 	cat $^ >$@
 
-$(test_results): ../../emulator/peddi.T64 *.sh
+$(test_results): ../../autostart-c64/peddi.T64 *.sh
 
-$(pe_test_results): ../../emulator/cc64pe.T64 *.sh
+$(pe_test_results): ../../autostart-c64/cc64pe.T64 *.sh
 
 $(test_results): %-result.txt: %.keybuf %.golden
 	./run-test.sh peddi $*

@@ -46,7 +46,8 @@
 
   ' noop is .status
 
-  0 ink-pot !  15 ink-pot 2+ c!
+  (64 0 ink-pot !  15  ink-pot 2+ c! C)
+  (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
   save
 

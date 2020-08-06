@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
+test -n "${CC64HOST}" || export CC64HOST=c64
+
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${testdir}/../..")"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
+autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${CC64HOST}")"
 c64files="$(realpath --relative-to="$PWD" "${testdir}/c64files")"
 
 peddi="peddi"
@@ -30,7 +33,7 @@ x64 \
   -chargen "${emulatordir}/c-chargen" \
   -symkeymap "${emulatordir}/x11_sym_uf_de.vkm" \
   -keymap 2 \
-  -autostart "${emulatordir}/${peddi}.T64" \
+  -autostart "${autostartdir}/${peddi}.T64" \
   -keybuf "$keybuf" \
   $warp \
   &

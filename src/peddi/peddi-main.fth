@@ -44,5 +44,6 @@
        6 -  origin  8 + ! cold ; \ s0
 
   $cbd0 ' limit >body !
-  0 ink-pot !  15 ink-pot 2+ c!
+  (64 0 ink-pot !  15  ink-pot 2+ c! C)
+  (16 0 ink-pot !  125 ink-pot 2+ c! C)
   256 256 relocate

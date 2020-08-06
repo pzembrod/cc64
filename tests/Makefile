@@ -1,54 +1,93 @@
 
-test_results = $(patsubst %-test.c,%-result.txt,$(wildcard *-test.c))
-rt_files = $(patsubst ../c64files/%,c64files/%, \
-    $(wildcard ../c64files/rt-c64-0801.[hio]))
+test_names = $(patsubst %-test.c, %, $(wildcard *-test.c))
+test_results_c64_c64 = $(patsubst %, %-c64_c64-result.txt, $(test_names))
+test_results_c64_c16 = $(patsubst %, %-c64_c16-result.txt, $(test_names))
+test_results_c16_c64 = $(patsubst %, %-c16_c64-result.txt, $(test_names))
+test_results_c16_c16 = $(patsubst %, %-c16_c16-result.txt, $(test_names))
+
+test_results_c64_hosted = $(test_results_c64_c64) $(test_results_c64_c16)
+test_results_c16_hosted = $(test_results_c16_c64) $(test_results_c16_c16)
+
+c64_rt_files = $(patsubst ../runtime/%, c64files/%, \
+    $(wildcard ../runtime/rt-*.[hio]))
+c16_rt_files = $(patsubst ../runtime/%, c16files/%, \
+    $(wildcard ../runtime/rt-*.[hio]))
 
 tests: fasttests
 
 alltests: fasttests slowtests petests
 
-slowtests: separate-tests.result
+slowtests: separate-tests-c64_c64.result
 
-fasttests: cc64-suite.result
+fasttests: cc64-suite-c64_c64.result
 
-petests: cc64pe-suite.result
+petests: cc64pe-suite-c64_c64.result
 
-separate-tests.result: $(test_results)
+slowcrosstests: \
+  separate-tests-c64_c64.result \
+  separate-tests-c16_c16.result \
+  separate-tests-c64_c16.result \
+  separate-tests-c16_c64.result
+
+separate-tests-c64_c64.result: $(test_results_c64_c64)
 	cat $^ >$@
 
-$(test_results) cc64-suite.result cc64pe-pesuite.result: \
-  $(rt_files) *.sh *.h
+separate-tests-c64_c16.result: $(test_results_c64_c16)
+	cat $^ >$@
 
-$(test_results) cc64-suite.result: ../emulator/cc64.T64
+separate-tests-c16_c64.result: $(test_results_c16_c64)
+	cat $^ >$@
 
-cc64pe-pesuite.result: ../emulator/cc64pe.T64
+separate-tests-c16_c16.result: $(test_results_c16_c16)
+	cat $^ >$@
 
-$(test_results): %-result.txt: %-test.c %.golden
-	./run-test.sh $*
+$(test_results_c64_hosted) cc64-suite-c64_*.result cc64pe-pesuite.result: \
+  $(c64_rt_files) *.sh *.h
 
-cc64-suite.result: *-test.c *.golden
-	./perform-suite.sh cc64
+$(test_results_c16_hosted) cc64-suite-c16_*.result cc64pe-pesuite.result: \
+  $(c16_rt_files) *.sh *.h
 
-cc64pe-suite.result: *-test.c *.golden
-	./perform-suite.sh cc64pe
+$(test_results_c64_hosted) cc64-suite-c64_*.result: ../autostart-c64/cc64.T64
+
+$(test_results_c16_hosted) cc64-suite-c16_*.result: ../autostart-c16/cc64.T64
+
+cc64pe-pesuite-c64_*.result: ../autostart-c64/cc64pe.T64
+
+$(test_results_c64_c64): %-c64_c64-result.txt: %-test.c %.golden
+	./run-test.sh $* c64_c64
+
+$(test_results_c64_c16): %-c64_c16-result.txt: %-test.c %.golden
+	./run-test.sh $* c64_c16
+
+$(test_results_c16_c64): %-c16_c64-result.txt: %-test.c %.golden
+	./run-test.sh $* c16_c64
+
+$(test_results_c16_c16): %-c16_c16-result.txt: %-test.c %.golden
+	./run-test.sh $* c16_c16
+
+cc64-suite-%.result: *-test.c *.golden
+	./perform-suite.sh cc64 $*
+
+cc64pe-suite-%.result: *-test.c *.golden
+	./perform-suite.sh cc64pe $*
 
 clean:
-	rm -f c64files/* suite.* separate-tests.result tmp.result
+	rm -f c64files/* c16files/* suite.* separate-tests.result tmp.result
 	rm -f cc64-suite.* cc64pe-suite.*
 	rm -f *.out *.T64 *-result.txt *-generated.c
 
-c64files/rt-c64-0801.h: ../c64files/rt-c64-0801.h
+c64files/rt-%: ../c64files/rt-%
 	test -d c64files || mkdir c64files
 	cp $< $@
 
-c64files/rt-c64-0801.i: ../c64files/rt-c64-0801.i
-	test -d c64files || mkdir c64files
-	cp $< $@
-
-c64files/rt-c64-0801.o: ../c64files/rt-c64-0801.o
-	test -d c64files || mkdir c64files
+c16files/rt-%: ../c16files/rt-%
+	test -d c16files || mkdir c16files
 	cp $< $@
 
 c64files/%.h: %.h
 	test -d c64files || mkdir c64files
+	ascii2petscii $< $@
+
+c16files/%.h: %.h
+	test -d c16files || mkdir c16files
 	ascii2petscii $< $@

@@ -1,28 +1,25 @@
 
 ; cc64 runtime module
-; to run on c64 at $0801-$a000
+; to run on c16/plus4 at $1001-$8000
 
-; philip zembrod, 10.05.1994
-; last change :   08.05.2020
+!addr   cc64_statics_start = $8000
+!addr   cc64_statics_end   = $8000
+!addr   cc64_sp            = $22
+!addr   cc64_zp            = $24
 
-!addr   cc64_statics_start = $a000
-!addr   cc64_statics_end   = $a000
-!addr   cc64_sp            = $fd
-!addr   cc64_zp            = $fb
+!addr   tmp_zp1            = $1e
+!addr   tmp_zp2            = $20
 
-!addr   tmp_zp1            = $22
-!addr   tmp_zp2            = $24
+!addr   strout    = $9088
+!addr   warmstart = $8003
 
-!addr   strout    = $ab1e
-!addr   warmstart = $e37b
-
-        *= $0801
+        *= $1001
 
 cc64_lib_start
         !word baslink
         !word 2020
         !byte $9e
-        !pet " 2081:"
+        !pet " 4129:"
         !byte $8f
         !pet " cc64 rt-lib v0.6", 0
 baslink !word 0
