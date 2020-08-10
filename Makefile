@@ -5,6 +5,7 @@ cc64srcs_c64 = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_ascii))
 cc64srcs_c16 = $(patsubst src/cc64/%, c16files/%, $(cc64srcs_ascii))
 peddisrcs_ascii = $(wildcard src/peddi/*.fth)
 peddisrcs_c64 = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_ascii))
+peddisrcs_c16 = $(patsubst src/peddi/%, c16files/%, $(peddisrcs_ascii))
 cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
 cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, cc64)
@@ -82,7 +83,9 @@ clean:
 veryclean: clean
 	rm -f c64files/*
 	rm -f c64files.d64 c64files.zip
-	rm -f emulator/*.T64 emulator/c-char-rom-gen
+	rm -f c16files/*
+	rm -f c16files.d64 c16files.zip
+	rm -f emulator/c-char-rom-gen
 	rm -f autostart-c64/*.T64 autostart-c16/*.T64
 	rm -f runtime/*
 
@@ -112,7 +115,7 @@ slowtests:
  autostart-%/vf-build-base.T64
 	build/build-cc64pe.sh $*
 
-%files/peddi: $(cc64srcs_c64) $(cc64srcs_c16) \
+%files/peddi: $(peddisrcs_c64) $(peddisrcs_c16) \
  build/build-peddi.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
 	build/build-peddi.sh $*

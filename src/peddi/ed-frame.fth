@@ -74,4 +74,5 @@ here ]
      bl word filename /filename move
      filename c@ /filename 1- umin
      filename c!
-     reset loadtext edit-page ;
+     (64 reset C)
+     loadtext edit-page ;

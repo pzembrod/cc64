@@ -43,10 +43,11 @@
      BEGIN pause c64key? UNTIL getkey ;
 
 | 40   constant col/scr
-| 1024 constant scr>
-| 1024 constant chr/scr
-| 2024 constant <scr
-| 1984 constant last-row>
+(64 | 1024 constant scr> C)
+(16 | 3072 constant scr> C)
+\ | 1024 constant chr/scr
+| scr> 1000 +    constant <scr
+| <scr col/scr - constant last-row>
 | ' scr> ALIAS 1st-row>
 | 25   constant rows/scr
 
