@@ -63,8 +63,8 @@ c64files.d64: $(c64dir_files)
 
 c16files.d64: $(c16dir_files)
 	rm -f $@
-	c1541 -format cc64-c64,cc d64 $@
-	c1541 -attach $@ $(patsubst %, -write c64files/%, cc64)
+	c1541 -format cc64-c16,cc d64 $@
+	c1541 -attach $@ $(patsubst %, -write c64files/%, $(cc64_binaries))
 	c1541 -attach $@ -write c64files/rt-c64-0801.h rt-c64-0801.h,s
 	c1541 -attach $@ -write c64files/rt-c64-0801.i
 	c1541 -attach $@ -write c64files/rt-c64-0801.o
