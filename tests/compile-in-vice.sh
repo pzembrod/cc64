@@ -28,8 +28,6 @@ ${emulator} \
   +truedrive \
   -drive8type 1541 \
   -fs8 "${hostfiles}" \
-  -symkeymap "${emulatordir}/x11_sym_uf_de.vkm" \
-  -keymap 2 \
   -autostart "${autostartdir}/${cc64}.T64" \
   -keybuf "$keybuf" \
   $warp \

@@ -8,7 +8,7 @@ peddisrcs_c64 = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_ascii))
 peddisrcs_c16 = $(patsubst src/peddi/%, c16files/%, $(peddisrcs_ascii))
 cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
-cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, cc64)
+cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 
 rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
   rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o

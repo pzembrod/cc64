@@ -19,6 +19,4 @@ x64 \
   -drive8type 1541 \
   -fs8 "${c64files}" \
   -chargen "${emulatordir}/c-chargen" \
-  -symkeymap "${emulatordir}/x11_sym_uf_de.vkm" \
-  -keymap 2 \
   $run

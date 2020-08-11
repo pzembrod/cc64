@@ -24,8 +24,6 @@ ${emulator} \
   +truedrive \
   -drive8type 1541 \
   -fs8 "${targetfiles}" \
-  -symkeymap "${emulatordir}/x11_sym_uf_de.vkm" \
-  -keymap 2 \
   $run \
   &
 

@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-test -n "$PLATFORM" || PLATFORM=c64
+test -n "$PLATFORM" || export PLATFORM=c64
+
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
@@ -30,13 +31,10 @@ ${emulator} \
   +truedrive \
   -drive8type 1541 \
   -fs8 "${basedir}/${cbmfiles}" \
-  -symkeymap "${emulatordir}/x11_sym_vf_de.vkm" \
-  -keymap 2 \
   $autostart \
   -keybuf "$keybuf" \
   $warp \
   &
-
 
 if [ -n "$keybuf" ]
 then

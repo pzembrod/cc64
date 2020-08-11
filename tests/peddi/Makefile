@@ -1,27 +1,51 @@
 
-test_results = $(patsubst %.golden, %-result.txt,$(wildcard *.golden))
-pe_test_results = $(patsubst %.golden, %-result-pe.txt,$(wildcard *.golden))
+test_names = $(patsubst %.golden, %, $(wildcard *.golden))
+test_results_c64 = $(patsubst %, %-c64-result.txt, $(test_names))
+test_results_c16 = $(patsubst %, %-c16-result.txt, $(test_names))
+pe_test_results_c64 = $(patsubst %, %-c64-result-pe.txt, $(test_names))
+pe_test_results_c16 = $(patsubst %, %-c16-result-pe.txt, $(test_names))
 
-tests: separate-tests.result separate-pe-tests.result
+tests: tests64 tests16
 
-separate-tests.result: $(test_results)
+tests64: separate-tests-c64.result separate-pe-tests-c64.result
+
+tests16: separate-tests-c16.result separate-pe-tests-c16.result
+
+separate-tests-c64.result: $(test_results_c64)
 	cat $^ >$@
 
-separate-pe-tests.result: $(pe_test_results)
+separate-tests-c16.result: $(test_results_c16)
 	cat $^ >$@
 
-$(test_results): ../../autostart-c64/peddi.T64 *.sh
+separate-pe-tests-c64.result: $(pe_test_results_c64)
+	cat $^ >$@
 
-$(pe_test_results): ../../autostart-c64/cc64pe.T64 *.sh
+separate-pe-tests-c16.result: $(pe_test_results_c16)
+	cat $^ >$@
 
-$(test_results): %-result.txt: %.keybuf %.golden
-	./run-test.sh peddi $*
+$(test_results_c64): ../../autostart-c64/peddi.T64 *.sh
 
-$(pe_test_results): %-result-pe.txt: %.keybuf %.golden
-	./run-test.sh cc64pe $*
-	mv $*-result.txt $*-result-pe.txt
+$(test_results_c16): ../../autostart-c16/peddi.T64 *.sh
+
+$(pe_test_results_c64): ../../autostart-c64/cc64pe.T64 *.sh
+
+$(pe_test_results_c16): ../../autostart-c16/cc64pe.T64 *.sh
+
+$(test_results_c64): %-c64-result.txt: %.keybuf %.golden
+	./run-test.sh peddi $* c64
+
+$(test_results_c16): %-c16-result.txt: %.keybuf %.golden
+	./run-test.sh peddi $* c16
+
+$(pe_test_results_c64): %-c64-result-pe.txt: %.keybuf %.golden
+	./run-test.sh cc64pe $* c64
+	mv $*-result.txt $*-c64-result-pe.txt
+
+$(pe_test_results_c16): %-c16-result-pe.txt: %.keybuf %.golden
+	./run-test.sh cc64pe $* c16
+	mv $*-result.txt $*-c16-result-pe.txt
 
 clean:
-	rm -f c64files/* c64files/.??*
+	rm -f c64files/* c64files/.??* c16files/* c16files/.??*
 	rm -f separate-tests.result separate-pe-tests.result tmp.result
 	rm -f *.out *-result.txt *-result-pe.txt
