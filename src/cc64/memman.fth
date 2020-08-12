@@ -28,15 +28,16 @@
 
 \   memman: variable           03sep94pz
 
-| create mem  $d000 , 100   ,
+| create cc64mem  100   ,
               1000  , 4000  , 4000 ,
               0 , 0 , 0 , 0 , 0 ,
 
-  : himem         mem @ ;
-| : #links        mem 2+ @ ;
-~ : #globals      mem 4 + @ ;
-| : symtabsize    mem 6 + @ ;
-| : codesize      mem 8 + @ ;
+  ' limit alias himem
+
+| : #links        cc64mem @ ;
+~ : #globals      cc64mem 2+ @ ;
+| : symtabsize    cc64mem 4 + @ ;
+| : codesize      cc64mem 6 + @ ;
   : lomem          r0 @ ;
 
 ~ 6 constant /link   \ listenknoten
@@ -54,24 +55,24 @@
 \   memman: configure          03sep94pz
 
 ~ ' himem ALIAS   ]heap
-~               : heap[    mem 10 + @ ;
+~               : heap[    cc64mem  8 + @ ;
 ~ ' heap[ ALIAS   ]hash
-~               : hash[    mem 12 + @ ;
+~               : hash[    cc64mem 10 + @ ;
 ~ ' hash[ ALIAS   ]symtab
-~               : symtab[  mem 14 + @ ;
+~               : symtab[  cc64mem 12 + @ ;
 ~ ' symtab[ ALIAS ]code
-~               : code[    mem 16 + @ ;
+~               : code[    cc64mem 14 + @ ;
 ~ ' code[ ALIAS   ]static
-~               : static[  mem 18 + @ ;
+~               : static[  cc64mem 16 + @ ;
 ~ ' lomem ALIAS   linebuf
 
 | : (conf?  ( -- flag )
      himem  #links /link *  -
-                      dup mem 10 + !
-     #globals 2*  -   dup mem 12 + !
-     symtabsize -     dup mem 14 + !
-     codesize   -         mem 16 + !
-     linebuf /linebuf +   mem 18 + !
+                      dup cc64mem  8 + !
+     #globals 2*  -   dup cc64mem 10 + !
+     symtabsize -     dup cc64mem 12 + !
+     codesize   -         cc64mem 14 + !
+     linebuf /linebuf +   cc64mem 16 + !
      static[ 11 + ]static u> ;
 
 
@@ -85,20 +86,21 @@
    init: configure
 
 | : set-mem:  ( n -- ) create c, does>
-  ( n dfa -- ) c@ mem + ! ;
+  ( n dfa -- ) c@ cc64mem + ! ;
 
-~ 0 set-mem: himem!
-~ 2 set-mem: #links!
-~ 4 set-mem: #globals!
-~ 6 set-mem: symtabsize!
-~ 8 set-mem: codesize!
+~ 0 set-mem: #links!
+~ 2 set-mem: #globals!
+~ 4 set-mem: symtabsize!
+~ 6 set-mem: codesize!
+
+~ : himem!  ['] limit >body ! ;
 
 
-\ | create (default-mem  $d000 , $20   ,
+\ | create (default-mem  $20   ,
 \                $10   , $100  , $100  ,
 
 \ ~ : default-mem  ( -- )
-\   (default-mem mem 10 cmove configure ;
+\   (default-mem cc64mem 8 cmove configure ;
 
 
 \ *** Block No. 16, Hexblock 10
