@@ -189,9 +189,9 @@ runtime/rt-c16-1001.i:
 
 # Charset rules
 
-c64files/c-charset: src/runtime/c-charset.a
+c64files/c-charset: src/runtime/c-charset-c64.a
 	test -d tmp || mkdir tmp
-	acme -f cbm -l tmp/c-charset.sym -o $@ $<
+	acme -f cbm -l tmp/c-charset-c64.sym -o $@ $<
 
 emulator/c-char-rom-gen: src/runtime/c-char-rom-gen.a
 	acme -f cbm -o $@ $<
