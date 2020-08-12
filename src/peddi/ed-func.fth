@@ -77,13 +77,17 @@
         bl I c! LOOP UNLOOP exit THEN
      cbm>scr I c! 1+ LOOP 2drop ;
 
-| $d020 constant border
+(64 | $d020 constant border C)
+(16 | $ff19 constant border C)
 | : half  ( n - )
      border c! pause $80 0 DO LOOP ;
 
+    | 0 constant black
+(64 | 1 constant white C)
+(16 | $71 constant white C)
 | : warn-signal ( -- )
-     border push  0 half  1 half
-                  0 half  1 half ;
+     border push  white half  black half
+                  white half  black half ;
 
 
 \ *** Block No. 22, Hexblock 16
