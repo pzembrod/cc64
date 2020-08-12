@@ -39,11 +39,11 @@ $(test_results_c16): %-c16-result.txt: %.keybuf %.golden
 
 $(pe_test_results_c64): %-c64-result-pe.txt: %.keybuf %.golden
 	./run-test.sh cc64pe $* c64
-	mv $*-result.txt $*-c64-result-pe.txt
+	mv $*-c64-result.txt $*-c64-result-pe.txt
 
 $(pe_test_results_c16): %-c16-result-pe.txt: %.keybuf %.golden
 	./run-test.sh cc64pe $* c16
-	mv $*-result.txt $*-c16-result-pe.txt
+	mv $*-c16-result.txt $*-c16-result-pe.txt
 
 clean:
 	rm -f c64files/* c64files/.??* c16files/* c16files/.??*
