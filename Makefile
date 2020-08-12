@@ -13,13 +13,15 @@ cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
   rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o
 
+sample_files = helloworld-c64.c helloworld-c16.c \
+  kernal-io-c64.c kernal-io-c16.c
+
 # c64files content
-c64_sample_files = helloworld.c kernal-io.c
-c64dir_content = $(cc64_binaries) $(rt_files) $(c64_sample_files) c-charset
+c64dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
 c64dir_files = $(patsubst %, c64files/% , $(c64dir_content))
 
 # c16files content
-c16dir_content = cc64 $(rt_files)
+c16dir_content = cc64 $(rt_files) $(sample_files)
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 
 # Forth binaries
@@ -58,19 +60,25 @@ c64files.d64: $(c64dir_files)
 	c1541 -attach $@ -write c64files/rt-c16-1001.i
 	c1541 -attach $@ -write c64files/rt-c16-1001.o
 	c1541 -attach $@ -write c64files/c-charset
-	c1541 -attach $@ -write c64files/helloworld.c helloworld.c,s
-	c1541 -attach $@ -write c64files/kernal-io.c kernal-io.c,s
+	c1541 -attach $@ -write c64files/helloworld-c64.c helloworld.c-c64,s
+	c1541 -attach $@ -write c64files/kernal-io-c64.c kernal-io.c-c64,s
+	c1541 -attach $@ -write c64files/helloworld-c16.c helloworld.c-c16,s
+	c1541 -attach $@ -write c64files/kernal-io-c16.c kernal-io.c-c16,s
 
 c16files.d64: $(c16dir_files)
 	rm -f $@
 	c1541 -format cc64-c16,cc d64 $@
 	c1541 -attach $@ $(patsubst %, -write c64files/%, $(cc64_binaries))
-	c1541 -attach $@ -write c64files/rt-c64-0801.h rt-c64-0801.h,s
-	c1541 -attach $@ -write c64files/rt-c64-0801.i
-	c1541 -attach $@ -write c64files/rt-c64-0801.o
-	c1541 -attach $@ -write c64files/rt-c16-1001.h rt-c16-1001.h,s
-	c1541 -attach $@ -write c64files/rt-c16-1001.i
-	c1541 -attach $@ -write c64files/rt-c16-1001.o
+	c1541 -attach $@ -write c16files/rt-c64-0801.h rt-c64-0801.h,s
+	c1541 -attach $@ -write c16files/rt-c64-0801.i
+	c1541 -attach $@ -write c16files/rt-c64-0801.o
+	c1541 -attach $@ -write c16files/rt-c16-1001.h rt-c16-1001.h,s
+	c1541 -attach $@ -write c16files/rt-c16-1001.i
+	c1541 -attach $@ -write c16files/rt-c16-1001.o
+	c1541 -attach $@ -write c16files/helloworld-c64.c helloworld.c-c64,s
+	c1541 -attach $@ -write c16files/kernal-io-c64.c kernal-io.c-c64,s
+	c1541 -attach $@ -write c16files/helloworld-c16.c helloworld.c-c16,s
+	c1541 -attach $@ -write c16files/kernal-io-c16.c kernal-io.c-c16,s
 
 etc: $(forth_t64_files) emulator/c-char-rom-gen
 
