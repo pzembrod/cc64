@@ -51,7 +51,9 @@ $(test_results_c64_hosted) cc64-suite-c64_*.result: ../autostart-c64/cc64.T64
 
 $(test_results_c16_hosted) cc64-suite-c16_*.result: ../autostart-c16/cc64.T64
 
-cc64pe-pesuite-c64_*.result: ../autostart-c64/cc64pe.T64
+cc64pe-suite-c64_*.result: ../autostart-c64/cc64pe.T64
+
+cc64pe-suite-c16_*.result: ../autostart-c16/cc64pe.T64
 
 $(test_results_c64_c64): %-c64_c64-result.txt: %-test.c %.golden
 	./run-test.sh $* c64_c64
