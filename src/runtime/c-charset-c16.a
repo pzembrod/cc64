@@ -1,0 +1,191 @@
+
+; Dynamically adds characters needed for C to the C16/Plus4 charset.
+
+; Copies the character ROM ($d000-$dfff) into RAM, patches
+; in the charactes \^_{|}~, and then switches TED
+; so the charset in RAM is used.
+
+
+!addr   zp_src   = $22
+!addr   zp_dst   = $24
+
+!addr   char_rom = $d000
+!addr   char_ram = $f000
+!addr   char_ram_lower_upper = char_ram + $0400
+char_pages = $8
+!addr   magic_dst = $f800
+
+!addr   char_rom_page = $02e4
+!addr   ted_char_rom_ram  =  $ff12
+!addr   ted_char_rom_page =  $ff13
+
+!addr   basic_end = $37
+!addr   basic_clr = $8a9a
+!addr   ram_start = $0531
+!addr   ram_end   = $0533
+
+!addr   ready = $867e
+
+        *= $1001
+
+cc64_lib_start
+        !word baslink
+        !word 2020
+        !byte $9e
+        !pet " 4129:"
+        !byte $8f
+        !pet " cc64   c charset", 0
+baslink !word 0
+
+        jmp init
+
+charlist
+        !byte $1c
+        !byte %00000000
+        !byte %01100000
+        !byte %00110000
+        !byte %00011000
+        !byte %00001100
+        !byte %00000110
+        !byte %00000011
+        !byte %00000000
+
+        !byte $1e
+        !byte %00000000
+        !byte %00011000
+        !byte %00111100
+        !byte %01100110
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+
+        !byte $1f
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %11111111
+
+        !byte $5b
+        !byte %00001100
+        !byte %00011000
+        !byte %00011000
+        !byte %00110000
+        !byte %00011000
+        !byte %00011000
+        !byte %00001100
+        !byte %00000000
+
+        !byte $5c
+        !byte %00011000
+        !byte %00011000
+        !byte %00011000
+        !byte %00000000
+        !byte %00011000
+        !byte %00011000
+        !byte %00011000
+        !byte %00000000
+
+        !byte $5d
+        !byte %00110000
+        !byte %00011000
+        !byte %00011000
+        !byte %00001100
+        !byte %00011000
+        !byte %00011000
+        !byte %00110000
+        !byte %00000000
+
+        !byte $5e
+        !byte %00000000
+        !byte %00110010
+        !byte %01111110
+        !byte %01001100
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+        !byte %00000000
+
+        !byte $20
+
+init    
+        lda #<char_ram
+        sta basic_end
+        lda #>char_ram
+        sta basic_end + 1
+        jsr basic_clr
+
+        lda #<char_rom
+        sta zp_src
+        lda #>char_rom
+        sta zp_src + 1
+        lda #<char_ram
+        sta zp_dst
+        lda #>char_ram
+        sta zp_dst + 1
+        ldx #char_pages
+        ldy #0
+
+copy_loop
+        lda (zp_src),y
+        sta (zp_dst),y
+        iny
+        bne copy_loop
+        inc zp_src + 1
+        inc zp_dst + 1
+        dex
+        bne copy_loop
+
+        ldx #0
+patch_loop
+        lda # (>char_ram_lower_upper) >>> 2
+        sta zp_dst + 1
+        lda charlist,x
+        inx
+        cmp #$20
+        beq patch_done
+        asl ; only 128 chars, so msb is always 0
+        asl
+        rol zp_dst + 1
+        asl
+        rol zp_dst + 1
+        sta zp_dst
+
+        ldy #0
+next_line
+        lda charlist,x
+        inx
+        sta (zp_dst),y
+        iny
+        cpy #8
+        bne next_line
+
+        jmp patch_loop
+
+patch_done
+        ldx #magic_end - magic_src - 1
+magic_loop
+        lda magic_src,x
+        sta magic_dst,x
+        dex
+        bpl magic_loop
+
+        lda #$5b
+        sta $0c00
+        
+        jsr re_init
+        jmp ready
+
+magic_src !word $6502, $1103
+re_init lda #>char_ram
+        sta ted_char_rom_page
+        sta char_rom_page
+        lda #$c0    ; charset in ram, #$c6 for charset in rom
+        sta ted_char_rom_ram
+        rts
+magic_end
+

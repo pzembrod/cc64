@@ -193,6 +193,10 @@ c64files/c-charset: src/runtime/c-charset-c64.a
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/c-charset-c64.sym -o $@ $<
 
+c16files/c-charset: src/runtime/c-charset-c16.a
+	test -d tmp || mkdir tmp
+	acme -f cbm -l tmp/c-charset-c16.sym -o $@ $<
+
 emulator/c-char-rom-gen: src/runtime/c-char-rom-gen.a
 	acme -f cbm -o $@ $<
 
