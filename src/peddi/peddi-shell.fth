@@ -1,28 +1,4 @@
 
-| create charset    here here 2- !
-   also assembler   here 6 +  $20 c, ,
-   xyNext $4c c, ,  $cbfa     $6c c, ,
-   toss
-
-| : 2@  dup 2+ @ swap @ ;
-
-| : init-shell  ( -- )
-     only shell
-     $cbfc 2@  $65021103. d=
-        IF charset THEN ;
-
-' init-shell IS 'cold
-
-| : .logo  ( -- )
-     ."     running" cr
-     ." peddi text editor V0.6" cr
-     ." 1995 by Philip Zembrod" cr
-     $cbfc 2@  $65021103. d= not ?exit
-     ." C charset in use" cr ;
-
-' .logo IS 'restart
-
-
 : dir  ( -- )
    dev 0 busopen  ascii $ bus! busoff
    dev 0 busin bus@ bus@ 2drop

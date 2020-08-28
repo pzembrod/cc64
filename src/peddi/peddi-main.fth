@@ -3,6 +3,8 @@
 
 \ peddi loadscreen standalone  07may95pz
 
+  include trns6502asm.fth  \ transient 6502 assembler
+
 | vocabulary peddi
   vocabulary shell
   peddi also definitions
@@ -27,6 +29,11 @@
 ' bye ALIAS bye
 
   include peddi-shell.fth  \ shell & savesystem
+  include version.fth
+  | : .binary-name  ." peddi text editor" ;
+  | : 2@  dup 2+ @ swap @ ;
+  include init-shell.fth
+
   save
 
 | : relocate-tasks  ( newUP -- )

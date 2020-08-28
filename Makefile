@@ -1,11 +1,18 @@
 
 # cc64 sources and binaries
+commonsrcs_ascii = $(wildcard src/common/*.fth)
+commonsrcs_c64 = $(patsubst src/common/%, c64files/%, $(commonsrcs_ascii))
+commonsrcs_c16 = $(patsubst src/common/%, c16files/%, $(commonsrcs_ascii))
 cc64srcs_ascii = $(wildcard src/cc64/*.fth)
-cc64srcs_c64 = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_ascii))
-cc64srcs_c16 = $(patsubst src/cc64/%, c16files/%, $(cc64srcs_ascii))
+cc64srcs_c64 = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_ascii)) \
+  $(commonsrcs_c64)
+cc64srcs_c16 = $(patsubst src/cc64/%, c16files/%, $(cc64srcs_ascii)) \
+  $(commonsrcs_c16)
 peddisrcs_ascii = $(wildcard src/peddi/*.fth)
-peddisrcs_c64 = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_ascii))
-peddisrcs_c16 = $(patsubst src/peddi/%, c16files/%, $(peddisrcs_ascii))
+peddisrcs_c64 = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_ascii)) \
+  $(commonsrcs_c64)
+peddisrcs_c16 = $(patsubst src/peddi/%, c16files/%, $(peddisrcs_ascii)) \
+  $(commonsrcs_c16)
 cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
 cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
