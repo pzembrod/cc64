@@ -154,13 +154,14 @@ ctrl-c - quit without saving
 
 ## Character set
 
-C needs a few characters that the C64 charset doesn't contain: \^_{|}~  
+C needs a few characters that the C64/C16/Plus4 charset doesn't contain:
+ \^_{|}~  
 cc64 comes with 2 options to fix this, a RAM and a ROM based. Both patch only
 the lower/upper case charset, not the upper-case/graphic charset.
 
-### c-charset
+### c-charset C64
 
-This is the RAM based option.
+This is the RAM based option for the C64.
 
 `c-charset` is a small assembler program starting at $cb3b. When loaded and
 started, it will set up a patched charset in RAM from $d000 and move the
@@ -173,18 +174,35 @@ Installation:
 
 ```
 load "c-charset",8,1
-sys 52027
+sys 52026
 ```
 
 Reactivation:
 
 ```
-sys 52191
+sys 52221
+```
+
+### c-charset C16
+
+This is the RAM based option for the C16/Plus4.
+
+`c-charset` is a small assembler program running from basic start.
+It will set up a patched charset in RAM from $f000 and switch to this charset.
+That's why cc64's default himem is $f000, not $fc00.
+A small routine which can switch the patched charset on again lives from
+$f800 and is detected and used by cc64 if present.
+
+Installation:
+
+```
+load "c-charset",8
+run
 ```
 
 ### c-char-rom-gen
 
-This is the ROM based option.
+This is the ROM based option, so far only available for the C64.
 
 `c-char-rom-gen` is an assembler program running from basic start which, when
 run, will the ROM charset into RAM (at $c000), patch the needed characters,

@@ -12,7 +12,7 @@
 ; philip zembrod , 3.9.1994
 ; letzte aenderung 8.3.2020
 
-        *= $cb3b
+        *= $cb3a
 
 basout   = $ffd2
 clrchn   = $ffcc
@@ -172,5 +172,6 @@ re_init lda #$cc
 
         rts
 
-magic   !word re_init, $6502, $1103
+magic   !word $6502, $1103
+        jmp re_init
 

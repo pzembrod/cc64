@@ -28,7 +28,6 @@ char_pages = $8
 
         *= $1001
 
-cc64_lib_start
         !word baslink
         !word 2020
         !byte $9e
@@ -174,9 +173,6 @@ magic_loop
         dex
         bpl magic_loop
 
-        lda #$5b
-        sta $0c00
-        
         jsr re_init
         jmp ready
 

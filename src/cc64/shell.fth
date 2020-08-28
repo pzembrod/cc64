@@ -9,8 +9,10 @@
 
 \   shell:                     21sep94pz
 
-Code bye   $37 # lda  $1 sta
-           $a000 ) jmp  end-code
+Code bye
+(64  $37 # lda  $1 sta  $a000 ) jmp  C)
+(16  $fff6 jmp  C)
+end-code
 
 ' savesystem        alias saveall
 ' .mem              alias mem
@@ -65,13 +67,16 @@ Code bye   $37 # lda  $1 sta
 
 \   shell: cold' logo          01mar20pz
 
-| Code charset  here 6 + jsr xyNext jmp
-                 $cbfa ) jmp end-code
+ Code c-charset
+  (64 $cbfd jsr C)  (16 $f804 jsr C) 
+   xyNext jmp end-code
+
+ : c-charset-present?  ( -- f )
+  (64 $cbf9 C) (16 $f800 C) 2@  $65021103. d= ;
 
 | : init-shell  ( -- )
      only shell
-     $cbfc 2@  $65021103. d=
-        IF charset THEN ;
+     c-charset-present? IF c-charset THEN ;
 
 ' init-shell IS 'cold
 
@@ -80,7 +85,7 @@ Code bye   $37 # lda  $1 sta
      ."     running" cr
      ." cc64 C compiler V0.6" cr
      ." 2020 by Philip Zembrod" cr
-     $cbfc 2@  $65021103. d= not ?exit
+     c-charset-present? not ?exit
      ." C charset in use" cr ;
 
 ' .logo IS 'restart
