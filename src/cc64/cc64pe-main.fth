@@ -41,6 +41,9 @@
   compiler also  shell definitions
 
   forth-include shell.fth
+  forth-include version.fth
+  | : .binary-name  ." cc64pe C compiler + peddi editor" ;
+  forth-include init-shell.fth
 
   onlyforth
 
@@ -70,14 +73,8 @@
 
 ' ed ALIAS ed
 
-| : .logo  ( -- )
-   [ ' 'restart >body @ , ]
-   ." peddi text editor present"
-   cr ;
-
-' .logo IS 'restart
-
   save
-  $cbd0 set-himem
-  2000 set-symtab
+  (64 $cbd0 set-himem C)
+  (16 $f000 set-himem C)
+  (64 2000 set-symtab C)
   1024 1024 set-stacks

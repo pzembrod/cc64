@@ -41,6 +41,9 @@
   compiler also  shell definitions
 
   forth-include shell.fth
+  forth-include version.fth
+  | : .binary-name  ." cc64 C compiler" ;
+  forth-include init-shell.fth
 
   onlyforth
 
@@ -52,5 +55,6 @@
   save
 
   shell
-  $cbd0 set-himem
+  (64 $cbd0 set-himem C)
+  (16 $f000 set-himem C)
   1024 1024 set-stacks

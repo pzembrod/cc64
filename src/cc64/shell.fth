@@ -63,34 +63,6 @@ end-code
    dev 2 busclose ;
 
 
-\ *** Block No. 129, Hexblock 81
-
-\   shell: cold' logo          01mar20pz
-
- Code c-charset
-  (64 $cbfd jsr C)  (16 $f804 jsr C) 
-   xyNext jmp end-code
-
- : c-charset-present?  ( -- f )
-  (64 $cbf9 C) (16 $f800 C) 2@  $65021103. d= ;
-
-| : init-shell  ( -- )
-     only shell
-     c-charset-present? IF c-charset THEN ;
-
-' init-shell IS 'cold
-
-
-| : .logo  ( -- )
-     ."     running" cr
-     ." cc64 C compiler V0.6" cr
-     ." 2020 by Philip Zembrod" cr
-     c-charset-present? not ?exit
-     ." C charset in use" cr ;
-
-' .logo IS 'restart
-
-
 \ *** Block No. 130, Hexblock 82
 
 \   shell                      20sep94pz
