@@ -38,6 +38,12 @@ forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
 
 all: c64 c16 etc
 
+release: c64files.zip c64files.d64 c16files.zip c16files.d64 doc.zip
+	rm -rf release
+	mkdir release
+	cp -p $^ release/
+
+
 .SECONDARY:
 
 c64: cc64-c64 $(c64dir_files) c64files.zip c64files.d64
@@ -96,6 +102,7 @@ etc: $(forth_t64_files) emulator/c-char-rom-gen
 
 clean:
 	rm -f c64files/*.fth c16files/*.fth tmp/* doc.zip
+	rm -rf release
 	$(MAKE) -C tests clean
 	$(MAKE) -C tests/peddi clean
 
