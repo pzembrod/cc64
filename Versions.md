@@ -5,9 +5,9 @@
 v0.7 is the first properly defined version, with a git label and a github
 release.
 
-v0.7 brings 2 major changes:
+v0.7 brings two major changes: a new build base, and a C16/Plus4 port.
 
-The build bases has been updated from my custom C64 UltraForth 3.82 version to
+The build base has been updated from my custom C64 UltraForth 3.82 version to
 [VolksForth](https://github.com/forth-ev/VolksForth/tree/master/6502/C64)
 [3.90](https://github.com/forth-ev/VolksForth/tree/c64-390/6502/C64).
 Note that UltraForth was the earlier name of VolksForth's C64/C16 versions.
@@ -17,7 +17,7 @@ as well as my simple INCLUDE implementation for loading .fth files integrated
 into the core system. It also offers a lite version without the BLOCK mechanism
 for loading d64 screen sources which cc64 doesn't use anymore.
 
-Thus, cc64 can now be built on stock VolksForth 3.90, which enabled the second
+Thus, cc64 is now built on stock VolksForth 3.90, which enabled the second
 major change: porting to C16 (with 64k) and Plus4. As of v0.7, cc64 runs hosted
 on C64 as well as on all C16 variants with 64k. Target runtime libraries
 for both platforms are available on both hosts, enabling cross-compilation.
