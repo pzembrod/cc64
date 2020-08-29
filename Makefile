@@ -28,7 +28,7 @@ c64dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
 c64dir_files = $(patsubst %, c64files/% , $(c64dir_content))
 
 # c16files content
-c16dir_content = cc64 $(rt_files) $(sample_files)
+c16dir_content = $(cc64_binaries)  $(rt_files) $(sample_files) c-charset
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 
 # Forth binaries
