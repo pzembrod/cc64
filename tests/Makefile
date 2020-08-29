@@ -74,8 +74,8 @@ cc64pe-suite-%.result: *-test.c *.golden
 	./perform-suite.sh cc64pe $*
 
 clean:
-	rm -f c64files/* c16files/* suite.* separate-tests.result tmp.result
-	rm -f cc64-suite.* cc64pe-suite.*
+	rm -f c64files/* c16files/* separate-tests-c??_c??.result tmp.result
+	rm -f cc64-suite-c??_c??.* cc64pe-suite-c??_c??.* suite.joined-*
 	rm -f *.out *.T64 *-result.txt *-generated.c
 
 c64files/rt-%: ../c64files/rt-%

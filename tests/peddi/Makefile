@@ -47,5 +47,5 @@ $(pe_test_results_c16): %-c16-result-pe.txt: %.keybuf %.golden
 
 clean:
 	rm -f c64files/* c64files/.??* c16files/* c16files/.??*
-	rm -f separate-tests.result separate-pe-tests.result tmp.result
-	rm -f *.out *-result.txt *-result-pe.txt
+	rm -f separate-tests-c??.result separate-pe-tests-c??.result
+	rm -f *.out *-result.txt *-result-pe.txt tmp.result

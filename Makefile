@@ -95,7 +95,7 @@ etc: $(forth_t64_files) emulator/c-char-rom-gen
 
 
 clean:
-	rm -f c64files/*.fth c16files/*.fth tmp/*
+	rm -f c64files/*.fth c16files/*.fth tmp/* doc.zip
 	$(MAKE) -C tests clean
 	$(MAKE) -C tests/peddi clean
 
