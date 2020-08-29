@@ -1,15 +1,35 @@
 # Usage
 
+## Platform
+
+cc64 versions exist for C64 and for C16 with 64k RAM, i.e.
+a C16 or C116 with a 64k RAM expansion or a Plus4.
+
 ## Download
 
-Download either the file
-[c64files.zip](https://github.com/pzembrod/cc64/blob/master/c64files.zip)
-and unpack the content into a directory mapped as drive (preferably 8) of
-an emulator (I recommend VICE), or download the disk image
-[c64files.d64](https://github.com/pzembrod/cc64/blob/master/c64files.d64)
-and attach it to an emulator or write it onto a real 1541 disk.
+Downloads are avaliable as zip archive, or as D64 disk image.
 
-Note that the disk image contains the correct CBM file type (prg or seq) for
+### Zip archive
+
+Zip archives for both platforms are available at head, i.e.
+[c64files.zip](https://github.com/pzembrod/cc64/blob/master/c64files.zip) or
+[c16files.zip](https://github.com/pzembrod/cc64/blob/master/c16files.zip),
+and also as part of [releases](https://github.com/pzembrod/cc64/releases).
+
+The zip archives are intended for unpacking into a directory mapped as a drive
+(typically #8) of an emulator (I use [VICE](https://vice-emu.sourceforge.io/)).
+
+### D64 disk image
+
+D64 disk images for both platforms are available at head, i.e.
+[c64files.d64](https://github.com/pzembrod/cc64/blob/master/c64files.d64)
+[c16files.d64](https://github.com/pzembrod/cc64/blob/master/c16files.d64),
+and also as part of [releases](https://github.com/pzembrod/cc64/releases).
+
+The disk images can be attached to an emulator, of course, but should also be
+usable for writing them onto a real 1541 or 1551 disk.
+
+Note that the disk images contain the correct CBM file type (prg or seq) for
 the c sources and runtime files.
 
 ## Binaries
@@ -126,7 +146,7 @@ new file _name_
 Peddi is a small full screen, scrolling PETSCII editor. No limit in line
 length (exept memory). Memory overflow is signalled by a double flash
 of the screen border.
-You call peddi with
+Peddi is called with
 
  `ed filename`
 
@@ -209,5 +229,3 @@ run, will the ROM charset into RAM (at $c000), patch the needed characters,
 and then save the RAM $c000-$cfff to disk in a file named `c-chargen` which
 then can be used by an emulator as chargen or programmed into an (E)EPROM and
 used in a real C64.
-
-The vice wrapper script `run-cc64.sh` uses this c-chargen.
