@@ -1,16 +1,41 @@
 # cc64 versions
 
-## current
+## v0.7
 
-The main directory structure contains the current version of cc64 which is
-under active development and recommended for use.
+v0.7 is the first properly defined version, with a git label and a github
+release.
 
-The older versions v03, v04 and v05 are living in the respective subdirs.
+v0.7 brings 2 major changes:
 
+The build bases has been updated from my custom C64 UltraForth 3.82 version to
+[VolksForth](https://github.com/forth-ev/VolksForth/tree/master/6502/C64)
+[3.90](https://github.com/forth-ev/VolksForth/tree/c64-390/6502/C64).
+Note that UltraForth was the earlier name of VolksForth's C64/C16 versions.
 
-## v05
+VolksForth C64/C16 3.90 has the fixes and enhancements (esp. UNLOOP) of my 3.82
+as well as my simple INCLUDE implementation for loading .fth files integrated
+into the core system. It also offers a lite version without the BLOCK mechanism
+for loading d64 screen sources which cc64 doesn't use anymore.
 
-v05 was the first open-sourced version and marks the transition from
+Thus, cc64 can now be built on stock VolksForth 3.90, which enabled the second
+major change: porting to C16 (with 64k) and Plus4. As of v0.7, cc64 runs hosted
+on C64 as well as on all C16 variants with 64k. Target runtime libraries
+for both platforms are available on both hosts, enabling cross-compilation.
+
+## v0.6
+
+v0.6 was the first version built without any dependencies on d64 screen sources
+anymore (see [Fourth sources](File-formats.md#forth-sources)), and also the
+first version to live in the main directory.
+
+v0.6 was the last not clearly defined version; it doesn't have git labels or
+a github release. During its lifetime happened the development that lead to
+v0.7.
+
+## v0.5
+
+v0.5 was the first open-sourced version and the last version that lived in its
+own subdirectory. v0.5 marks the transition from
 development on a real C64 with sources in UltraForth's screen format using
 direct 1541 disk block access to emulator-based development with sources
 in regular ASCII files. In v05 I also wrote a set of automated build scripts,
@@ -25,19 +50,19 @@ switched to the
 
 v05 still contains the full sources in the UltraForth screen format on d64
 disk images, which are also available in readable ASCII format.
-See [Emulator and file formats](File-formats.md) for details on the different
-file formats involved.
+See [Emulator and file formats -> Fourth sources](File-formats.md#forth-sources)
+for details on the different file formats involved.
 
 
-## v03 and v04
+## v0.3 and v0.4
 
-v03 and v04 were the first two versions I published, without
+v.03 and v0.4 were the first two versions I published, without
 Forth sources, as uploads to
 ftp://ccnga.uwaterloo.ca/pub/cbm/INCOMING/programming,
 on 6-Oct-1994 and 3-Nov-1995, respectively.
 Thanks go to Craig Bruce at this point for keeping the archive on
 <http://csbruce.com/cbm/ftp/c64/programming/>.
 
-I keep v03 and v04 here mainly for the record. I don't recommend doing anything
+I keep v0.3 and v0.4 here mainly for the record. I don't recommend doing anything
 with them.
 

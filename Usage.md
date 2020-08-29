@@ -7,7 +7,7 @@ a C16 or C116 with a 64k RAM expansion or a Plus4.
 
 ## Download
 
-Downloads are avaliable as zip archive, or as D64 disk image.
+Downloads are avaliable as zip archive, or as d64 disk image.
 
 ### Zip archive
 
@@ -46,10 +46,10 @@ cc64 and peddi are written in Forth and use the Forth command line as shell.
 The main consequence of this is that all numeric parameters to commands are
 entered in RPN (reversed polish notation) - _before_ the command.
 
-A heads-up: So far I'm still using the old UltraForth which has German
-messages, namely the syntax error message "Haeh?" on error which means as much
-as "What?".
-I will eventually switch to the newer VolksForth with English messages.
+A heads-up: The German ancestry of the VolksForth means that some messages
+are still in German. Namely the syntax error message says "Haeh?" which means
+as much as "What?". No doubt we'll get more of VolksForth's messages
+translated to English over time.
 
 The full set of commands listed below is only available in the combined
 compiler and editor binary `cc64pe`. The standalone compiler and editor

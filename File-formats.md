@@ -4,7 +4,7 @@ Originally I developed cc64 on a real C64, with a 1541 disk drive. The move to
 development on an emulator brought a number of advantages, namely faster builds
 and larger disks. It also came with a number of challenges around disk drive
 emulation, Commodore's non-ASCII character set (known as PETSCII), the
-keyboard differences between PCs and C64, and the fact that ultraFORTH sources
+keyboard differences between PCs and C64, and the fact that UltraForth sources
 aren't even files.
 
 This page describes cc64's integration via emulator into its hosting Linux.
@@ -34,7 +34,7 @@ VICE offers a number of different
 [disk drives it can emulate](https://vice-emu.sourceforge.io/vice_2.html#SEC15),
 and two ways how it can emulate them. I am using the virtual drive option
 which is very fast, and though it only supports drive access through the
-regular Kernal routines, this is fine because neither ultraFORTH nor cc64 do
+regular Kernal routines, this is fine because neither UltraForth nor cc64 do
 anything else.
 
 I did try the true drive emulation option, but it's very slow; using it with
@@ -109,7 +109,7 @@ that turns a C64 program into a tape image.
 
 ### Scripted workflows with VICE
 
-Autostarting ultraFORTH or cc64 inside VICE got me only half the way to a
+Autostarting UltraForth or cc64 inside VICE got me only half the way to a
 scripted build; the compile invocation still needed to be entered. Fortunately,
 VICE can fill the C64 keyboard buffer using the -keybuf option. Remarkably,
 this option can take more than 10 characters, the C64's keyboard buffer length.
@@ -131,7 +131,7 @@ or 8 disk blocks, depending on the disk sector size, and just addressed by a
 block number. In this way you can handle source code on a bare-metal system
 (a common use case of Forth) without any need for a file system. The screen
 is usually treated as 16 lines of source, with 64 characters each. No newline.
-Because the C64 display has only 40 characters per line, ultraFORTH tweaks that
+Because the C64 display has only 40 characters per line, UltraForth tweaks that
 a bit and treats a screen as 24 lines of 41 characters and 1 line of 40.
 Still no newlines.
 

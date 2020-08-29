@@ -1,7 +1,7 @@
 # Why Forth?
 
 The reason for writing cc64 in Forth were the compact code that Forth
-generates, and the fact that ultraFORTH was by far the most powerful
+generates, and the fact that UltraForth was by far the most powerful
 development environment on the C64 that I could get hold of back in 1989.
 
 My first stab at writing an actual C compiler used Dirk Zabel's macro
@@ -26,7 +26,7 @@ concepts of Forth, esp. the part where you need to be aware which code runs at
 compile time and which at run time, I grew to like the language, and became
 positively enthusiastic about it. I learned to make use of defining words -
 in another language you would call them language or compiler enhancements - in
-quite a few parts of cc64. It didn't hurt, either, that ultraFORTH came with
+quite a few parts of cc64. It didn't hurt, either, that UltraForth came with
 an assembler that I could use and integrate. And the code compactness did
 pay off: Two 170k disks worth of source (though not 100% full) condense
 down to just over 18k of compiled code, on top of the ~15-16k Forth core on top
