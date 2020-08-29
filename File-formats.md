@@ -45,7 +45,7 @@ Linux host directory - a very useful feature.
 I'm using a virtual 1541 drive backed by a Linux file system directory as
 drive 8 in all VICE configs for cc64. In those configs that need to handle
 Forth source screens (which live directly in 1541 disk blocks on D64 disk
-images (see [below](#UltraFORTH-screens-on-a-1541)), I have 3 additional
+images (see [below](#UltraForth-screens-on-a-1541)), I have 3 additional
 1541s configured as drives 9, 10 and 11, backed by the disk images
 cc64src1.d64, cc64src2.d64 and peddi_src.d64.
 
@@ -181,9 +181,10 @@ out of space somewhere.
 
 Since the advent of ANS Forth in 1994, regular text files have been standardized
 as the preferred form of Forth sources, and they seem to be the more common
-from now. UltraFORTH  isn't ANS compliant (yet) and doesn't support text
-source files, but I hacked together a simplified version of the ANS word
-include; it lives in cc64src1.d64/fth blocks 132-135. I'm so far only using
-this for top-level build scripts, basically replacements for top-level load
-screens, but my plan, going forward, is to move more and more of cc64's source
-into text files and build from there.
+from now. UltraForth 3.82 isn't ANS compliant, but I hacked together a
+simplified version of the ANS word INCLUDE; it lived in cc64src1.d64/fth blocks 132-135 in v05/src. Initially using this only for top-level build scripts,
+basically replacements for top-level load screens, I have, in the step from
+v05 to v06, moved all of cc64's sources into text files from which it is now
+built. And as of v07, the INCLUDE implementation now comes from the core
+VolksForth 3.90 to which it has been ported. See [Versions](Versions.md)
+for details.
