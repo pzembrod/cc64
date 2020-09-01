@@ -43,15 +43,11 @@ then
   done
   sleep 0.5
 
-  log="${basedir}/killfail.log"
+  kill9log="${basedir}/kill-9.log"
+  vicepid=$(jobs -p %1)
   kill %1
-  #set +e
-  #jobs %1 2>/dev/null && sleep 0.2
-  #jobs %1 2>/dev/null && date >> "$log" && sleep 0.5
-  #jobs %1 2>/dev/null && echo "1 sec" >> "$log" && sleep 2
-  #jobs %1 2>/dev/null && echo "3 sec" >> "$log" && sleep 8
-  #jobs %1 2>/dev/null && echo "11 sec: kill -9" >> "$log" && kill -9 %1
-  #set -e
+  (sleep 20; ps -q "${vicepid}" -f --no-headers && \
+      (kill -9 "${vicepid}" ; date)) >> "${kill9log}" 2>&1 &
 fi
 
 wait %1 || echo "$VICE returned $?"

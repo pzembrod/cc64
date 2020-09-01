@@ -36,7 +36,11 @@ then
   done
   sleep 0.5
 
+  kill9log="${basedir}/kill-9.log"
+  vicepid=$(jobs -p %1)
   kill %1
+  (sleep 20; ps -q "${vicepid}" -f --no-headers && \
+      (kill -9 "${vicepid}" ; date)) >> "${kill9log}" 2>&1 &
 fi
 
 wait %1 || echo "x64 returned $?"
