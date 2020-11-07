@@ -8,7 +8,7 @@ basedir="$(realpath --relative-to="$PWD" "${testdir}/..")"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 
 targetfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64TARGET}files")"
-emulator="$("${emulatordir}/which-emulator.sh" "${CC64TARGET}")"
+emulator="$("${emulatordir}/which-vice.sh" "${CC64TARGET}")"
 
 run=""
 if [ -n "$1" ]

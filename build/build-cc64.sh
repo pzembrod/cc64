@@ -7,9 +7,6 @@ emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 
 platform="$1"
 
-# test -n "$target" && rm -f "${basedir}/cbmfiles/${target}"
-
 keybuf="include cc64-main.fth\nsaveall cc64\ndos s0:notdone\n"
 
-PLATFORM="${platform}" \
-  "${emulatordir}/run-in-vice.sh" "vf-build-base" "${keybuf}"
+"${emulatordir}/run-in-${platform}emu.sh" "vf-build-base" "${keybuf}"

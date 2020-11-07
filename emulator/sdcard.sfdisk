@@ -1,0 +1,6 @@
+label: dos
+label-id: 0x00000000
+device: emulator/my-image.fat
+unit: sectors
+
+emulator/my-image.fat1 : start=           1, size=      131040, type=c, bootable

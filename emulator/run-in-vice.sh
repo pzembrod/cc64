@@ -8,7 +8,7 @@ basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
 cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${PLATFORM}files")"
 
-emulator="$("${emulatordir}/which-emulator.sh" "${PLATFORM}")"
+emulator="$("${emulatordir}/which-vice.sh" "${PLATFORM}")"
 
 autostart=""
 if [ -n "$1" ]
@@ -20,7 +20,7 @@ keybuf=""
 warp=""
 if [ -n "$2" ]
 then
-  keybuf="${2}" # dos s0:notdone\n"
+  keybuf="${2}"
   # The following could also just be a cp.
   ascii2petscii "${emulatordir}/notdone" "${basedir}/${cbmfiles}/notdone"
   warp="-warp"

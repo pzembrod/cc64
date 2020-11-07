@@ -3,11 +3,14 @@
 commonsrcs_ascii = $(wildcard src/common/*.fth)
 commonsrcs_c64 = $(patsubst src/common/%, c64files/%, $(commonsrcs_ascii))
 commonsrcs_c16 = $(patsubst src/common/%, c16files/%, $(commonsrcs_ascii))
+commonsrcs_x16 = $(patsubst src/common/%, x16files/%, $(commonsrcs_ascii))
 cc64srcs_ascii = $(wildcard src/cc64/*.fth)
 cc64srcs_c64 = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_ascii)) \
   $(commonsrcs_c64)
 cc64srcs_c16 = $(patsubst src/cc64/%, c16files/%, $(cc64srcs_ascii)) \
   $(commonsrcs_c16)
+cc64srcs_x16 = $(patsubst src/cc64/%, x16files/%, $(cc64srcs_ascii)) \
+  $(commonsrcs_x16)
 peddisrcs_ascii = $(wildcard src/peddi/*.fth)
 peddisrcs_c64 = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_ascii)) \
   $(commonsrcs_c64)
@@ -21,7 +24,7 @@ rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
   rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o
 
 sample_files = helloworld-c64.c helloworld-c16.c \
-  kernal-io-c64.c kernal-io-c16.c
+  kernal-io-c64.c kernal-io-c16.c sieve-c64.c
 
 # c64files content
 c64dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
@@ -30,6 +33,10 @@ c64dir_files = $(patsubst %, c64files/% , $(c64dir_content))
 # c16files content
 c16dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
+
+# x16files content
+x16dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
+x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
 # Forth binaries
 forth_binaries = devenv-uF83
@@ -131,9 +138,9 @@ slowtests:
 
 # cc64 build rules
 
-%files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) \
+%files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) $(cc64srcs_x16) \
  build/build-cc64.sh emulator/run-in-vice.sh \
- autostart-%/vf-build-base.T64
+ autostart-%/vf-build-base.T64 %files/vf-build-base emulator/sdcard.img
 	build/build-cc64.sh $*
 
 %files/cc64pe: $(cc64srcs_c64) $(peddisrcs_c64) \
@@ -153,6 +160,9 @@ c64files/vf-build-base: forth/vf-lite-c64
 	cp $< $@
 
 c16files/vf-build-base: forth/vf-lite-c16+
+	cp $< $@
+
+x16files/vf-build-base: forth/vf-lite-x16
 	cp $< $@
 
 
@@ -237,6 +247,19 @@ autostart-c16/%.T64: c16files/%
 autostart-c16/%.T64: forth/%
 	bin2t64 $< $@
 
+autostart-x16/%.T64: x16files/%
+	bin2t64 $< $@
+
+
+# X16 emulator rules
+
+emulator/sdcard.img: emulator/sdcard.sfdisk
+	rm -f $@ $@.tmp
+	dd if=/dev/zero of=$@.tmp count=64 bs=1M
+	sfdisk -w always -W always $@.tmp < $<
+	mformat -i $@.tmp -F
+	mv $@.tmp $@
+
 
 # Rules, mostly generic, to populate c64files/, c16files/
 
@@ -253,5 +276,13 @@ c16files/%.fth: src/*/%.fth
 	touch -r $< $@
 
 c16files/%.c: src/*/%.c
+	ascii2petscii $< $@
+	touch -r $< $@
+
+x16files/%.fth: src/*/%.fth
+	ascii2petscii $< $@
+	touch -r $< $@
+
+x16files/%.c: src/*/%.c
 	ascii2petscii $< $@
 	touch -r $< $@

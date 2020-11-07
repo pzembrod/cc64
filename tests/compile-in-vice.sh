@@ -9,7 +9,7 @@ emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${CC64HOST}")"
 
 hostfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64HOST}files")"
-emulator="$("${emulatordir}/which-emulator.sh" "${CC64HOST}")"
+emulator="$("${emulatordir}/which-vice.sh" "${CC64HOST}")"
 
 keybuf="$1"
 cc64="$2"
