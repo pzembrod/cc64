@@ -9,7 +9,8 @@ cc64 was inspired by Ron Cain and James E. Hendrix'
 
 - cc64 uses the old K&R standard. No ANSI, not even for function
 parameter declaration. Sorry.
-- Only int and char as basic data types.
+- Only (signed) int and (unsigned) char as basic data types.
+- No unsigned. No long.
 - No floats. No void.
 - No structs, no unions.
 - No typedef, no enum.
