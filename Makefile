@@ -156,16 +156,13 @@ slowtests:
 
 # build base rule
 
-#c64files/vf-build-base: forth/v4th-c64
-#	cp $< $@
-
-c64files/vf-build-base: forth/vf-lite-c64
+c64files/vf-build-base: forth/v4th-c64
 	cp $< $@
 
-c16files/vf-build-base: forth/vf-lite-c16+
+c16files/vf-build-base: forth/v4th-c16+
 	cp $< $@
 
-x16files/vf-build-base: forth/vf-lite-x16
+x16files/vf-build-base: forth/v4th-x16
 	cp $< $@
 
 
