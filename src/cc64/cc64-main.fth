@@ -2,7 +2,9 @@
   onlyforth  decimal  cr
   | ' include alias forth-include
 
-| : ~  | ;
+| ' |     alias ~
+| ' |on   alias ~on
+| ' |off  alias ~off
 
   forth-include util-words.fth  \ unloop strcmp doer-make
   cr

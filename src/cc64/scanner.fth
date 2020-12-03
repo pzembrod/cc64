@@ -121,7 +121,7 @@
  ,"                          =   =    "
 
 | stringtab op
-  ?head off  ~  ?head @ 34 * ?head !
+  ~on
   x <++>    x <+=>    x <+>
   x <-->    x <-=>    x <->
   x <*=>    x <*>
@@ -135,7 +135,7 @@
   x <<<=>   x <<<>    x <<=>    x <<>
   x <>>=>   x <>>>    x <>=>    x <>>
   x <inv>
-
+  ~off
   endtab
 
 
