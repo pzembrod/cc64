@@ -108,7 +108,7 @@ etc: $(forth_t64_files) emulator/c-char-rom-gen
 
 
 clean:
-	rm -f c64files/*.fth c16files/*.fth tmp/* doc.zip
+	rm -f c64files/*.fth c16files/*.fth x16files/*.fth tmp/* doc.zip
 	rm -rf release
 	$(MAKE) -C tests clean
 	$(MAKE) -C tests/peddi clean
@@ -123,7 +123,7 @@ veryclean: clean
 	rm -f runtime/*
 
 
-test: cc64 fasttests
+test: cc64-c64 fasttests
 
 alltests:
 	$(MAKE) -C tests alltests
@@ -155,6 +155,9 @@ slowtests:
 
 
 # build base rule
+
+#c64files/vf-build-base: forth/v4th-c64
+#	cp $< $@
 
 c64files/vf-build-base: forth/vf-lite-c64
 	cp $< $@
