@@ -38,7 +38,7 @@
 ~ 3 constant #keyword#
 ~ 4 constant #oper#
 ~ 5 constant #string#
-~ -1 dup 2constant #eof#
+~ : #eof#  -1 dup ;
 
 
 \ *** Block No. 38, Hexblock 26
@@ -341,7 +341,7 @@
 
 \   scanner:                   11mar91pz
 
-| 2variable word'
+| create word'  4 allot
 | variable back
 | variable word#
 

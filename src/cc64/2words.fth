@@ -1,6 +1,6 @@
 \ *** Block No. 129, Hexblock 81
 
-\ 2! 2@ 2variable 2constant clv12may94pz
+\ 2! 2@
 
 ~ Code 2!  ( d adr --)
  tya  setup jsr  3 # ldy
@@ -12,9 +12,3 @@
  SP 2dec  3 # ldy
  [[  N )Y lda  SP )Y sta  dey  0< ?]
  xyNext jmp  end-code
-
-~ : 2Variable  ( --)   Create 4 allot ;
-             ( -- adr)
-
-~ : 2Constant  ( d --)   Create , ,
-  Does> ( -- d)   2@ ;
