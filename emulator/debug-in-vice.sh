@@ -9,7 +9,7 @@ basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
 cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${PLATFORM}files")"
 
-emulator="$("${emulatordir}/which-emulator.sh" "${PLATFORM}")"
+emulator="$("${emulatordir}/which-vice.sh" "${PLATFORM}")"
 
 autostart=""
 if [ -n "$1" ]

@@ -9,7 +9,7 @@ emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
 
 cbmfiles="$(realpath --relative-to="$PWD" "${testdir}/${PLATFORM}files")"
-emulator="$("${emulatordir}/which-emulator.sh" "${PLATFORM}")"
+emulator="$("${emulatordir}/which-vice.sh" "${PLATFORM}")"
 
 peddi="peddi"
 keybuf=""
