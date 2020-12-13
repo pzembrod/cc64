@@ -123,7 +123,7 @@ veryclean: clean
 	rm -f runtime/*
 
 
-test: cc64-c64 fasttests
+test64: autostart-c64/cc64.T64 fasttests
 
 alltests:
 	$(MAKE) -C tests alltests

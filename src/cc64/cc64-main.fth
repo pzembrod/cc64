@@ -1,6 +1,21 @@
 
+\ with build log:
+' noop alias \log
+\ without build log:
+\ ' \ alias \log
+
+\log include logtofile.fth
+\log logopen" cc64.log"
+
+  \ include tmpheap.fth
+  \ $600 mk-tmp-heap
+  | ' | alias ||
+  | ' noop alias tmpclear
+
   onlyforth  decimal  cr
   | ' include alias forth-include
+  \ | : forth-include  include
+  \    base push hex cr here u. heap u. up@ u. ;
 
 | ' |     alias ~
 | ' |on   alias ~on
@@ -9,7 +24,7 @@
   forth-include util-words.fth  \ unloop strcmp doer-make
   cr
   forth-include trns6502asm.fth  \ transient 6502 assembler
-  forth-include 2words.fth  \ 2@ 2! 2variable/constant
+  forth-include 2words.fth  \ 2@ 2!
   cr
   vocabulary compiler
   compiler also definitions
@@ -55,6 +70,9 @@
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
   save
+  cr .( compile successful) cr
+
+\log logclose
 
   shell
   (64 $cbd0 set-himem C)
