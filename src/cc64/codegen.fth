@@ -65,7 +65,7 @@
 
 \   codegen: objects           11mar91pz
 
-| : size? ( obj -- obj size )
+|| : size? ( obj -- obj size )
      %pointer %function + isn't? >r
      is-char? r> and 2+ ;
 
@@ -93,7 +93,7 @@
 
 \ codegen: reference/value     26sep90pz
 
-| defer 'value      ( obj1 -- obj2 )
+|| defer 'value      ( obj1 -- obj2 )
 
 | : value ( obj1 -- obj2 )
    %reference is?
@@ -101,7 +101,7 @@
       %function %pointer + isn't?
          IF set-int THEN THEN ;
 
-| : reference ( obj1 -- obj2 )
+|| : reference ( obj1 -- obj2 )
    %reference is?
       IF %reference clr
       ELSE *noref* error THEN ;
@@ -111,9 +111,9 @@
 
 \ codegen: constant, doit      18apr94pz
 
-| variable a-used
+|| variable a-used
 
-| : require-accu
+|| : require-accu
      a-used @ IF .pha' THEN
      a-used on ;
 
@@ -127,9 +127,9 @@
    init: release-accu
 
 
-| variable vector
+|| variable vector
 
-| : doit ( n -- )
+|| : doit ( n -- )
      vector @ + perform ;
   \ for unop, incop and do-binop, who
   \ all use vectors
@@ -139,12 +139,12 @@
 
 \ codegen: combined type tests 01mar91pz
 
-| : pointer? ( type -- type flag )
+|| : pointer? ( type -- type flag )
      %pointer is? >r %function isn't?
      r> and ;
   ( for do-add and do-sub )
 
-| : int-pointer? ( type -- type flag )
+|| : int-pointer? ( type -- type flag )
      pointer? >r is-int? r> and ;
   ( for incop )
   ( both for pointer scaling )
@@ -177,7 +177,7 @@
      0  literal ;
 
 
-| : do-lda(a) ( obj1 -- obj2 )
+|| : do-lda(a) ( obj1 -- obj2 )
      size? .size
      %constant is?
         IF   require-accu
@@ -189,7 +189,7 @@
 
 \   codegen: atom              27may91pz
 
-| : do-lda(base),# ( obj1 -- obj2 )
+|| : do-lda(base),# ( obj1 -- obj2 )
      %offset isn't? *compiler* ?fatal
      require-accu  size? .size
      over .lda.s(base),#
@@ -291,7 +291,7 @@
    %pointer set  %function clr ;
 
 
-| : unop ( cfa2 cfa0 -- )
+|| : unop ( cfa2 cfa0 -- )
      create , ,
     does> ( obj1 pfa -- obj2 ) vector !
      value  %constant is? nip
@@ -308,7 +308,7 @@
 
 \   codegen: unary             18apr94pz
 
-| : incop ( cfa6 cfa4 cfa2 cfa0 -- )
+|| : incop ( cfa6 cfa4 cfa2 cfa0 -- )
      create , , , ,
     does> ( obj1 pfa -- obj2 ) vector !
      reference  size? .size
@@ -335,26 +335,26 @@
 
 \   codegen: unary             27may91pz
 
-| : ++x0 over dup .incr.s   .lda.s ;
-| : ++x2 over dup .2incr.s  .lda.s ;
-| : ++x4 .add#  .sta.s(zp) ;
-| : ++x6 .add#  .sta.s(base),# ;
+|| : ++x0 over dup .incr.s   .lda.s ;
+|| : ++x2 over dup .2incr.s  .lda.s ;
+|| : ++x4 .add#  .sta.s(zp) ;
+|| : ++x6 .add#  .sta.s(base),# ;
 
-| : --x0 over dup .decr.s   .lda.s ;
-| : --x2 over dup .2decr.s  .lda.s ;
-| : --x4 .sub#  .sta.s(zp) ;
-| : --x6 .sub#  .sta.s(base),# ;
+|| : --x0 over dup .decr.s   .lda.s ;
+|| : --x2 over dup .2decr.s  .lda.s ;
+|| : --x4 .sub#  .sta.s(zp) ;
+|| : --x6 .sub#  .sta.s(base),# ;
 
-| : x++0 over dup .lda.s  .incr.s ;
-| : x++2 over dup .lda.s  .2incr.s ;
-| : x++4 .pha .add#  .sta.s(zp) .pla ;
-| : x++6 .pha .add#  .sta.s(base),#
+|| : x++0 over dup .lda.s  .incr.s ;
+|| : x++2 over dup .lda.s  .2incr.s ;
+|| : x++4 .pha .add#  .sta.s(zp) .pla ;
+|| : x++6 .pha .add#  .sta.s(base),#
                                 .pla ;
 
-| : x--0 over dup .lda.s  .decr.s ;
-| : x--2 over dup .lda.s  .2decr.s ;
-| : x--4 .pha .sub#  .sta.s(zp) .pla ;
-| : x--6 .pha .sub#  .sta.s(base),#
+|| : x--0 over dup .lda.s  .decr.s ;
+|| : x--2 over dup .lda.s  .2decr.s ;
+|| : x--4 .pha .sub#  .sta.s(zp) .pla ;
+|| : x--6 .pha .sub#  .sta.s(base),#
                                 .pla ;
 
 
@@ -379,13 +379,13 @@
 
 \ codegen: binary              11sep94pz
 
-| variable typ
+|| variable typ
 
-| : setconst ( -- )
+|| : setconst ( -- )
      typ @  %constant set  typ ! ;
 
     ' setconst ' swap ' noop ' drop
-| create const-vec    , , , ,
+|| create const-vec    , , , ,
 
 | : do-binop ( obj1 obj2 vec -- obj3 )
      vector !
@@ -407,7 +407,7 @@
      %constant is?
       IF swap 2/ swap ELSE .shra THEN ;
 
-| create add-vec
+|| create add-vec
   ' + ' .add# ' .add# ' .add , , , ,
 
 | : do-add ( obj1 obj2 -- obj3 )
@@ -426,8 +426,8 @@
 
 \   codegen: binary            11sep94pz
 
-| variable shra-flag
-| create sub-vec
+|| variable shra-flag
+|| create sub-vec
   ' - ' .#sub ' .sub# ' .sub , , , ,
 
 | : do-sub ( obj1 obj2 -- obj3 )
@@ -453,7 +453,7 @@
 
 \   codegen: binary            12sep90pz
 
-| : binop ( cfa3 cfa2 cfa1 cfa0 -- )
+|| : binop ( cfa3 cfa2 cfa1 cfa0 -- )
      create , , , ,
     does>   ( obj1 obj2 vec -- obj3 )
      %default typ !  do-binop ;
@@ -478,9 +478,9 @@
 
 \ > und < sollten 0 oder -1 ergeben !
 
-~ : <=  swap > ;
-~ : >=  swap < ;
-~ : !=  = 0= ;
+|| : <=  swap > ;
+|| : >=  swap < ;
+|| : !=  = 0= ;
 
    ' < ' .gt# ' .lt# ' .lt
 | binop do-lt
@@ -500,9 +500,9 @@
 
 \   codegen: binary            27sep90pz
 
-~ : << ( n1 n2 -- n3 )
+|| : << ( n1 n2 -- n3 )
      0 ?DO 2* LOOP ;
-~ : >> ( n1 n2 -- n3 )
+|| : >> ( n1 n2 -- n3 )
      0 ?DO 2/ LOOP ;
 
    ' << ' .#shl ' .shl# ' .shl
@@ -537,7 +537,7 @@
 
 \   codegen: conditional       22feb91pz
 
-| : is0? ( obj -- obj flag )
+|| : is0? ( obj -- obj flag )
      %constant is? >r over 0= r> and ;
 
 | : do-cond1 ( obj1 -- adr1 )
