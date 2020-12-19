@@ -66,7 +66,7 @@
 ~               : static[  cc64mem 16 + @ ;
 ~ ' lomem ALIAS   linebuf
 
-| : (conf?  ( -- flag )
+|| : (conf?  ( -- flag )
      himem  #links /link *  -
                       dup cc64mem  8 + !
      #globals 2*  -   dup cc64mem 10 + !
@@ -85,7 +85,7 @@
 
    init: configure
 
-| : set-mem:  ( n -- ) create c, does>
+|| : set-mem:  ( n -- ) create c, does>
   ( n dfa -- ) c@ cc64mem + ! ;
 
 ~ 0 set-mem: #links!
@@ -107,7 +107,7 @@
 
 \   memman:                    09sep94pz
 
-| : .bytes  ( n -- )  . ." bytes" cr ;
+|| : .bytes  ( n -- )  . ." bytes" cr ;
 
 ~ : .mem ( -- )
      (conf? cr
@@ -133,7 +133,7 @@
 
 \   memman:                    24aug94pz
 
-| : relocate-tasks  ( newUP -- )
+|| : relocate-tasks  ( newUP -- )
  up@ dup BEGIN  1+ under @ 2dup -
  WHILE  rot drop  REPEAT  2drop ! ;
 

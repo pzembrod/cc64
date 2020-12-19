@@ -2,8 +2,8 @@
 
 \ stringtabellen               30sep90pz
 
-| variable n
-| variable m
+|| variable n
+|| variable m
 
 ~ : x ( -- )  n @  1 n +!  constant ;
 ~ : x"  ( -- )   here m @ !  here m !

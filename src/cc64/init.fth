@@ -2,7 +2,7 @@
 
 \ init                         18apr94pz
 
-| variable inits  inits off
+|| variable inits  inits off
 
 ~ : init  ( -- )
      inits BEGIN @ ?dup WHILE

@@ -5,7 +5,7 @@
 \ terminology / interface:
 \ hook-into     hook-out
 \ heap>         >heap
-\ init-heap
+\ ( init-heap )
 
   cr .( module listman ) cr
 
@@ -23,7 +23,7 @@
         ELSE nip THEN ;
 
 
-| variable heap
+|| variable heap
 
 ~ : heap> ( -- element/0 )
      heap @ dup
@@ -38,7 +38,7 @@
 
 \   listman: init              12mar91pz
 
-~ : init-heap
+|| : init-heap
      heap off
      ]heap heap[ ?DO
        I >heap
