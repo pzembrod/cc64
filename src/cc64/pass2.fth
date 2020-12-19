@@ -9,14 +9,14 @@
 
 \   pass2 :                    11sep94pz
 
-| variable #toread
-| variable #inbuf
-| variable p2in>
-| ' code[ ALIAS p2in[
-| ' ]code ALIAS ]p2in
+|| variable #toread
+|| variable #inbuf
+|| variable p2in>
+|| ' code[ ALIAS p2in[
+|| ' ]code ALIAS ]p2in
 
 
-| : p2readcode  ( -- )
+|| : p2readcode  ( -- )
      #toread @ 0=     *compiler* ?fatal
      code-file feof? *obj-short* ?fatal
      code-file fsetin   p2in[ p2in> !
@@ -24,7 +24,7 @@
      fgets  dup #inbuf !
          negate #toread +!   funset ;
 
-| : p2code@ ( -- 8b )
+|| : p2code@ ( -- 8b )
      #inbuf @ 0= IF p2readcode THEN
      -1 #inbuf +!
      p2in> @ c@  1 p2in> +! ;
@@ -34,23 +34,23 @@
 
 \   pass2 :                    13sep94pz
 
-| variable p2out>
-| ' static[ ALIAS p2out[
-| ' ]static ALIAS ]p2out
+|| variable p2out>
+|| ' static[ ALIAS p2out[
+|| ' ]static ALIAS ]p2out
 
 
-| : p2flush  ( -- )
+|| : p2flush  ( -- )
      exe-file fsetout
      p2out[ p2out> @ over - fputs
      funset
      p2out[ p2out> ! ;
 
-| : p2code!  ( 8b -- )
+|| : p2code!  ( 8b -- )
      p2out> @  under  c!
      1+ dup p2out> !
      ]p2out = IF p2flush THEN ;
 
-~ : init-p2i/o  ( -- )
+|| : init-p2i/o  ( -- )
      p2out[  p2out> ! ;
 
     init: init-p2i/o
@@ -60,22 +60,22 @@
 
 \   pass2 :                    13sep94pz
 
-| : p2copy  ( last.adr+1 first.adr -- )
+|| : p2copy  ( last.adr+1 first.adr -- )
      ?DO p2code@ p2code! LOOP ;
 
-| : p2wcode!  ( 16b -- )
+|| : p2wcode!  ( 16b -- )
      >lo/hi swap p2code! p2code! ;
 
-| : p2wcode@drop  ( -- )
+|| : p2wcode@drop  ( -- )
      p2code@ p2code@ 2drop ;
 
-| : p2openfile
+|| : p2openfile
     ( len mode type name handle -- )
      ." linking " over count type cr
      fopen  2+ #toread !  #inbuf off
      p2readcode ;
 
-| : p2closefile  ( handle -- )
+|| : p2closefile  ( handle -- )
      dup fclose
      feof? 0= *obj-long* ?fatal
      #toread @ #inbuf @ or
@@ -86,7 +86,7 @@
 
 \   pass2 :                    21sep94pz
 
-| : link-runtimemodule  ( -- )
+|| : link-runtimemodule  ( -- )
      ascii w ascii p exe-name
      exe-file fopen
      code.first @ lib.first @ -
@@ -108,9 +108,9 @@
 
 \   pass2 :                    21sep94pz
 
-| variable p2pc
+|| variable p2pc
 
-| : link-code  ( -- )
+|| : link-code  ( -- )
      ascii a ascii p exe-name
      exe-file fopen
      code.last @ code.first @ -
@@ -133,7 +133,7 @@
 
 \   pass2 :                    14jan96pz
 
-| : (link-statics  ( n filename -- )
+|| : (link-statics  ( n filename -- )
      over 0=
         IF ." no need to link "
         count type cr  drop exit THEN
@@ -146,7 +146,7 @@
      p2flush exe-file fclose
      code-file p2closefile ;
 
-| : link-statics  ( -- )
+|| : link-statics  ( -- )
      statics.libfirst @ statics.first @
      - static-name (link-statics
      statics.last @ statics.libfirst @
@@ -157,7 +157,7 @@
 
 \   pass2 :                    21sep94pz
 
-| : (link-lib ( n in-name w/a -- )
+|| : (link-lib ( n in-name w/a -- )
      dup >r
      ascii p exe-name exe-file fopen
      >r dup ascii r ascii p r>
@@ -169,7 +169,7 @@
      p2flush exe-file fclose
      code-file p2closefile ;
 
-| : link-libstatics  ( -- )
+|| : link-libstatics  ( -- )
    statics.last @ statics.libfirst  @ -
    lib.initname  ascii w (link-lib
    statics.libfirst @ statics.first @ -
@@ -180,7 +180,7 @@
 
 \   pass2 :                    07may95pz
 
-| : write-libheader ( -- )
+|| : write-libheader ( -- )
      cr!
      " #pragma cc64" str!
      >base         @ hex!
@@ -203,7 +203,7 @@
 
 \   pass2 :                    11sep94pz
 
-| : write-declarations  ( -- )
+|| : write-declarations  ( -- )
      ." creating " exe-name count
      type cr    ascii w ascii s
      exe-name exe-file fopen
@@ -216,7 +216,7 @@
      2 +LOOP
      funset  exe-file fclose ;
 
-| : link-lib  ( -- )
+|| : link-lib  ( -- )
      code.suffix  exe-name strcat
      link-runtimemodule  link-code
      exe-name cut-suffix
@@ -231,7 +231,7 @@
 
 \   pass2 :                    11sep94pz
 
-| : link-exe  ( -- )
+|| : link-exe  ( -- )
      link-runtimemodule  link-code
      link-statics ;
 
