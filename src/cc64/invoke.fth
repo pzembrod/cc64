@@ -9,7 +9,7 @@
 
 \   invoke :  pass1            11sep94pz
 
-~ : pass1 ( -- )
+|| : pass1 ( -- )
      open-outfiles
      ." source file: "
      source-name count type cr
@@ -17,7 +17,7 @@
      compile-program
      end-of-code close-outfiles ;
 
-| : ?usage  ( flag -- )
+|| : ?usage  ( flag -- )
      IF ." usage: cc file.c" cr
      rdrop THEN ;
 
@@ -26,14 +26,14 @@
 
 \   invoke :  start compiler   11sep94pz
 
-| : wait-scratch  ( -- )
+|| : wait-scratch  ( -- )
      dev 15 busin BEGIN bus@ drop
      i/o-status? UNTIL busoff ;
 
-| : s!  count bustype ;
-| : ,!  ascii , bus! ;
+|| : s!  count bustype ;
+|| : ,!  ascii , bus! ;
 
-| : scratch-exe  ( -- )
+|| : scratch-exe  ( -- )
      dev 15 busout " s0:" s!
      exe-name s!        ,!
      exe-name s! code.suffix s! ,!
