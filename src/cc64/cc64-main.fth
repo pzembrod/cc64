@@ -13,7 +13,7 @@
 
   include tmpheap.fth
 
-  (64 $e00 mk-tmp-heap C)
+  (64 $2000 mk-tmp-heap C)
   (16 $e00 mk-tmp-heap C)
   (CX 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> ! C)
 
@@ -48,28 +48,32 @@
 
   forth-include codehandler.fth
   tmpclear
-
-  onlyforth
-  forth-include tmp6502asm.fth  \ transient 6502 assembler
-  onlyforth compiler also definitions
-  forth-include v-assembler.fth
-  forth-include lowlevel.fth
-  tmpclear
+  forth-include rt-ptrs.fth
 
   forth-include input.fth
-  forth-include scanner.fth
-  forth-include symboltable.fth
   forth-include preprocessor.fth
+  include scanner.fth
+  forth-include symboltable.fth
   tmpclear
 
   forth-include listman.fth
   tmpclear
+
+  onlyforth
+  forth-include tmp6502asm.fth  \ transient 6502 assembler
+  onlyforth compiler also definitions
+  \ forth-include v-assembler.fth
+  forth-include v-asm2.fth
+  forth-include lowlevel.fth
+  \ tmpclear
+
   forth-include codegen2.fth
   forth-include parser.fth
   forth-include p2write-decl.fth
   tmpclear
   forth-include pass2.fth
   forth-include invoke.fth
+  words
 
   forth definitions
   forth-include savesystem.fth

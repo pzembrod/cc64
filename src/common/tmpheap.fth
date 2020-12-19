@@ -21,8 +21,8 @@ heap dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
    tmp-heapmove  ?heapmovetx off ;
 
 ~ : ||     ['] tmp-heapmove1x  ?heapmovetx ! ;
-\ : ||on   ['] tmp-heapmove    ?heapmovetx ! ;
-\ : ||off  ?heapmovetx off ;
+~ : ||on   ['] tmp-heapmove    ?heapmovetx ! ;
+~ : ||off  ?heapmovetx off ;
 
 
 | : remove-tmp-words-in-voc  ( voc -- )
