@@ -19,31 +19,31 @@
 
 \   preprocessor:              11sep94pz
 
-| : clearline ( -- )
+|| : clearline ( -- )
      linebuf off res-inptr ;
 
-| : cpp-error  ( -- )
+|| : cpp-error  ( -- )
      *preprocessor* error  clearline ;
 
-| : check-eol  ( -- )
+|| : check-eol  ( -- )
      skipblanks  char> 0=
         IF rdrop  cpp-error THEN ;
 
-| : ?cpp-errorexit  ( flag -- )
+|| : ?cpp-errorexit  ( flag -- )
        IF rdrop cpp-error THEN ;
 
-| : ?cpp-fatal *preprocessor* ?fatal ;
+|| : ?cpp-fatal *preprocessor* ?fatal ;
 
-| create include-name /filename allot
+|| create include-name /filename allot
 
-| create delim  1 allot
+|| create delim  1 allot
 
 
 \ *** Block No. 106, Hexblock 6a
 
 \   preprocessor:              11sep94pz
 
-| : include ( -- )
+|| : cpp-include ( -- )
      check-eol
      char> ascii < =
      char> ascii " =
@@ -69,14 +69,14 @@
 
 \   preprocessor:              19apr94pz
 
-| variable minus
+|| variable minus
 
-| : cpp-number? ( -- n false/ -- true )
+|| : cpp-number? ( -- n false/ -- true )
      skipblanks
      char> num? 0= ?dup ?exit
      number drop  false ;
 
-| : define ( -- )
+|| : cpp-define ( -- )
      check-eol
      char> alpha? 0= ?cpp-errorexit
      get-id
@@ -97,9 +97,9 @@
 
 \   preprocessor:              19apr94pz
 
-| create cpp-word 17 allot
+|| create cpp-word 17 allot
 
-| : cpp-nextword  ( -- adr )
+|| : cpp-nextword  ( -- adr )
      skipblanks
      cpp-word 1+ 16 bounds DO
      char> 0= char> bl = or
@@ -115,7 +115,7 @@
 
 \   preprocessor:              07may95pz
 
-| : pragma  ( -- )
+|| : cpp-pragma  ( -- )
      cpp-nextword " cc64" strcmp
                0= ?cpp-errorexit
      cpp-number? ?cpp-fatal   >base !
@@ -142,16 +142,16 @@
 
 \   preprocessor:              07may95pz
 
-| stringtab cpp-keywords
+|| stringtab cpp-keywords
 
-| x #define    x" define"
-| x #include   x" include"
-| x #pragma    x" pragma"
+|| x #define    x" define"
+|| x #include   x" include"
+|| x #pragma    x" pragma"
 
 endtab
 
-| create cpp-commands
- ' define ,  ' include ,  ' pragma ,
+|| create cpp-commands
+ ' cpp-define ,  ' cpp-include ,  ' cpp-pragma ,
 
 
 make preprocess ( -- )

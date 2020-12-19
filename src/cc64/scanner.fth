@@ -6,9 +6,9 @@
 \   nextword   backword
 \   mark       advanced?
 \   word.
-\   start$     build$      end$
+\   start$     build$      end$     do$
 \   alle tokens
-\   init-scanner
+\   ( init-scanner )
 
   cr .( module scanner ) cr
 
@@ -17,18 +17,18 @@
 
 \   scanner:                   26feb91pz
 
-| : alpha?  ( c -- flag )
+|| : alpha?  ( c -- flag )
     dup  ascii a ascii [ uwithin
     over ascii A ascii { uwithin or  \ }
     swap ascii _ = or ;
 
-| : num?  ( c -- flag )
+|| : num?  ( c -- flag )
     ascii 0  ascii :  uwithin ;
 
-| : alphanum? ( c -- flag )
+|| : alphanum? ( c -- flag )
     dup alpha?  swap num?  or ;
 
-| : skipblanks  ( -- )
+|| : skipblanks  ( -- )
      BEGIN char> bl = WHILE
      +char REPEAT ;
 
@@ -73,9 +73,9 @@
 
 \   scanner:                   18apr94pz
 
-| variable token
+|| variable token
 
-~ : scanword  ( adr table -- false )
+|| : scanword  ( adr table -- false )
             ( adr table -- token true )
      token off
      BEGIN ?dup WHILE
@@ -84,7 +84,7 @@
      +string  1 token +! REPEAT
      drop false ;
 
-~ : keyword?  ( adr -- false )
+|| : keyword?  ( adr -- false )
               ( adr -- token true )
      keyword  scanword ;
 
@@ -93,9 +93,9 @@
 
 \   scanner:                   18apr94pz
 
-| create id-buf  /id 1+ allot
+|| create id-buf  /id 1+ allot
 
-| : get-id ( -- )
+|| : get-id ( -- )
      id-buf 1+ /id bounds
      DO char> I c! +char char>
      alphanum? 0=
@@ -105,7 +105,7 @@
      BEGIN +char char>
      alphanum? 0= UNTIL ;
 
-| : id ( -- word type )
+|| : id ( -- word type )
      get-id  id-buf keyword?
         IF #keyword#
         ELSE id-buf #id# THEN ;
@@ -115,12 +115,12 @@
 
 \   scanner:                   08oct90pz
 
-| create operator-list
+|| create operator-list
  ," +++---**///%%&&&|||^^!!==<<<<>>>>~"
  ," += -= = =* = =& =| = = = <<= >>=  "
  ,"                          =   =    "
 
-| stringtab op
+|| stringtab op
   ~on
   x <++>    x <+=>    x <+>
   x <-->    x <-=>    x <->
@@ -143,14 +143,14 @@
 
 \   scanner:                   08oct90pz
 
-| : operator?  ( c -- token t/ -- f )
+|| : operator?  ( c -- token t/ -- f )
      operator-list count 0
      DO 2dup I + c@ =
        IF 2drop  +char
        I true UNLOOP exit THEN
      LOOP  2drop false ;
 
-| : th-char ( token1 n -- token2 )
+|| : th-char ( token1 n -- token2 )
      operator-list swap 1
         DO count + LOOP count rot
         DO dup I + c@  dup  bl =
@@ -161,7 +161,7 @@
            I UNLOOP exit THEN
         LOOP  *compiler* fatal ;
 
-| : operator ( token1 -- token2 #op# )
+|| : operator ( token1 -- token2 #op# )
      2 th-char  3 th-char  #oper# ;
 
 
@@ -169,24 +169,24 @@
 
 \   scanner:                   13feb91pz
 
-| : octnum ( -- n )
+|| : octnum ( -- n )
      0 BEGIN char> ascii 0 -
      dup 8 u< WHILE
      swap 8 * +  +char REPEAT drop ;
 
-| : deznum ( -- n )
+|| : deznum ( -- n )
      0 BEGIN char> ascii 0 -
      dup 10 u< WHILE
      swap 10 * +  +char REPEAT drop ;
 
-| : hexdigit ( c -- n/-1 )
+|| : hexdigit ( c -- n/-1 )
      capital  ascii 0 -
      dup 10 u< ?exit
      [ ascii A ascii 0 - ] literal -
      dup 6 u< IF 10 +
               ELSE drop -1 THEN ;
 
-| : hexnum ( -- n )
+|| : hexnum ( -- n )
      0 BEGIN char> hexdigit
      dup 16 u< WHILE
      swap 16 * +  +char REPEAT drop ;
@@ -196,7 +196,7 @@
 
 \   scanner:                   03oct90pz
 
-| : number ( -- n #number# )
+|| : number ( -- n #number# )
      char> ascii 0 =
         IF +char char> capital
         ascii X = IF +char hexnum
@@ -204,9 +204,9 @@
         ELSE deznum THEN #number# ;
 
 
-| create charlist ," ()[]{},;:"
+|| create charlist ," ()[]{},;:"
 
-| : legalchar? ( c -- c true  )
+|| : legalchar? ( c -- c true  )
                ( c --   false )
      charlist count bounds
      DO dup I c@ =
@@ -218,14 +218,14 @@
 
 \   scanner:                   02mar94pz
 
-| create \list ," btnfr0\' "
+|| create \list ," btnfr0\' "
   ascii " here 1- c!
   8 c, 9 c, 13 c, 12 c, 13 c, 0 c,
   ascii \ c,  ascii ' c,  ascii " c,
 
-| 256 constant none
+|| 256 constant none
 
-| : \char ( -- c )
+|| : \char ( -- c )
      char> 0= IF newline none exit THEN
      \list count bounds
      DO I c@ char> =
@@ -243,9 +243,9 @@
 
 \   scanner:                   03oct90pz
 
-| 512 constant err
+|| 512 constant err
 
-| : char-const ( -- c #number# )
+|| : char-const ( -- c #number# )
      BEGIN char> 0 case?
         IF *eol* error err
         ELSE +char ascii ' case?
@@ -264,15 +264,15 @@
 
 \   scanner:                   21feb91pz
 
-| variable do$
+|| variable do$
 | : $: Create c,
        Does> c@ do$ @ + perform ;
 
-| 0 $: $[  ( -- sys )
-| 2 $: $,  ( c -- )
-| 4 $: ]$  ( sys -- desc )
+|| 0 $: $[  ( -- sys )
+|| 2 $: $,  ( c -- )
+|| 4 $: ]$  ( sys -- desc )
 
-| variable $pending
+|| variable $pending
 
 ~ : do$:  Create:
     Does> ( pfa -- desc )  do$ !
@@ -292,11 +292,11 @@
 
 \   scanner:                   14sep94pz
 
-| : string ( -- ??? #string# )
+|| : string ( -- ??? #string# )
      $pending on  0 #string# ;
 
 
-| : (nextword ( -- word type )
+|| : (nextword ( -- word type )
      $pending @  *compiler* ?fatal
      BEGIN
       BEGIN skipblanks  char> 0=
@@ -318,13 +318,13 @@
 
 \   scanner:                   09oct90pz
 
-| : is-comment? ( w t -- w t flag )
+|| : is-comment? ( w t -- w t flag )
      2dup <comment> #oper# dnegate d+
      or 0= ;
 
-| ' comment-state ALIAS st
+|| ' comment-state ALIAS st
 
-| : skip-comment ( -- )
+|| : skip-comment ( -- )
      line @ comment-line !
      2 st !
      BEGIN char> +char ascii * case?
@@ -341,9 +341,9 @@
 
 \   scanner:                   11mar91pz
 
-| create word'  4 allot
-| variable back
-| variable word#
+|| create word'  4 allot
+|| variable back
+|| variable word#
 
 ~ : nextword ( -- word type )
      back @ back off  IF word' 2@ ELSE
@@ -361,7 +361,7 @@
 ~ : advanced? ( word# -- flag )
      word# @ = 0= ;
 
-~ : init-scanner
+|| : init-scanner
    back off  $pending off  word# off ;
     init: init-scanner
 
@@ -370,13 +370,13 @@
 
 \   scanner: word.             03oct90pz
 
-| : keyword. ( n )
+|| : keyword. ( n )
      keyword swap string[]
      >string count type ;
 
-| : emit' ( c ) dup bl -
+|| : emit' ( c ) dup bl -
           IF emit ELSE drop THEN ;
-| : oper. ( n )  operator-list 2dup
+|| : oper. ( n )  operator-list 2dup
        1+ + c@ emit    count + 2dup
        1+ + c@ emit'   count +
        1+ + c@ emit' ;
