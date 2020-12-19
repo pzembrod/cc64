@@ -8,9 +8,10 @@
 \ open-input    close-input
 \ open-include  close-include
 \ char>         +char
-\ line
+\ line          res-inptr
 \ comment-line  comment-state
 \ #eof
+\ source-name
 \ printcontext
 
   cr .( module input ) cr
@@ -20,12 +21,12 @@
 
 \   input :  variable          14sep94pz
 
-| 4 constant max-level
-| variable include-level
-| create name[]
+|| 4 constant max-level
+|| variable include-level
+|| create name[]
           /filename max-level * allot
-| create line[]    max-level 2* allot
-| create filepos[] max-level 2* allot
+|| create line[]    max-level 2* allot
+|| create filepos[] max-level 2* allot
 
 ~ variable comment-state
 ~ variable comment-line
@@ -33,14 +34,14 @@
 
 ~ doer preprocess
 
-| variable inptr
+|| variable inptr
 
 ~ : +char  ( -- )  1 inptr +! ;
 ~ : char>  ( -- c )  inptr @ c@ ;
 \ : char>  ( -- c )   eof @
 \    IF #eof ELSE inptr @ c@ THEN ;
 
-| : res-inptr  linebuf inptr ! ;
+~ : res-inptr  linebuf inptr ! ;
 
 
 \ *** Block No. 32, Hexblock 20
@@ -61,7 +62,7 @@
         ELSE linebuf off THEN
      source-file fclose ;
 
-| : open-source  ( -- )
+|| : open-source  ( -- )
      ascii r ascii s source-name
      source-file fopen  res-inptr ;
 
@@ -104,7 +105,7 @@
 
 ~ variable listing  listing on
 
-| : printsourceline  ( -- )
+|| : printsourceline  ( -- )
      linebuf /linebuf bounds
      DO I c@ ?dup 0= IF LEAVE THEN
      emit LOOP cr ;
@@ -137,7 +138,7 @@ make printcontext  ( -- )
       inptr @ linebuf - 1- 0 max
       spaces ASCII ^ emit  cr ;
 
-~ : init-input ( -- )
+|| : init-input ( -- )
      include-level off
      linebuf off  res-inptr
      context? on ;
