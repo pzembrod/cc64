@@ -21,71 +21,70 @@
   \ | ' noop alias tmpclear
 
   onlyforth  decimal  cr
-  | ' include alias forth-include
-  \ | : forth-include  include
+  \ | : include  include
   \    base push hex cr here u. heap u. up@ u. ;
 
-  forth-include util-words.fth  \ unloop strcmp doer-make
+  include util-words.fth  \ unloop strcmp doer-make
   cr
   | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
   | : 2!  ( d adr --)  under !  2+ ! ;
-  \ forth-include 2words.fth  \ 2@ 2!
+  \ include 2words.fth  \ 2@ 2!
   cr
   vocabulary compiler
   compiler also definitions
 
-  forth-include init.fth
+  include init.fth
 
-  forth-include strtab.fth
-  forth-include errormsgs.fth
-  forth-include errorhandler.fth
-  forth-include memman.fth
+  include strtab.fth
+  include errormsgs.fth
+  include errorhandler.fth
+  include memman.fth
   tmpclear
 
-  forth-include fileio.fth
-  forth-include fileman.fth
+  include fileio.fth
+  include fileman.fth
   tmpclear
 
-  forth-include codehandler.fth
+  include codehandler.fth
   tmpclear
-  forth-include rt-ptrs.fth
+  include rt-ptrs.fth
 
-  forth-include input.fth
-  forth-include preprocessor.fth
+  include input.fth
   include scanner.fth
-  forth-include symboltable.fth
+  include symboltable.fth
+  include preprocessor.fth
   tmpclear
 
-  forth-include listman.fth
+  include listman.fth
   tmpclear
 
   onlyforth
-  forth-include tmp6502asm.fth  \ transient 6502 assembler
+  include tmp6502asm.fth  \ transient 6502 assembler
   onlyforth compiler also definitions
-  \ forth-include v-assembler.fth
-  forth-include v-asm2.fth
-  forth-include lowlevel.fth
+  \ include v-assembler.fth
+  include v-asm2.fth
+  include lowlevel.fth
   \ tmpclear
 
-  forth-include codegen2.fth
-  forth-include parser.fth
-  forth-include p2write-decl.fth
+  include codegen2.fth
+  include parser.fth
+  include p2write-decl.fth
   tmpclear
-  forth-include pass2.fth
-  forth-include invoke.fth
-  words
+  include pass2.fth
+  include invoke.fth
+  \ words
 
   forth definitions
-  forth-include savesystem.fth
+  include savesystem.fth
 
   onlyforth
   vocabulary shell
   compiler also  shell definitions
 
-  forth-include shell.fth
-  forth-include version.fth
+  include shell.fth
+  include version.fth
   | : .binary-name  ." cc64 C compiler" ;
-  forth-include init-shell.fth
+  include init-shell.fth
 
   onlyforth
 
