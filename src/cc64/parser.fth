@@ -46,7 +46,7 @@
 || : cp]$ ( jmp adr -- adr )
      swap .resolve-jmp ;
 
-~ do$: compile$  ( -- adr )
+|| do$: compile$  ( -- adr )
         cp$[ .byte cp]$ ;
 
 \ obj in stack comments represents a data value in an expression and
@@ -194,25 +194,25 @@
   <*>   ' do-mult
   </>   ' do-div
   <%>   ' do-mod
-  3  ' unary   | binary product
+  3  ' unary   || binary product
 
   <+>   ' do-add
   <->   ' do-sub
-  2  ' product | binary sum
+  2  ' product || binary sum
 
   <<<>  ' do-shl
   <>>>  ' do-shr
-  2  ' sum     | binary shift
+  2  ' sum     || binary shift
 
   <<>   ' do-lt
   <<=>  ' do-le
   <>>   ' do-gt
   <>=>  ' do-ge
-  4  ' shift   | binary comp
+  4  ' shift   || binary comp
 
   <==>  ' do-eq
   <!=>  ' do-ne
-  2  ' comp    | binary equal
+  2  ' comp    || binary equal
 
 
 \ *** Block No. 57, Hexblock 39
@@ -220,13 +220,13 @@
 \   parser: binary             09oct90pz
 
   <and> ' do-and
-  1  ' equal   | binary bit-and
+  1  ' equal   || binary bit-and
 
   <xor> ' do-xor
-  1  ' bit-and | binary bit-xor
+  1  ' bit-and || binary bit-xor
 
   <or>  ' do-or
-  1  ' bit-xor | binary bit-or
+  1  ' bit-xor || binary bit-or
 
 || : l-and ( -- obj )
      bit-or
@@ -309,11 +309,11 @@
       THEN ;
 
 
-~ : constant-expression ( -- val )
+|| : constant-expression ( -- val )
      assign value  %constant isn't?
      *noconst* ?error  drop ;
 
-~ : expression  ( -- )
+|| : expression  ( -- )
      expression value non-constant
      2drop release-accu ;
 
@@ -324,7 +324,7 @@
 
   .( submodule statement ) cr
 
-~ doer compound
+|| doer compound
 || doer statement
 
 || : expect';'  ascii ; #char# expect ;
@@ -394,7 +394,7 @@
 || : continue-stmt ( -- )
      conts another  expect';' ;
 
-~ : init-breaks  breaks off conts off ;
+|| : init-breaks  breaks off conts off ;
      init: init-breaks
 
 
@@ -405,7 +405,7 @@
 || variable switch-state ( 0/-1/def.adr)
 || variable cases
 
-~ : init-switch   switch-state off
+|| : init-switch   switch-state off
      cases off ;
     init: init-switch
 
@@ -524,7 +524,7 @@
 
 \   parser: statement          12mar91pz
 
-~ : statement? ( -- flag )  true
+|| : statement? ( -- flag )  true
   #keyword# comes-a? IF
   <break> case? IF break-stmt exit THEN
   <cont> case?
@@ -591,8 +591,8 @@
 
 ~ variable function :does> 0 ;
 
-~ : defined   swap ! ;
-~ : defined?  swap @ = ;
+|| : defined   swap ! ;
+|| : defined?  swap @ = ;
 
 \   function [ not ] defined
 \   function [ not ] defined?
@@ -941,7 +941,7 @@
 
 \   parser: define function    25apr94pz
 
-~ variable protos2resolve
+|| variable protos2resolve
 ~ variable protos2patch
 
 || : prototype ( type -- )
@@ -957,7 +957,7 @@
            ELSE rdrop THEN
         THEN ;
 
-~ : init-patches
+|| : init-patches
      protos2resolve off
      protos2patch   off ;
 
