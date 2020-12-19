@@ -38,12 +38,12 @@
 
 ~ doer flushcode ( -- )
 
-~ doer flushstatic ( -- )
+|| doer flushstatic ( -- )
 
 
-| variable nolayout
+|| variable nolayout
 
-~ : init-codehandler  nolayout on ;
+|| : init-codehandler  nolayout on ;
 
    init: init-codehandler
 
@@ -52,15 +52,15 @@
 
 \   codehandler: code          19apr94pz
 
-| variable >pc
+|| variable >pc
 ~ : pc  >pc @ ;
 
-| variable codeoffset
-| : clearcode ( -- )
+|| variable codeoffset
+|| : clearcode ( -- )
      pc code[ - codeoffset ! ;
 ~ : *=   >pc !  clearcode ;
 
-| : >codeadr ( pc-adr -- code-buf-adr )
+|| : >codeadr ( pc-adr -- code-buf-adr )
     nolayout @  *nolayout* ?fatal
     codeoffset @ - dup
     code[ ]code 1- uwithin
@@ -77,10 +77,10 @@
 
 \   codehandler: statics       19apr94pz
 
-| variable static-offset
-| variable static>
+|| variable static-offset
+|| variable static>
 
-| : clearstatic ( -- )
+|| : clearstatic ( -- )
    static[ static> ! ;
 
 ~ : staticadr> ( -- current.adress )
@@ -126,3 +126,22 @@
      flushcode
      staticadr> statics.first !
      pc         code.last     ! ;
+
+\ *** Block No. 77, Hexblock 4d
+
+\ codeoutput: flushcode/static 11sep94pz
+
+make flushcode ( -- )
+   code-file fsetout
+   code[  pc >codeadr  over -  fputs
+   funset  clearcode ;
+
+make flushstatic ( -- )
+   static-file fsetout
+   static[  static> @  over - fputs
+   static[ static> @ - static-offset +!
+   funset  clearstatic ;
+
+\ noch schlecht modularisiert:
+\    greift auf interne worte des
+\    codehandlers zurueck.

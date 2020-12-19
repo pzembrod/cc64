@@ -7,46 +7,67 @@
 \log include logtofile.fth
 \log logopen" cc64.log"
 
-  \ include tmpheap.fth
-  \ $600 mk-tmp-heap
-  | ' | alias ||
-  | ' noop alias tmpclear
+| ' |     alias ~
+| ' |on   alias ~on
+| ' |off  alias ~off
+
+  include tmpheap.fth
+
+  (64 $e00 mk-tmp-heap C)
+  (16 $e00 mk-tmp-heap C)
+  (CX 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> ! C)
+
+  \ | ' | alias ||
+  \ | ' noop alias tmpclear
 
   onlyforth  decimal  cr
   | ' include alias forth-include
   \ | : forth-include  include
   \    base push hex cr here u. heap u. up@ u. ;
 
-| ' |     alias ~
-| ' |on   alias ~on
-| ' |off  alias ~off
-
   forth-include util-words.fth  \ unloop strcmp doer-make
   cr
-  forth-include trns6502asm.fth  \ transient 6502 assembler
-  forth-include 2words.fth  \ 2@ 2!
+  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
+  | : 2!  ( d adr --)  under !  2+ ! ;
+  \ forth-include 2words.fth  \ 2@ 2!
   cr
   vocabulary compiler
   compiler also definitions
 
-  forth-include strtab.fth
   forth-include init.fth
+
+  forth-include strtab.fth
   forth-include errormsgs.fth
   forth-include errorhandler.fth
   forth-include memman.fth
-  forth-include listman.fth
+  tmpclear
+
   forth-include fileio.fth
   forth-include fileman.fth
+  tmpclear
+
+  forth-include codehandler.fth
+  tmpclear
+
+  onlyforth
+  forth-include tmp6502asm.fth  \ transient 6502 assembler
+  onlyforth compiler also definitions
+  forth-include v-assembler.fth
+  forth-include lowlevel.fth
+  tmpclear
+
   forth-include input.fth
   forth-include scanner.fth
   forth-include symboltable.fth
-  forth-include codehandler.fth
-  forth-include codeoutput.fth
-  forth-include v-assembler.fth
   forth-include preprocessor.fth
+  tmpclear
 
-  forth-include codegen.fth
+  forth-include listman.fth
+  tmpclear
+  forth-include codegen2.fth
   forth-include parser.fth
+  forth-include p2write-decl.fth
+  tmpclear
   forth-include pass2.fth
   forth-include invoke.fth
 
@@ -69,6 +90,7 @@
   (64 0 ink-pot !  15  ink-pot 2+ c! C)
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
+  base @  hex here u. heap u. up@ u.  base !
   save
   cr .( compile successful) cr
 

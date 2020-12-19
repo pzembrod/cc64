@@ -1,10 +1,10 @@
 
-| Code c-charset
-  (64 $cbfd jsr C)  (16 $f804 jsr C) 
-   xyNext jmp end-code
+\ | Code c-charset
+\   (64 $cbfd jsr C)  (16 $f804 jsr C) 
+\    xyNext jmp end-code
 
-| : c-charset-present?  ( -- f )
-  (64 $cbf9 C) (16 $f800 C) 2@  $65021103. d= ;
+\ | : c-charset-present?  ( -- f )
+\   (64 $cbf9 C) (16 $f800 C) 2@  $65021103. d= ;
 
 | : init-shell  ( -- )
      only shell

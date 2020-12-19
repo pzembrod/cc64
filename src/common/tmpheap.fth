@@ -1,16 +1,14 @@
 
-\ | ' noop alias |
-
-User tmpheap[
-User tmpheap>
-User ]tmpheap
+~ User tmpheap[
+~ User tmpheap>
+~ User ]tmpheap
 
 heap dup ]tmpheap !  dup tmpheap> !  tmpheap[ ! 
 
-: mk-tmp-heap  ( size -- )
+~ : mk-tmp-heap  ( size -- )
     heap dup ]tmpheap ! tmpheap> !  hallot  heap tmpheap[ ! ;
 
-| : tmp-hallot  ( size -- addr )
+~ : tmp-hallot  ( size -- addr )
     tmpheap> @ swap -
     dup tmpheap[ @ u< abort" tmp heap overflow"
     dup tmpheap> ! ;
@@ -22,7 +20,7 @@ heap dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
 | : tmp-heapmove1x   ( from size -- from offset )
    tmp-heapmove  ?heapmovetx off ;
 
-: ||     ['] tmp-heapmove1x  ?heapmovetx ! ;
+~ : ||     ['] tmp-heapmove1x  ?heapmovetx ! ;
 \ : ||on   ['] tmp-heapmove    ?heapmovetx ! ;
 \ : ||off  ?heapmovetx off ;
 
@@ -40,7 +38,7 @@ heap dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
  voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
-: tmpclear  ( -- )
+~ : tmpclear  ( -- )
  remove-tmp-words
  tmpheap> @ tmpheap[ @ - cr u. ." tmpheap spare"
  ]tmpheap @ tmpheap> !  last off ;

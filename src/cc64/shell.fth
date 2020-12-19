@@ -9,10 +9,11 @@
 
 \   shell:                     21sep94pz
 
-Code bye
-(64  $37 # lda  $1 sta  $a000 ) jmp  C)
-(16  $fff6 jmp  C)
-end-code
+\ Code bye
+\ (64  $37 # lda  $1 sta  $a000 ) jmp  C)
+\ (16  $fff6 jmp  C)
+\ end-code
+' bye alias bye
 
 ' savesystem        alias saveall
 ' .mem              alias mem

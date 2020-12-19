@@ -93,3 +93,11 @@
 | ' bus! ALIAS fputc  ( c -- )
 
 | ' bustype ALIAS fputs  ( adr n -- )
+
+| : hex!  ( n -- )
+     "  0x" count fputs
+     base push hex 0 <# #s #> fputs ;
+
+| : cr!  ( -- )  $0d fputc ;
+
+| : str! ( string -- ) count fputs ;
