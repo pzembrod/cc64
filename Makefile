@@ -108,7 +108,10 @@ etc: $(forth_t64_files) emulator/c-char-rom-gen
 
 
 clean:
-	rm -f c64files/*.fth c16files/*.fth x16files/*.fth tmp/* doc.zip
+	rm -f c64files/*.fth c16files/*.fth x16files/*.fth
+	rm -f c64files/*.log c16files/*.log x16files/*.log
+	rm -f [cx][16][64]files/notdone
+	rm -f emulator/sdcard.img tmp/* doc.zip
 	rm -rf release
 	$(MAKE) -C tests clean
 	$(MAKE) -C tests/peddi clean
