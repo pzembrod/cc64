@@ -68,15 +68,8 @@ fi
 
 wait %1 || echo "x16emu returned $?"
 
-for binfile in ${BINOUTPUT}
+for outfile in ${OUTFILES}
 do
-  sdfile="$(echo ${binfile}|ascii2petscii -)"
-  mcopy -i "${sdcard}" "::${sdfile}" "${x16filesdir}/${binfile}"
-done
-
-for txtfile in ${TXTOUTPUT}
-do
-  sdfile="$(echo ${txtfile}|ascii2petscii -)"
-  mcopy -i "${sdcard}" "::${sdfile}" "${basefir}/tmp/${txtfile}.petscii"
-  petscii2ascii "${basefir}/tmp/${txtfile}.petscii" "${x16filesdir}/${txtfile}"
+  sdfile="$(echo "${outfile}"|ascii2petscii - |tr -d '\r')"
+  mcopy -i "${sdcard}" "::${sdfile}" "${x16filesdir}/${outfile}"
 done

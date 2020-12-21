@@ -138,9 +138,9 @@ slowtests:
 
 # cc64 build rules
 
-%files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) $(cc64srcs_x16) \
+%files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) \
  build/build-cc64.sh emulator/run-in-vice.sh \
- autostart-%/vf-build-base.T64 %files/vf-build-base emulator/sdcard.img
+ autostart-%/vf-build-base.T64
 	build/build-cc64.sh $*
 
 %files/cc64pe: $(cc64srcs_c64) $(peddisrcs_c64) \
@@ -152,6 +152,12 @@ slowtests:
  build/build-peddi.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
 	build/build-peddi.sh $*
+
+
+x16files/cc64: $(cc64srcs_x16) \
+ build/build-cc64.sh emulator/run-in-x16emu.sh \
+ x16files/vf-build-base emulator/sdcard.img
+	build/build-cc64.sh x16
 
 
 # build base rule

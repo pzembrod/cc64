@@ -14,6 +14,7 @@ rm -f "${logfile}"
 
 keybuf="include cc64-main.fth\nsaveall cc64\ndos s0:notdone\n"
 
+export OUTFILES="cc64 cc64.log"
 "${emulatordir}/run-in-${platform}emu.sh" "vf-build-base" "${keybuf}"
 
 petscii2ascii "${logfile}" | \
