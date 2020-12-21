@@ -1,51 +1,89 @@
 
-  onlyforth  decimal  cr
-  | ' include alias forth-include
+\ with build log:
+' noop alias \log
+\ without build log:
+\ ' \ alias \log
+
+\log include logtofile.fth
+\log logopen" cc64pe.log"
 
 | ' |     alias ~
 | ' |on   alias ~on
 | ' |off  alias ~off
 
-  forth-include util-words.fth  \ unloop strcmp doer-make
+  include tmpheap.fth
+
+  (64 $2000 mk-tmp-heap C)
+  (16 $2000 mk-tmp-heap C)
+  (CX 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> ! C)
+
+  \ | ' | alias ||
+  \ | ' noop alias tmpclear
+
+  onlyforth  decimal  cr
+  \ | : include  include base push hex cr here u. heap u. up@ u. ;
+
+  include util-words.fth  \ unloop strcmp doer-make
   cr
-  forth-include trns6502asm.fth  \ transient 6502 assembler
-  forth-include 2words.fth  \ 2@ 2! 2variable/constant
+  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
+  | : 2!  ( d adr --)  under !  2+ ! ;
+  \ include 2words.fth  \ 2@ 2!
   cr
   vocabulary compiler
   compiler also definitions
 
-  forth-include strtab.fth
-  forth-include init.fth
-  forth-include errormsgs.fth
-  forth-include errorhandler.fth
-  forth-include memman.fth
-  forth-include listman.fth
-  forth-include fileio.fth
-  forth-include fileman.fth
-  forth-include input.fth
-  forth-include scanner.fth
-  forth-include symboltable.fth
-  forth-include codehandler.fth
-  forth-include codeoutput.fth
-  forth-include v-assembler.fth
-  forth-include preprocessor.fth
+  include init.fth
 
-  forth-include codegen.fth
-  forth-include parser.fth
-  forth-include pass2.fth
-  forth-include invoke.fth
+  include strtab.fth
+  include errormsgs.fth
+  include errorhandler.fth
+  include memman.fth
+  tmpclear
+
+  include fileio.fth
+  include fileman.fth
+  tmpclear
+
+  include codehandler.fth
+  tmpclear
+  include rt-ptrs.fth
+
+  include input.fth
+  include scanner.fth
+  include symboltable.fth
+  include preprocessor.fth
+  tmpclear
+
+  include listman.fth
+  tmpclear
+
+  onlyforth
+  include tmp6502asm.fth  \ transient 6502 assembler
+  onlyforth compiler also definitions
+  \ include v-assembler.fth
+  include v-asm2.fth
+  include lowlevel.fth
+  \ tmpclear
+
+  include codegen2.fth
+  include parser.fth
+  include p2write-decl.fth
+  tmpclear
+  include pass2.fth
+  include invoke.fth
+  \ words
 
   forth definitions
-  forth-include savesystem.fth
+  include savesystem.fth
 
   onlyforth
   vocabulary shell
   compiler also  shell definitions
 
-  forth-include shell.fth
-  forth-include version.fth
+  include shell.fth
+  include version.fth
   | : .binary-name  ." cc64pe C compiler + peddi editor" ;
-  forth-include init-shell.fth
+  include init-shell.fth
 
   onlyforth
 
@@ -76,6 +114,10 @@
 ' ed ALIAS ed
 
   save
+  cr .( compile successful) cr
+
+\log logclose
+
   (64 $cbd0 set-himem C)
   (16 $f000 set-himem C)
   (64 2000 set-symtab C)

@@ -14,15 +14,14 @@
   include tmpheap.fth
 
   (64 $2000 mk-tmp-heap C)
-  (16 $e00 mk-tmp-heap C)
+  (16 $2000 mk-tmp-heap C)
   (CX 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> ! C)
 
   \ | ' | alias ||
   \ | ' noop alias tmpclear
 
   onlyforth  decimal  cr
-  \ | : include  include
-  \    base push hex cr here u. heap u. up@ u. ;
+  \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
   include util-words.fth  \ unloop strcmp doer-make
   cr
