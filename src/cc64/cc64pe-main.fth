@@ -60,12 +60,11 @@
   onlyforth
   include tmp6502asm.fth  \ transient 6502 assembler
   onlyforth compiler also definitions
-  \ include v-assembler.fth
-  include v-asm2.fth
+  include v-assembler.fth
   include lowlevel.fth
   \ tmpclear
 
-  include codegen2.fth
+  include codegen.fth
   include parser.fth
   include p2write-decl.fth
   tmpclear
