@@ -2,9 +2,6 @@
 
 \ parser loadscreen            21sep94pz
 
-  cr
-  .( module parser: ) cr
-
 || : teststack  ( -- )
      here $80 + sp@ u> *stack* ?fatal
      up@ udp @ + $40 + rp@ u>

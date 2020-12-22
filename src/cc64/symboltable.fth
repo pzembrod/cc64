@@ -6,10 +6,7 @@
 \ findlocal    putlocal
 \ nestlocal    unnestlocal
 \ findglobal   putglobal
-\ init-symtab
-
-  cr .( module symtab ) cr
-
+\ ( init-symtab )
 
 \ symbol format:
 \  [ name$(counted)][ /symbol bytes data ]

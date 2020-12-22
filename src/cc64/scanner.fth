@@ -10,9 +10,6 @@
 \   alle tokens
 \   ( init-scanner )
 
-  cr .( module scanner ) cr
-
-
 \ *** Block No. 37, Hexblock 25
 
 \   scanner:                   26feb91pz

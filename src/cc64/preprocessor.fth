@@ -6,8 +6,6 @@
 
 \  preprocess
 
-  cr .( module preprocessor ) cr
-
 \ The preprocessor is a really bad
 \ hack which depends deeply on special
 \ properties of input, scanner and

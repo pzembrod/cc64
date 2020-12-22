@@ -2,9 +2,6 @@
 
 \ file-i/o                     20sep94pz
 
-  cr .( module file-i/o ) cr
-
-
 \ *** Block No. 113, Hexblock 71
 
 \   file-i/o                   21sep94pz

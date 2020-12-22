@@ -2,9 +2,6 @@
 
 \ errormessages              20sep94pz
 
-  cr .( module errormessages ) cr
-
-
 \ *** Block No. 25, Hexblock 19
 
 \ errormessages                11sep94pz

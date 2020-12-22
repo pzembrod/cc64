@@ -2,11 +2,6 @@
 
 \ codegen loadscreen           21sep94pz
 
-  cr
-  .( module codegen )
-  cr
-
-
 \ *** Block No. 13, Hexblock d
 
 \ codegen: objects             13jan91pz

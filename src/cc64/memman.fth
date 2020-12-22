@@ -2,8 +2,6 @@
 
 \ memman: loadscreen           20sep94pz
 
-  cr .( module memman ) cr
-
 \ terminology / interface:
 \    himem
 \    heap[    ]heap

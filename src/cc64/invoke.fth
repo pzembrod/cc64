@@ -2,9 +2,6 @@
 
 \ invoke :  loadscreen         21sep94pz
 
-  cr .( module invoke ) cr
-
-
 \ *** Block No. 101, Hexblock 65
 
 \   invoke :  pass1            11sep94pz

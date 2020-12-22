@@ -2,8 +2,6 @@
 
 \ vassembler loadscreen        20sep94pz
 
-  cr .( module v-assembler ) cr
-
 \ assembler for the virtual machine on which codegen is based
 \ basicalls a slight abstraction, 16 bit, of the 6502.
 

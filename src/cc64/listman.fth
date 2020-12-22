@@ -7,9 +7,6 @@
 \ heap>         >heap
 \ ( init-heap )
 
-  cr .( module listman ) cr
-
-
 \ *** Block No. 19, Hexblock 13
 
 \ listman:                     12mar91pz

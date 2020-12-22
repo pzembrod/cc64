@@ -14,9 +14,6 @@
 \ source-name
 \ printcontext
 
-  cr .( module input ) cr
-
-
 \ *** Block No. 31, Hexblock 1f
 
 \   input :  variable          14sep94pz

@@ -2,9 +2,6 @@
 
 \ pass2 :  loadscreen          21sep94pz
 
-  cr .( module pass2 ) cr
-
-
 \ *** Block No. 109, Hexblock 6d
 
 \   pass2 :                    11sep94pz

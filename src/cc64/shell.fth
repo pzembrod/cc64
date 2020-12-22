@@ -2,9 +2,6 @@
 
 \ shell loadscreen             21sep94pz
 
-  cr .( module shell ) cr
-
-
 \ *** Block No. 127, Hexblock 7f
 
 \   shell:                     21sep94pz

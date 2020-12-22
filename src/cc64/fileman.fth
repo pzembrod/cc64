@@ -2,8 +2,6 @@
 
 \ fileman: loadscreen          20sep94pz
 
-  cr .( module fileman ) cr
-
 \ terminology / interface:
 
 \ source-file

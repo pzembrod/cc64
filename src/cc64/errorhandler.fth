@@ -2,9 +2,6 @@
 
 \ errorhandler : loadscreen    20sep94pz
 
-  cr .( module errorhandler ) cr
-
-
 \ *** Block No. 55, Hexblock 37
 
 \   errorhandler               11sep94pz

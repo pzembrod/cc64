@@ -2,8 +2,6 @@
 
 \ codehandler: loadscreen      20sep94pz
 
-  cr .( module codehandler ) cr
-
 \ terminology / interface:
 
 \ fuer programmcode:
