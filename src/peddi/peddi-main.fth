@@ -1,9 +1,20 @@
 
+\ with build log:
+' noop alias \log
+\ without build log:
+\ ' \ alias \log
+
+\log include logtofile.fth
+\log logopen" peddi.log"
+
   onlyforth  decimal
 
 \ peddi loadscreen standalone  07may95pz
 
+  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
+
   include trns6502asm.fth  \ transient 6502 assembler
+  include lowlevel.fth
 
 | vocabulary peddi
   vocabulary shell
@@ -49,6 +60,10 @@
  dup relocate-tasks
  up@ 1+ @   origin   1+ !        \ task
        6 -  origin  8 + ! cold ; \ s0
+
+  cr .( compile successful) cr
+
+\log logclose
 
   $cbd0 ' limit >body !
   (64 0 ink-pot !  15  ink-pot 2+ c! C)
