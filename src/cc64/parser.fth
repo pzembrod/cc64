@@ -2,7 +2,11 @@
 
 \ parser loadscreen            21sep94pz
 
-|| : teststack  ( -- )
+~ variable protos2patch
+
+||on
+
+: teststack  ( -- )
      here $80 + sp@ u> *stack* ?fatal
      up@ udp @ + $40 + rp@ u>
                       *rstack* ?fatal ;
@@ -12,16 +16,16 @@
 
 \ parser: tools                22feb91pz
 
-|| : comes? ( word wordtype -- flag )
+: comes? ( word wordtype -- flag )
     nextword dnegate d+ or
     IF backword false ELSE true THEN ;
 
-|| : comes-a? ( wordtype -- word true )
+: comes-a? ( wordtype -- word true )
              ( wordtype -- false )
     nextword rot = dup not
     IF nip backword THEN ;
 
-|| : expect ( word wordtype -- )
+: expect ( word wordtype -- )
     2dup comes?
        IF 2drop
        ELSE *expected* error word.
@@ -33,17 +37,17 @@
 
 \ *** Block No. 50, Hexblock 32
 
-  .( submodule expression ) cr
+  cr .( submodule expression ) cr
 
 \ parser: atom                 13sep94pz
 
-|| : cp$[ ( -- jmp adr )
+: cp$[ ( -- jmp adr )
      .jmp-ahead  .label ;
 
-|| : cp]$ ( jmp adr -- adr )
+: cp]$ ( jmp adr -- adr )
      swap .resolve-jmp ;
 
-|| do$: compile$  ( -- adr )
+do$: compile$  ( -- adr )
         cp$[ .byte cp]$ ;
 
 \ obj in stack comments represents a data value in an expression and
@@ -55,7 +59,7 @@
 \ definitions %int, %pointer, %function etc. from the beginning of
 \ codegen.fth.
 
-|| : atom ( -- obj )
+: atom ( -- obj )
    #number# comes-a?
       IF do-numatom  exit THEN
    #id#     comes-a?
@@ -71,10 +75,10 @@
 
 \ parser: primary              15mar91pz
 
-|| doer expression
-|| doer assign
+doer expression
+doer assign
 
-|| : primary[] ( obj1 -- obj2 )
+: primary[] ( obj1 -- obj2 )
    value
    expression value  do-add
    do-pointer
@@ -85,16 +89,16 @@
 
 \   parser: primary            26apr20pz
 
-|| : std-arguments ( -- )
+: std-arguments ( -- )
      assign put-std-argument
      BEGIN ascii , #char# comes? WHILE
      assign drop-std-argument REPEAT ;
 
-|| : arguments  ( -- )
+: arguments  ( -- )
      BEGIN assign put-argument
      ascii , #char# comes? not UNTIL ;
 
-|| : primary() ( obj1 -- obj2 )
+: primary() ( obj1 -- obj2 )
      %stdfctn is?
         IF ascii ) #char# comes? not
            IF std-arguments
@@ -111,7 +115,7 @@
 
 \   parser: primary            11sep94pz
 
-|| : primary ( -- obj )
+: primary ( -- obj )
      teststack
      ascii ( #char# comes?
         IF expression
@@ -131,7 +135,7 @@
 
 \ parser: unary                22feb91pz
 
-|| : unary ( -- obj )  recursive
+: unary ( -- obj )  recursive
 
    #oper# comes-a? IF
     <-> case? IF unary do-neg exit THEN
@@ -159,7 +163,7 @@
 
 \ parser: binary               06mar91pz
 
-|| : comes-op? ( tab -- cfa true )
+: comes-op? ( tab -- cfa true )
               ( tab -- false )
      #oper# comes-a?
         IF swap  dup 2+ swap @ bounds
@@ -170,7 +174,7 @@
         backword THEN
      drop  false ;
 
-|| : binary  ( tab -- )
+: binary  ( tab -- )
     create , dup 4 * ,  0
      DO swap , , LOOP
     does>   ( tab -- obj )
@@ -191,25 +195,25 @@
   <*>   ' do-mult
   </>   ' do-div
   <%>   ' do-mod
-  3  ' unary   || binary product
+  3  ' unary   binary product
 
   <+>   ' do-add
   <->   ' do-sub
-  2  ' product || binary sum
+  2  ' product binary sum
 
   <<<>  ' do-shl
   <>>>  ' do-shr
-  2  ' sum     || binary shift
+  2  ' sum     binary shift
 
   <<>   ' do-lt
   <<=>  ' do-le
   <>>   ' do-gt
   <>=>  ' do-ge
-  4  ' shift   || binary comp
+  4  ' shift   binary comp
 
   <==>  ' do-eq
   <!=>  ' do-ne
-  2  ' comp    || binary equal
+  2  ' comp    binary equal
 
 
 \ *** Block No. 57, Hexblock 39
@@ -217,21 +221,21 @@
 \   parser: binary             09oct90pz
 
   <and> ' do-and
-  1  ' equal   || binary bit-and
+  1  ' equal   binary bit-and
 
   <xor> ' do-xor
-  1  ' bit-and || binary bit-xor
+  1  ' bit-and binary bit-xor
 
   <or>  ' do-or
-  1  ' bit-xor || binary bit-or
+  1  ' bit-xor binary bit-or
 
-|| : l-and ( -- obj )
+: l-and ( -- obj )
      bit-or
      BEGIN  <l-and> #oper# comes? WHILE
      do-l-and.1  bit-or
      do-l-and.2  REPEAT ;
 
-|| : l-or ( -- obj )
+: l-or ( -- obj )
      l-and
      BEGIN  <l-or> #oper# comes? WHILE
      do-l-or.1  l-and
@@ -242,7 +246,7 @@
 
 \   parser: binary             07apr90pz
 
-|| : conditional ( -- obj )
+: conditional ( -- obj )
      l-or
      ascii ? #char# comes?
         IF do-cond1
@@ -257,7 +261,7 @@
 
 \ parser: assign               06mar91pz
 
-|| create assign-oper  11  4 * ,
+create assign-oper  11  4 * ,
   <=>      0          swap  , ,
   <*=>   ' do-mult    swap  , ,
   </=>   ' do-div     swap  , ,
@@ -306,11 +310,11 @@
       THEN ;
 
 
-|| : constant-expression ( -- val )
+: constant-expression ( -- val )
      assign value  %constant isn't?
      *noconst* ?error  drop ;
 
-|| : expression  ( -- )
+: expression  ( -- )
      expression value non-constant
      2drop release-accu ;
 
@@ -321,15 +325,15 @@
 
   .( submodule statement ) cr
 
-|| doer compound
-|| doer statement
+doer compound
+doer statement
 
-|| : expect';'  ascii ; #char# expect ;
+: expect';'  ascii ; #char# expect ;
 
-|| : expression-stmt ( -- )
+: expression-stmt ( -- )
       expression  expect';' ;
 
-|| : return-stmt ( -- )
+: return-stmt ( -- )
       ascii ; #char# comes? not
          IF expression-stmt THEN
       .rts ;
@@ -339,12 +343,12 @@
 
 \   parser: statement          22feb91pz
 
-|| : (expression)  ( -- )
+: (expression)  ( -- )
      ascii ( #char# expect
      expression
      ascii ) #char# expect ;
 
-|| : if-stmt  ( -- )
+: if-stmt  ( -- )
      (expression)
      .jmz-ahead
      statement
@@ -358,14 +362,14 @@
 
 \   parser: statement          12mar91pz
 
-|| : ?drop&exit ( n flag -- n / -- )
+: ?drop&exit ( n flag -- n / -- )
       IF drop rdrop THEN ;
 
-|| : new  ( list -- )
+: new  ( list -- )
      heap> ?dup 0= ?drop&exit
      dup 2+ off  swap hook-into ;
 
-|| : resolve  ( list -- )
+: resolve  ( list -- )
      BEGIN dup hook-out  dup >heap
      2+ @ ?dup WHILE
      .resolve-jmp REPEAT drop ;
@@ -375,23 +379,23 @@
 
 \   parser: statement          12mar91pz
 
-|| variable breaks
-|| variable conts
+variable breaks
+variable conts
 
-|| : another  ( list -- )
+: another  ( list -- )
      dup @ 0= IF *ill-brk* error
               drop exit THEN
      heap> ?dup 0= ?drop&exit
      .jmp-ahead over 2+ !
      swap hook-into ;
 
-|| : break-stmt ( -- )
+: break-stmt ( -- )
      breaks another  expect';' ;
 
-|| : continue-stmt ( -- )
+: continue-stmt ( -- )
      conts another  expect';' ;
 
-|| : init-breaks  breaks off conts off ;
+: init-breaks  breaks off conts off ;
      init: init-breaks
 
 
@@ -399,14 +403,14 @@
 
 \   parser: statement          18apr94pz
 
-|| variable switch-state ( 0/-1/def.adr)
-|| variable cases
+variable switch-state ( 0/-1/def.adr)
+variable cases
 
-|| : init-switch   switch-state off
+: init-switch   switch-state off
      cases off ;
     init: init-switch
 
-|| : case-stmt ( -- )
+: case-stmt ( -- )
      constant-expression
      ascii : #char# expect
      switch-state @ 0=   IF drop
@@ -415,7 +419,7 @@
      dup  cases hook-into
      2+ .label over !  2+ ! ;
 
-|| : default-stmt ( -- )
+: default-stmt ( -- )
      ascii : #char# expect
      switch-state @ 1+
         IF *ill-default* error
@@ -427,13 +431,13 @@
 
 \   parser: statement          27may91pz
 
-|| : cases-resolve ( -- )
+: cases-resolve ( -- )
      BEGIN cases hook-out  dup >heap
      2+ dup @ ?dup WHILE
      .word 2+ @ .word REPEAT
      drop  0 .word ;
 
-|| : switch-stmt  ( -- )
+: switch-stmt  ( -- )
      switch-state @ switch-state on
      breaks new  cases new
      (expression)  .jmp-ahead
@@ -455,14 +459,14 @@
 
 \   parser: statement          22feb91pz
 
-|| : do-stmt  ( -- )
+: do-stmt  ( -- )
      breaks new  conts new
      .label  statement  conts resolve
      <while> #keyword# expect
      (expression)  .jmn
      breaks resolve  expect';' ;
 
-|| : while-stmt  ( -- )
+: while-stmt  ( -- )
      breaks new  conts new
      .label  (expression)
      .jmz-ahead
@@ -479,14 +483,14 @@
 \    ascii ; #char# comes? not
 \      IF expression  expect';' THEN ;
 
-|| : 2nd-expression? ( -- flag )
+: 2nd-expression? ( -- flag )
      ascii ; #char# comes? not dup
        IF expression  expect';' THEN ;
 
-|| : 1st-expression  ( -- )
+: 1st-expression  ( -- )
      2nd-expression? drop ;
 
-|| : 3rd-expression  ( -- )
+: 3rd-expression  ( -- )
      ascii ) #char# comes? not
         IF expression
         ascii ) #char# expect THEN ;
@@ -496,7 +500,7 @@
 
 \   parser: statement          22feb91pz
 
-|| : for-stmt ( -- )
+: for-stmt ( -- )
      breaks new  conts new
      ascii ( #char# expect
      1st-expression
@@ -521,7 +525,7 @@
 
 \   parser: statement          12mar91pz
 
-|| : statement? ( -- flag )  true
+: statement? ( -- flag )  true
   #keyword# comes-a? IF
   <break> case? IF break-stmt exit THEN
   <cont> case?
@@ -566,14 +570,14 @@
 
   .( submodule definition ) cr
 
-|| variable #/obj
-|| variable []dim'd
-|| variable #inits
-|| variable []init'd
+variable #/obj
+variable []dim'd
+variable #inits
+variable []init'd
 
-|| variable extern
+variable extern
 
-|| : >type  ( desc -- desc.type )
+: >type  ( desc -- desc.type )
           ; immediate
 
 \ haengt von der wirkungsweise von
@@ -586,10 +590,10 @@
 
 \   parser: declaration basics 14mar91pz
 
-~ variable function :does> 0 ;
+variable function :does> 0 ;
 
-|| : defined   swap ! ;
-|| : defined?  swap @ = ;
+: defined   swap ! ;
+: defined?  swap @ = ;
 
 \   function [ not ] defined
 \   function [ not ] defined?
@@ -599,19 +603,19 @@
 
 \   parser: type-specifiers    14mar91pz
 
-|| : type-name? ( type -- type' flag )
+: type-name? ( type -- type' flag )
      <char> #keyword# comes?
         IF set-char true
         ELSE <int> #keyword# comes?
            IF set-int true
            ELSE false THEN THEN ;
 
-|| : register? ( type -- type' flag )
+: register? ( type -- type' flag )
      <register> #keyword# comes?
         IF ( %register set ) true
         ELSE false THEN ;
 
-|| : extern? ( type -- type' flag )
+: extern? ( type -- type' flag )
      <extern> #keyword# comes?
         IF %extern set  %offset clr
            extern on  true
@@ -622,13 +626,13 @@
 
 \   parser: type-specifiers    14mar91pz
 
-|| : range? ( type -- type' flag )
+: range? ( type -- type' flag )
      extern? ?dup ?exit
      <static> #keyword# comes?
         IF %extern clr true
         ELSE false THEN ;
 
-|| : class? ( type -- type' flag )
+: class? ( type -- type' flag )
      register? ?dup ?exit
      extern?   ?dup ?exit
      <auto> #keyword# comes?
@@ -642,9 +646,9 @@
 
 \   parser: type-specifiers    11sep94pz
 
-|| defer 'class?
+defer 'class?
 
-|| : or-type: ( cfa -- )  create ,
+: or-type: ( cfa -- )  create ,
     does> ( type pfa -- type' flag )
      @ IS 'class?   extern off
      'class?
@@ -653,25 +657,25 @@
            IF 'class? drop  true
            ELSE false THEN THEN ;
 
-|| ' class? or-type: class-or-type?
-|| ' range? or-type: range-or-type?
-|| ' register? or-type: register-or-type?
+' class? or-type: class-or-type?
+' range? or-type: range-or-type?
+' register? or-type: register-or-type?
 
 
 \ *** Block No. 78, Hexblock 4e
 
 \   parser: declarator         08mar91pz
 
-|| create id-buf /id 1+ allot
+create id-buf /id 1+ allot
 
-|| : handle-id  ( -- )
+: handle-id  ( -- )
      id-buf off  #id# comes-a?
         IF id-buf over c@ 1+ cmove
         ELSE *expected* error
         ." identifier" THEN ;
 
 
-|| : [parameters]) ( -- )
+: [parameters]) ( -- )
      tos-offs off
      ascii ) #char# comes? not
         IF BEGIN #id# comes-a?
@@ -687,7 +691,7 @@
 
 \   parser: declarator         14mar91pz
 
-|| : handle-function ( type -- type' )
+: handle-function ( type -- type' )
      function?
         IF unnestlocal THEN
      %function is?
@@ -708,11 +712,11 @@
 
 \   parser: declarator         08mar91pz
 
-|| : set-pointer ( type -- type' )
+: set-pointer ( type -- type' )
      %pointer is?  *double-ptr* ?error
      %pointer set ;
 
-|| : handle-array ( type -- type' )
+: handle-array ( type -- type' )
      ascii ] #char# comes? not
         IF %function is? >r
         constant-expression r>
@@ -737,7 +741,7 @@
 
 \   parser: declarator         06mar91pz
 
-|| : (declarator ( type -- type' )
+: (declarator ( type -- type' )
      1 #/obj !  []dim'd off
     false BEGIN <*> #oper# comes? WHILE
      *double-ptr* ?error true REPEAT >r
@@ -753,9 +757,9 @@
      r> advanced? not UNTIL
      r> IF set-pointer THEN ;
 
-|| defer 'declarator ( type' -- )
+defer 'declarator ( type' -- )
 
-|| : declarator ( type -- )
+: declarator ( type -- )
      (declarator 'declarator ;
 
 
@@ -763,13 +767,13 @@
 
 \   parser: declarator         12mar91pz
 
-|| variable (1st
-|| : 1st  (1st on ;
-|| : 2nd  (1st off ;
-|| : 1st? (1st @ ;
+variable (1st
+: 1st  (1st on ;
+: 2nd  (1st off ;
+: 1st? (1st @ ;
 
 
-|| : declarator-list';' ( type -- )
+: declarator-list';' ( type -- )
      >r
      function not defined
      r@ 1st declarator
@@ -784,27 +788,27 @@
 
 \   parser: initializer        11sep94pz
 
-|| : 1more ( n -- n )
+: 1more ( n -- n )
      teststack  1 #inits +! ;
 
-|| : nomore ( n -- )  drop ;
+: nomore ( n -- )  drop ;
 
-|| defer '1more
+defer '1more
 
-|| : ?1more  ( flag -- )
+: ?1more  ( flag -- )
         IF ['] 1more
         ELSE *initer* error
         ['] nomore THEN
      IS '1more ;
 
-|| : >inittype ( type -- inittype )
+: >inittype ( type -- inittype )
      ( bit 0: int     bit 1: array   )
      ( bit 2: offset  bit 3: []dim'd )
      is-int? 1 and >r array? 2 and >r
      %offset is? 4 and nip r> or r> or
      []dim'd @ 8 and or ;
 
-|| : (init$   >inittype 7 and 2 =
+: (init$   >inittype 7 and 2 =
      dup []init'd !  ?1more ;
 
 
@@ -812,7 +816,7 @@
 
 \   parser: initializer        12mar91pz
 
-|| : init[] ( type -- values )
+: init[] ( type -- values )
      >inittype 6 and 2 =
      dup []init'd !  ?1more
      BEGIN constant-expression '1more
@@ -823,10 +827,10 @@
         ELSE false THEN
      UNTIL ;
 
-|| do$: init$ ( type -- values )
+do$: init$ ( type -- values )
         (init$ '1more noop ;
 
-|| : initializer ( type -- values )
+: initializer ( type -- values )
      ascii { #char# comes?  \ }
         IF init[] exit THEN
      #string# comes-a?
@@ -839,16 +843,16 @@
 
 \   parser: declare-fcnt/data  14mar91pz
 
-|| : check-types-equal ( type1 type2 -- )
+: check-types-equal ( type1 type2 -- )
      xor %decl.mask and
      *!=type* ?error ;
 
-|| : declare ( type -- )
+: declare ( type -- )
      id-buf findglobal ?dup
         IF >type @ check-types-equal
         ELSE drop *undef* error THEN ;
 
-|| : extern-op?
+: extern-op?
      ( type -- type' flag )
      <*=> #oper# comes?
         IF function?
@@ -857,7 +861,7 @@
         true
         ELSE </=> #oper# comes? THEN ;
 
-|| : define-extern ( type -- )
+: define-extern ( type -- )
      %extern isn't? *???* ?error
      function? IF unnestlocal THEN
      constant-expression swap
@@ -868,14 +872,14 @@
 
 \   parser: define-data        14mar91pz
 
-|| : dim-array ( type -- type' )
+: dim-array ( type -- type' )
      []dim'd @ 0=
         IF []init'd @
            IF #inits @ #/obj !
            ELSE %reference set THEN
         THEN ;
 
-|| : size/# ( type -- type n )
+: size/# ( type -- type n )
      %pointer %function + isn't? >r
      array? >r is-char? r> r> or and
      2+ ;
@@ -885,9 +889,9 @@
 
 \   parser: define-data        11sep94pz
 
-|| defer 'stat,
+defer 'stat,
 
-|| : create-static
+: create-static
     ( [values] type -- obj )
      size/# 1-
         IF ['] stat, ELSE ['] cstat,
@@ -907,7 +911,7 @@
 
 \   parser: define-data        11sep94pz
 
-|| : create-dyn ( [value] type -- obj )
+: create-dyn ( [value] type -- obj )
      size/# #/obj @ *  dyn-allot swap
      #inits @
         IF size/# .size  rot .lda#.s
@@ -918,9 +922,9 @@
 
 \   parser: define-data        11sep94pz
 
-|| defer 'putsymbol
+defer 'putsymbol
 
-|| : define-data ( type -- )
+: define-data ( type -- )
      extern @
         IF declare exit THEN
      #inits off  []init'd off
@@ -938,10 +942,9 @@
 
 \   parser: define function    25apr94pz
 
-|| variable protos2resolve
-~ variable protos2patch
+variable protos2resolve
 
-|| : prototype ( type -- )
+: prototype ( type -- )
      unnestlocal
      id-buf findglobal ?dup
         IF >type @ check-types-equal
@@ -954,7 +957,7 @@
            ELSE rdrop THEN
         THEN ;
 
-|| : init-patches
+: init-patches
      protos2resolve off
      protos2patch   off ;
 
@@ -965,14 +968,14 @@
 
 \   parser: define function    25apr94pz
 
-|| : sort-in  ( addr2patch -- list )
+: sort-in  ( addr2patch -- list )
      >r  protos2patch BEGIN
         dup @ 0= IF rdrop exit THEN
         dup @ 4 + @ r@ u<
                  IF rdrop exit THEN
         @ REPEAT ;
 
-|| : adjust-prototype
+: adjust-prototype
     ( obj desc type -- obj desc )
      2 pick check-types-equal   >r
      ( obj )
@@ -984,7 +987,7 @@
      ( obj element)  2 pick over 2+ !
      dup 4 + @  sort-in  hook-into r> ;
 
-|| : find/putglobal ( obj -- obj desc )
+: find/putglobal ( obj -- obj desc )
      id-buf findglobal ?dup
         IF dup >type @ %proto is?
            IF adjust-prototype exit
@@ -996,7 +999,7 @@
 
 \   parser: define-function    14mar91pz
 
-|| : parameter' ( type -- )
+: parameter' ( type -- )
      function? dup >r
         IF unnestlocal THEN
      array? r> or
@@ -1006,7 +1009,7 @@
                 ELSE >type ! THEN
         THEN ;
 
-|| : declare-parameters ( -- )
+: declare-parameters ( -- )
      ['] parameter' IS 'declarator
      BEGIN %local
      register-or-type? WHILE
@@ -1017,7 +1020,7 @@
 
 \   parser: define function    14mar91pz
 
-|| : define-function ( type -- )
+: define-function ( type -- )
      #char# comes-a?
         IF backword
         dup ascii ; = swap ascii , = or
@@ -1038,19 +1041,19 @@
 
 \   parser: type-specifiers    11sep94pz
 
-|| : global  ( -- )
+: global  ( -- )
      ['] putglobal IS 'putsymbol ;
 
-|| : local  ( -- )
+: local  ( -- )
      ['] putlocal IS 'putsymbol ;
 
 
-|| : declaration' ( type -- )
+: declaration' ( type -- )
      function?
         IF unnestlocal declare
         ELSE local define-data THEN ;
 
-|| : definition' ( type -- )
+: definition' ( type -- )
      extern-op?
         IF define-extern exit THEN
      function?
@@ -1062,13 +1065,13 @@
 
 \   parser: declaration        14mar91pz
 
-|| : declaration? ( -- flag )
+: declaration? ( -- flag )
      ['] declaration' IS 'declarator
      %local class-or-type?
         IF declarator-list';' true
         ELSE drop false THEN ;
 
-|| : definition? ( -- flag )
+: definition? ( -- flag )
      ['] definition' IS 'declarator
      %global range-or-type?
         IF declarator-list';' true
@@ -1078,6 +1081,7 @@
            declarator-list';'
            r> advanced? THEN THEN ;
 
+||off
 
 \ *** Block No. 96, Hexblock 60
 
