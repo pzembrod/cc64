@@ -11,14 +11,10 @@
 | ' |on   alias ~on
 | ' |off  alias ~off
 
-  include tmpheap.fth
-
+  (64 include tmpheap.fth C)
   (64 $2000 mk-tmp-heap C)
-  (16 $2000 mk-tmp-heap C)
-  (CX 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> ! C)
-
-  \ | ' | alias ||
-  \ | ' noop alias tmpclear
+  (16 include notmpheap.fth C)
+  (CX include x16tmpheap.fth C)
 
   onlyforth  decimal  cr
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
@@ -58,7 +54,9 @@
   tmpclear
 
   onlyforth
-  include tmp6502asm.fth  \ transient 6502 assembler
+  (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
+  (16 include trns6502asm.fth  C) \ 6502 assembler on heap
+  (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   onlyforth compiler also definitions
   include v-assembler.fth
   include lowlevel.fth
