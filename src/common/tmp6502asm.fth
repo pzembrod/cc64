@@ -10,7 +10,7 @@
 \ Forth-6502 Assembler         20sep94pz
 \ Basis: Forth Dimensions VOL III No. 5)
 
- cr .( transient forth assembler) cr
+ cr .( tmpheap transient forth assembler) cr
 
 here   $800 tmp-hallot dp !
 
