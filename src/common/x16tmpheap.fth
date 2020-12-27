@@ -1,22 +1,19 @@
 
-\ This is the reference implementation of tmpheap which allocates
-\ the tmpheap on the regular heap and moves definitons prefixed
-\ with || or within a ||on to ||off range onto the tmpheap.
+\ This is a custom implementation of tmpheap for the X16 which
+\ allocates the tmpheap in a RAM bank and moves definitons prefixed
+\ with || or within a ||on to ||off range there.
 \ tmpclear will remove all words on the tmpheap, wheras regular clear
 \ will remove all words on tmpheap and heap together.
 
-\ Before the first use of ||, the tmpheap size in bytes must be
-\ set with mk-tmp-heap ( size -- )
+\ Other than the reference tmpheap living on the regular heap, this
+\ custom tmpheap needs no initialization as its position and
+\ size (8k) is fixed.
 
 ~ User tmpheap[
 ~ User tmpheap>
 ~ User ]tmpheap
 
-~ : reset-tmp-heap  ( -- )
-  up@ dup ]tmpheap !  dup tmpheap> !  tmpheap[ ! ;
-
-reset-tmp-heap
-' reset-tmp-heap is custom-remove
+ 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> !
 
 ~ : mk-tmp-heap  ( size -- )
     heap dup ]tmpheap ! tmpheap> !  hallot  heap tmpheap[ ! ;
@@ -47,7 +44,7 @@ reset-tmp-heap
     THEN
   REPEAT drop ;
 
-| : remove-tmp-words  ( -- )
+| : remove-tmp-words ( -- )
  voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
@@ -55,5 +52,7 @@ reset-tmp-heap
   remove-tmp-words
   \ Uncomment the following line to help determine the ideal tmpheap
   \ size for your project.
-  \ tmpheap> @ tmpheap[ @ - cr u. ." spare tmpheap bytes"
+  \ tmpheap> @ tmpheap[ @ - cr u. ." tmpheap spare"
   ]tmpheap @ tmpheap> !  last off ;
+
+' tmpclear is custom-remove
