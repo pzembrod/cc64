@@ -465,7 +465,7 @@
      dev 2 busopen   dev 8 - (drv !
      filename count bustype
      " ,s,r"  count bustype busoff
-     page  derror?
+     page  i/o-status?
         IF dev 2 busclose
         changed? off  .screen
         exit THEN
@@ -492,11 +492,11 @@
      busoff  dev 2 busout
      text[   )text @  over - bustype
      text( @ ]text 1- over - bustype
-     dev 2 busclose  derror? ;
+     dev 2 busclose  i/o-status? ;
 
 | : savetext  ( -- )
      page (savetext
-        IF ." write operation failed"
+        IF derror? drop ." write operation failed"
         cr key drop
         ELSE changed? off THEN
      .screen ;
