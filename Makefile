@@ -20,8 +20,10 @@ cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
 cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 
-rt_files = rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
-  rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o
+rt_files = \
+  rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
+  rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o \
+  rt-x16-0801.h rt-x16-0801.i rt-x16-0801.o
 
 sample_files = helloworld-c64.c helloworld-c16.c \
   kernal-io-c64.c kernal-io-c16.c sieve-c64.c
@@ -35,7 +37,7 @@ c16dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 
 # x16files content
-x16dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
+x16dir_content = cc64 $(rt_files) $(sample_files)
 x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
 # Forth binaries
@@ -53,13 +55,15 @@ release: c64files.zip c64files.d64 c16files.zip c16files.d64 doc.zip
 
 .SECONDARY:
 
-c64: cc64-c64 $(c64dir_files) c64files.zip c64files.d64
+c64: cc64-c64-t64 $(c64dir_files) c64files.zip c64files.d64
 
-c16: cc64-c16 $(c16dir_files) c16files.zip c16files.d64
+c16: cc64-c16-t64 $(c16dir_files) c16files.zip c16files.d64
 
-cc64-c64: $(cc64_c64_t64_files)
+x16: $(x16dir_files) x16files.zip
 
-cc64-c16: $(cc64_c16_t64_files)
+cc64-c64-t64: $(cc64_c64_t64_files)
+
+cc64-c16-t64: $(cc64_c16_t64_files)
 
 c64files.zip: $(c64dir_files)
 	rm -f $@
@@ -68,6 +72,10 @@ c64files.zip: $(c64dir_files)
 c16files.zip: $(c16dir_files)
 	rm -f $@
 	zip -r $@ $(c16dir_files)
+
+x16files.zip: $(x16dir_files)
+	rm -f $@
+	zip -r $@ $(x16dir_files)
 
 c64files.d64: $(c64dir_files)
 	rm -f $@
@@ -121,6 +129,8 @@ veryclean: clean
 	rm -f c64files.d64 c64files.zip
 	rm -f c16files/*
 	rm -f c16files.d64 c16files.zip
+	rm -f x16files/*
+	rm -f x16files.zip
 	rm -f emulator/c-char-rom-gen
 	rm -f autostart-c64/*.T64 autostart-c16/*.T64
 	rm -f runtime/*
@@ -193,12 +203,25 @@ runtime/rt-c16-1001.o runtime/rt-c16-1001.h: \
 	awk -f build/generate_pragma_cc64.awk -F '$$' tmp/rt-c16-1001.sym \
 	  > runtime/rt-c16-1001.h
 
+runtime/rt-x16-0801.o runtime/rt-x16-0801.h: \
+    src/runtime/rt-x16-0801.a build/generate_pragma_cc64.awk
+	test -d tmp || mkdir tmp
+	acme -f cbm -l tmp/rt-x16-0801.sym -o runtime/rt-x16-0801.o \
+	  src/runtime/rt-x16-0801.a
+	awk -f build/generate_pragma_cc64.awk -F '$$' tmp/rt-x16-0801.sym \
+	  > runtime/rt-x16-0801.h
+
 runtime/rt-c64-0801.i:
 	awk 'BEGIN{ printf("\x00\x90");}' > $@
 	# An empty binary file with (arbitrary) load address $9000
 	# Might be worth encoding in an asm source for clarity.
 
 runtime/rt-c16-1001.i:
+	awk 'BEGIN{ printf("\x00\x90");}' > $@
+	# An empty binary file with (arbitrary) load address $9000
+	# Might be worth encoding in an asm source for clarity.
+
+runtime/rt-x16-0801.i:
 	awk 'BEGIN{ printf("\x00\x90");}' > $@
 	# An empty binary file with (arbitrary) load address $9000
 	# Might be worth encoding in an asm source for clarity.
@@ -221,6 +244,16 @@ runtime/rt-c16-1001.i:
 	cp $< $@
 
 %files/rt-c16-1001.o: runtime/rt-c16-1001.o
+	cp $< $@
+
+%files/rt-x16-0801.h: runtime/rt-x16-0801.h
+	ascii2petscii $< $@
+	touch -r $< $@
+
+%files/rt-x16-0801.i: runtime/rt-x16-0801.i
+	cp $< $@
+
+%files/rt-x16-0801.o: runtime/rt-x16-0801.o
 	cp $< $@
 
 
