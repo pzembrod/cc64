@@ -45,7 +45,7 @@ forth_binaries = devenv-uF83
 forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
 
 
-all: c64 c16 etc
+all: c64 c16 x16 etc
 
 release: c64files.zip c64files.d64 c16files.zip c16files.d64 doc.zip
 	rm -rf release
