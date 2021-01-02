@@ -24,7 +24,7 @@ if [ -n "$2" ]
 then
   keybuf="${2}"
   # The following could also just be a cp.
-  ascii2petscii "${emulatordir}/notdone" "${basedir}/${cbmfiles}/notdone"
+  ascii2petscii "${emulatordir}/notdone" "${cbmfiles}/notdone"
   warp="-warp"
 fi
 
@@ -32,7 +32,7 @@ ${emulator} \
   -virtualdev \
   +truedrive \
   -drive8type 1541 \
-  -fs8 "${basedir}/${cbmfiles}" \
+  -fs8 "${cbmfiles}" \
   $autostart \
   -keybuf "$keybuf" \
   $warp \
@@ -40,7 +40,7 @@ ${emulator} \
 
 if [ -n "$keybuf" ]
 then
-  while [ -f "${basedir}/${cbmfiles}/notdone" ]
+  while [ -f "${cbmfiles}/notdone" ]
     do sleep 1
   done
   sleep 0.5
