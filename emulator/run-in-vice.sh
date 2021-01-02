@@ -3,26 +3,29 @@ set -e
 
 test -n "${PLATFORM}" || exit 1
 cbmfiles="${CBMFILES}"
+autostartdir="${AUTOSTARTDIR}"
+
+executable="${1}"
+keybuf="${2}"
 
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
-autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
+test -n "${autostartdir}" || \
+  autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
 test -n "${cbmfiles}" || \
   cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${PLATFORM}files")"
 
 emulator="$("${emulatordir}/which-vice.sh" "${PLATFORM}")"
 
 autostart=""
-if [ -n "$1" ]
+if [ -n "${executable}" ]
 then
-  autostart="-autostart ${autostartdir}/${1}.T64"
+  autostart="-autostart ${autostartdir}/${executable}.T64"
 fi
 
-keybuf=""
 warp=""
-if [ -n "$2" ]
+if [ -n "${keybuf}" ]
 then
-  keybuf="${2}"
   # The following could also just be a cp.
   ascii2petscii "${emulatordir}/notdone" "${cbmfiles}/notdone"
   warp="-warp"
@@ -34,7 +37,7 @@ ${emulator} \
   -drive8type 1541 \
   -fs8 "${cbmfiles}" \
   $autostart \
-  -keybuf "$keybuf" \
+  -keybuf "${keybuf}" \
   $warp \
   &
 

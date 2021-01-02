@@ -1,21 +1,23 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-tests=$(echo *-test.c| sed 's/-test\.c//g')
-goldens=*.golden
 cc64="$1"
 host_target="$2"
 
 test -n "${host_target}" || host_target=c64_c64
+IFS=_ read host target <<< "${host_target}"
 
-IFS=_ read host target <<< "$2"
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
-hostfiles="${host}files"
-targetfiles="${target}files"
+testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
+basedir="$(realpath --relative-to="$PWD" "${testdir}/..")"
+hostfiles="${testdir}/${host}files"
+targetfiles="${testdir}/${target}files"
 
 test -d "${targetfiles}" || mkdir "${targetfiles}"
+
+tests=$(echo *-test.c| sed 's/-test\.c//g')
+goldens=*.golden
 
 # Build test binary
 (
@@ -33,7 +35,7 @@ test -d "${targetfiles}" || mkdir "${targetfiles}"
   cat test-main.h
 ) | tee suite-generated.c | ascii2petscii - "${hostfiles}/suite.c"
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
-CC64HOST="${host}" ./compile-in-vice.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
+CC64HOST="${host}" ./compile-in-emu.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
 
 bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 
@@ -53,7 +55,7 @@ done
 suitename="${cc64}-suite-${host_target}"
 # Run test binary
 rm -f "${targetfiles}/suite.out" "${suitename}.out"
-CC64TARGET="${target}" ./test-in-vice.sh suite
+CC64TARGET="${target}" ./test-in-emu.sh suite
 petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"
 
 # Evaluate test output
