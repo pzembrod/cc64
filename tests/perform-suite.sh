@@ -35,8 +35,10 @@ goldens=*.golden
   cat test-main.h
 ) | tee suite-generated.c | ascii2petscii - "${hostfiles}/suite.c"
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
-CC64HOST="${host}" ./compile-in-emu.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
+CC64HOST="${host}" OUTFILES=suite \
+  ./compile-in-emu.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
 
+cp "${hostfiles}/suite" "${targetfiles}/suite"
 bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 
 # Build golden (and silver) file.

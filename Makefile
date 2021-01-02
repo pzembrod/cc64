@@ -296,11 +296,7 @@ autostart-x16/%.T64: x16files/%
 # X16 emulator rules
 
 emulator/sdcard.img: emulator/sdcard.sfdisk
-	rm -f $@ $@.tmp
-	dd if=/dev/zero of=$@.tmp count=64 bs=1M
-	sfdisk -w always -W always $@.tmp < $<
-	mformat -i $@.tmp -F
-	mv $@.tmp $@
+	emulator/mk-sdcard.sh $< $@
 
 
 # Rules, mostly generic, to populate c64files/, c16files/

@@ -13,7 +13,7 @@ targetfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64TARGET}files")"
 
 keybuf='open1,8,15,"s0:notdone":close1\n'
 
-export OUTFILES=""
+export OUTFILES="${testbinary}.out"
 export CBMFILES="${targetfiles}"
 export AUTOSTARTDIR="${targetfiles}"
 "${emulatordir}/run-in-${CC64TARGET}emu.sh" "${testbinary}" "${keybuf}"
