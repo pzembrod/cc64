@@ -1,12 +1,14 @@
 #!/bin/bash
 set -e
 
-test -n "$PLATFORM" || export PLATFORM=c64
+test -n "${PLATFORM}" || exit 1
+cbmfiles="${CBMFILES}"
 
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
-cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${PLATFORM}files")"
+test -n "${cbmfiles}" || \
+  cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${PLATFORM}files")"
 
 emulator="$("${emulatordir}/which-vice.sh" "${PLATFORM}")"
 

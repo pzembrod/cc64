@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
+x16filesdir="${CBMFILES}"
+
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
-x16filesdir="$(realpath --relative-to="$PWD" "${basedir}/x16files")"
+test -n "${x16filesdir}" || \
+  x16filesdir="$(realpath --relative-to="$PWD" "${basedir}/x16files")"
 sdcard="${emulatordir}/sdcard.img"
 x16script="${basedir}/tmp/x16script"
 
