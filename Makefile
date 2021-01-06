@@ -156,7 +156,9 @@ slowtests:
  autostart-%/vf-build-base.T64
 	build/build-cc64.sh $*
 
-%files/cc64pe: $(cc64srcs_c64) $(peddisrcs_c16) \
+%files/cc64pe: \
+ $(cc64srcs_c64) $(cc64srcs_c16) \
+ $(peddisrcs_c64) $(peddisrcs_c16) \
  build/build-cc64pe.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
 	build/build-cc64pe.sh $*
