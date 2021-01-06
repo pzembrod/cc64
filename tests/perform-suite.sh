@@ -38,7 +38,10 @@ rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
 CC64HOST="${host}" OUTFILES=suite \
   ./compile-in-emu.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
 
-cp "${hostfiles}/suite" "${targetfiles}/suite"
+if [ "${hostfiles}" != "${targetfiles}" ]
+then
+  cp "${hostfiles}/suite" "${targetfiles}/suite"
+fi
 bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 
 # Build golden (and silver) file.

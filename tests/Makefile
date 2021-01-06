@@ -6,9 +6,13 @@ test_results_c64_x16 = $(patsubst %, %-c64_x16-result.txt, $(test_names))
 test_results_c16_c64 = $(patsubst %, %-c16_c64-result.txt, $(test_names))
 test_results_c16_c16 = $(patsubst %, %-c16_c16-result.txt, $(test_names))
 test_results_c16_x16 = $(patsubst %, %-c16_x16-result.txt, $(test_names))
+test_results_x16_c64 = $(patsubst %, %-x16_c64-result.txt, $(test_names))
+test_results_x16_c16 = $(patsubst %, %-x16_c16-result.txt, $(test_names))
+test_results_x16_x16 = $(patsubst %, %-x16_x16-result.txt, $(test_names))
 
-test_results_c64_hosted = $(test_results_c64_c64) $(test_results_c64_c16)
-test_results_c16_hosted = $(test_results_c16_c64) $(test_results_c16_c16)
+test_results_c64_hosted = $(test_results_c64_c64) $(test_results_c64_c16) $(test_results_c64_x16)
+test_results_c16_hosted = $(test_results_c16_c64) $(test_results_c16_c16) $(test_results_c16_x16)
+test_results_x16_hosted = $(test_results_x16_c64) $(test_results_x16_c16) $(test_results_x16_x16)
 
 suite_suffixes = $(patsubst %, %.result, c64 c16 x16)
 suite_c64_suffixes = $(patsubst %, suite-c64_%, $(suite_suffixes))
@@ -76,6 +80,9 @@ $(test_results_c64_hosted) $(suite_results_c64_hosted): \
 $(test_results_c16_hosted) $(suite_results_c16_hosted): \
     ../autostart-c16/cc64.T64 $(c16_rt_files) *.sh *.h
 
+$(test_results_x16_hosted) $(suite_results_x16_hosted): \
+    x16files/cc64 $(x16_rt_files) *.sh *.h
+
 $(test_results_c64_c64): %-c64_c64-result.txt: %-test.c %.golden
 	./run-test.sh $* c64_c64
 
@@ -119,6 +126,10 @@ c16files/rt-%: ../c16files/rt-%
 	test -d c16files || mkdir c16files
 	cp $< $@
 
+x16files/rt-%: ../x16files/rt-%
+	test -d x16files || mkdir x16files
+	cp $< $@
+
 c64files/%.h: %.h
 	test -d c64files || mkdir c64files
 	ascii2petscii $< $@
@@ -126,3 +137,11 @@ c64files/%.h: %.h
 c16files/%.h: %.h
 	test -d c16files || mkdir c16files
 	ascii2petscii $< $@
+
+x16files/%.h: %.h
+	test -d x16files || mkdir x16files
+	ascii2petscii $< $@
+
+x16files/cc64: ../x16files/cc64
+	test -d x16files || mkdir x16files
+	cp $< $@
