@@ -32,11 +32,16 @@ c16_rt_files = \
 x16_rt_files = \
     $(patsubst ../runtime/%, x16files/%, $(wildcard ../runtime/rt-*.[hio]))
 
-tests: fasttests
+tests: fasttests64
 
 alltests: fasttests slowtests petests
 
-fasttests: cc64-suite-c64_c64.result
+fasttests64: cc64-suite-c64_c64.result
+
+fasttests: \
+  cc64-suite-c64_c64.result \
+  cc64-suite-c16_c16.result \
+  cc64-suite-x16_x16.result
 
 slowtests: separate-tests-c64_c64.result
 
@@ -46,9 +51,14 @@ allcrosstests: fastcrosstests slowcrosstests pecrosstests
 
 fastcrosstests: \
   cc64-suite-c64_c64.result \
-  cc64-suite-c16_c16.result \
   cc64-suite-c64_c16.result \
-  cc64-suite-c16_c64.result
+  cc64-suite-c64_x16.result \
+  cc64-suite-c16_c64.result \
+  cc64-suite-c16_c16.result \
+  cc64-suite-c16_x16.result \
+  cc64-suite-x16_c64.result \
+  cc64-suite-x16_c16.result \
+  cc64-suite-x16_x16.result
 
 slowcrosstests: \
   separate-tests-c64_c64.result \
@@ -108,6 +118,8 @@ cc64pe-suite-c64_x16.result: ../emulator/sdcard.img
 cc64-suite-c16_x16.result: ../emulator/sdcard.img
 
 cc64pe-suite-c16_x16.result: ../emulator/sdcard.img
+
+cc64-suite-x16_x16.result: ../emulator/sdcard.img
 
 ../emulator/sdcard.img: ../emulator/sdcard.sfdisk
 	../emulator/mk-sdcard.sh $< $@
