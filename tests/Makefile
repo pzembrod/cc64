@@ -125,7 +125,8 @@ cc64-suite-x16_x16.result: ../emulator/sdcard.img
 	../emulator/mk-sdcard.sh $< $@
 
 clean:
-	rm -f c64files/* c16files/* separate-tests-c??_c??.result tmp.result
+	rm -f c64files/* c16files/* x16files/*
+	rm -f separate-tests-c??_c??.result tmp.result
 	rm -f cc64-suite-[cx]??_[cx]??.* cc64pe-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
 	rm -f *.out *.T64 *-result.txt *-generated.c
