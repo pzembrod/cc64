@@ -118,4 +118,4 @@
   (64 $cbd0 set-himem C)
   (16 $f000 set-himem C)
   (64 2000 set-symtab C)
-  1024 1024 set-stacks
+  512 512 set-stacks

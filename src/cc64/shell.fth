@@ -12,14 +12,14 @@
 \ end-code
 ' bye alias bye
 
-' savesystem        alias saveall
-' .mem              alias mem
-' himem!            alias set-himem
-' #links!           alias set-heap
-' #globals!         alias set-hash
-' symtabsize!       alias set-symtab
-' codesize!         alias set-code
-' relocate          alias set-stacks
+' savesystem         alias saveall
+' .mem               alias mem
+' himem!             alias set-himem
+' #links!            alias set-heap
+' #globals!          alias set-hash
+' symtabsize!        alias set-symtab
+(CX \ C) ' codesize! alias set-code
+' relocate           alias set-stacks
 
 : auxdev ( n -- )             aux# c! ;
 : device ( n -- ) dup dev# c! aux# c! ;

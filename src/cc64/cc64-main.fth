@@ -98,4 +98,4 @@
   shell
   (64 $cbd0 set-himem C)
   (16 $f000 set-himem C)
-  1024 1024 set-stacks
+  512 512 set-stacks

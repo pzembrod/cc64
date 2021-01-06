@@ -22,6 +22,7 @@
          negate #toread +!   funset ;
 
 || : p2code@ ( -- 8b )
+     (CX enable-code[]-bank C)
      #inbuf @ 0= IF p2readcode THEN
      -1 #inbuf +!
      p2in> @ c@  1 p2in> +! ;

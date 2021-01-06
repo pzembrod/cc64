@@ -60,6 +60,7 @@
 
 || : >codeadr ( pc-adr -- code-buf-adr )
     nolayout @  *nolayout* ?fatal
+    (CX enable-code[]-bank C)
     codeoffset @ - dup
     code[ ]code 1- uwithin
     0= *functolong* ?fatal ;

@@ -26,17 +26,18 @@
 
 \   memman: variable           03sep94pz
 
-| create cc64mem  100   ,
-              1000  , 4000  , 4000 ,
+|| create cc64mem  100   ,
+(CX \ C)      1000  , 4000  , 5000 ,
+(CX           1000  , 1000  , 8192 , C)
               0 , 0 , 0 , 0 , 0 ,
 
   ' limit alias himem
 
-| : #links        cc64mem @ ;
-~ : #globals      cc64mem 2+ @ ;
-| : symtabsize    cc64mem 4 + @ ;
-| : codesize      cc64mem 6 + @ ;
-  : lomem          r0 @ ;
+|| : #links        cc64mem @ ;
+~  : #globals      cc64mem 2+ @ ;
+|| : symtabsize    cc64mem 4 + @ ;
+|| : codesize      cc64mem 6 + @ ;
+   : lomem          r0 @ ;
 
 ~ 6 constant /link   \ listenknoten
 
@@ -52,24 +53,28 @@
 
 \   memman: configure          03sep94pz
 
-~ ' himem ALIAS   ]heap
-~               : heap[    cc64mem  8 + @ ;
-~ ' heap[ ALIAS   ]hash
-~               : hash[    cc64mem 10 + @ ;
-~ ' hash[ ALIAS   ]symtab
-~               : symtab[  cc64mem 12 + @ ;
-~ ' symtab[ ALIAS ]code
-~               : code[    cc64mem 14 + @ ;
-~ ' code[ ALIAS   ]static
-~               : static[  cc64mem 16 + @ ;
+' himem
+~ ALIAS ]heap
+~     : heap[    cc64mem  8 + @ ;  ' heap[
+~ ALIAS ]hash
+~     : hash[    cc64mem 10 + @ ;  ' hash[
+~ ALIAS ]symtab
+~     : symtab[  cc64mem 12 + @ ;  ' symtab[
+(CX \ C) ~ ALIAS ]code
+(CX \ C) ~     : code[    cc64mem 14 + @ ;  ' code[
+~ ALIAS ]static
+~     : static[  cc64mem 16 + @ ;
 ~ ' lomem ALIAS   linebuf
+
+(CX ~ : code[  $a000 ;      ~ : ]code  $c000 ; C)
+(CX ~ : enable-code[]-bank ( -- ) 1 $9f61 c! ; C)
 
 || : (conf?  ( -- flag )
      himem  #links /link *  -
                       dup cc64mem  8 + !
      #globals 2*  -   dup cc64mem 10 + !
      symtabsize -     dup cc64mem 12 + !
-     codesize   -         cc64mem 14 + !
+(CX drop \ C) codesize -  cc64mem 14 + !
      linebuf /linebuf +   cc64mem 16 + !
      static[ 11 + ]static u> ;
 
@@ -89,7 +94,7 @@
 ~ 0 set-mem: #links!
 ~ 2 set-mem: #globals!
 ~ 4 set-mem: symtabsize!
-~ 6 set-mem: codesize!
+(CX \ C) ~ 6 set-mem: codesize!
 
 ~ : himem!  ['] limit >body ! ;
 
