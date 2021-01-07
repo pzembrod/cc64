@@ -25,7 +25,7 @@ rt_files = \
   rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o \
   rt-x16-0801.h rt-x16-0801.i rt-x16-0801.o
 
-sample_files = helloworld-c64.c helloworld-c16.c \
+sample_files = helloworld-c64.c helloworld-c16.c helloworld-x16.c \
   kernal-io-c64.c kernal-io-c16.c sieve-c64.c
 
 # c64files content
@@ -87,6 +87,9 @@ c64files.d64: $(c64dir_files)
 	c1541 -attach $@ -write c64files/rt-c16-1001.h rt-c16-1001.h,s
 	c1541 -attach $@ -write c64files/rt-c16-1001.i
 	c1541 -attach $@ -write c64files/rt-c16-1001.o
+	c1541 -attach $@ -write c64files/rt-x16-0801.h rt-x16-0801.h,s
+	c1541 -attach $@ -write c64files/rt-x16-0801.i
+	c1541 -attach $@ -write c64files/rt-x16-0801.o
 	c1541 -attach $@ -write c64files/c-charset
 	c1541 -attach $@ -write c64files/helloworld-c64.c helloworld-c64.c,s
 	c1541 -attach $@ -write c64files/kernal-io-c64.c kernal-io-c64.c,s
@@ -103,11 +106,22 @@ c16files.d64: $(c16dir_files)
 	c1541 -attach $@ -write c16files/rt-c16-1001.h rt-c16-1001.h,s
 	c1541 -attach $@ -write c16files/rt-c16-1001.i
 	c1541 -attach $@ -write c16files/rt-c16-1001.o
+	c1541 -attach $@ -write c16files/rt-x16-0801.h rt-x16-0801.h,s
+	c1541 -attach $@ -write c16files/rt-x16-0801.i
+	c1541 -attach $@ -write c16files/rt-x16-0801.o
 	c1541 -attach $@ -write c16files/c-charset
 	c1541 -attach $@ -write c16files/helloworld-c64.c helloworld-c64.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c64.c kernal-io-c64.c,s
 	c1541 -attach $@ -write c16files/helloworld-c16.c helloworld-c16.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c16.c kernal-io-c16.c,s
+
+x16files.img: $(x16dir_files) emulator/copy-to-sd-img.sh \
+  emulator/mk-sdcard.sh emulator/sdcard.sfdisk
+	rm -f $@
+	emulator/mk-sdcard.sh emulator/sdcard.sfdisk $@
+	mformat -i $@ -F
+	# mcopy -i $@ x16files/cc64 ::CC64
+	emulator/copy-to-sd-img.sh $@ $(x16dir_files)
 
 doc.zip: $(wildcard *.md)
 	zip $@ $^
@@ -297,8 +311,8 @@ autostart-x16/%.T64: x16files/%
 
 # X16 emulator rules
 
-emulator/sdcard.img: emulator/sdcard.sfdisk
-	emulator/mk-sdcard.sh $< $@
+emulator/sdcard.img: emulator/sdcard.sfdisk emulator/mk-sdcard.sh
+	emulator/mk-sdcard.sh emulator/sdcard.sfdisk $@
 
 
 # Rules, mostly generic, to populate c64files/, c16files/
