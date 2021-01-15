@@ -45,7 +45,9 @@
   | : 2@  dup 2+ @ swap @ ;
   include init-shell.fth
 
+\log display
   save
+\log alsologtofile
 
 | : relocate-tasks  ( newUP -- )
  up@ dup BEGIN  1+ under @ 2dup -

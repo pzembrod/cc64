@@ -90,7 +90,9 @@
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
   base @  hex here u. heap u. up@ u.  base !
+\log display
   save
+\log alsologtofile
   cr .( compile successful) cr
 
 \log logclose

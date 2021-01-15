@@ -110,7 +110,9 @@
 
 ' ed ALIAS ed
 
+\log display
   save
+\log alsologtofile
   cr .( compile successful) cr
 
 \log logclose
