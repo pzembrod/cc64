@@ -59,7 +59,7 @@ c64: cc64-c64-t64 $(c64dir_files) c64files.zip c64files.d64
 
 c16: cc64-c16-t64 $(c16dir_files) c16files.zip c16files.d64
 
-x16: $(x16dir_files) x16files.zip x16files-img.zip
+x16: $(x16dir_files) x16files.zip x16files-sdcard.zip
 
 cc64-c64-t64: $(cc64_c64_t64_files)
 
@@ -115,7 +115,7 @@ c16files.d64: $(c16dir_files)
 	c1541 -attach $@ -write c16files/helloworld-c16.c helloworld-c16.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c16.c kernal-io-c16.c,s
 
-x16files-img.zip: $(x16dir_files) emulator/copy-to-sd-img.sh \
+x16files-sdcard.zip: $(x16dir_files) emulator/copy-to-sd-img.sh \
   emulator/mk-sdcard.sh emulator/sdcard.sfdisk
 	rm -f x16files.img $@
 	emulator/mk-sdcard.sh emulator/sdcard.sfdisk x16files.img
