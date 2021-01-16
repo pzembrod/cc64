@@ -58,6 +58,7 @@
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   include lowlevel.fth
+  (CX include x16edit.fth  C)
   onlyforth compiler also definitions
   include v-assembler.fth
   \ tmpclear

@@ -69,3 +69,4 @@
         words ;
 
 ' cc                alias cc
+(CX ' xed           alias xed C)
