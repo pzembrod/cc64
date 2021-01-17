@@ -14,8 +14,14 @@
 
         *= $cb3a
 
-basout   = $ffd2
-clrchn   = $ffcc
+!addr   zp_src   = $22
+
+!addr   charset = $d000
+charset_pages = $10
+!addr   charset_lower_upper = charset + (charset_pages << 7)
+
+!addr   basout   = $ffd2
+!addr   clrchn   = $ffcc
 
         jmp init
 
@@ -98,62 +104,67 @@ init    sei
         lda #$33
         sta $01
 
-        lda #$00
-        sta $22
-        lda #$d0
-        sta $23
-        ldx #$10
+        lda #<charset
+        sta zp_src
+        lda #>charset
+        sta zp_src + 1
+        ldx #charset_pages
         ldy #0
 
-init1   lda ($22),y
-        sta ($22),y
+copy_loop
+        lda (zp_src),y
+        sta (zp_src),y
         iny
-        bne init1
-        inc $23
+        bne copy_loop
+        inc zp_src + 1
         dex
-        bne init1
+        bne copy_loop
 
         lda #$34
         sta $01
-        ldx #0
 
-init2   lda #$1b ; $d8 >> 3
-        sta $23
+        ldx #0
+patch_loop
+        lda # (>charset_lower_upper) >>> 3
+        sta zp_src + 1
         lda charlist,x
         inx
         cmp #$20
-        beq init5
+        beq patch_done
         asl
-        rol $23
+        rol zp_src + 1
         asl
-        rol $23
+        rol zp_src + 1
         asl
-        rol $23
-        sta $22
+        rol zp_src + 1
+        sta zp_src
 
         ldy #0
-init3   lda charlist,x
+next_line
+        lda charlist,x
         inx
         pha
-        sta ($22),y
+        sta (zp_src),y
         iny
         cpy #8
-        bne init3
+        bne next_line
 
         dey
-        lda $23
+        lda zp_src + 1
         ora #$04
-        sta $23
+        sta zp_src + 1
 
-init4   pla
+next_reverse_line
+        pla
         eor #$ff
-        sta ($22),y
+        sta (zp_src),y
         dey
-        bpl init4
+        bpl next_reverse_line
 
-        jmp init2
+        jmp patch_loop
 
-init5   pla
+patch_done
+        pla
         sta $01
         cli
 

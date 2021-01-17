@@ -37,7 +37,7 @@ c16dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 
 # x16files content
-x16dir_content = cc64 $(rt_files) $(sample_files)
+x16dir_content = cc64 $(rt_files) $(sample_files) c-charset
 x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
 # Forth binaries
@@ -286,6 +286,10 @@ c64files/c-charset: src/runtime/c-charset-c64.a
 c16files/c-charset: src/runtime/c-charset-c16.a
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/c-charset-c16.sym -o $@ $<
+
+x16files/c-charset: src/runtime/c-charset-x16.a
+	test -d tmp || mkdir tmp
+	acme -f cbm -l tmp/c-charset-x16.sym -o $@ $<
 
 emulator/c-char-rom-gen: src/runtime/c-char-rom-gen.a
 	acme -f cbm -o $@ $<
