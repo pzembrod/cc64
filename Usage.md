@@ -2,27 +2,37 @@
 
 ## Platform
 
-cc64 versions exist for C64 and for C16 with 64k RAM, i.e.
-a C16 or C116 with a 64k RAM expansion or a Plus4.
+cc64 versions exist for C64, for C16 with 64k RAM, i.e.
+a C16 or C116 with a 64k RAM expansion or a Plus4, and for the
+new Commander X16.
 
 ## Download
 
-Downloads are avaliable as zip archive, or as d64 disk image.
+Downloads are avaliable as zip archive, as d64 disk image or as zipped
+SDCard image.
 
 ### Zip archive
 
-Zip archives for both platforms are available at head, i.e.
-[c64files.zip](https://github.com/pzembrod/cc64/blob/master/c64files.zip) or
+Zip archives for all platforms are available at head, i.e.
+[c64files.zip](https://github.com/pzembrod/cc64/blob/master/c64files.zip),
 [c16files.zip](https://github.com/pzembrod/cc64/blob/master/c16files.zip),
+[x16files.zip](https://github.com/pzembrod/cc64/blob/master/x16files.zip),
 and also as part of [releases](https://github.com/pzembrod/cc64/releases).
 
 The zip archives are intended for unpacking into a directory mapped as a drive
-(typically #8) of an emulator (I use [VICE](https://vice-emu.sourceforge.io/)).
+(typically #8) of an emulator like [VICE](https://vice-emu.sourceforge.io/)
+for C64 or C16.
+
+Since the X16 emulator x16emu has only very limited support for mapping
+directories as drives (LOAD and SAVE works, but no sequential files such
+as C source files), the content of x16files.zip must be copied onto an
+SDCard image to work with x16emu, or onto a real SDCard to work with a
+real X16. A prepared SDCard image is also available (see below).
 
 ### D64 disk image
 
-D64 disk images for both platforms are available at head, i.e.
-[c64files.d64](https://github.com/pzembrod/cc64/blob/master/c64files.d64)
+D64 disk images for C64 and C16 are available at head, i.e.
+[c64files.d64](https://github.com/pzembrod/cc64/blob/master/c64files.d64) and
 [c16files.d64](https://github.com/pzembrod/cc64/blob/master/c16files.d64),
 and also as part of [releases](https://github.com/pzembrod/cc64/releases).
 
@@ -32,13 +42,32 @@ usable for writing them onto a real 1541 or 1551 disk.
 Note that the disk images contain the correct CBM file type (prg or seq) for
 the c sources and runtime files.
 
+### X16 SDCard image
+
+A zipped prepared SDCard image (64 MB) for X16 is available at head, i.e.
+[x16files-sdcard.zip](https://github.com/pzembrod/cc64/blob/master/x16files-sdcard.zip),
+and also as part of [releases](https://github.com/pzembrod/cc64/releases).
+
+The contained x16files.img can be attached to x16emu via the -sdcard flag.
+It probably can also be written to a real SDCard, but for that purpose
+the x16files.zip archive is probably better suited.
+
 ## Binaries
 
 There are 3 main binaries:
 
 - `cc64` - the standalone compiler
-- `peddi` - the standalone editor
-- `cc64pe` - compiler and editor combined
+- `peddi` - the standalone editor (only C64 and C16)
+- `cc64pe` - compiler and editor combined (only C64 and C16)
+
+peddi wasn't ported to the X16; instead, the X16 flavour of cc64 can
+call Stefan Jakobsson's
+[X16Edit](https://github.com/stefan-b-jakobsson/x16-edit)
+editor if it is present in ROM. See X16Edit's
+[ROM Notes](https://github.com/stefan-b-jakobsson/x16-edit/blob/master/docs/romnotes.pdf)
+for how to install it in ROM, and its
+[manual](https://github.com/stefan-b-jakobsson/x16-edit/blob/master/docs/manual.pdf)
+for how to use it.
 
 ## Shell
 
@@ -125,6 +154,8 @@ a function too long error is thrown.
 - - The remaining memory aka staticbuffer is used to buffer initialization values
 of static variables. Its size isn't critical as it is flushed to file when full;
 it just needs to be positive.
+- - Not available on the X16 where a fixed code buffer of 8 kB lives in
+banked RAM.
 - _nnn_ _mmm_ `set-stacks`
 - - sets the size of data stack (_nnn_ bytes) and return stack (_mmm_ bytes)
 and resets the system. Note that the sizes shown by `mem` will be _nnn_ minus 6
@@ -172,12 +203,33 @@ ctrl-x - exit and save text
 ctrl-c - quit without saving
 ```
 
+## X16Edit
+
+If [X16Edit](https://github.com/stefan-b-jakobsson/x16-edit) is present
+in ROM, it can be invoked with
+
+ `xed filename`
+
+to open an existing file, and with
+
+ `xed`
+
+to start editing with an empty buffer.
+
+See its
+[manual](https://github.com/stefan-b-jakobsson/x16-edit/blob/master/docs/manual.pdf)
+for how to use it. See X16Edit's
+[ROM Notes](https://github.com/stefan-b-jakobsson/x16-edit/blob/master/docs/romnotes.pdf)
+for how to install it in ROM.
+
 ## Character set
 
 C needs a few characters that the C64/C16/Plus4 charset doesn't contain:
  \^_{|}~  
 cc64 comes with 2 options to fix this, a RAM and a ROM based. Both patch only
 the lower/upper case charset, not the upper-case/graphic charset.
+
+Note: This hasn't been ported to the X16 yet.
 
 ### c-charset C64
 
