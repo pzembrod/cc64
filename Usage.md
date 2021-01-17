@@ -229,8 +229,6 @@ C needs a few characters that the C64/C16/Plus4 charset doesn't contain:
 cc64 comes with 2 options to fix this, a RAM and a ROM based. Both patch only
 the lower/upper case charset, not the upper-case/graphic charset.
 
-Note: This hasn't been ported to the X16 yet.
-
 ### c-charset C64
 
 This is the RAM based option for the C64.
@@ -271,6 +269,23 @@ Installation:
 load "c-charset",8
 run
 ```
+
+### c-charset X16
+
+This is the RAM based option for the X16.
+
+`c-charset` is a small assembler program starting at $0400. When activated,
+it will generate a patched charset in RAM bank 6 from $a000-$a7ff and upload it to VERA.
+
+Activation:
+
+```
+load "c-charset"
+sys 1024
+```
+
+Note: For cc64 to use c-charset, it only needs to be loaded. cc64 will issue the
+`jsr $0400` after startup if c-charset is loaded.
 
 ### c-char-rom-gen
 
