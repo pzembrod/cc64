@@ -47,7 +47,10 @@ forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
 
 all: c64 c16 x16 etc
 
-release: c64files.zip c64files.d64 c16files.zip c16files.d64 doc.zip
+release: doc.zip \
+  c64files.zip c64files.d64 \
+  c16files.zip c16files.d64 \
+  x16files.zip x16files-sdcard.zip
 	rm -rf release
 	mkdir release
 	cp -p $^ release/
