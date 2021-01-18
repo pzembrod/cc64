@@ -14,15 +14,10 @@ several weekends' work, though.
 ## VICE emulator
 
 I'm using the
-[Versatile Commodore Emulator VICE](https://vice-emu.sourceforge.io/).
-It seems to be the most mature and best maintained platform-independent C64
-emulator these days, it's available via Debian's and Ubuntu's package
-repository, has good enough interfacing with the host OS for my purposes,
-and in general is working really well for me. It can emulate other
-CBM machines, too, and even the SuperCPU module - which I tried out, but found
-that I didn't need it, thanks to VICE's warp mode which, on my machine, gives
-me ~60x the speed of a real C64.
-It's nice if a build takes 15 sec instead of 15 min.
+[Versatile Commodore Emulator VICE](https://vice-emu.sourceforge.io/) for building
+and running the C64 and C16 versions of cc64. It has good interfacing with the host OS for my purposes, and in general is working really well for me. I esp. love its warp mode which, on my machine, gives me >100x the speed of a real C64. It's nice if a build takes less than 10 sec instead of 15 min.
+
+Initially I used Ubuntu's default version. But after Ubuntu 20.04 packaged the more accurately emulating (which I don't need) but slower (which hurts me) x64sc instead of the old x64, I switched to building my VICE binaries from source.
 
 Note: VICE doesn't come with the
 [C64 ROMs](https://vice-emu.sourceforge.io/vice_4.html#SEC26)
@@ -82,10 +77,10 @@ doesn't handle renaming P00 files properly, and since Peddi maintains a backup
 version of the edited text file when saving, and uses file renaming for that,
 I decided that the rename issue was a show stopper for using P00 files.
 
-Instead I am now using a c64files/ subdirectory as backing dir for drive 8
-in most VICE configs and so keep PETSCII and ASCII files separate: PETSCII
-files live in c64files/ and ASCII files in the main directory. Makefiles
-handle the conversion as needed.
+Instead I am now using a c64files/ respectively c16files/ subdirectory as
+backing dir for drive 8 in most VICE configs and so keep PETSCII and ASCII
+files separate: PETSCII files live in c64files/ or c16files/, and ASCII files
+live in the main directory. Makefiles handle the conversion as needed.
 
 ### Running on a real C64
 
@@ -120,6 +115,34 @@ is accomplished with a trick: The VICE wrapper scripts place a file named
 So the build and test scripts inside VICE can signal they're done by
 scratching the file "notdone".
 
+
+## x16emu
+
+For building and testing the [Commander X16](https://www.commanderx16.com/)
+flavour of cc64 I am using the official emulator [x16emu](https://www.commanderx16.com/forum/index.php?/files/file/25-commander-x16-emulator-winmaclinux/).
+Other than VICE, x16emu supports only very limited file operations from a
+Linux-dir backed emulated drive, namely just LOAD and SAVE, but no sequential
+file operations which cc64 of course needs. x16emu supports full file
+operations only with an SDCard image backed drive. I am nonetheless using an
+x16files/ dir containing PETSCII files in the same way as c64files/ and
+c16files/ with VICE, and in a separate step the content of this dir is written
+into an SDCard image to be then used by x16emu. After a build or test run,
+expected output files are then copied from the SDCard image back to x16files/.
+
+Autostarting and cripting x16emu works very similar to scripting VICE, with the
+difference that the T64 mechanism doesn't work. Instead, the binary is put into
+x16files/ and thus the SDCard image, and the keyboard buffer input, which in
+this case also includes a LOAD and a RUN command, needs to be passed to x16emu
+in a file instead of a command line flag.
+
+Signalling the completion of a build or test operation by scratching the
+"notdone" file works just like in VICE, with the difference that the script
+controlling and eventually terminating x16emu needs to look into an SDCard
+image instead of into a directory.
+
+For formatting and copying to and from SDCard images I use the tools from the
+Debian package "mtools" (they do need root privilege like loopback mounting
+would), and for initial partitioning I use sfdisk from the "fdisk" package.
 
 ## Forth sources
 

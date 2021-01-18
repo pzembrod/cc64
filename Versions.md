@@ -1,5 +1,19 @@
 # cc64 versions
 
+## v0.8
+
+v0.8 brings the port of cc64 to the [Commander X16](https://www.commanderx16.com/).
+This required a number of refactorings and the move to VolksForth 3.9.2
+as build base, but no feature changes beyond that.
+
+The build process now produces compile logs during the
+build of cc64 that are verified afterwards.
+
+## v0.7.1
+
+In cc64 v0.7, the C16/Plus4 disk image c16files.d64 mistakenly held the C64 binaries instead of the correct C16 binaries.
+V0.7.1 fixes this.
+
 ## v0.7
 
 v0.7 is the first properly defined version, with a git label and a github
