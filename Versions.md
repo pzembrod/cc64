@@ -2,7 +2,7 @@
 
 ## v0.8
 
-v0.8 brings the port of cc64 to the [Commander X16](https://www.commanderx16.com/).
+v0.8 brings cc64 to the [Commander X16](https://www.commanderx16.com/).
 This required a number of refactorings and the move to VolksForth 3.9.2
 as build base, but no feature changes beyond that.
 
