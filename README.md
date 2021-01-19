@@ -1,7 +1,7 @@
 # cc64
 
 cc64 is a [small-C](C-lang-subset.md) compiler,
-written in Forth ([why?](Why-Forth.md)), targeting the 6502 CPU.
+written in Forth ([her's why](Why-Forth.md)), targeting the 6502 CPU.
 It's hosted on the Commodore C64, on the C16 with 64k RAM and the Plus4,
 and on the new [Commander X16](https://www.commanderx16.com/), and runtime
 targets are also available for all 3 platforms, on each host, allowing
