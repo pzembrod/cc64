@@ -61,13 +61,8 @@ There are 3 main binaries:
 - `cc64pe` - compiler and editor combined (only C64 and C16)
 
 peddi wasn't ported to the X16; instead, the X16 flavour of cc64 can
-call Stefan Jakobsson's
-[X16Edit](https://github.com/stefan-b-jakobsson/x16-edit)
-editor if it is present in ROM. See X16Edit's
-[ROM Notes](https://github.com/stefan-b-jakobsson/x16-edit/blob/master/docs/romnotes.pdf)
-for how to install it in ROM, and its
-[manual](https://github.com/stefan-b-jakobsson/x16-edit/blob/master/docs/manual.pdf)
-for how to use it.
+call Stefan Jakobsson's [X16Edit](Usage.md#x16edit)
+editor if it is present in ROM.
 
 ## Shell
 
@@ -174,9 +169,9 @@ new file _name_
 
 ## Peddi
 
-Peddi is a small full screen, scrolling PETSCII editor. No limit in line
-length (exept memory). Memory overflow is signalled by a double flash
-of the screen border.
+Peddi is a small full screen, scrolling PETSCII editor for the C64 and C16.
+There's no limit in line length (exept memory).
+Memory overflow is signalled by a double flash of the screen border.
 Peddi is called with
 
  `ed filename`
@@ -205,8 +200,9 @@ ctrl-c - quit without saving
 
 ## X16Edit
 
-If [X16Edit](https://github.com/stefan-b-jakobsson/x16-edit) is present
-in ROM, it can be invoked with
+For the X16 I recommend
+[X16Edit](https://github.com/stefan-b-jakobsson/x16-edit) as editor.
+If is present in ROM, it can be invoked with
 
  `xed filename`
 
