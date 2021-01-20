@@ -47,10 +47,10 @@ forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
 
 all: c64 c16 x16 etc
 
-release: doc.zip \
-  c64files.zip c64files.d64 \
-  c16files.zip c16files.d64 \
-  x16files.zip x16files-sdcard.zip
+release: cc64-doc.zip \
+  cc64-c64files.zip cc64-c64files.d64 \
+  cc64-c16files.zip cc64-c16files.d64 \
+  cc64-x16files.zip cc64-x16files-sdcard.zip
 	rm -rf release
 	mkdir release
 	cp -p $^ release/
@@ -68,19 +68,19 @@ cc64-c64-t64: $(cc64_c64_t64_files)
 
 cc64-c16-t64: $(cc64_c16_t64_files)
 
-c64files.zip: $(c64dir_files)
+cc64-c64files.zip: $(c64dir_files) COPYING
 	rm -f $@
-	zip -r $@ $(c64dir_files)
+	zip -r $@ $^
 
-c16files.zip: $(c16dir_files)
+cc64-c16files.zip: $(c16dir_files) COPYING
 	rm -f $@
-	zip -r $@ $(c16dir_files)
+	zip -r $@ $^
 
-x16files.zip: $(x16dir_files)
+cc64-x16files.zip: $(x16dir_files) COPYING
 	rm -f $@
-	zip -r $@ $(x16dir_files)
+	zip -r $@ $^
 
-c64files.d64: $(c64dir_files)
+cc64-c64files.d64: $(c64dir_files) tmp/copying
 	rm -f $@
 	c1541 -format cc64-c64,cc d64 $@
 	c1541 -attach $@ $(patsubst %, -write c64files/%, $(cc64_binaries))
@@ -98,8 +98,9 @@ c64files.d64: $(c64dir_files)
 	c1541 -attach $@ -write c64files/kernal-io-c64.c kernal-io-c64.c,s
 	c1541 -attach $@ -write c64files/helloworld-c16.c helloworld-c16.c,s
 	c1541 -attach $@ -write c64files/kernal-io-c16.c kernal-io-c16.c,s
+	c1541 -attach $@ -write tmp/copying
 
-c16files.d64: $(c16dir_files)
+cc64-c16files.d64: $(c16dir_files) tmp/copying
 	rm -f $@
 	c1541 -format cc64-c16,cc d64 $@
 	c1541 -attach $@ $(patsubst %, -write c16files/%, $(cc64_binaries))
@@ -117,16 +118,18 @@ c16files.d64: $(c16dir_files)
 	c1541 -attach $@ -write c16files/kernal-io-c64.c kernal-io-c64.c,s
 	c1541 -attach $@ -write c16files/helloworld-c16.c helloworld-c16.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c16.c kernal-io-c16.c,s
+	c1541 -attach $@ -write tmp/copying
 
-x16files-sdcard.zip: $(x16dir_files) emulator/copy-to-sd-img.sh \
-  emulator/mk-sdcard.sh emulator/sdcard.sfdisk
+cc64-x16files-sdcard.zip: $(x16dir_files) emulator/copy-to-sd-img.sh \
+  emulator/mk-sdcard.sh emulator/sdcard.sfdisk tmp/copying
 	rm -f x16files.img $@
 	emulator/mk-sdcard.sh emulator/sdcard.sfdisk x16files.img
 	mformat -i x16files.img -F
 	emulator/copy-to-sd-img.sh x16files.img $(x16dir_files)
+	mcopy -i x16files.img tmp/copying ::COPYING
 	zip $@ x16files.img
 
-doc.zip: $(wildcard *.md)
+cc64-doc.zip: $(wildcard *.md) COPYING
 	zip $@ $^
 
 etc: $(forth_t64_files) emulator/c-char-rom-gen
@@ -348,3 +351,7 @@ x16files/%.fth: src/*/%.fth
 x16files/%.c: src/*/%.c
 	ascii2petscii $< $@
 	touch -r $< $@
+
+tmp/copying: COPYING
+	test -d tmp || mkdir tmp
+	ascii2petscii $< $@
