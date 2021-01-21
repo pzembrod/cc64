@@ -140,7 +140,7 @@ clean:
 	rm -f c64files/*.log c16files/*.log x16files/*.log
 	rm -f x16files.img
 	rm -f [cx][16][64]files/notdone
-	rm -f emulator/sdcard.img tmp/* doc.zip
+	rm -f emulator/sdcard.img tmp/* cc64-doc.zip
 	rm -rf release
 	$(MAKE) -C tests clean
 	$(MAKE) -C tests/peddi clean
