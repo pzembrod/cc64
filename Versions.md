@@ -1,5 +1,10 @@
 # cc64 versions
 
+## v0.8.0.1
+
+No code changes, just a small update to COPYING, and COPYING is added
+to the distribution zip files and images.
+
 ## v0.8
 
 v0.8 brings cc64 to the [Commander X16](https://www.commanderx16.com/).
