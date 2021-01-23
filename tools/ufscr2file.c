@@ -25,25 +25,25 @@ int nextchar(FILE *in) {
       if(c == EOF) break;
       skip = (track == 18) && (sector < 3);
       byte++;
-      if((byte & 255) == 0) {
+      if ((byte & 255) == 0) {
         sector++;
-        if(sector > 20) {
+        if (sector > 20) {
           sector = 0; 
           track++;
         }
       }
-    } while(skip);
-  return(c);
+    } while (skip);
+  return c;
 }
 
 void buffered_putchar(FILE *out, char c) {
   static char line[50], *p=line;
-  if(p - line > 45) {
+  if (p - line > 45) {
     fprintf(stderr, "!!! overlong line !!!\n");
     exit(1);
   }
-  if(c == '\n') {
-    while(p > line && *(p - 1) == ' ') p--;
+  if (c == '\n') {
+    while (p > line && *(p - 1) == ' ') p--;
     *p = '\0';
     fprintf(out, "%s\n", line);
     p=line;
@@ -55,18 +55,18 @@ void buffered_putchar(FILE *out, char c) {
 int printblock(FILE *in, FILE *out, int n) {
   int line, col, c;
   fprintf(out, "\n\\ *** Block No. %d, Hexblock %x\n\n", n, n);
-  for(line = 0; line < 25; line++) {
-    for(col = 0; col < (line == 24 ? 40 : 41); col++) {
+  for (line = 0; line < 25; line++) {
+    for (col = 0; col < (line == 24 ? 40 : 41); col++) {
       c = nextchar(in);
-      if(c == EOF) {
+      if (c == EOF) {
         fprintf(out, "\n### premature end of input file ###\n");
-        return(1);
+        return 1;
       }
       buffered_putchar(out, (char) petscii2ascii(c));
     }
     buffered_putchar(out, '\n');
   }
-  return(0);
+  return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -74,12 +74,12 @@ int main(int argc, char *argv[]) {
   int error = openfiles(&in, &out, argc, argv,
       "usage: %s file.d64 [outfile]\n");
   if (error) {
-    return(error);
+    return error;
   }
   int block;
-  for(block = 0; block < 170; block++)
-    if(printblock(in, out, block))
-      return(1);
-  return(0);
+  for (block = 0; block < 170; block++)
+    if (printblock(in, out, block))
+      return EXIT_FAILURE;
+  return closefiles(in, out);
 }
 

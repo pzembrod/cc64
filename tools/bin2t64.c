@@ -22,17 +22,17 @@ int main(int argc, char *argv[]) {
   char* writeptr = filebytes;
   int c;
   // Read file content
-  while((c = fgetc(in)) != EOF) {
+  while ((c = fgetc(in)) != EOF) {
     *readptr++ = (char) c;
   }
-  if(readptr - writeptr < 2) {
+  if (readptr - writeptr < 2) {
     fprintf(stderr, "file size %ld\n", readptr - writeptr);
     return(1);
   }
 
   // T64 Tape Record
   fputs("C64S tape image file", out);
-  for(int i = 0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     fputc(0, out);
   }
   fputc(0, out); fputc(2, out);  // T64 version
@@ -40,14 +40,14 @@ int main(int argc, char *argv[]) {
   fputc(1, out); fputc(0, out);  // # of used dir entries
   fputc(0, out); fputc(0, out);  // unused
   char* basename = filename;
-  while(*basename) ++basename;
-  while(basename > filename && *(basename - 1) != '/') --basename;
+  while (*basename) ++basename;
+  while (basename > filename && *(basename - 1) != '/') --basename;
   char* p = basename;
-  while(*p) {
+  while (*p) {
     fputc(*p, out);
     ++p;
   }
-  for(int i = p - basename; i < 24; ++i) {
+  for (int i = p - basename; i < 24; ++i) {
     fputc(0x20, out);
   }
 
@@ -68,17 +68,17 @@ int main(int argc, char *argv[]) {
   fputc(0, out); fputc(0, out);  // unused
   fputc(0, out); fputc(0, out);  // unused
   p = basename;
-  while(*p) {
+  while (*p) {
     fputc(ascii2petscii(*p), out);
     ++p;
   }
-  for(int i = p - basename; i < 16; ++i) {
+  for (int i = p - basename; i < 16; ++i) {
     fputc(0x20, out);
   }
   
-  while(writeptr < readptr) {
+  while (writeptr < readptr) {
     fputc(*writeptr++, out);
   }
-  return(0);
+  return closefiles(in, out);
 }
 

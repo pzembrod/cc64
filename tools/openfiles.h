@@ -7,4 +7,6 @@
 extern int openfiles(FILE **in, FILE **out, int argc, char *argv[],
     char* usageFormatStr);
 
+extern int closefiles(FILE *in, FILE *out);
+
 #endif

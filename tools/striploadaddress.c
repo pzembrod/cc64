@@ -14,14 +14,14 @@ int main(int argc, char *argv[]) {
   int error = openfiles(&in, &out, argc, argv,
       "usage: %s infile [outfile]\n");
   if (error) {
-    return(error);
+    return error;
   }
   int c;
   if (fgetc(in) == EOF) return 1;
   if (fgetc(in) == EOF) return 1;
-  while((c = fgetc(in)) != EOF) {
+  while ((c = fgetc(in)) != EOF) {
     fputc(c, out);
   }
-  return(0);
+  return closefiles(in, out);
 }
 

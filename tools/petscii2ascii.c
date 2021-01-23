@@ -14,12 +14,12 @@ int main(int argc, char *argv[]) {
   int error = openfiles(&in, &out, argc, argv,
       "usage: %s infile [outfile]\n");
   if (error) {
-    return(error);
+    return error;
   }
   int c;
-  while((c = fgetc(in)) != EOF) {
+  while ((c = fgetc(in)) != EOF) {
     fputc(petscii2ascii(c), out);
   }
-  return(0);
+  return closefiles(in, out);
 }
 
