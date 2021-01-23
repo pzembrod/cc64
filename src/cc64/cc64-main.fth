@@ -90,10 +90,16 @@
   (64 0 ink-pot !  15  ink-pot 2+ c! C)
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
-  base @  hex here u. heap u. up@ u.  base !
+  cr
+  .( here/heap/up@ = )
+  base @  hex here u. heap u. up@ u. cr  base !
+  s0 @ here - u. .( dictionary bytes to spare pre save ) cr
 \log display
   save
 \log alsologtofile
+  s0 @ here - u. .( dictionary bytes to spare post save ) cr
+  .( here/heap/up@ = )
+  base @  hex here u. heap u. up@ u. cr  base !
   cr .( compile successful) cr
 
 \log logclose
