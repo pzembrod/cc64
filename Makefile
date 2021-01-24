@@ -134,6 +134,16 @@ cc64-doc.zip: $(wildcard *.md) COPYING
 
 etc: $(forth_t64_files) emulator/c-char-rom-gen
 
+# The following utility build rule is based on my current setup of
+# where VICE and x16emu have their default ROMs.
+c-char-roms:
+	patch-c-charset ~/.config/vice/C64/chargen \
+	    emulator/c64-c-chargen -n 2048 -i 3072
+	patch-c-charset ~/.config/vice/PLUS4/kernal \
+	    emulator/c16-c-kernal -n 5120
+	patch-c-charset ~/bin/rom.bin \
+	    emulator/x16-c-rom.bin -n 99328
+
 
 clean:
 	rm -f c64files/*.fth c16files/*.fth x16files/*.fth
