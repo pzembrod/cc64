@@ -5,7 +5,7 @@
 #include "openfiles.h"
 
 int openfiles(FILE **in, FILE **out, int argc, char *argv[],
-    char* usageFormatStr) {
+    const char* usageFormatStr) {
   if(argc<2 || argc>3) {
     fprintf(stderr, usageFormatStr, argv[0]);
     return argc==1 ? EXIT_SUCCESS : EXIT_FAILURE;

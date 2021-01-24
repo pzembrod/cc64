@@ -3,7 +3,7 @@ bindir = $(HOME)/bin
 
 imagetools = bin2p00 bin2t64 txt2s00
 filetools =  ascii2petscii petscii2ascii striploadaddress ufscr2file
-tools = $(imagetools) $(filetools)
+tools = $(imagetools) $(filetools) patch-c-charset
 
 all: $(tools)
 
@@ -25,6 +25,11 @@ bin2p00.o: bin2p00.c openfiles.h petscii.h
 bin2t64: bin2t64.o petscii.o openfiles.o
 
 bin2t64.o: bin2t64.c openfiles.h petscii.h
+
+
+patch-c-charset: patch-c-charset.o openfiles.o
+
+patch-c-charset.o: patch-c-charset.c openfiles.h
 
 
 petscii2ascii: petscii2ascii.o petscii.o openfiles.o

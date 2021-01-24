@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 extern int openfiles(FILE **in, FILE **out, int argc, char *argv[],
-    char* usageFormatStr);
+    const char* usageFormatStr);
 
 extern int closefiles(FILE *in, FILE *out);
 
