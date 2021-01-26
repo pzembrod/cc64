@@ -1,5 +1,9 @@
 
-; Generates a C capable char rom image for (e.g.) use with an emulator.
+; Generates a C capable C64 char rom image for (e.g.) use with an emulator.
+
+; DEPRECATED; superseeded by tools/patch-c-charset.c which can patch
+; the characters needed for C into an existing ROM image for differnt
+; computers. Tried out for C64, C16/Plus4 and Commander X16.
 
 ; Copies the character ROM ($d000-$dfff) to $c000-cfff, patches
 ; in the charactes \^_{|}~, and then saves $c000-$cfff to disk.
