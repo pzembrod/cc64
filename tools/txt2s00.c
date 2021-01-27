@@ -14,22 +14,22 @@ int main(int argc, char *argv[]) {
   int error = openfiles(&in, &out, argc, argv,
       "usage: %s infile [outfile]\n");
   if (error) {
-    return(error);
+    return error;
   }
   char* filename = argv[1];
   int c;
   fputs("C64File", out); fputc(0, out);
   char* p = filename;
-  while(*p) {
+  while (*p) {
     fputc(ascii2petscii(*p), out);
     ++p;
   }
-  for(int i = p - filename; i < 18; ++i) {
+  for (int i = p - filename; i < 18; ++i) {
     fputc(0, out);
   }
-  while((c = fgetc(in)) != EOF) {
+  while ((c = fgetc(in)) != EOF) {
     fputc(ascii2petscii(c), out);
   }
-  return(0);
+  return closefiles(in, out);
 }
 

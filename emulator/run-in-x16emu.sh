@@ -47,6 +47,7 @@ fi
 x16emu \
   -keymap de \
   -sdcard "${sdcard}" \
+  -rom "${emulatordir}/x16-c-rom.bin" \
   $autostart \
   $script \
   $warp \
