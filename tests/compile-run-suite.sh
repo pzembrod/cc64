@@ -50,7 +50,7 @@ bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 rm -f suite.joined-golden suite.joined-silver
 touch suite.joined-golden suite.joined-silver
 for t in $tests; do
-  echo "${t}-test:" >> suite.joined-golden  
+  echo "${t}-test:" >> suite.joined-golden
   cat ${t}.golden >> suite.joined-golden
   # joined-silver doesn't contain test sections, so diffing against it
   # will highlight the test sections as well as actuall output diffs.
@@ -60,7 +60,7 @@ done
 suitename="${cc64}-suite-${host_target}"
 # Run test binary
 rm -f "${targetfiles}/suite.out" "${suitename}.out"
-CC64TARGET="${target}" ./test-in-emu.sh suite
+CC64TARGET="${target}" ./run-in-emu.sh suite
 petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"
 
 # Evaluate test output

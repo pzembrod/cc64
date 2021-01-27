@@ -29,7 +29,7 @@ fulltestname="${testname}-${host_target}"
 
 # Run test binary
 rm -f "${targetfiles}/${testname}.out" "${fulltestname}.out"
-CC64TARGET="${target}" ./test-in-emu.sh "${testname}"
+CC64TARGET="${target}" ./run-in-emu.sh "${testname}"
 petscii2ascii "${targetfiles}/${testname}.out" "${fulltestname}.out"
 
 # Evaluate test output

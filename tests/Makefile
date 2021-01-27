@@ -94,22 +94,22 @@ $(test_results_x16_hosted) $(suite_results_x16_hosted): \
     x16files/cc64 $(x16_rt_files) *.sh *.h
 
 $(test_results_c64_c64): %-c64_c64-result.txt: %-test.c %.golden
-	./run-test.sh $* c64_c64
+	./compile-run-test.sh $* c64_c64
 
 $(test_results_c64_c16): %-c64_c16-result.txt: %-test.c %.golden
-	./run-test.sh $* c64_c16
+	./compile-run-test.sh $* c64_c16
 
 $(test_results_c16_c64): %-c16_c64-result.txt: %-test.c %.golden
-	./run-test.sh $* c16_c64
+	./compile-run-test.sh $* c16_c64
 
 $(test_results_c16_c16): %-c16_c16-result.txt: %-test.c %.golden
-	./run-test.sh $* c16_c16
+	./compile-run-test.sh $* c16_c16
 
 cc64-suite-%.result: *-test.c *.golden
-	./perform-suite.sh cc64 $*
+	./compile-run-suite.sh cc64 $*
 
 cc64pe-suite-%.result: *-test.c *.golden
-	./perform-suite.sh cc64pe $*
+	./compile-run-suite.sh cc64pe $*
 
 cc64-suite-c64_x16.result: ../emulator/sdcard.img
 
