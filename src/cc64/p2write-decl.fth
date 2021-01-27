@@ -7,14 +7,13 @@
               ELSE " int " THEN str!
      %function %reference + isn't? >r
      %pointer is? r> and
-        IF drop swap str! " [] /=" str!
-        hex! exit THEN
-     %pointer is? IF ascii * fputc THEN
-     %function is?
-        IF %reference isn't?
-           IF rot str! ELSE " (*" str!
-           rot str! ascii ) fputc THEN
-        " ()" str! ELSE rot str! THEN
-     %stdfctn is? IF "  *=" ELSE "  /="
-     THEN str!  drop hex!
+       IF drop swap str! " [] /=" str! hex!
+       ELSE %pointer is? IF ascii * fputc THEN
+       %function is?
+          IF %reference isn't?
+             IF rot str! ELSE " (*" str!
+             rot str! ascii ) fputc THEN
+          " ()" str! ELSE rot str! THEN
+       %stdfctn is? IF "  *=" ELSE "  /=" THEN
+       str!  drop hex! THEN
      "  ;" str!  cr! ;

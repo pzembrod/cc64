@@ -111,6 +111,13 @@ cc64-suite-%.result: *-test.c *.golden
 cc64pe-suite-%.result: *-test.c *.golden
 	./compile-run-suite.sh cc64pe $*
 
+
+libtest.result: libtest.c libtest.golden compile-lib.sh \
+    ../autostart-c64/cc64.T64 $(c64_rt_files)
+	./compile-lib.sh libtest
+
+
+
 cc64-suite-c64_x16.result: ../emulator/sdcard.img
 
 cc64pe-suite-c64_x16.result: ../emulator/sdcard.img
@@ -126,7 +133,7 @@ cc64-suite-x16_x16.result: ../emulator/sdcard.img
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
-	rm -f separate-tests-c??_c??.result tmp.result
+	rm -f separate-tests-c??_c??.result libtest.result tmp.result
 	rm -f cc64-suite-[cx]??_[cx]??.* cc64pe-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
 	rm -f *.out *.T64 *-result.txt *-generated.c
