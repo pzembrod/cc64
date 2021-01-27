@@ -14,6 +14,7 @@ basedir="$(realpath --relative-to="$PWD" "${testdir}/..")"
 hostfiles="${testdir}/${host}files"
 targetfiles="${testdir}/${target}files"
 
+test -d "${hostfiles}"   || mkdir "${hostfiles}"
 test -d "${targetfiles}" || mkdir "${targetfiles}"
 
 tests=$(echo *-test.c| sed 's/-test\.c//g')
@@ -64,8 +65,11 @@ CC64TARGET="${target}" ./run-in-emu.sh suite
 petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"
 
 # Evaluate test output
+rm -f "${suitename}.result"
+set +e
 diff suite.joined-golden "${suitename}.out"
 result=$?
+set -e
 test $result -eq 0 \
   && echo "${suitename} PASS" > "${suitename}.result" \
   || diff suite.joined-silver "${suitename}.out" > "${suitename}.result"

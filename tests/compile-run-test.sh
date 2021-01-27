@@ -14,6 +14,7 @@ basedir="$(realpath --relative-to="$PWD" "${testdir}/..")"
 hostfiles="${testdir}/${host}files"
 targetfiles="${testdir}/${target}files"
 
+test -d "${hostfiles}"   || mkdir "${hostfiles}"
 test -d "${targetfiles}" || mkdir "${targetfiles}"
 
 # Build test binary
@@ -33,12 +34,15 @@ CC64TARGET="${target}" ./run-in-emu.sh "${testname}"
 petscii2ascii "${targetfiles}/${testname}.out" "${fulltestname}.out"
 
 # Evaluate test output
+rm -f tmp.result
 echo "Test: ${fulltestname}" > tmp.result
+set +e
 diff "${testname}.golden" "${fulltestname}.out" >> tmp.result
 result=$?
+set -e
 test $result -eq 0 \
   && echo "PASS: ${fulltestname}" >> tmp.result \
   || echo "FAIL: ${fulltestname}" >> tmp.result
 cat tmp.result
-mv tmp.result "${fulltestname}-result.txt"
+mv -f tmp.result "${fulltestname}.result"
 exit $result
