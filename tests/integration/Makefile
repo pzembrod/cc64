@@ -9,6 +9,8 @@ x16_rt_files = \
     $(patsubst $(basedir)/runtime/%, x16files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
 
 
+commonsrcs_ascii = $(wildcard $(basedir)/src/common/*.fth)
+commonsrcs_c64 = $(patsubst $(basedir)/src/common/%, c64files/%, $(commonsrcs_ascii))
 cc64srcs_ascii = $(wildcard $(basedir)/src/cc64/*.fth)
 cc64srcs_c64 = $(patsubst $(basedir)/src/cc64/%, c64files/%, $(cc64srcs_ascii))
 
@@ -23,7 +25,8 @@ libtest.result: libtest.c libtest.golden compile-lib.sh \
     $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files)
 	./compile-lib.sh libtest
 
-faketest: $(cc64srcs_c64) $(testsrcs_c64)
+faketest: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
+	./build-test.sh
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
