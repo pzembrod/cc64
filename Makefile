@@ -152,7 +152,8 @@ clean:
 	rm -f [cx][16][64]files/notdone
 	rm -f emulator/sdcard.img tmp/* cc64-doc.zip
 	rm -rf release
-	$(MAKE) -C tests clean
+	$(MAKE) -C tests/e2e clean
+	$(MAKE) -C tests/integration clean
 	$(MAKE) -C tests/peddi clean
 
 veryclean: clean
@@ -167,17 +168,21 @@ veryclean: clean
 	rm -f runtime/*
 
 
-test64: autostart-c64/cc64.T64 fasttests
+test64: autostart-c64/cc64.T64
+	$(MAKE) -C tests/e2e fasttests64
 
-alltests:
-	$(MAKE) -C tests alltests
+alltests: sut
+	$(MAKE) -C tests/e2e alltests
+	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
 
-fasttests:
-	$(MAKE) -C tests fasttests
+fasttests: sut
+	$(MAKE) -C tests/e2e fasttests
 
-slowtests:
-	$(MAKE) -C tests slowtests
+slowtests: sut
+	$(MAKE) -C tests/e2e slowtests
+
+sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64
 
 
 # cc64 build rules

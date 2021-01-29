@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -x
 
 testname="$1"
 host_target="$2"
