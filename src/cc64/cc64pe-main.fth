@@ -21,7 +21,7 @@
 
   include util-words.fth
   cr
-  vocabulary compiler
+~ vocabulary compiler
   compiler also definitions
 
   include init.fth
@@ -90,12 +90,12 @@
 \ peddi loadscreen for cc64    19apr20pz
 
   onlyforth  decimal
-| vocabulary peddi
+~ vocabulary peddi
   compiler also peddi also definitions
 
-| ' lomem    alias text[
-| ' himem    alias ]text
-| ' dev      alias dev
+~ ' lomem    alias text[
+~ ' himem    alias ]text
+~ ' dev      alias dev
 
   onlyforth peddi also definitions
 

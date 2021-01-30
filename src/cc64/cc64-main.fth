@@ -21,7 +21,7 @@
 
   include util-words.fth
   cr
-  vocabulary compiler
+~ vocabulary compiler
   compiler also definitions
 
   include init.fth
