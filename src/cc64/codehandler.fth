@@ -12,7 +12,7 @@
 \ flushstatic
 
 \ fuer dynamische variable:
-\ tos-offs  dyn-allot
+\ dyn-offs  dyn-reset  dyn-allot
 
 \ fuer codelayout:
 \ lib.first          codelayout.ok
@@ -27,11 +27,14 @@
 
 \   codehandler: dynamics,init 19apr94pz
 
-~ variable tos-offs
+|| variable >tos-offs
+
+~ : dyn-offs  ( -- offs )  >tos-offs @ ;
+
+~ : dyn-reset  ( -- )  >tos-offs off ;
 
 ~ : dyn-allot ( n -- offs )
-     tos-offs @  swap tos-offs +! ;
-
+     dyn-offs  swap >tos-offs +! ;
 
 
 ~ doer flushcode ( -- )

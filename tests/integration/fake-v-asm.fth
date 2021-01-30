@@ -127,22 +127,24 @@
 
 \   testassembler:jumps/labels 03mar94pz
 
-\ variable >pc
-\ : pc >pc @ ;
-| : +pc   1 >pc +! ;
+  variable >label
+\ label 0 is forbidden b/c of for & switch
+  : reset-labels  1 >label ! ;
+  init: reset-labels
+
+  : +label   1 >label +! ;
 
   : .jmp       ( adr -- )
      ." jmp " u. cr ;
   : .label      ( -- adr )
-     pc dup ." *label*: " u. +pc cr ;
-\ label 0 ist verboten wg. for & switch
+     >label @ dup ." *label*: " u. +label cr ;
   : .jmp-ahead ( -- adr )
-     ." jmp ahead " pc dup u. +pc cr ;
+     ." jmp ahead " >label @ dup u. +label @ cr ;
   : .resolve-jmp ( adr -- )
      ." patch " u. cr ;
 
-| : .beq    ." cmp #0: beq *+5 :" ;
-| : .bne    ." cmp #0: bne *+5 :" ;
+  : .beq    ." cmp #0: beq *+5 :" ;
+  : .bne    ." cmp #0: bne *+5 :" ;
 
   : .jmz        .bne  .jmp ;
   : .jmn        .beq  .jmp ;

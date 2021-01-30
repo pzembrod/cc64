@@ -676,7 +676,7 @@ create id-buf /id 1+ allot
 
 
 : [parameters]) ( -- )
-     tos-offs off
+     dyn-reset
      ascii ) #char# comes? not
         IF BEGIN #id# comes-a?
            IF putlocal
