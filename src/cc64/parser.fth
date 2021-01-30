@@ -16,16 +16,16 @@
 
 \ parser: tools                22feb91pz
 
-: comes? ( word wordtype -- flag )
+: comes? ( tokenvalue token -- flag )
     nextword dnegate d+ or
     IF backword false ELSE true THEN ;
 
-: comes-a? ( wordtype -- word true )
-             ( wordtype -- false )
+: comes-a? ( token -- tokenvalue true )
+           ( token -- false )
     nextword rot = dup not
     IF nip backword THEN ;
 
-: expect ( word wordtype -- )
+: expect ( tokenvalue token -- )
     2dup comes?
        IF 2drop
        ELSE *expected* error word.

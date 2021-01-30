@@ -4,7 +4,7 @@
 
 \ terminology / interface:
 
-\ newline
+\ nextline
 \ open-input    close-input
 \ open-include  close-include
 \ char>         +char
@@ -98,7 +98,7 @@
 
 \ *** Block No. 34, Hexblock 22
 
-\   input :  newline           14sep94pz
+\   input :  nextline           14sep94pz
 
 ~ variable listing  listing on
 
@@ -107,7 +107,7 @@
      DO I c@ ?dup 0= IF LEAVE THEN
      emit LOOP cr ;
 
-~ : newline ( -- )
+~ : nextline ( -- )
      source-file feof?
         IF close-include
         eof @ ?exit THEN
