@@ -16,14 +16,10 @@
   (16 include notmpheap.fth C)
   (CX include x16tmpheap.fth C)
 
-  onlyforth  decimal  cr
+  onlyforth  decimal
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
-  include util-words.fth  \ unloop strcmp doer-make
-  cr
-  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
-  | : 2!  ( d adr --)  under !  2+ ! ;
-  \ include 2words.fth  \ 2@ 2!
+  include util-words.fth
   cr
   vocabulary compiler
   compiler also definitions

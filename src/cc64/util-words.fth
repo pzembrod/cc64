@@ -5,24 +5,17 @@
 \ needs unloop                         (
 \ ) : unloop  r> rdrop rdrop rdrop >r ;
 
-  : >I  ( n -- )
+~ : >I  ( n -- )
     r> rdrop swap r@ - >r >r ;
 
-
-  : >lo/hi ( u -- lo hi )
-     256 u/mod ;
+~ : >lo/hi ( u -- lo hi )
+     $100 u/mod ;
 
   \ : lo/hi> ( lo hi -- u )
   \    255 and 256 * swap 255 and + ;
 
-  : >lo ( -- lo )
-     255 and ;
-  : >hi ( -- hi )
-     2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
-
-\ needs :does>                         (
- : :does>  here >r [compile] does>
-   current @ context !  hide 0 ] ;
+~ : :does>  here >r [compile] does>
+    current @ context !  hide 0 ] ;
 
 
 \ *** Block No. 7, Hexblock 7
@@ -50,10 +43,14 @@
 \ doer/make (interaktiv)       02sep94pz
 
   here 0 ] ;
-  : doer  ( -- )
+~ : doer  ( -- )
       create  [ swap ] literal ,
       does> @ [ assembler ] ip
               [ forth ]     ! ;
 
-  : make  ( -- )
+~ : make  ( -- )
       here ' >body ! [compile] ] 0 ;
+
+
+~ : 2@  ( adr -- d)  dup 2+ @ swap @ ;
+~ : 2!  ( d adr --)  under !  2+ ! ;
