@@ -13,12 +13,8 @@
 
   include notmpheap.fth
 
-  onlyforth  decimal  cr
-  include util-words.fth  \ unloop strcmp doer-make
-  cr
-  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
-  | : 2!  ( d adr --)  under !  2+ ! ;
-  \ include 2words.fth  \ 2@ 2!
+  onlyforth  decimal
+  include util-words.fth
   cr
   vocabulary compiler
   compiler also definitions
@@ -29,58 +25,27 @@
   include errormsgs.fth
   include errorhandler.fth
 
-  31 constant /id
-  6 constant /link   \ listenknoten
-  4 constant /symbol \ datenfeldgroesse
-
-  10  constant #links
+  31  constant /id
+  4   constant /symbol \ datenfeldgroesse
   6   constant #globals
   100 constant symtabsize
-
-  create heap[ #links /link * allot  here constant ]heap
   create hash[ #globals 2+ allot  here constant ]hash
   create symtab[ symtabsize allot  here constant ]symtab
-
-  variable eof
-  -1 constant #eof
-  variable comment-state
-  variable line
-  variable comment-line
-
-  : char> ;
-  : +char ;
-  : newline ;
-
-  include scanner.fth
   include symboltable.fth
-  \ include preprocessor.fth
-  \ make preprocess ;
 
+  include fake-input.fth
+  include scanner.fth
+
+  6  constant /link
+  10 constant #links
+  create heap[  #links /link * allot
+  here constant ]heap
   include listman.fth
 
-  variable >pc
-  : pc  >pc @ ;
+  include fake-codeh.fth
   include fake-v-asm.fth
 
-~ variable tos-offs
-
-~ : dyn-allot ( n -- offs )
-     tos-offs @  swap tos-offs +! ;
-
   include codegen.fth
-|| variable static>
-
-~ : staticadr> ( -- current.adress )
-     static> @ ;
-
-~ : >staticadr ( adr -- )
-     static>  ! ;
-  : stat, ." stat, " . ;
-  : cstat, ." cstat, " . ;
-
-  : flushcode ;
-  : flushstatic ;
-
   include parser.fth
 
 : dos  ( -- )

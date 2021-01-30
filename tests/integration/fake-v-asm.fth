@@ -1,3 +1,6 @@
+
+\ fake for v-assembler.fth
+
 \ *** Block No. 155, Hexblock 9b
 
 \ testassembler: allgemeines   27may91pz
