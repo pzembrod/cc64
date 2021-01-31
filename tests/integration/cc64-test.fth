@@ -10,7 +10,10 @@
   ' noop   alias ~
   ' noop  alias ~on
   ' noop  alias ~off
-  include notmpheap.fth
+
+  (64 include tmpheap.fth C)
+  (64 $2000 mk-tmp-heap C)
+  (16 include notmpheap.fth C)
 
   : dos  ( -- )
    bl word count ?dup
@@ -31,31 +34,39 @@
   include strtab.fth
   include errormsgs.fth
   include errorhandler.fth
+  tmpclear
 
-  \ include fake-memsym.fth
-  \ include symboltable.fth
+  include fake-memsym.fth
+  include symboltable.fth
+  tmpclear
 
   include fake-input.fth
-  \ include scanner.fth
+  include scanner.fth
+  tmpclear
 
-  \ include fake-memheap.fth
-  \ include listman.fth
+  include fake-memheap.fth
+  include listman.fth
+  tmpclear
 
-  \ include fake-codeh.fth
-  \ include fake-v-asm.fth
+  include fake-codeh.fth
+  include fake-v-asm.fth
 
-  \ include codegen.fth
-  \ include parser.fth
+  include notmpheap.fth
+
+  include codegen.fth
+  include parser.fth
 
   init
   src-begin test-src
-  src@ 1  @
-  src-end
-  \ : test BEGIN nextword dup . . cr dnegate #eof# d+ or 0= UNTIL ;
-  \ test-src test
-
   src@ int i;       @
-  src@ i = c + 5    @
+  src@ i = c + 5;    @
+  src-end
+  : test-scanner BEGIN nextword 2dup . . 2dup word. cr
+    dnegate #eof# d+ or 0= UNTIL ;
+  cr hex
+  test-src test-scanner
+
+  cr hex here u. s0 @ u.
 
   cr .( test successful) cr
 

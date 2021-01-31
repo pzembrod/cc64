@@ -387,4 +387,4 @@
                               exit THEN
   #string#  case? IF ." string @ " u.
                               exit THEN
-  ." word t:" . ." n:" . ;
+  ." token/val:" . . ;
