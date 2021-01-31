@@ -32,30 +32,30 @@
   include errormsgs.fth
   include errorhandler.fth
 
-  31  constant /id
-  4   constant /symbol \ datenfeldgroesse
-  6   constant #globals
-  100 constant symtabsize
-  create hash[ #globals 2+ allot  here constant ]hash
-  create symtab[ symtabsize allot  here constant ]symtab
-  include symboltable.fth
+  \ include fake-memsym.fth
+  \ include symboltable.fth
 
   include fake-input.fth
-  include scanner.fth
+  \ include scanner.fth
 
-  6  constant /link
-  10 constant #links
-  create heap[  #links /link * allot
-  here constant ]heap
-  include listman.fth
+  \ include fake-memheap.fth
+  \ include listman.fth
 
-  include fake-codeh.fth
-  include fake-v-asm.fth
+  \ include fake-codeh.fth
+  \ include fake-v-asm.fth
 
-  include codegen.fth
-  include parser.fth
+  \ include codegen.fth
+  \ include parser.fth
 
   init
+  src-begin test-src
+  src@ 1  @
+  src-end
+  \ : test BEGIN nextword dup . . cr dnegate #eof# d+ or 0= UNTIL ;
+  \ test-src test
+
+  src@ int i;       @
+  src@ i = c + 5    @
 
   cr .( test successful) cr
 
