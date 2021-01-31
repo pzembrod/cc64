@@ -51,20 +51,26 @@
   include fake-codeh.fth
   include fake-v-asm.fth
 
-  include notmpheap.fth
-
   include codegen.fth
+  include notmpheap.fth
   include parser.fth
 
   init
-  src-begin test-src
+  src-begin test-src1
   src@ int i;       @
   src@ i = c + 5;    @
   src-end
   : test-scanner BEGIN nextword 2dup . . 2dup word. cr
     dnegate #eof# d+ or 0= UNTIL ;
   cr hex
-  test-src test-scanner
+  test-src1 test-scanner
+
+  src-begin test-src2
+  src@ int i; @
+  src@ static char c; @
+  src-end
+
+  test-src2 definition? cr . cr definition? cr . cr definition? cr . cr
 
   cr hex here u. s0 @ u.
 
