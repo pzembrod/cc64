@@ -1,7 +1,8 @@
 
 | : (write-decl ( name val type -- )
      %function %reference %pointer + +
-     isn't? IF 2drop drop exit THEN
+     isn't? >r  %extern isn't? r> or
+       IF 2drop drop exit THEN
      " extern " str!
      is-char? IF   " char "
               ELSE " int " THEN str!
