@@ -21,7 +21,7 @@
 
   include util-words.fth
   cr
-~ vocabulary compiler
+| vocabulary compiler
   compiler also definitions
 
   include init.fth
@@ -85,17 +85,26 @@
   (64 0 ink-pot !  15  ink-pot 2+ c! C)
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
-  save
+\ Carry the 4 temp names needed in peddi over the clear
+\ by placing their XTs on the stack before the clear and
+\ temp aliasing them in reverse order afterwards:
+  compiler
+  ' lomem  \ for text[
+  ' himem  \ for ]text
+  ' dev
+  ' compiler
 
-\ peddi loadscreen for cc64    19apr20pz
+  clear
+
+| alias compiler
 
   onlyforth  decimal
-~ vocabulary peddi
+| vocabulary peddi
   compiler also peddi also definitions
 
-~ ' lomem    alias text[
-~ ' himem    alias ]text
-~ ' dev      alias dev
+| alias dev
+| alias ]text
+| alias text[
 
   onlyforth peddi also definitions
 
