@@ -1,5 +1,5 @@
 
-| : (write-decl ( name val type -- )
+~ : (write-decl ( name val type -- )
      %function %reference %pointer + +
      isn't? >r  %extern isn't? r> or
        IF 2drop drop exit THEN

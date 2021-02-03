@@ -57,12 +57,11 @@
   (CX include x16edit.fth  C)
   onlyforth compiler also definitions
   include v-assembler.fth
-  \ tmpclear
-
   include codegen.fth
   include parser.fth
   include p2write-decl.fth
   tmpclear
+
   include pass2.fth
   include invoke.fth
   \ words
