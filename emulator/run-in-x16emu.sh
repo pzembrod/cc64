@@ -3,6 +3,9 @@ set -e
 
 x16filesdir="${CBMFILES}"
 
+executable="${1}"
+keybuf="${2}"
+
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 test -n "${x16filesdir}" || \
@@ -20,20 +23,27 @@ done
 
 autostart=""
 script=""
-if [ -n "$1" ]
+if [ -n "${executable}" ]
 then
-  autostart="-prg ${x16filesdir}/${1} -run"
+  autostart="-prg ${x16filesdir}/${executable} -run"
 fi
 
 script=""
 warp=""
 scale=""
 debug=""
-if [ -n "$2" ]
+if [ -n "${keybuf}" ]
 then
   test -d tmp || mkdir tmp
   rm -f "${x16script}".*
-  echo "load\"${1}\"\nrun\n${2}" | sed 's/\\n/\n/g' > "${x16script}".ascii
+  # Magic env variable KEEPEMU: If set, remove the final CR.
+  if [ -n "${KEEPEMU}" ]; then
+    tr_remove='\n'
+  else
+    tr_remove=''
+  fi
+  echo "load\"${executable}\"\nrun\n${keybuf}" | tr -d "${tr_remove}" \
+      | sed 's/\\n/\n/g' > "${x16script}".ascii
   ascii2petscii "${x16script}.ascii" "${x16script}.petscii"
   script="-bas ${x16script}.petscii"
   autostart=""

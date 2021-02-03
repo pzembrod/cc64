@@ -23,7 +23,7 @@ echo "char *name(){ return \"${testname}.out,s,w\"; } test(){ ${testname}_test (
  | tee "${testname}-generated.c" \
  | ascii2petscii - "${hostfiles}/${testname}.c"
 rm -f "${hostfiles}/${testname}" "${targetfiles}/${testname}.T64"
-CC64HOST="${host}" ./compile-in-emu.sh "cc ${testname}.c\ndos s0:notdone\n"
+CC64HOST="${host}" ./compile-in-emu.sh "cc ${testname}.c\ndos s0:notdone"
 
 bin2t64 "${hostfiles}/${testname}" "${targetfiles}/${testname}.T64"
 fulltestname="${testname}-${host_target}"

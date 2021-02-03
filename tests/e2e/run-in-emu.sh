@@ -11,7 +11,7 @@ source "${testdir}/basedir.sh"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 targetfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64TARGET}files")"
 
-keybuf='open1,8,15,"s0:notdone":close1\n'
+keybuf='open1,8,15,"s0:notdone":close1'
 
 export OUTFILES="${testbinary}.out"
 export CBMFILES="${targetfiles}"

@@ -11,7 +11,7 @@ logfile="${cbmfiles}/cc64-test.log"
 
 rm -f "${logfile}"
 
-keybuf="include cc64-test.fth\ndos s0:notdone\n"
+keybuf="include cc64-test.fth\ndos s0:notdone"
 
 export OUTFILES="cc64-test.log"
 export CBMFILES="${cbmfiles}"

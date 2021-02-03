@@ -12,7 +12,7 @@ logfile="${cbmfiles}/cc64pe.log"
 rm -f "${cbmfiles}/cc64pe"
 rm -f "${logfile}"
 
-keybuf="include cc64pe-main.fth\nsaveall cc64pe\ndos s0:notdone\n"
+keybuf="include cc64pe-main.fth\nsaveall cc64pe\ndos s0:notdone"
 
 PLATFORM="${platform}" \
   "${emulatordir}/run-in-vice.sh" "vf-build-base" "${keybuf}"
