@@ -62,7 +62,7 @@ c64: cc64-c64-t64 $(c64dir_files) cc64-c64files.zip cc64-c64files.d64
 
 c16: cc64-c16-t64 $(c16dir_files) cc64-c16files.zip cc64-c16files.d64
 
-x16: $(x16dir_files) x16files.zip cc64-x16files-sdcard.zip
+x16: $(x16dir_files) cc64-x16files.zip cc64-x16files-sdcard.zip
 
 cc64-c64-t64: $(cc64_c64_t64_files)
 
@@ -155,6 +155,7 @@ clean:
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
 	$(MAKE) -C tests/peddi clean
+	$(MAKE) -C tests/unit clean
 
 veryclean: clean
 	rm -f c64files/*
@@ -170,17 +171,26 @@ veryclean: clean
 
 test64: autostart-c64/cc64.T64
 	$(MAKE) -C tests/e2e fasttests64
+	$(MAKE) -C tests/unit tests
+	$(MAKE) -C tests/integration tests
 
 alltests: sut
 	$(MAKE) -C tests/e2e alltests
+	$(MAKE) -C tests/unit tests
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
 
 fasttests: sut
 	$(MAKE) -C tests/e2e fasttests
+	$(MAKE) -C tests/unit tests
+	$(MAKE) -C tests/integration tests
+	$(MAKE) -C tests/peddi tests
 
 slowtests: sut
 	$(MAKE) -C tests/e2e slowtests
+	$(MAKE) -C tests/unit tests
+	$(MAKE) -C tests/integration tests
+	$(MAKE) -C tests/peddi tests
 
 sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64
 
