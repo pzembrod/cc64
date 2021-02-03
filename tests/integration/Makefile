@@ -25,13 +25,9 @@ libtest.result: libtest.c libtest.golden compile-lib.sh \
     $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files)
 	./compile-lib.sh libtest
 
-faketest: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
-	./build-test.sh
-
 clean:
 	rm -f c64files/* c16files/* x16files/*
-	rm -f libtest.result tmp.result
-	rm -f *.out *-result.txt *-generated.c
+	rm -f *.result *.out *-generated.c
 
 c64files/rt-%: $(basedir)/c64files/rt-%
 	test -d c64files || mkdir c64files

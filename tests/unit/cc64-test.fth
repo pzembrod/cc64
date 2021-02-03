@@ -53,6 +53,9 @@
 
   include codegen.fth
   include notmpheap.fth
+
+  : putglobal cr ." putglobal " dup count type cr putglobal ;
+  : findglobal cr ." findglobal " dup count type cr findglobal ;
   include parser.fth
 
   init
@@ -64,6 +67,8 @@
     dnegate #eof# d+ or 0= UNTIL ;
   cr hex
   test-src1 test-scanner
+
+  : findglobal"  ascii " word dup cr count type cr findglobal ;
 
   src-begin test-src2
   src@ int i; @
