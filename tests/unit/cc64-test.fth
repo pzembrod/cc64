@@ -58,11 +58,18 @@
   : findglobal cr ." findglobal " dup count type cr findglobal ;
   include parser.fth
 
+  : cells  2* ;
+  : s"  [compile] " compile count ; immediate restrict
+  : [char]  [compile] ascii ; immediate
+
+  include tester.fth
+
   init
   src-begin test-src1
   src@ int i;       @
   src@ i = c + 5;    @
   src-end
+
   : test-scanner BEGIN nextword 2dup . . 2dup word. cr
     dnegate #eof# d+ or 0= UNTIL ;
   cr hex
@@ -79,6 +86,6 @@
 
   cr hex here u. s0 @ u.
 
-  cr .( test successful) cr
+  cr .( test completed with 0 errors) cr
 
 \log logclose

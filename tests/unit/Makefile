@@ -10,11 +10,14 @@ testsrcs_ascii = $(wildcard *.fth)
 testsrcs_c64 = $(patsubst %, c64files/%, $(testsrcs_ascii))
 
 
-tests: faketest
+tests: cc64-test scanner-test
 
 
-faketest: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
-	./build-test.sh
+cc64-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
+	./build-test.sh cc64-test
+
+scanner-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
+	./build-test.sh scanner-test
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
