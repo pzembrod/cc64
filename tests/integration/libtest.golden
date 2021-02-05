@@ -6,3 +6,4 @@ extern char f() /= 0x9CE ;
 extern int i /= 0x9FFE ;
 extern char *p /= 0x9FFA ;
 extern int x /= 0x9FFC ;
+extern int up /= 0xFB ;

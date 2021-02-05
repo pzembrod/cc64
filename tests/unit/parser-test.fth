@@ -5,7 +5,7 @@
 \ ' \ alias \log
 
 \log include logtofile.fth
-\log logopen" cc64-test.log"
+\log logopen" parser-test.log"
 
   ' noop   alias ~
   ' noop  alias ~on
@@ -52,40 +52,38 @@
   include fake-v-asm.fth
 
   include codegen.fth
+
   include notmpheap.fth
 
-  : putglobal cr ." putglobal " dup count type cr putglobal ;
-  : findglobal cr ." findglobal " dup count type cr findglobal ;
   include parser.fth
-
-  : cells  2* ;
-  : s"  [compile] " compile count ; immediate restrict
-  : [char]  [compile] ascii ; immediate
 
   include tester.fth
 
-  init
+  : fetchglobal"  ascii " word findglobal 2@ ;
+
   src-begin test-src1
-  src@ int i;       @
-  src@ i = c + 5;    @
-  src-end
-
-  : test-scanner BEGIN nextword 2dup . . 2dup word. cr
-    dnegate #eof# d+ or 0= UNTIL ;
-  cr hex
-  test-src1 test-scanner
-
-  : findglobal"  ascii " word dup cr count type cr findglobal ;
-
-  src-begin test-src2
   src@ int i; @
-  src@ static char c; @
+  src@ static char x; @
+  src@ extern char a /= 0x0a; @
+  src@ static int e /= 0x0e; @
   src-end
+  
+  init  $a000 >staticadr
 
-  test-src2 definition? cr . cr definition? cr . cr definition? cr . cr
+  test-src1
+  T{ definition? -> true }T
+  T{ definition? -> true }T
+  T{ definition? -> true }T
+  T{ definition? -> true }T
+  T{ definition? -> false }T
 
-  cr hex here u. s0 @ u.
+  T{ fetchglobal" i" -> $9ffe %int %extern %reference + + }T
+  T{ fetchglobal" x" -> $9ffd %reference }T
+  T{ fetchglobal" a" -> $0a %extern %reference + }T
+  T{ fetchglobal" e" -> $0e %int %reference + }T
 
-  cr .( test completed with 0 errors) cr
+  cr hex .( here, s0: ) here u. s0 @ u.
+
+  cr .( test completed with ) #errors @ . .( errors) cr
 
 \log logclose

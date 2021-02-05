@@ -862,7 +862,6 @@ do$: init$ ( type -- values )
         ELSE </=> #oper# comes? THEN ;
 
 : define-extern ( type -- )
-     %extern isn't? *???* ?error
      function? IF unnestlocal THEN
      constant-expression swap
      id-buf putglobal  2! ;
