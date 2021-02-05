@@ -23,10 +23,6 @@
    BEGIN bus@ con! i/o-status? UNTIL
    busoff ;
 
-  : cells  2* ;
-  : s"  [compile] " compile count ; immediate restrict
-  : [char]  [compile] ascii ; immediate
-
   include tester.fth
 
   onlyforth  decimal

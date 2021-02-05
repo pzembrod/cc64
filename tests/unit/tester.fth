@@ -12,6 +12,11 @@
 \ agree with the Forth 200X file ttester.fs. This avoids clashes with
 \ locals using { ... } and the FSL use of } 
 
+\ Needed ANS words that VolksForth does't (yet) supply:
+  : cells  2* ;
+  : s"  [compile] " compile count ; immediate restrict
+  : [char]  [compile] ascii ; immediate
+
 HEX
 
 \ SET THE FOLLOWING FLAG TO TRUE FOR MORE VERBOSE OUTPUT; THIS MAY
@@ -51,7 +56,11 @@ CREATE ACTUAL-RESULTS 20 CELLS ALLOT
       DEPTH ?DUP IF         \ IF THERE IS SOMETHING ON THE STACK
          0  DO            \ FOR EACH STACK ITEM
            ACTUAL-RESULTS I CELLS + @   \ COMPARE ACTUAL WITH EXPECTED
-           = 0= IF S" INCORRECT RESULT: " ERROR LEAVE THEN
+           = 0= IF S" INCORRECT RESULT: " ERROR
+                cr ." Actual result: "
+                0 ACTUAL-DEPTH @ 1- ?DO
+                    actual-results I cells + @ u. -1 +LOOP
+                LEAVE THEN
          LOOP
       THEN
    ELSE               \ DEPTH MISMATCH
