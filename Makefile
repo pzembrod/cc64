@@ -1,25 +1,21 @@
 
 # cc64 sources and binaries
 commonsrcs_ascii = $(wildcard src/common/*.fth)
-commonsrcs_c64 = $(patsubst src/common/%, c64files/%, $(commonsrcs_ascii))
-commonsrcs_c16 = $(patsubst src/common/%, c16files/%, $(commonsrcs_ascii))
-commonsrcs_x16 = $(patsubst src/common/%, x16files/%, $(commonsrcs_ascii))
+commonsrcs = $(patsubst src/common/%, %, $(commonsrcs_ascii))
 cc64srcs_ascii = $(wildcard src/cc64/*.fth)
-cc64srcs_c64 = $(patsubst src/cc64/%, c64files/%, $(cc64srcs_ascii)) \
-  $(commonsrcs_c64)
-cc64srcs_c16 = $(patsubst src/cc64/%, c16files/%, $(cc64srcs_ascii)) \
-  $(commonsrcs_c16)
-cc64srcs_x16 = $(patsubst src/cc64/%, x16files/%, $(cc64srcs_ascii)) \
-  $(commonsrcs_x16)
+cc64srcs = $(patsubst src/cc64/%, %, $(cc64srcs_ascii))
 peddisrcs_ascii = $(wildcard src/peddi/*.fth)
-peddisrcs_c64 = $(patsubst src/peddi/%, c64files/%, $(peddisrcs_ascii)) \
-  $(commonsrcs_c64)
-peddisrcs_c16 = $(patsubst src/peddi/%, c16files/%, $(peddisrcs_ascii)) \
-  $(commonsrcs_c16)
+peddisrcs = $(patsubst src/peddi/%, %, $(peddisrcs_ascii))
+cc64srcs_c64 = $(patsubst %, c64files/%, $(cc64srcs) $(commonsrcs))
+cc64srcs_c16 = $(patsubst %, c16files/%, $(cc64srcs) $(commonsrcs))
+cc64srcs_x16 = $(patsubst %, x16files/%, $(cc64srcs) $(commonsrcs))
+peddisrcs_c64 = $(patsubst %, c64files/%, $(peddisrcs) $(commonsrcs))
+peddisrcs_c16 = $(patsubst %, c16files/%, $(peddisrcs) $(commonsrcs))
 cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
 cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 
+# runtime and sample files
 rt_files = \
   rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
   rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o \
@@ -40,6 +36,13 @@ c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 x16dir_content = cc64 $(rt_files) $(sample_files) c-charset
 x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
+# PETSCII sources and VolksForth bases for manual recompile
+recompile_dir = recompile-cc64
+recompile_srcs = $(patsubst %, $(recompile_dir)/%, \
+    $(cc64srcs) $(peddisrcs) $(commonsrcs))
+recompile_forths = $(patsubst forth/%, $(recompile_dir)/%, \
+    $(wildcard forth/v4th*))
+
 # Forth binaries
 forth_binaries = devenv-uF83
 forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
@@ -50,7 +53,8 @@ all: c64 c16 x16 etc
 release: cc64-doc.zip \
   cc64-c64files.zip cc64-c64files.d64 \
   cc64-c16files.zip cc64-c16files.d64 \
-  cc64-x16files.zip cc64-x16files-sdcard.zip
+  cc64-x16files.zip cc64-x16files-sdcard.zip \
+  $(recompile_dir).zip
 	rm -rf release
 	mkdir release
 	cp -p $^ release/
@@ -77,6 +81,10 @@ cc64-c16files.zip: $(c16dir_files) COPYING
 	zip -r $@ $^
 
 cc64-x16files.zip: $(x16dir_files) COPYING
+	rm -f $@
+	zip -r $@ $^
+
+$(recompile_dir).zip: $(recompile_srcs) $(recompile_forths) COPYING
 	rm -f $@
 	zip -r $@ $^
 
@@ -152,6 +160,7 @@ clean:
 	rm -f [cx][16][64]files/notdone
 	rm -f emulator/sdcard.img tmp/* cc64-doc.zip
 	rm -rf release
+	rm -rf $(recompile_dir) $(recompile_dir).zip
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
 	$(MAKE) -C tests/peddi clean
@@ -230,6 +239,9 @@ c16files/vf-build-base: forth/v4th-c16+
 	cp $< $@
 
 x16files/vf-build-base: forth/v4th-x16
+	cp $< $@
+
+$(recompile_dir)/%: forth/%
 	cp $< $@
 
 
@@ -351,7 +363,7 @@ emulator/sdcard.img: emulator/sdcard.sfdisk emulator/mk-sdcard.sh
 	emulator/mk-sdcard.sh emulator/sdcard.sfdisk $@
 
 
-# Rules, mostly generic, to populate c64files/, c16files/
+# Rules, mostly generic, to populate c64files/, c16files/, x16files/
 
 c64files/%.fth: src/*/%.fth
 	ascii2petscii $< $@
@@ -374,6 +386,11 @@ x16files/%.fth: src/*/%.fth
 	touch -r $< $@
 
 x16files/%.c: src/*/%.c
+	ascii2petscii $< $@
+	touch -r $< $@
+
+$(recompile_dir)/%.fth: src/*/%.fth
+	test -d $(recompile_dir) || mkdir $(recompile_dir)
 	ascii2petscii $< $@
 	touch -r $< $@
 
