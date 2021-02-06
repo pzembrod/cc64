@@ -2,55 +2,75 @@
 
 ## Platform
 
-cc64 versions exist for C64, for C16 with 64k RAM, i.e.
+cc64 versions exist for the C64, for C16 variants with 64k RAM, i.e.
 a C16 or C116 with a 64k RAM expansion or a Plus4, and for the
 new Commander X16.
 
-## Download
+## Downloads
 
-Downloads are avaliable as zip archive, as d64 disk image or as zipped
-SDCard image.
+[Releases](https://github.com/pzembrod/cc64/releases) consist of several
+zip archives and disk and SDCard images. Most can also be downloaded
+from head; they will often be a bit older than the latest sources at head,
+though.
 
-### Zip archive
+### cc64-*files.zip archives
 
-Zip archives for all platforms are available at head, i.e.
-[c64files.zip](https://github.com/pzembrod/cc64/blob/master/c64files.zip),
-[c16files.zip](https://github.com/pzembrod/cc64/blob/master/c16files.zip),
-[x16files.zip](https://github.com/pzembrod/cc64/blob/master/x16files.zip),
-and also as part of [releases](https://github.com/pzembrod/cc64/releases).
-
-The zip archives are intended for unpacking into a directory mapped as a drive
+These zip archives for all platforms (at head:
+[cc64-c64files.zip](https://github.com/pzembrod/cc64/blob/master/cc64-c64files.zip),
+[cc64-c16files.zip](https://github.com/pzembrod/cc64/blob/master/cc64-c16files.zip),
+[cc64-x16files.zip](https://github.com/pzembrod/cc64/blob/master/cc64-x16files.zip))
+are intended for unpacking into a directory mapped as a drive
 (typically #8) of an emulator like [VICE](https://vice-emu.sourceforge.io/)
-for C64 or C16.
+for C64 or C16, or for writing onto a disk of a real machine.
 
-Since the X16 emulator x16emu has only very limited support for mapping
-directories as drives (LOAD and SAVE works, but no sequential files such
-as C source files), the content of x16files.zip must be copied onto an
-SDCard image to work with x16emu, or onto a real SDCard to work with a
-real X16. A prepared SDCard image is also available (see below).
+For use with the X16 emulator
+[x16emu](https://www.commanderx16.com/forum/index.php?/files/file/25-commander-x16-emulator-winmaclinux/)
+the content of cc64-x16files.zip must be copied into an SDCard image because
+x16emu has only very limited support for mapping directories as drives
+(LOAD and SAVE works, but no sequential files such as C source files).
+A prepared SDCard image is also available (see below).
+Writing onto a real SDCard for use in a real X16 works as well, of course.
 
-### D64 disk image
+### D64 disk images
 
-D64 disk images for C64 and C16 are available at head, i.e.
+The D64 disk images for C64 and C16 (at head: 
 [c64files.d64](https://github.com/pzembrod/cc64/blob/master/c64files.d64) and
-[c16files.d64](https://github.com/pzembrod/cc64/blob/master/c16files.d64),
-and also as part of [releases](https://github.com/pzembrod/cc64/releases).
-
-The disk images can be attached to an emulator, of course, but should also be
+[c16files.d64](https://github.com/pzembrod/cc64/blob/master/c16files.d64))
+can be attached to an emulator, of course, but should also be
 usable for writing them onto a real 1541 or 1551 disk.
 
 Note that the disk images contain the correct CBM file type (prg or seq) for
-the c sources and runtime files.
+the C sources and runtime files.
 
 ### X16 SDCard image
 
-A zipped prepared SDCard image (64 MB) for X16 is available at head, i.e.
-[x16files-sdcard.zip](https://github.com/pzembrod/cc64/blob/master/x16files-sdcard.zip),
-and also as part of [releases](https://github.com/pzembrod/cc64/releases).
-
-The contained x16files.img can be attached to x16emu via the -sdcard flag.
+A zipped prepared SDCard image (64 MB) for X16 (at head:
+[x16files-sdcard.zip](https://github.com/pzembrod/cc64/blob/master/x16files-sdcard.zip))
+can be attached to x16emu via the -sdcard flag.
 It probably can also be written to a real SDCard, but for that purpose
 the x16files.zip archive is probably better suited.
+
+### recompile-cc64.zip
+
+This zip archive (only available in
+[Releases](https://github.com/pzembrod/cc64/releases))
+is for recompiling the cc64 binaries from their Forth sources,
+in setups where my Linux-based make and bash build doesn't work, e.g.
+on a real C64, Plus4 or X16, or on a Windows-based emulator.
+
+The archive works for all 3 platforms. Copy the archive content onto a disk,
+a disk or card image or into a dir mapped to an emulator drive.
+Load v4th-c64, v4th-c16+ or v4th-x16, depending on the platform,
+run it, and then type
+
+```
+include cc64-main.fth
+saveall cc64
+```
+
+to compile a new cc64 binary, or likewise for cc64pe and peddi. 
+Note that peddi only runs on the C64 and C16, not on the X16.
+
 
 ## Binaries
 
