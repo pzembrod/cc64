@@ -6,6 +6,8 @@
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
 \ VERSION 1.2
 
+\ 05/02/2021 by pzembrod: Added ANS compatibility shim for VolksForth
+\ and added printing actual stack content in case of test failure.
 \ 24/11/2015 Replaced Core Ext word <> with = 0=
 \ 31/3/2015 Variable #ERRORS added and incremented for each error reported.
 \ 22/1/09 The words { and } have been changed to T{ and }T respectively to

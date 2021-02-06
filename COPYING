@@ -40,3 +40,7 @@ See https://github.com/Tuplanolla/cheat
 Copyright (c) 2012, Guillermo "Tordek" Freschi
 Copyright (c) 2013, Sampsa "Tuplanolla" Kiiskinen
 All rights reserved.
+
+
+The tests directory of cc64 contains John Hayes' tester.fth which is
+(C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
