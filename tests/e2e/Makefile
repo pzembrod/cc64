@@ -25,7 +25,7 @@ suite_results_c64_hosted = \
 suite_results_c16_hosted = \
     $(patsubst %, cc64-% cc64pe-%, $(suite_c16_suffixes))
 suite_results_x16_hosted = \
-    $(patsubst %, cc64-% cc64pe-%, $(suite_x16_suffixes))
+    $(patsubst %, cc64-%, $(suite_x16_suffixes))
 
 c64_rt_files = \
     $(patsubst $(basedir)/runtime/%, c64files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
@@ -64,9 +64,14 @@ fastcrosstests: \
 
 slowcrosstests: \
   separate-tests-c64_c64.result \
-  separate-tests-c16_c16.result \
   separate-tests-c64_c16.result \
-  separate-tests-c16_c64.result
+  separate-tests-c64_x16.result \
+  separate-tests-c16_c64.result \
+  separate-tests-c16_c16.result \
+  separate-tests-c16_x16.result \
+  separate-tests-x16_c64.result \
+  separate-tests-x16_c16.result \
+  separate-tests-x16_x16.result
 
 pecrosstests: \
   cc64pe-suite-c64_c64.result \
@@ -80,10 +85,25 @@ separate-tests-c64_c64.result: $(test_results_c64_c64)
 separate-tests-c64_c16.result: $(test_results_c64_c16)
 	cat $^ >$@
 
+separate-tests-c64_x16.result: $(test_results_c64_x16)
+	cat $^ >$@
+
 separate-tests-c16_c64.result: $(test_results_c16_c64)
 	cat $^ >$@
 
 separate-tests-c16_c16.result: $(test_results_c16_c16)
+	cat $^ >$@
+
+separate-tests-c16_x16.result: $(test_results_c16_x16)
+	cat $^ >$@
+
+separate-tests-x16_c64.result: $(test_results_x16_c64)
+	cat $^ >$@
+
+separate-tests-x16_c16.result: $(test_results_x16_c16)
+	cat $^ >$@
+
+separate-tests-x16_x16.result: $(test_results_x16_x16)
 	cat $^ >$@
 
 $(test_results_c64_hosted) $(suite_results_c64_hosted): \
@@ -101,18 +121,33 @@ $(test_results_c64_c64): %-c64_c64.result: %-test.c %.golden
 $(test_results_c64_c16): %-c64_c16.result: %-test.c %.golden
 	./compile-run-test.sh $* c64_c16
 
+$(test_results_c64_x16): %-c64_x16.result: %-test.c %.golden
+	./compile-run-test.sh $* c64_x16
+
 $(test_results_c16_c64): %-c16_c64.result: %-test.c %.golden
 	./compile-run-test.sh $* c16_c64
 
 $(test_results_c16_c16): %-c16_c16.result: %-test.c %.golden
 	./compile-run-test.sh $* c16_c16
 
+$(test_results_c16_x16): %-c16_x16.result: %-test.c %.golden
+	./compile-run-test.sh $* c16_x16
+
+$(test_results_x16_c64): %-x16_c64.result: %-test.c %.golden
+	./compile-run-test.sh $* x16_c64
+
+$(test_results_x16_c16): %-x16_c16.result: %-test.c %.golden
+	./compile-run-test.sh $* x16_c16
+
+$(test_results_x16_x16): %-x16_x16.result: %-test.c %.golden
+	./compile-run-test.sh $* x16_x16
+
+
 cc64-suite-%.result: *-test.c *.golden
 	./compile-run-suite.sh cc64 $*
 
 cc64pe-suite-%.result: *-test.c *.golden
 	./compile-run-suite.sh cc64pe $*
-
 
 
 cc64-suite-c64_x16.result: $(basedir)/emulator/sdcard.img
