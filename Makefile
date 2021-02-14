@@ -36,6 +36,13 @@ c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 x16dir_content = cc64 $(rt_files) $(sample_files) c-charset
 x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
+# PETSCII sources and VolksForth bases for manual recompile
+recompile_dir = recompile-cc64
+recompile_srcs = $(patsubst %, $(recompile_dir)/%, \
+    $(cc64srcs) $(peddisrcs) $(commonsrcs))
+recompile_forths = $(patsubst forth/%, $(recompile_dir)/%, \
+    $(wildcard forth/v4th*))
+
 # Forth binaries
 forth_binaries = devenv-uF83
 forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
@@ -74,6 +81,10 @@ cc64-c16files.zip: $(c16dir_files) COPYING
 	zip -r $@ $^
 
 cc64-x16files.zip: $(x16dir_files) COPYING
+	rm -f $@
+	zip -r $@ $^
+
+$(recompile_dir).zip: $(recompile_srcs) $(recompile_forths) COPYING
 	rm -f $@
 	zip -r $@ $^
 
@@ -261,6 +272,9 @@ c16files/vf-build-base: forth/v4th-c16+
 	cp $< $@
 
 x16files/vf-build-base: forth/v4th-x16
+	cp $< $@
+
+$(recompile_dir)/%: forth/%
 	cp $< $@
 
 
