@@ -8,6 +8,7 @@
 \log logopen" peddi.log"
 
   onlyforth  decimal
+  | ' |     alias ~
 
 \ peddi loadscreen standalone  07may95pz
 

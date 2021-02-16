@@ -1,0 +1,14 @@
+To recompile cc64 from sources without using the main Makefile,
+copy the content of this archive onto a disk,
+a disk or card image or into a dir mapped to an emulator drive.
+
+Load v4th-c64, v4th-c16+ or v4th-x16, depending on the platform,
+run it, and then type
+
+```
+include cc64-main.fth
+saveall cc64
+```
+
+to compile a new cc64 binary, or likewise for cc64pe and peddi. 
+Note that peddi only runs on the C64 and C16, not on the X16.

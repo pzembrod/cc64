@@ -16,16 +16,16 @@
 
 \ parser: tools                22feb91pz
 
-: comes? ( word wordtype -- flag )
+: comes? ( tokenvalue token -- flag )
     nextword dnegate d+ or
     IF backword false ELSE true THEN ;
 
-: comes-a? ( wordtype -- word true )
-             ( wordtype -- false )
+: comes-a? ( token -- tokenvalue true )
+           ( token -- false )
     nextword rot = dup not
     IF nip backword THEN ;
 
-: expect ( word wordtype -- )
+: expect ( tokenvalue token -- )
     2dup comes?
        IF 2drop
        ELSE *expected* error word.
@@ -676,7 +676,7 @@ create id-buf /id 1+ allot
 
 
 : [parameters]) ( -- )
-     tos-offs off
+     dyn-reset
      ascii ) #char# comes? not
         IF BEGIN #id# comes-a?
            IF putlocal
@@ -862,7 +862,6 @@ do$: init$ ( type -- values )
         ELSE </=> #oper# comes? THEN ;
 
 : define-extern ( type -- )
-     %extern isn't? *???* ?error
      function? IF unnestlocal THEN
      constant-expression swap
      id-buf putglobal  2! ;

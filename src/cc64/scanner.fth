@@ -102,7 +102,7 @@
      BEGIN +char char>
      alphanum? 0= UNTIL ;
 
-|| : id ( -- word type )
+|| : id ( -- tokenvalue token )
      get-id  id-buf keyword?
         IF #keyword#
         ELSE id-buf #id# THEN ;
@@ -140,14 +140,14 @@
 
 \   scanner:                   08oct90pz
 
-|| : operator?  ( c -- token t/ -- f )
+|| : operator?  ( c -- tokenvalue t/ -- f )
      operator-list count 0
      DO 2dup I + c@ =
        IF 2drop  +char
        I true UNLOOP exit THEN
      LOOP  2drop false ;
 
-|| : th-char ( token1 n -- token2 )
+|| : th-char ( tokenvalue1 n -- tokenvalue2 )
      operator-list swap 1
         DO count + LOOP count rot
         DO dup I + c@  dup  bl =
@@ -158,7 +158,7 @@
            I UNLOOP exit THEN
         LOOP  *compiler* fatal ;
 
-|| : operator ( token1 -- token2 #op# )
+|| : operator ( tokenvalue1 -- tokenvalue2 #op# )
      2 th-char  3 th-char  #oper# ;
 
 
@@ -223,7 +223,7 @@
 || 256 constant none
 
 || : \char ( -- c )
-     char> 0= IF newline none exit THEN
+     char> 0= IF nextline none exit THEN
      \list count bounds
      DO I c@ char> =
         IF +char I \list c@ + c@
@@ -293,11 +293,11 @@
      $pending on  0 #string# ;
 
 
-|| : (nextword ( -- word type )
+|| : (nextword ( -- tokenvalue token )
      $pending @  *compiler* ?fatal
      BEGIN
       BEGIN skipblanks  char> 0=
-      eof @ 0= and WHILE newline REPEAT
+      eof @ 0= and WHILE nextline REPEAT
      eof @ #eof = IF #eof#  exit THEN
      char> alpha? IF id exit THEN
      char> num?   IF number exit THEN
@@ -330,7 +330,7 @@
            IF st @ 1 = IF st off
                        ELSE 2 st ! THEN
            ELSE 2 st ! 0=
-              IF newline THEN THEN THEN
+              IF nextline THEN THEN THEN
      st @ 0= UNTIL ;
 
 
@@ -342,7 +342,7 @@
 || variable back
 || variable word#
 
-~ : nextword ( -- word type )
+~ : nextword ( -- tokenvalue token )
      back @ back off  IF word' 2@ ELSE
       BEGIN (nextword is-comment? WHILE
       2drop skip-comment REPEAT
@@ -387,4 +387,4 @@
                               exit THEN
   #string#  case? IF ." string @ " u.
                               exit THEN
-  ." word t:" . ." n:" . ;
+  ." token/val:" . . ;

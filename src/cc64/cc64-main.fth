@@ -16,16 +16,12 @@
   (16 include notmpheap.fth C)
   (CX include x16tmpheap.fth C)
 
-  onlyforth  decimal  cr
+  onlyforth  decimal
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
-  include util-words.fth  \ unloop strcmp doer-make
+  include util-words.fth
   cr
-  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
-  | : 2!  ( d adr --)  under !  2+ ! ;
-  \ include 2words.fth  \ 2@ 2!
-  cr
-  vocabulary compiler
+~ vocabulary compiler
   compiler also definitions
 
   include init.fth
@@ -61,12 +57,11 @@
   (CX include x16edit.fth  C)
   onlyforth compiler also definitions
   include v-assembler.fth
-  \ tmpclear
-
   include codegen.fth
   include parser.fth
   include p2write-decl.fth
   tmpclear
+
   include pass2.fth
   include invoke.fth
   \ words

@@ -12,7 +12,7 @@ logfile="${cbmfiles}/peddi.log"
 rm -f "${cbmfiles}/peddi"
 rm -f "${logfile}"
 
-keybuf="include peddi-main.fth\nsaveall peddi\ndos s0:notdone\n"
+keybuf="include peddi-main.fth\nsaveall peddi\ndos s0:notdone"
 
 export OUTFILES="peddi peddi.log"
 "${emulatordir}/run-in-${platform}emu.sh" "vf-build-base" "${keybuf}"

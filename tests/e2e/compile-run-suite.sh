@@ -10,10 +10,11 @@ IFS=_ read host target <<< "${host_target}"
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-basedir="$(realpath --relative-to="$PWD" "${testdir}/..")"
+source "${testdir}/basedir.sh"
 hostfiles="${testdir}/${host}files"
 targetfiles="${testdir}/${target}files"
 
+test -d "${hostfiles}"   || mkdir "${hostfiles}"
 test -d "${targetfiles}" || mkdir "${targetfiles}"
 
 tests=$(echo *-test.c| sed 's/-test\.c//g')
@@ -36,7 +37,7 @@ goldens=*.golden
 ) | tee suite-generated.c | ascii2petscii - "${hostfiles}/suite.c"
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
 CC64HOST="${host}" OUTFILES=suite \
-  ./compile-in-emu.sh "cc suite.c\ndos s0:notdone\n" "$cc64"
+  ./compile-in-emu.sh "cc suite.c\ndos s0:notdone" "$cc64"
 
 if [ "${hostfiles}" != "${targetfiles}" ]
 then
@@ -50,7 +51,7 @@ bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 rm -f suite.joined-golden suite.joined-silver
 touch suite.joined-golden suite.joined-silver
 for t in $tests; do
-  echo "${t}-test:" >> suite.joined-golden  
+  echo "${t}-test:" >> suite.joined-golden
   cat ${t}.golden >> suite.joined-golden
   # joined-silver doesn't contain test sections, so diffing against it
   # will highlight the test sections as well as actuall output diffs.
@@ -60,12 +61,15 @@ done
 suitename="${cc64}-suite-${host_target}"
 # Run test binary
 rm -f "${targetfiles}/suite.out" "${suitename}.out"
-CC64TARGET="${target}" ./test-in-emu.sh suite
+CC64TARGET="${target}" ./run-in-emu.sh suite
 petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"
 
 # Evaluate test output
+rm -f "${suitename}.result"
+set +e
 diff suite.joined-golden "${suitename}.out"
 result=$?
+set -e
 test $result -eq 0 \
   && echo "${suitename} PASS" > "${suitename}.result" \
   || diff suite.joined-silver "${suitename}.out" > "${suitename}.result"

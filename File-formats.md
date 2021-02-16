@@ -115,6 +115,11 @@ is accomplished with a trick: The VICE wrapper scripts place a file named
 So the build and test scripts inside VICE can signal they're done by
 scratching the file "notdone".
 
+One hidden control variable: If the environment variable $KEEPEMU is set to
+something non-empty, then the scripts will not sent the final CR after the
+command to scratch the "notdone" file, thus keeping the emulator open for
+interactive debugging.
+
 
 ## x16emu
 

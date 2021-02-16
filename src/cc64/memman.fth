@@ -31,13 +31,13 @@
 (CX           1000  , 1000  , 8192 , C)
               0 , 0 , 0 , 0 , 0 ,
 
-  ' limit alias himem
+~  ' limit alias himem
 
 || : #links        cc64mem @ ;
 ~  : #globals      cc64mem 2+ @ ;
 || : symtabsize    cc64mem 4 + @ ;
 || : codesize      cc64mem 6 + @ ;
-   : lomem          r0 @ ;
+~  : lomem          r0 @ ;
 
 ~ 6 constant /link   \ listenknoten
 

@@ -7,11 +7,11 @@ testbinary="${1}"
 test -n "${testbinary}" || exit 1
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-basedir="$(realpath --relative-to="$PWD" "${testdir}/..")"
+source "${testdir}/basedir.sh"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 targetfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64TARGET}files")"
 
-keybuf='open1,8,15,"s0:notdone":close1\n'
+keybuf='open1,8,15,"s0:notdone":close1'
 
 export OUTFILES="${testbinary}.out"
 export CBMFILES="${targetfiles}"

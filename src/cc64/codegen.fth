@@ -244,15 +244,15 @@ variable vector
 \   codegen: primary           27may91pz
 
 : do-call ( obj2 args -- obj3 )
-     dyn-allot tos-offs @ - 2/ >r
+     dyn-allot dyn-offs - 2/ >r
      %constant isn't?
      IF .sta-zp ELSE require-accu THEN
-     tos-offs @ .link#
+     dyn-offs .link#
      r> .args
      %constant is?
         IF over .jsr
         ELSE .jsr(zp) THEN
-     tos-offs @ negate .link#
+     dyn-offs negate .link#
      %constant %function + clr ;
 
 

@@ -16,10 +16,13 @@ keybuf=""
 warp=""
 if [ -n "$2" ]
 then
-  # keybuf="$1"
-  keybuf="${2}dos s0:notdone\n"
+  keybuf="${2}dos s0:notdone"
   warp="-warp"
   ascii2petscii "${testdir}/notdone" "${cbmfiles}/notdone"
+  # Magic env variable KEEPEMU: Only if not set, send in the final CR.
+  if [ -z "${KEEPEMU}" ]; then
+    keybuf="${keybuf}\n"
+  fi
 fi
 
 if [ -n "$1" ]
@@ -33,7 +36,7 @@ ${emulator} \
   -drive8type 1541 \
   -fs8 "${cbmfiles}" \
   -autostart "${autostartdir}/${peddi}.T64" \
-  -keybuf "$keybuf" \
+  -keybuf "${keybuf}" \
   $warp \
   &
 

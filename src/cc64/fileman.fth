@@ -33,8 +33,8 @@
 ~ create code-name    ," %%code"
 ~ create static-name  ," %%init"
 
-  create dev#  8 c,
-  : dev   ( -- dev )  dev# c@ ;
+~ create dev#  8 c,
+~ : dev   ( -- dev )  dev# c@ ;
 ~ create aux#  8 c,
 ~ : aux   ( -- aux )  aux# c@ ;
 

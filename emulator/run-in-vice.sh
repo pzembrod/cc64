@@ -29,6 +29,10 @@ then
   # The following could also just be a cp.
   ascii2petscii "${emulatordir}/notdone" "${cbmfiles}/notdone"
   warp="-warp"
+  # Magic env variable KEEPEMU: Only if not set, send in the final CR.
+  if [ -z "${KEEPEMU}" ]; then
+    keybuf="${keybuf}\n"
+  fi
 fi
 
 ${emulator} \

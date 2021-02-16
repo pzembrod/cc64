@@ -16,16 +16,12 @@
   (16 include notmpheap.fth C)
   (CX include x16tmpheap.fth C)
 
-  onlyforth  decimal  cr
+  onlyforth  decimal
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
-  include util-words.fth  \ unloop strcmp doer-make
+  include util-words.fth
   cr
-  | : 2@  ( adr -- d)  dup 2+ @ swap @ ;
-  | : 2!  ( d adr --)  under !  2+ ! ;
-  \ include 2words.fth  \ 2@ 2!
-  cr
-  vocabulary compiler
+| vocabulary compiler
   compiler also definitions
 
   include init.fth
@@ -89,17 +85,26 @@
   (64 0 ink-pot !  15  ink-pot 2+ c! C)
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
 
-  save
+\ Carry the 4 temp names needed in peddi over the clear
+\ by placing their XTs on the stack before the clear and
+\ temp aliasing them in reverse order afterwards:
+  compiler
+  ' lomem  \ for text[
+  ' himem  \ for ]text
+  ' dev
+  ' compiler
 
-\ peddi loadscreen for cc64    19apr20pz
+  clear
+
+| alias compiler
 
   onlyforth  decimal
 | vocabulary peddi
   compiler also peddi also definitions
 
-| ' lomem    alias text[
-| ' himem    alias ]text
-| ' dev      alias dev
+| alias dev
+| alias ]text
+| alias text[
 
   onlyforth peddi also definitions
 

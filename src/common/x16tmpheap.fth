@@ -15,9 +15,6 @@
 
  1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> !
 
-~ : mk-tmp-heap  ( size -- )
-    heap dup ]tmpheap ! tmpheap> !  hallot  heap tmpheap[ ! ;
-
 ~ : tmp-hallot  ( size -- addr )
     tmpheap> @ swap -
     dup tmpheap[ @ u< abort" tmp heap overflow"
