@@ -1,5 +1,13 @@
 # cc64 versions
 
+## v0.8.1
+
+v0.8.1 brings fixes for 2 bugs around declaring and exporting symbols for new runtime libraries. Thanks to buzzphp for finding and reporting them.
+
+Also following a suggestion from buzzphp, v0.8.1 contains a zip file with cc64's Fourth sources in PETSCII format, plus the VolksForth kernels for C64, C16 and X16, to facilitate recompiling cc64 from source in case the Makefile setup doesn't work, e.g. on emulators under Windows or on real machines.
+
+And finally thi release contains improved testing, namely integration tests for the library symbol export, and the first unit tests for scanner and parser.
+
 ## v0.8.0.1
 
 No code changes, just a small update to COPYING, and COPYING is added
