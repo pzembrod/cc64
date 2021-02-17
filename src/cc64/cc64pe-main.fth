@@ -7,6 +7,9 @@
 \log include logtofile.fth
 \log logopen" cc64pe.log"
 
+\ no profiling:
+| ' \ alias \prof
+
 | ' |     alias ~
 | ' |on   alias ~on
 | ' |off  alias ~off

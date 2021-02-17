@@ -47,7 +47,9 @@
 forth definitions
 
   : cc  ( -- )
-     clearstack  init
+     clearstack
+     \prof (64 reset-50ms-timer read-50ms-timer C)
+     init
      bl word   dup c@ 0= ?usage
      dup exe-name strcpy
          source-name strcpy
@@ -62,7 +64,10 @@ forth definitions
         IF ." error(s) occured" cr
         close-files scratchfiles exit
         THEN
+     \prof (64 dup read-50ms-timer - ms. cr C)
      ." pass 2:" cr
      pass2  cr
      ." compilation done" cr
-     scratchfiles ;
+     scratchfiles
+     \prof (64 read-50ms-timer - ms. cr C)
+     ;
