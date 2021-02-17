@@ -210,6 +210,10 @@ veryclean: clean
 	rm -f autostart-c64/*.T64 autostart-c16/*.T64
 	rm -f runtime/*
 
+# Convenience rule for interactive debugging/developing:
+# Provide all Forth sources in c64files/ in PETSCII format.
+petscii64: $(cc64srcs_c64) $(peddisrcs_c64)
+
 
 test64: autostart-c64/cc64.T64
 	$(MAKE) -C tests/e2e fasttests64
