@@ -24,7 +24,7 @@ echo "char *name(){ return \"${testname}.out,s,w\"; } test(){ ${testname}_test (
  | ascii2petscii - "${hostfiles}/${testname}.c"
 rm -f "${hostfiles}/${testname}" "${targetfiles}/${testname}.T64"
 CC64HOST="${host}" OUTFILES="${testname}" \
-  ./compile-in-emu.sh "cc ${testname}.c\ndos s0:notdone"
+  ./compile-in-emu.sh "${testname}"
 
 if [ "${hostfiles}" != "${targetfiles}" ]
 then

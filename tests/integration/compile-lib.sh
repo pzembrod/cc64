@@ -18,7 +18,7 @@ test -d "${hostfiles}" || mkdir "${hostfiles}"
 rm -f "${hostfiles}/${testname}"*
 ascii2petscii "${testname}.c" "${hostfiles}/${testname}.c"
 CC64HOST="${host}" OUTFILES="${testname}.h" \
-  ./compile-in-emu.sh "cc ${testname}.c\ndos s0:notdone"
+  ./compile-in-emu.sh "${testname}"
 
 petscii2ascii "${hostfiles}/${testname}.h" "${testname}.h.out"
 

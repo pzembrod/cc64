@@ -37,7 +37,7 @@ goldens=*.golden
 ) | tee suite-generated.c | ascii2petscii - "${hostfiles}/suite.c"
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
 CC64HOST="${host}" OUTFILES=suite \
-  ./compile-in-emu.sh "cc suite.c\ndos s0:notdone" "$cc64"
+  ./compile-in-emu.sh "suite" "$cc64"
 
 if [ "${hostfiles}" != "${targetfiles}" ]
 then
