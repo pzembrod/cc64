@@ -1,29 +1,35 @@
 
 || $dd00 >label CIA
+|| CIA 4 + >label timerAlo
+|| CIA 5 + >label timerAhi
+|| CIA 6 + >label timerBlo
+|| CIA 7 + >label timerBhi
+|| CIA $e + >label timerActrl
+|| CIA $f + >label timerBctrl
 
 ~ Code reset-32bit-timer  ( -- )
-    $ff # lda  CIA 4 + sta  CIA 5 + sta  CIA 6 + sta  CIA 7 + sta
-    %11011001 # lda  CIA $f + sta
-    %10010001 # lda  CIA $e + sta
+    $ff # lda  timerAlo sta  timerAhi sta  timerBlo sta  timerBhi sta
+    %11011001 # lda  timerBctrl sta
+    %10010001 # lda  timerActrl sta
     Next jmp  end-code
 
 ~ Code read-32bit-timer  ( -- ud )
-    CIA $e + lda  pha  $fe and  CIA $e + sta
-    SP 2dec  CIA 4 + lda  SP x) sta  CIA 5 + lda  SP )y sta
-    SP 2dec  CIA 6 + lda  SP x) sta  CIA 7 + lda  SP )y sta
-    pla  CIA $e + sta  Next jmp  end-code
+    timerActrl lda  pha  $fe and  timerActrl sta
+    SP 2dec  timerAlo lda  SP x) sta  timerAhi lda  SP )y sta
+    SP 2dec  timerBlo lda  SP x) sta  timerBhi lda  SP )y sta
+    pla  timerActrl sta  Next jmp  end-code
 
 ~ Code reset-50ms-timer  ( -- )
     \ $c06e / 985248 Hz ( PAL C64 phi2 ) = 0.050 sec
-    $6e # lda  CIA 4 + sta  $c0 # lda  CIA 5 + sta
-    $ff # lda  CIA 6 + sta  CIA 7 + sta
-    %11011001 # lda  CIA $f + sta
-    %10010001 # lda  CIA $e + sta
+    $6e # lda  timerAlo sta  $c0 # lda  timerAhi sta
+    $ff # lda  timerBlo sta  timerBhi sta
+    %11011001 # lda  timerBctrl sta
+    %10010001 # lda  timerActrl sta
     Next jmp  end-code
 
 ~ Code read-50ms-timer  ( -- u )
-    CIA $e + lda  tax  $fe and  CIA $e + sta
-    CIA 6 + lda  pha  CIA 7 + lda  CIA $e + stx
+    timerActrl lda  tax  $fe and  timerActrl sta
+    timerBlo lda  pha  timerBhi lda  timerActrl stx
     Push jmp  end-code
 
 ~ : ms.  ( u -- )

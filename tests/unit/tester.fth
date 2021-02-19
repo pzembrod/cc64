@@ -52,21 +52,22 @@ CREATE ACTUAL-RESULTS 20 CELLS ALLOT
       0 DO ACTUAL-RESULTS I CELLS + ! LOOP \ SAVE THEM
    THEN ;
 
+: .actual-result  ( -- )
+    cr ." Actual result: "  actual-depth @ 0 ?DO
+        actual-results actual-depth @ 1- I - cells + @ u. LOOP ;
+
 : }T      \ ( ... -- ) COMPARE STACK (EXPECTED) CONTENTS WITH SAVED
       \ (ACTUAL) CONTENTS.
    DEPTH ACTUAL-DEPTH @ = IF      \ IF DEPTHS MATCH
       DEPTH ?DUP IF         \ IF THERE IS SOMETHING ON THE STACK
          0  DO            \ FOR EACH STACK ITEM
            ACTUAL-RESULTS I CELLS + @   \ COMPARE ACTUAL WITH EXPECTED
-           = 0= IF S" INCORRECT RESULT: " ERROR
-                cr ." Actual result: "
-                0 ACTUAL-DEPTH @ 1- ?DO
-                    actual-results I cells + @ u. -1 +LOOP
+           = 0= IF S" INCORRECT RESULT: " ERROR .actual-result
                 LEAVE THEN
          LOOP
       THEN
    ELSE               \ DEPTH MISMATCH
-      S" WRONG NUMBER OF RESULTS: " ERROR
+      S" WRONG NUMBER OF RESULTS: " ERROR .actual-result
    THEN ;
 
 : TESTING   \ ( -- ) TALKING COMMENT.
