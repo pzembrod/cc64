@@ -23,3 +23,14 @@
 ~ : string[] ( tab n -- adr )
      0 ?DO +string ?dup 0= IF void THEN
     LOOP ;
+
+|| variable token
+
+~ : findstr  ( adr table -- false )
+            ( adr table -- token true )
+     token off
+     BEGIN ?dup WHILE
+     2dup >string strcmp
+        IF 2drop token @ true exit THEN
+     +string  1 token +! REPEAT
+     drop false ;

@@ -42,7 +42,7 @@
 
 \   scanner:                   12jan91pz
 
-| stringtab keyword
+|| stringtab keywords
 
 ~ x <auto>     x" auto"
 ~ x <break>    x" break"
@@ -70,20 +70,9 @@
 
 \   scanner:                   18apr94pz
 
-|| variable token
-
-|| : scanword  ( adr table -- false )
-            ( adr table -- token true )
-     token off
-     BEGIN ?dup WHILE
-     2dup >string strcmp
-        IF 2drop token @ true exit THEN
-     +string  1 token +! REPEAT
-     drop false ;
-
 || : keyword?  ( adr -- false )
               ( adr -- token true )
-     keyword  scanword ;
+     keywords  findstr ;
 
 
 \ *** Block No. 40, Hexblock 28
@@ -368,7 +357,7 @@
 \   scanner: word.             03oct90pz
 
 || : keyword. ( n )
-     keyword swap string[]
+     keywords swap string[]
      >string count type ;
 
 || : emit' ( c ) dup bl -

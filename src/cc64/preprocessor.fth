@@ -158,7 +158,7 @@ make preprocess ( -- )
       clearline  exit THEN
    comment-state @ ?exit
    char> ascii # - ?exit  +char
-   cpp-nextword cpp-keywords scanword
+   cpp-nextword cpp-keywords findstr
       IF 2* cpp-commands + perform
       exit THEN
    cpp-error ;
