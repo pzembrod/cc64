@@ -5,8 +5,8 @@ variable prevTime
 variable deltaTime
 variable currentBucket
 
-create bucketsLo    #buckets 2+ allot
-create bucketsHi    #buckets 2+ allot
+create bucketsLo    #buckets 1+ allot
+create bucketsHi    #buckets 1+ allot
 create bucketTimes  #buckets 1+ 4 * allot
 create bucketCounts #buckets 1+ 4 * allot
 
@@ -35,6 +35,11 @@ Assembler also definitions
   bucketTimes 1+ ,x lda  deltaTime 1+ adc  bucketTimes 1+ ,x sta
 ;
 
+: incCountOfBucket
+  bucketCounts 2+ ,x inc 0= ?[ bucketCounts 3+ ,x inc 0= ?[
+     bucketCounts ,x inc 0= ?[ bucketCounts 1+ ,x inc  ]? ]? ]?
+;
+
 Label compareIp
   IP 1+ lda  bucketsHi ,x cmp  0= ?[ IP lda  bucketsLo ,x cmp ]?
   rts
@@ -53,11 +58,6 @@ Label compareIp
     ]?
     currentBucket stx
   ]?
-;
-
-: incCountOfBucket
-  bucketCounts 2+ ,x inc 0= ?[ bucketCounts 3+ ,x inc 0= ?[
-     bucketCounts ,x inc 0= ?[ bucketCounts 1+ ,x inc  ]? ]? ]?
 ;
 
 Label prNext
@@ -79,11 +79,35 @@ Code install-prNext \ installs prNext
  $4C # lda  Next $a + sta  Next jmp
 end-code
 
+Code init-prevTime  setPrevTime  Next jmp end-code
+
 : (profiler-init
-  currentBucket off  ['] forth-83 >lo/hi bucketsHi c! bucketsLo c! ;
+  currentBucket off  init-prevTime
+  bucketTimes  #buckets 1+ 4 * erase
+  bucketCounts #buckets 1+ 4 * erase
+  bucketsLo    #buckets 2+ $f0 fill
+  bucketsHi    #buckets 2+ $f0 fill
+  ['] forth-83 >lo/hi bucketsHi c! bucketsLo c! ;
 
 : profiler-bucket
   currentBucket @ 1+ dup >r currentBucket !
-  here >lo/hi  bucketsHi r@ + c!  bucketsLo r> + c! ;
+  here >lo/hi  bucketsHi r@ + c!  bucketsLo r> + c!
+  0 c, ;
 
-: profiler-init  (profiler-init install-prNext ;
+: profiler-bucket"
+  currentBucket @ 1+ dup >r currentBucket !
+  here >lo/hi  bucketsHi r@ + c!  bucketsLo r> + c!
+  ," ;
+
+: profiler-init  (profiler-init reset-32bit-timer install-prNext ;
+
+: d[].  ( addr I -- ) 2* 2* + 2@  <# # # # # # # # #s #> type bl emit ;
+: bucketaddr  ( I -- addr )
+    bucketsLo over + c@ swap bucketsHi + c@ $100 * + ;
+
+: profiler-report
+    #buckets 1+ 0 DO
+      I .  I bucketaddr u.  bucketCounts I d[].  bucketTimes I d[].
+      I IF I bucketaddr count type THEN
+      cr
+    LOOP ;

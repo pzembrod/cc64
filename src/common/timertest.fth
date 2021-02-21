@@ -23,6 +23,7 @@ Onlyforth  Assembler also definitions
 Onlyforth
   include lowlevel.fth
   include 6526timer.fth
+  include profiler.fth
 
   : test1 reset-32bit-timer ;
   : test2 begin read-32bit-timer cr d. key? until ;

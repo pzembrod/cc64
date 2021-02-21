@@ -27,14 +27,10 @@
 
   include util-words.fth
 
-Onlyforth  Assembler also definitions
+  onlyforth assembler also definitions
   include 6502asm.fth
-Onlyforth
-  include lowlevel.fth
 
-  \ include 6526timer.fth
-
-  assembler also definitions
+  onlyforth assembler also definitions
   variable ip
   create CIA 16 allot
   CIA 4 + constant timerAlo
@@ -43,7 +39,8 @@ Onlyforth
   CIA 7 + constant timerBhi
   CIA $e + constant timerActrl
   CIA $f + constant timerBctrl
-  onlyforth 
+  onlyforth
+  : reset-32bit-timer ;
 
   include profiler.fth
 
@@ -56,9 +53,9 @@ Onlyforth
 
   (profiler-init
   variable b-1
-  profiler-bucket
+  profiler-bucket" bucket 1"
   variable b0
-  profiler-bucket
+  profiler-bucket" bucket 2"
   variable b1
   profiler-bucket
   variable b2
@@ -73,18 +70,18 @@ Onlyforth
   profiler-bucket
   variable b7
 
-  decimal
+  hex
 
   T{ ' dup testFindBucket -> $ff }T
   T{ b-1 testFindBucket -> 0 }T
-  T{ b0 testFindBucket -> 4 }T
-  T{ b1 testFindBucket -> 8 }T
-  T{ b2 testFindBucket -> 12 }T
-  T{ b3 testFindBucket -> 16 }T
-  T{ b4 testFindBucket -> 20 }T
-  T{ b5 testFindBucket -> 24 }T
-  T{ b6 testFindBucket -> 28 }T
-  T{ b7 testFindBucket -> 32 }T
+  T{ b0 testFindBucket -> $4 }T
+  T{ b1 testFindBucket -> $8 }T
+  T{ b2 testFindBucket -> $c }T
+  T{ b3 testFindBucket -> $10 }T
+  T{ b4 testFindBucket -> $14 }T
+  T{ b5 testFindBucket -> $18 }T
+  T{ b6 testFindBucket -> $1c }T
+  T{ b7 testFindBucket -> $20 }T
 
   code callCalcTime  calcTime  Next jmp end-code
   $dddd timerBlo !
@@ -96,6 +93,56 @@ Onlyforth
   $1234 timerBlo !
   $abcd timerAlo !
   T{ callSetPrevTime  prevTime 2@ -> $1234abcd. }T
+
+  : fetch-dwords  ( addr n -- d0 d1 ... dn-1 )
+      2* 2* bounds ?DO I 2@ 4 +LOOP ;
+
+  code callAddTimeToBucket ( x -- )
+    sp X) lda  tax  addTimeToBucket  0 # ldx  Pop jmp end-code
+  bucketTimes $24 erase
+  T{ bucketTimes 9 fetch-dwords
+      -> 0. 0. 0. 0. 0. 0. 0. 0. 0. }T
+  $12345678. deltaTime 2!
+  T{ 4 callAddTimeToBucket  bucketTimes 9 fetch-dwords
+      -> 0. $12345678. 0. 0. 0. 0. 0. 0. 0. }T
+  $87654321. deltaTime 2!
+  T{ 4 callAddTimeToBucket  bucketTimes 9 fetch-dwords
+      -> 0. $99999999. 0. 0. 0. 0. 0. 0. 0. }T
+  $00ffffff. deltaTime 2!
+  T{ $10 callAddTimeToBucket  bucketTimes 9 fetch-dwords
+      -> 0. $99999999. 0. 0. $00ffffff. 0. 0. 0. 0. }T
+  $00020305. deltaTime 2!
+  T{ $10 callAddTimeToBucket  bucketTimes 9 fetch-dwords
+      -> 0. $99999999. 0. 0. $01020304. 0. 0. 0. 0. }T
+  1. deltaTime 2!
+  T{ $20 callAddTimeToBucket  bucketTimes 9 fetch-dwords
+      -> 0. $99999999. 0. 0. $01020304. 0. 0. 0. 1. }T
+
+  code callIncCountOfBucket ( x -- )
+    sp X) lda  tax  incCountOfBucket  0 # ldx  Pop jmp end-code
+  bucketCounts $24 erase
+  T{ bucketCounts 9 fetch-dwords
+      -> 0. 0. 0. 0. 0. 0. 0. 0. 0. }T
+  T{ 4 callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 0. 1. 0. 0. 0. 0. 0. 0. 0. }T
+  T{ 4 callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 0. 2. 0. 0. 0. 0. 0. 0. 0. }T
+  T{ $20 callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 0. 2. 0. 0. 0. 0. 0. 0. 1. }T
+  T{ 0 callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 1. 2. 0. 0. 0. 0. 0. 0. 1. }T
+  $ff. bucketCounts 8 + 2!
+  T{ 8 callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 1. 2. $100. 0. 0. 0. 0. 0. 1. }T
+  $ffff. bucketCounts $c + 2!
+  T{ $0c callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 1. 2. $100. $10000. 0. 0. 0. 0. 1. }T
+  $ffffff. bucketCounts $10 + 2!
+  T{ $10 callIncCountOfBucket  bucketCounts 9 fetch-dwords
+      -> 1. 2. $100. $10000. $1000000. 0. 0. 0. 1. }T
+
+  cr .( report) cr
+  profiler-report
 
   cr .( test completed with ) #errors @ . .( errors) cr
 
