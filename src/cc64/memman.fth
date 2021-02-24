@@ -141,8 +141,8 @@
  WHILE  rot drop  REPEAT  2drop ! ;
 
 ~ : relocate  ( stacklen rstacklen -- )
- empty  256 max 8192 min  swap
- 256 max 8192 min  pad + 256 +
+ empty  $100 max $2000 min  swap
+ $100 max $2000 min  pad + $100 +
  2dup + 2+ limit u>
  abort" stacks beyond limit"
  under  +   origin $A + !        \ r0
