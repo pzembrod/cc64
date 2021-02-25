@@ -81,33 +81,30 @@ end-code
 
 Code init-prevTime  setPrevTime  Next jmp end-code
 
-: (profiler-init
+: profiler-init-buckets
   currentBucket off  init-prevTime
-  bucketTimes  #buckets 1+ 4 * erase
-  bucketCounts #buckets 1+ 4 * erase
-  bucketsLo    #buckets 2+ $f0 fill
-  bucketsHi    #buckets 2+ $f0 fill
+  bucketsLo    #buckets 2+ $ff fill
+  bucketsHi    #buckets 2+ $ff fill
   ['] forth-83 >lo/hi bucketsHi c! bucketsLo c! ;
-
-: profiler-bucket
-  currentBucket @ 1+ dup >r currentBucket !
-  here >lo/hi  bucketsHi r@ + c!  bucketsLo r> + c!
-  0 c, ;
 
 : profiler-bucket"
   currentBucket @ 1+ dup >r currentBucket !
   here >lo/hi  bucketsHi r@ + c!  bucketsLo r> + c!
   ," ;
 
-: profiler-init  (profiler-init reset-32bit-timer install-prNext ;
+: profiler-start
+  bucketTimes  #buckets 1+ 4 * erase
+  bucketCounts #buckets 1+ 4 * erase
+  reset-32bit-timer install-prNext ;
 
 : d[].  ( addr I -- ) 2* 2* + 2@  <# # # # # # # # #s #> type bl emit ;
 : bucketaddr  ( I -- addr )
     bucketsLo over + c@ swap bucketsHi + c@ $100 * + ;
 
 : profiler-report
+    end-trace
     #buckets 1+ 0 DO
       I .  I bucketaddr u.  bucketCounts I d[].  bucketTimes I d[].
-      I IF I bucketaddr count type THEN
+      I IF I bucketaddr 1+ IF I bucketaddr count type THEN THEN
       cr
     LOOP ;

@@ -51,24 +51,22 @@
   : testFindBucket ( addr -- x )
      ip !  $ff currentBucket c!  callFindBucket  currentBucket c@ ;
 
-  (profiler-init
+  profiler-init-buckets
   variable b-1
   profiler-bucket" bucket 1"
   variable b0
   profiler-bucket" bucket 2"
   variable b1
-  profiler-bucket
+  profiler-bucket" bucket 3"
   variable b2
-  profiler-bucket
+  profiler-bucket" bucket 4"
   variable b3
-  profiler-bucket
+  profiler-bucket" bucket 5"
   variable b4
-  profiler-bucket
+  profiler-bucket" bucket 6"
   variable b5
-  profiler-bucket
+  profiler-bucket" bucket 7"
   variable b6
-  profiler-bucket
-  variable b7
 
   hex
 
