@@ -48,7 +48,8 @@ forth definitions
 
   : cc  ( -- )
      clearstack
-     \prof (64 reset-50ms-timer read-50ms-timer C)
+     \prof profiler-start
+     \prof read-50ms-timer
      init
      bl word   dup c@ 0= ?usage
      dup exe-name strcpy
@@ -69,5 +70,6 @@ forth definitions
      pass2  cr
      ." compilation done" cr
      scratchfiles
-     \prof (64 read-50ms-timer - ms. cr C)
+     \prof read-50ms-timer - ms. cr
+     \prof profiler-report
      ;

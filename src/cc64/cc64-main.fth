@@ -7,8 +7,8 @@
 \log include logtofile.fth
 \log logopen" cc64.log"
 
-\ with profiling:
-| ' noop alias \prof
+\ with profiling, only on C64:
+| ' \ (64 drop ' noop C) alias \prof
 \ without profiling:
 \ | ' \ alias \prof
 
@@ -25,10 +25,14 @@
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
   include util-words.fth
-  cr
+  \prof include tmp6502asm.fth
+  \prof include 6526timer.fth
+  \prof include profiler.fth
+  \prof profiler-init-buckets
 ~ vocabulary compiler
   compiler also definitions
 
+  \prof profiler-bucket" memory"
   include init.fth
 
   include strtab.fth
@@ -37,6 +41,7 @@
   include memman.fth
   tmpclear
 
+  \prof profiler-bucket" files"
   include fileio.fth
   include fileman.fth
   tmpclear
@@ -45,12 +50,16 @@
   tmpclear
   include rt-ptrs.fth
 
+  \prof profiler-bucket" input"
   include input.fth
+  \prof profiler-bucket" scanner"
   include scanner.fth
+  \prof profiler-bucket" symtab"
   include symboltable.fth
   include preprocessor.fth
   tmpclear
 
+  \prof profiler-bucket" parser"
   include listman.fth
   tmpclear
 
@@ -59,12 +68,12 @@
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   include lowlevel.fth
-  \prof (64 include 6526timer.fth C)
   (CX include x16edit.fth  C)
   onlyforth compiler also definitions
   include v-assembler.fth
   include codegen.fth
   include parser.fth
+  \prof profiler-bucket" pass2"
   include p2write-decl.fth
   tmpclear
 
@@ -72,6 +81,7 @@
   include invoke.fth
   \ words
 
+  \prof profiler-bucket" shell"
   forth definitions
   include savesystem.fth
 
@@ -101,6 +111,7 @@
   s0 @ here - u. .( dictionary bytes to spare post save ) cr
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
+
   cr .( compile successful) cr
 
 \log logclose
