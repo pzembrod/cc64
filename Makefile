@@ -84,10 +84,6 @@ cc64-x16files.zip: $(x16dir_files) COPYING
 	rm -f $@
 	zip -r $@ $^
 
-$(recompile_dir).zip: $(recompile_srcs) $(recompile_forths) COPYING
-	rm -f $@
-	zip -r $@ $^
-
 cc64-c64files.d64: $(c64dir_files) tmp/copying
 	rm -f $@
 	c1541 -format cc64-c64,cc d64 $@
