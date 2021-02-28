@@ -4,9 +4,12 @@
 variable prevTime
 variable deltaTime
 variable currentBucket
+variable currentBucketOpen
 
-create bucketsLo    #buckets 1+ allot
-create bucketsHi    #buckets 1+ allot
+create <buckets[    #buckets 1+ allot
+create >buckets[    #buckets 1+ allot
+create <]buckets    #buckets 1+ allot
+create >]buckets    #buckets 1+ allot
 create bucketTimes  #buckets 1+ 4 * allot
 create bucketCounts #buckets 1+ 4 * allot
 
@@ -41,7 +44,7 @@ Assembler also definitions
 ;
 
 Label compareIp
-  IP 1+ lda  bucketsHi ,x cmp  0= ?[ IP lda  bucketsLo ,x cmp ]?
+  IP 1+ lda  >buckets[ ,x cmp  0= ?[ IP lda  <buckets[ ,x cmp ]?
   rts
 
 : findBucket
@@ -54,6 +57,10 @@ Label compareIp
       compareIp jsr  0<> ?[  CC ?[ dex dex ][ inx inx ]?
       compareIp jsr  0<> ?[  CC ?[ dex     ][ inx     ]?
       compareIp jsr          CC ?[ dex     ]?             ]? ]?
+
+      \ IP 1+ lda  >]buckets ,x cmp  0= ?[ IP lda  <]buckets ,x cmp ]?
+      \   CS ?[ 0 # ldx ]?
+
       txa  .a asl  .a asl  tax
     ]?
     currentBucket stx
@@ -82,14 +89,21 @@ end-code
 Code init-prevTime  setPrevTime  Next jmp end-code
 
 : profiler-init-buckets
-  currentBucket off  init-prevTime
-  bucketsLo    #buckets 2+ $ff fill
-  bucketsHi    #buckets 2+ $ff fill
-  ['] forth-83 >lo/hi bucketsHi c! bucketsLo c! ;
+  currentBucket off  currentBucketOpen off  init-prevTime
+  <buckets[    #buckets 2+ $ff fill
+  >buckets[    #buckets 2+ $ff fill
+  ['] forth-83 >lo/hi >buckets[ c! <buckets[ c! ;
 
-: profiler-bucket"
+: profiler-bucket-end
+  currentBucketOpen @ 0= abort" no-profiler-bucket-open"
+  currentBucket @ >r
+  here >lo/hi  >]buckets r@ + c!  <]buckets r> + c!
+  currentBucketOpen off ;
+
+: profiler-bucket-begin"
+  currentBucketOpen @ IF profiler-bucket-end THEN
   currentBucket @ 1+ dup >r currentBucket !
-  here >lo/hi  bucketsHi r@ + c!  bucketsLo r> + c!
+  here >lo/hi  >buckets[ r@ + c!  <buckets[ r> + c!
   ," ;
 
 : profiler-start
@@ -98,8 +112,9 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   reset-32bit-timer install-prNext ;
 
 : d[].  ( addr I -- ) 2* 2* + 2@  <# # # # # # # # #s #> type bl emit ;
+
 : bucketaddr  ( I -- addr )
-    bucketsLo over + c@ swap bucketsHi + c@ $100 * + ;
+    <buckets[ over + c@ swap >buckets[ + c@ $100 * + ;
 
 : profiler-report
     end-trace

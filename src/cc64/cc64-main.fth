@@ -32,7 +32,7 @@
 ~ vocabulary compiler
   compiler also definitions
 
-  \prof profiler-bucket" memory"
+  \prof profiler-bucket-begin" memory"
   include init.fth
 
   include strtab.fth
@@ -41,7 +41,7 @@
   include memman.fth
   tmpclear
 
-  \prof profiler-bucket" files"
+  \prof profiler-bucket-begin" files"
   include fileio.fth
   include fileman.fth
   tmpclear
@@ -50,16 +50,16 @@
   tmpclear
   include rt-ptrs.fth
 
-  \prof profiler-bucket" input"
+  \prof profiler-bucket-begin" input"
   include input.fth
-  \prof profiler-bucket" scanner"
+  \prof profiler-bucket-begin" scanner"
   include scanner.fth
-  \prof profiler-bucket" symtab"
+  \prof profiler-bucket-begin" symtab"
   include symboltable.fth
   include preprocessor.fth
   tmpclear
 
-  \prof profiler-bucket" parser"
+  \prof profiler-bucket-begin" parser"
   include listman.fth
   tmpclear
 
@@ -73,7 +73,7 @@
   include v-assembler.fth
   include codegen.fth
   include parser.fth
-  \prof profiler-bucket" pass2"
+  \prof profiler-bucket-begin" pass2"
   include p2write-decl.fth
   tmpclear
 
@@ -81,7 +81,7 @@
   include invoke.fth
   \ words
 
-  \prof profiler-bucket" shell"
+  \prof profiler-bucket-begin" shell"
   forth definitions
   include savesystem.fth
 

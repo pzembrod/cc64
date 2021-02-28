@@ -44,6 +44,12 @@
 
   include profiler.fth
 
+  : .blk|tib
+     blk @ ?dup IF  ."  Blk " u. ?cr  exit THEN
+     factive? IF tib #tib @ cr type THEN ;
+
+  \ ' .blk|tib Is .status
+
   Code callFindBucket ( -- )  findBucket  0 # ldx Next jmp end-code
   
   assembler also
@@ -52,34 +58,33 @@
      ip !  $ff currentBucket c!  callFindBucket  currentBucket c@ ;
 
   profiler-init-buckets
-  variable b-1
-  profiler-bucket" bucket 1"
-  variable b0
-  profiler-bucket" bucket 2"
-  variable b1
-  profiler-bucket" bucket 3"
-  variable b2
-  profiler-bucket" bucket 4"
-  variable b3
-  profiler-bucket" bucket 5"
-  variable b4
-  profiler-bucket" bucket 6"
-  variable b5
-  profiler-bucket" bucket 7"
-  variable b6
+  variable bucket-1
+  profiler-bucket-begin" bucket 1"
+  variable bucket0
+  profiler-bucket-begin" bucket 2"
+  variable bucket1
+  profiler-bucket-begin" bucket 3"
+  variable bucket2
+  profiler-bucket-begin" bucket 4"
+  variable bucket3
+  profiler-bucket-begin" bucket 5"
+  variable bucket4
+  profiler-bucket-begin" bucket 6"
+  variable bucket5
+  profiler-bucket-begin" bucket 7"
+  variable bucket6
 
   hex
 
   T{ ' dup testFindBucket -> $ff }T
-  T{ b-1 testFindBucket -> 0 }T
-  T{ b0 testFindBucket -> $4 }T
-  T{ b1 testFindBucket -> $8 }T
-  T{ b2 testFindBucket -> $c }T
-  T{ b3 testFindBucket -> $10 }T
-  T{ b4 testFindBucket -> $14 }T
-  T{ b5 testFindBucket -> $18 }T
-  T{ b6 testFindBucket -> $1c }T
-  T{ b7 testFindBucket -> $20 }T
+  T{ bucket-1 testFindBucket -> 0 }T
+  T{ bucket0 testFindBucket -> $4 }T
+  T{ bucket1 testFindBucket -> $8 }T
+  T{ bucket2 testFindBucket -> $c }T
+  T{ bucket3 testFindBucket -> $10 }T
+  T{ bucket4 testFindBucket -> $14 }T
+  T{ bucket5 testFindBucket -> $18 }T
+  T{ bucket6 testFindBucket -> $1c }T
 
   code callCalcTime  calcTime  Next jmp end-code
   $dddd timerBlo !
