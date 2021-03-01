@@ -16,8 +16,8 @@ Output: alsologtofile
  log-emit log-cr log-type c64del c64page
  c64at c64at? ;
 
-: logopen"
-  ascii " parse  log-dev-2nd@ busopen
+: logopen
+  bl parse  log-dev-2nd@ busopen
   2dup type
   bustype " ,s,w" count bustype busoff
   i/o-status? IF c64cr log-dev c@ dos-error abort THEN

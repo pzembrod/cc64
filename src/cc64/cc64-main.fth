@@ -5,7 +5,7 @@
 \ ' \ alias \log
 
 \log include logtofile.fth
-\log logopen" cc64.log"
+\log logopen cc64.log
 
 \ with profiling, only on C64:
 | ' \ (64 drop ' noop C) alias \prof

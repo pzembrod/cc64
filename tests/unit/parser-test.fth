@@ -5,7 +5,7 @@
 \ ' \ alias \log
 
 \log include logtofile.fth
-\log logopen" parser-test.log"
+\log logopen parser-test.log
 
   ' noop   alias ~
   ' noop  alias ~on

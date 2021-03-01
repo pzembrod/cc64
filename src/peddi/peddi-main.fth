@@ -5,7 +5,7 @@
 \ ' \ alias \log
 
 \log include logtofile.fth
-\log logopen" peddi.log"
+\log logopen peddi.log
 
   onlyforth  decimal
   | ' |     alias ~

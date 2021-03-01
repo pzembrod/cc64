@@ -5,7 +5,7 @@
 \ alias \log
 
 \log include logtofile.fth
-\log logopen" profilertest.log"
+\log logopen profilertest.log
 
   ' noop   alias ~
   ' noop  alias ~on

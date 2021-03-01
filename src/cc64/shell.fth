@@ -60,6 +60,9 @@
    i/o-status? UNTIL busoff
    dev 2 busclose ;
 
+\log : logfile  logopen alsologtofile ;
+
+\log : logclose  display logclose ;
 
 \ *** Block No. 130, Hexblock 82
 

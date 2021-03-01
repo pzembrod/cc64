@@ -5,7 +5,7 @@
 ' \ alias \log
 
 \log include logtofile.fth
-\log logopen" timertest.log"
+\log logopen timertest.log
 
 | ' noop     alias ~
 | ' |on   alias ~on
