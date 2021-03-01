@@ -1,6 +1,6 @@
 
 create log-dev  8 c,
-create log-2nd  2 c,
+create log-2nd  9 c,
 : log-dev-2nd@ log-dev c@ log-2nd c@ ;
 
 : log-emit

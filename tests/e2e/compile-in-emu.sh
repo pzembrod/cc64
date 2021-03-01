@@ -13,7 +13,8 @@ source "${testdir}/basedir.sh"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 hostfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64HOST}files")"
 
-keybuf="cc ${testname}.c\ndos s0:notdone"
+rm -f "${hostfiles}/${testname}.log"
+keybuf="logfile ${testname}.log\ncc ${testname}.c\nlogclose\ndos s0:notdone"
 
 export CBMFILES="${hostfiles}"
 "${emulatordir}/run-in-${CC64HOST}emu.sh" "${cc64}" "${keybuf}"
