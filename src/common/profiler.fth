@@ -58,8 +58,8 @@ Label compareIp
       compareIp jsr  0<> ?[  CC ?[ dex     ][ inx     ]?
       compareIp jsr          CC ?[ dex     ]?             ]? ]?
 
-      \ IP 1+ lda  >]buckets ,x cmp  0= ?[ IP lda  <]buckets ,x cmp ]?
-      \   CS ?[ 0 # ldx ]?
+      IP 1+ lda  >]buckets ,x cmp  0= ?[ IP lda  <]buckets ,x cmp ]?
+        CS ?[ 0 # ldx ]?
 
       txa  .a asl  .a asl  tax
     ]?
@@ -104,7 +104,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   currentBucketOpen @ IF profiler-bucket-end THEN
   currentBucket @ 1+ dup >r currentBucket !
   here >lo/hi  >buckets[ r@ + c!  <buckets[ r> + c!
-  ," ;
+  currentBucketOpen on  ," ;
 
 : profiler-start
   bucketTimes  #buckets 1+ 4 * erase

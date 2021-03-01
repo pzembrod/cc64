@@ -62,7 +62,9 @@
   profiler-bucket-begin" bucket 1"
   variable bucket0
   profiler-bucket-begin" bucket 2"
-  variable bucket1
+  variable bucket1a
+  profiler-bucket-end
+  variable bucket1b
   profiler-bucket-begin" bucket 3"
   variable bucket2
   profiler-bucket-begin" bucket 4"
@@ -79,7 +81,8 @@
   T{ ' dup testFindBucket -> $ff }T
   T{ bucket-1 testFindBucket -> 0 }T
   T{ bucket0 testFindBucket -> $4 }T
-  T{ bucket1 testFindBucket -> $8 }T
+  T{ bucket1a testFindBucket -> $8 }T
+  T{ bucket1b testFindBucket -> 0 }T
   T{ bucket2 testFindBucket -> $c }T
   T{ bucket3 testFindBucket -> $10 }T
   T{ bucket4 testFindBucket -> $14 }T
