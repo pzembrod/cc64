@@ -65,6 +65,7 @@
 \log : logclose  display logclose ;
 
 : list!  ( flag -- )  listing ! ;
+: list?  ( -- )  listing @ . ;
 
 \ *** Block No. 130, Hexblock 82
 

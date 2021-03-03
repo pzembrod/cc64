@@ -186,6 +186,14 @@ be reloaded freshly from disk, and the stack sizes set to higher values.
 - - saves the complete compiler together with its actual memory settings to a
 new file _name_
 
+### Misc commands
+
+- `1 list!`
+- `0 list!`
+- - switches listing the C source while compiling on respectively off. Default is off. Listing can cause ~25% increase in pass1 compile time.
+- `list?`
+- - shows whether listing is currently on or off.
+
 
 ## Peddi
 
