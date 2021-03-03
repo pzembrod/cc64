@@ -12,6 +12,9 @@
 \ without profiling:
 \ | ' \ alias \prof
 
+\prof ' \ alias \prof1
+\prof ' noop alias \prof2
+
 | ' |     alias ~
 | ' |on   alias ~on
 | ' |off  alias ~off
@@ -32,7 +35,7 @@
 ~ vocabulary compiler
   compiler also definitions
 
-  \prof profiler-bucket-begin" memory"
+  \prof1 profiler-bucket-begin" memory"
   include init.fth
 
   include strtab.fth
@@ -41,7 +44,7 @@
   include memman.fth
   tmpclear
 
-  \prof profiler-bucket-begin" files"
+  \prof1 profiler-bucket-begin" files"
   include fileio.fth
   include fileman.fth
   tmpclear
@@ -50,16 +53,16 @@
   tmpclear
   include rt-ptrs.fth
 
-  \prof profiler-bucket-begin" input"
+  \prof1 profiler-bucket-begin" input"
   include input.fth
-  \prof profiler-bucket-begin" scanner"
+  \prof1 profiler-bucket-begin" scanner"
   include scanner.fth
-  \prof profiler-bucket-begin" symtab"
+  \prof1 profiler-bucket-begin" symtab"
   include symboltable.fth
   include preprocessor.fth
   tmpclear
 
-  \prof profiler-bucket-begin" parser"
+  \prof1 profiler-bucket-begin" parser"
   include listman.fth
   tmpclear
 
@@ -73,7 +76,7 @@
   include v-assembler.fth
   include codegen.fth
   include parser.fth
-  \prof profiler-bucket-begin" pass2"
+  \prof1 profiler-bucket-begin" pass2"
   include p2write-decl.fth
   tmpclear
 
@@ -81,7 +84,7 @@
   include invoke.fth
   \ words
 
-  \prof profiler-bucket-begin" shell"
+  \prof1 profiler-bucket-begin" shell"
   forth definitions
   include savesystem.fth
 

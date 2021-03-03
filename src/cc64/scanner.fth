@@ -14,6 +14,8 @@
 
 \   scanner:                   26feb91pz
 
+\prof2 profiler-bucket-begin" alpha"
+
 || : alpha?  ( c -- flag )
     dup  ascii a ascii [ uwithin
     over ascii A ascii { uwithin or  \ }
@@ -28,6 +30,8 @@
 || : skipblanks  ( -- )
      BEGIN char> bl = WHILE
      +char REPEAT ;
+
+\prof2 profiler-bucket-begin" keyword?"
 
 ~ 0 constant #char#
 ~ 1 constant #id#
@@ -79,6 +83,8 @@
 
 \   scanner:                   18apr94pz
 
+\prof2 profiler-bucket-begin" id"
+
 || create id-buf  /id 1+ allot
 
 || : get-id ( -- )
@@ -100,6 +106,8 @@
 \ *** Block No. 41, Hexblock 29
 
 \   scanner:                   08oct90pz
+
+\prof2 profiler-bucket-begin" op"
 
 || create operator-list
  ," +++---**///%%&&&|||^^!!==<<<<>>>>~"
@@ -150,6 +158,7 @@
 || : operator ( tokenvalue1 -- tokenvalue2 #op# )
      2 th-char  3 th-char  #oper# ;
 
+\prof2 profiler-bucket-begin" num"
 
 \ *** Block No. 43, Hexblock 2b
 
@@ -189,6 +198,7 @@
                   ELSE octnum THEN
         ELSE deznum THEN #number# ;
 
+\prof2 profiler-bucket-begin" char/string"
 
 || create charlist ," ()[]{},;:"
 
@@ -281,6 +291,7 @@
 || : string ( -- ??? #string# )
      $pending on  0 #string# ;
 
+\prof2 profiler-bucket-begin" nextword"
 
 || : (nextword ( -- tokenvalue token )
      $pending @  *compiler* ?fatal
@@ -304,6 +315,8 @@
 
 \   scanner:                   09oct90pz
 
+\prof2 profiler-bucket-begin" comment"
+
 || : is-comment? ( w t -- w t flag )
      2dup <comment> #oper# dnegate d+
      or 0= ;
@@ -326,6 +339,8 @@
 \ *** Block No. 50, Hexblock 32
 
 \   scanner:                   11mar91pz
+
+\prof2 profiler-bucket-end
 
 || create word'  4 allot
 || variable back
@@ -377,3 +392,6 @@
   #string#  case? IF ." string @ " u.
                               exit THEN
   ." token/val:" . . ;
+
+\ prof2 profiler-bucket-end
+
