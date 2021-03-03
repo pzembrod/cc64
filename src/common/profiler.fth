@@ -111,15 +111,16 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   bucketCounts #buckets 1+ 4 * erase
   reset-32bit-timer install-prNext ;
 
-: d[].  ( addr I -- ) 2* 2* + 2@  <# # # # # # # # #s #> type bl emit ;
+: d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 
 : bucketaddr  ( I -- addr )
     <buckets[ over + c@ swap >buckets[ + c@ $100 * + ;
 
 : profiler-report
     end-trace
+    ." b# addr   nextcounts  clockticks  name" cr
     #buckets 1+ 0 DO
       I .  I bucketaddr u.  bucketCounts I d[].  bucketTimes I d[].
-      I IF I bucketaddr 1+ IF I bucketaddr count type THEN THEN
+      I IF I bucketaddr 1+ IF ."   " I bucketaddr count type THEN THEN
       cr
     LOOP ;
