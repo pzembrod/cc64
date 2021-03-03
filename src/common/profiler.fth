@@ -1,8 +1,8 @@
 
 8 constant #buckets
 
-variable prevTime
-variable deltaTime
+create prevTime  4 allot
+create deltaTime 4 allot
 variable currentBucket
 variable currentBucketOpen
 
@@ -109,7 +109,8 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 : profiler-start
   bucketTimes  #buckets 1+ 4 * erase
   bucketCounts #buckets 1+ 4 * erase
-  reset-32bit-timer install-prNext ;
+  reset-32bit-timer  prevTime 4 erase
+  install-prNext ;
 
 : d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 
@@ -121,6 +122,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
     ." b# addr   nextcounts  clockticks  name" cr
     #buckets 1+ 0 DO
       I .  I bucketaddr u.  bucketCounts I d[].  bucketTimes I d[].
-      I IF I bucketaddr 1+ IF ."   " I bucketaddr count type THEN THEN
+      I IF I bucketaddr 1+ IF ."   " I bucketaddr count type THEN
+      ELSE ."   (etc)" THEN
       cr
     LOOP ;
