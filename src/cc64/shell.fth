@@ -64,6 +64,8 @@
 
 \log : logclose  display logclose ;
 
+: list!  ( flag -- )  listing ! ;
+
 \ *** Block No. 130, Hexblock 82
 
 \   shell                      20sep94pz
