@@ -92,19 +92,19 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   currentBucket off  currentBucketOpen off  init-prevTime
   <buckets[    #buckets 2+ $ff fill
   >buckets[    #buckets 2+ $ff fill
+  <]buckets    #buckets 2+ $ff fill
+  >]buckets    #buckets 2+ $ff fill
   ['] forth-83 >lo/hi >buckets[ c! <buckets[ c! ;
 
-: profiler-bucket-end
-  currentBucketOpen @ 0= abort" no-profiler-bucket-open"
-  currentBucket @ >r
-  here >lo/hi  >]buckets r@ + c!  <]buckets r> + c!
-  currentBucketOpen off ;
+: profiler-bucket
+  create  last @ ,  0 , ;
 
-: profiler-bucket-begin"
-  currentBucketOpen @ IF profiler-bucket-end THEN
-  currentBucket @ 1+ dup >r currentBucket !
-  here >lo/hi  >buckets[ r@ + c!  <buckets[ r> + c!
-  currentBucketOpen on  ," ;
+: end-bucket  ( bucket -- )  here swap 2+ ! ;
+
+: measure-bucket  ( bucket -- )
+  currentBucket @ 1+ dup >r currentBucket ! \ check for #buckets
+  dup @ >lo/hi  >buckets[ r@ + c!  <buckets[ r@ + c!
+  2+  @ >lo/hi  >]buckets r@ + c!  <]buckets r> + c! ;
 
 : profiler-start
   bucketTimes  #buckets 1+ 4 * erase
@@ -114,15 +114,19 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 
 : d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 
-: bucketaddr  ( I -- addr )
+: bucket[  ( I -- addr )
     <buckets[ over + c@ swap >buckets[ + c@ $100 * + ;
+
+: ]bucket  ( I -- addr )
+    <]buckets over + c@ swap >]buckets + c@ $100 * + ;
 
 : profiler-report
     end-trace
-    ." b# addr   nextcounts  clockticks  name" cr
+    ." b# addr[  ]addr  nextcounts  clockticks  name" cr
     #buckets 1+ 0 DO
-      I .  I bucketaddr u.  bucketCounts I d[].  bucketTimes I d[].
-      I IF I bucketaddr 1+ IF ."   " I bucketaddr count type THEN
+      I .  I bucket[ u.  I ]bucket u.
+      bucketCounts I d[].  bucketTimes I d[].
+      I IF I bucket[ 1+ IF ."   " I bucket[ count $1f and type THEN
       ELSE ."   (etc)" THEN
       cr
     LOOP ;

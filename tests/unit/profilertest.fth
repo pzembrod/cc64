@@ -57,37 +57,53 @@
   : testFindBucket ( addr -- x )
      ip !  $ff currentBucket c!  callFindBucket  currentBucket c@ ;
 
-  profiler-init-buckets
-  variable bucket-1
-  profiler-bucket-begin" bucket 1"
-  variable bucket0
-  profiler-bucket-begin" bucket 2"
-  variable bucket1a
-  profiler-bucket-end
-  variable bucket1b
-  profiler-bucket-begin" bucket 3"
-  variable bucket2
-  profiler-bucket-begin" bucket 4"
-  variable bucket3
-  profiler-bucket-begin" bucket 5"
-  variable bucket4
-  profiler-bucket-begin" bucket 6"
-  variable bucket5
-  profiler-bucket-begin" bucket 7"
-  variable bucket6
-
   hex
 
+  profiler-init-buckets
+  variable var-bucket-1
+  profiler-bucket number-1
+  variable var-bucket0
+  number-1 end-bucket
+  profiler-bucket number-2
+  variable var-bucket1a
+  number-2 end-bucket
+  variable var1
+  variable var-bucket1b
+  profiler-bucket number-3
+  variable var-bucket2
+  number-3 end-bucket
+  profiler-bucket number-4
+  variable var-bucket3
+  number-4 end-bucket
+  profiler-bucket number-5
+  variable var-bucket4
+  number-5 end-bucket
+  profiler-bucket number-6
+  variable var-bucket5
+  number-6 end-bucket
+  profiler-bucket number-7
+  variable var-bucket6
+  number-7 end-bucket
+
+  profiler-init-buckets
+  number-1 measure-bucket
+  number-2 measure-bucket
+  number-3 measure-bucket
+  number-4 measure-bucket
+  number-5 measure-bucket
+  number-6 measure-bucket
+  number-7 measure-bucket
+
   T{ ' dup testFindBucket -> $ff }T
-  T{ bucket-1 testFindBucket -> 0 }T
-  T{ bucket0 testFindBucket -> $4 }T
-  T{ bucket1a testFindBucket -> $8 }T
-  T{ bucket1b testFindBucket -> 0 }T
-  T{ bucket2 testFindBucket -> $c }T
-  T{ bucket3 testFindBucket -> $10 }T
-  T{ bucket4 testFindBucket -> $14 }T
-  T{ bucket5 testFindBucket -> $18 }T
-  T{ bucket6 testFindBucket -> $1c }T
+  T{ var-bucket-1 testFindBucket -> 0 }T
+  T{ var-bucket0 testFindBucket -> $4 }T
+  T{ var-bucket1a testFindBucket -> $8 }T
+  T{ var-bucket1b testFindBucket -> 0 }T
+  T{ var-bucket2 testFindBucket -> $c }T
+  T{ var-bucket3 testFindBucket -> $10 }T
+  T{ var-bucket4 testFindBucket -> $14 }T
+  T{ var-bucket5 testFindBucket -> $18 }T
+  T{ var-bucket6 testFindBucket -> $1c }T
 
   code callCalcTime  calcTime  Next jmp end-code
   $dddd timerBlo !
