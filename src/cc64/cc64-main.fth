@@ -12,8 +12,6 @@
 \ without profiling:
 \ | ' \ alias \prof
 
-\prof ' \ alias \prof1
-
 | ' |     alias ~
 | ' |on   alias ~on
 | ' |off  alias ~off
@@ -34,7 +32,7 @@
 ~ vocabulary compiler
   compiler also definitions
 
-  \prof1 profiler-bucket-begin" memory"
+  \prof profiler-bucket [memman-etc]
   include init.fth
 
   include strtab.fth
@@ -42,8 +40,9 @@
   include errorhandler.fth
   include memman.fth
   tmpclear
+  \prof [memman-etc] end-bucket
 
-  \prof1 profiler-bucket-begin" files"
+  \prof profiler-bucket [file-handling]
   include fileio.fth
   include fileman.fth
   tmpclear
@@ -51,17 +50,21 @@
   include codehandler.fth
   tmpclear
   include rt-ptrs.fth
+  \prof [file-handling] end-bucket
 
-  \prof1 profiler-bucket-begin" input"
+  \prof profiler-bucket [input]
   include input.fth
-  \prof1 profiler-bucket-begin" scanner"
+  \prof [input] end-bucket
+  \prof profiler-bucket [scanner]
   include scanner.fth
-  \prof1 profiler-bucket-begin" symtab"
+  \prof [scanner] end-bucket
+  \prof profiler-bucket [symtab]
   include symboltable.fth
   include preprocessor.fth
   tmpclear
+  \prof [symtab] end-bucket
 
-  \prof1 profiler-bucket-begin" parser"
+  \prof profiler-bucket [parser]
   include listman.fth
   tmpclear
 
@@ -75,14 +78,15 @@
   include v-assembler.fth
   include codegen.fth
   include parser.fth
-  \prof1 profiler-bucket-begin" pass2"
+  \prof [parser] end-bucket
+
+  \prof profiler-bucket [pass2]
   include p2write-decl.fth
   tmpclear
-
   include pass2.fth
   include invoke.fth
+  \prof [pass2] end-bucket
 
-  \prof1 profiler-bucket-begin" shell"
   forth definitions
   include savesystem.fth
 
@@ -90,12 +94,14 @@
   vocabulary shell
   compiler also  shell definitions
 
+  \prof profiler-bucket [shell]
   include shell.fth
   include version.fth
   | : .binary-name  ." cc64 C compiler" ;
   include init-shell.fth
+  \prof [shell] end-bucket
 
-  \prof include prof-scan1.fth
+  \prof include prof-metrics.fth
 
   onlyforth
 

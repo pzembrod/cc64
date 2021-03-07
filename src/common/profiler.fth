@@ -106,6 +106,13 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   dup @ >lo/hi  >buckets[ r@ + c!  <buckets[ r@ + c!
   2+  @ >lo/hi  >]buckets r@ + c!  <]buckets r> + c! ;
 
+: profiler-metric:[
+  create $0f ]
+  does> profiler-init-buckets
+  BEGIN dup @ ?dup WHILE execute measure-bucket  2+ REPEAT drop ;
+
+: ]profiler-metric  $0f ?pairs  [compile] [  0 , ;  immediate restrict
+
 : profiler-start
   bucketTimes  #buckets 1+ 4 * erase
   bucketCounts #buckets 1+ 4 * erase
