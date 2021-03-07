@@ -13,7 +13,6 @@
 \ | ' \ alias \prof
 
 \prof ' \ alias \prof1
-\prof ' noop alias \prof2
 
 | ' |     alias ~
 | ' |on   alias ~on
@@ -82,7 +81,6 @@
 
   include pass2.fth
   include invoke.fth
-  \ words
 
   \prof1 profiler-bucket-begin" shell"
   forth definitions
@@ -96,6 +94,8 @@
   include version.fth
   | : .binary-name  ." cc64 C compiler" ;
   include init-shell.fth
+
+  \prof include prof-scan1.fth
 
   onlyforth
 

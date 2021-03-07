@@ -65,7 +65,7 @@ forth definitions
         IF ." error(s) occured" cr
         close-files scratchfiles exit
         THEN
-     \prof (64 dup read-50ms-timer - ms. cr C)
+     \prof dup read-50ms-timer - ms. cr
      ." pass 2:" cr
      pass2  cr
      ." compilation done" cr

@@ -14,7 +14,7 @@
 
 \   scanner:                   26feb91pz
 
-\prof2 profiler-bucket-begin" alpha"
+\prof profiler-bucket [scanner-alphanum]
 
 || : alpha?  ( c -- flag )
     dup  ascii a ascii [ uwithin
@@ -31,7 +31,8 @@
      BEGIN char> bl = WHILE
      +char REPEAT ;
 
-\prof2 profiler-bucket-begin" keyword?"
+\prof [scanner-alphanum] end-bucket
+\prof profiler-bucket [scanner-keyword]
 
 ~ 0 constant #char#
 ~ 1 constant #id#
@@ -83,7 +84,8 @@
 
 \   scanner:                   18apr94pz
 
-\prof2 profiler-bucket-begin" id"
+\prof [scanner-keyword] end-bucket
+\prof profiler-bucket [scanner-identifier]
 
 || create id-buf  /id 1+ allot
 
@@ -107,7 +109,8 @@
 
 \   scanner:                   08oct90pz
 
-\prof2 profiler-bucket-begin" op"
+\prof [scanner-identifier] end-bucket
+\prof profiler-bucket [scanner-operator]
 
 || create operator-list
  ," +++---**///%%&&&|||^^!!==<<<<>>>>~"
@@ -158,7 +161,8 @@
 || : operator ( tokenvalue1 -- tokenvalue2 #op# )
      2 th-char  3 th-char  #oper# ;
 
-\prof2 profiler-bucket-begin" num"
+\prof [scanner-operator] end-bucket
+\prof profiler-bucket [scanner-number]
 
 \ *** Block No. 43, Hexblock 2b
 
@@ -198,7 +202,8 @@
                   ELSE octnum THEN
         ELSE deznum THEN #number# ;
 
-\prof2 profiler-bucket-begin" char/string"
+\prof [scanner-number] end-bucket
+\prof profiler-bucket [scanner-char/string]
 
 || create charlist ," ()[]{},;:"
 
@@ -291,7 +296,8 @@
 || : string ( -- ??? #string# )
      $pending on  0 #string# ;
 
-\prof2 profiler-bucket-begin" nextword"
+\prof [scanner-char/string] end-bucket
+\prof profiler-bucket [scanner-nextword]
 
 || : (nextword ( -- tokenvalue token )
      $pending @  *compiler* ?fatal
@@ -315,7 +321,8 @@
 
 \   scanner:                   09oct90pz
 
-\prof2 profiler-bucket-begin" comment"
+\prof [scanner-nextword] end-bucket
+\prof profiler-bucket [scanner-comment]
 
 || : is-comment? ( w t -- w t flag )
      2dup <comment> #oper# dnegate d+
@@ -340,7 +347,8 @@
 
 \   scanner:                   11mar91pz
 
-\prof2 profiler-bucket-end
+\prof [scanner-comment] end-bucket
+\prof profiler-bucket [scanner-rest]
 
 || create word'  4 allot
 || variable back
@@ -393,5 +401,5 @@
                               exit THEN
   ." token/val:" . . ;
 
-\ prof2 profiler-bucket-end
+\prof [scanner-rest] end-bucket
 
