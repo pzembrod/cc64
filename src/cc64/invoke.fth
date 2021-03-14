@@ -44,7 +44,7 @@
 
 \   invoke :  start compiler   13sep94pz
 
-forth definitions
+\ forth definitions
 
   : cc  ( -- )
      clearstack

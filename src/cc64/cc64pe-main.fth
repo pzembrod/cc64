@@ -8,7 +8,7 @@
 \log logopen cc64pe.log
 
 \ no profiling:
-| ' \ alias \prof
+\needs \prof  | ' \ alias \prof immediate
 
 | ' |     alias ~
 | ' |on   alias ~on

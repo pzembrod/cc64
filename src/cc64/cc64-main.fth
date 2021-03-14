@@ -8,9 +8,9 @@
 \log logopen cc64.log
 
 \ with profiling, only on C64:
-| ' \ (64 drop ' noop C) alias \prof
+\ | ' \ (64 drop ' noop C) alias \prof
 \ without profiling:
-\ | ' \ alias \prof
+\needs \prof  | ' \ alias \prof immediate
 
 | ' |     alias ~
 | ' |on   alias ~on

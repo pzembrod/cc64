@@ -21,9 +21,11 @@ suite_c64_suffixes = $(patsubst %, suite-c64_%, $(suite_suffixes))
 suite_c16_suffixes = $(patsubst %, suite-c16_%, $(suite_suffixes))
 suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 suite_results_c64_hosted = \
-    $(patsubst %, cc64-% cc64pe-%, $(suite_c64_suffixes))
+    $(patsubst %, cc64-%, $(suite_c64_suffixes)) \
+    $(patsubst %, cc64pe-%, $(suite_c64_suffixes))
 suite_results_c16_hosted = \
-    $(patsubst %, cc64-% cc64pe-%, $(suite_c16_suffixes))
+    $(patsubst %, cc64-%, $(suite_c16_suffixes)) \
+    $(patsubst %, cc64pe-%, $(suite_c16_suffixes))
 suite_results_x16_hosted = \
     $(patsubst %, cc64-%, $(suite_x16_suffixes))
 

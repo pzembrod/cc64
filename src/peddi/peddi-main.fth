@@ -10,6 +10,8 @@
   onlyforth  decimal
   | ' |     alias ~
 
+  include notmpheap.fth
+
 \ peddi loadscreen standalone  07may95pz
 
   | : 2@  ( adr -- d)  dup 2+ @ swap @ ;

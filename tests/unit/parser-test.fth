@@ -7,6 +7,8 @@
 \log include logtofile.fth
 \log logopen parser-test.log
 
+\needs \prof  ' \ alias \prof immediate
+
   ' noop   alias ~
   ' noop  alias ~on
   ' noop  alias ~off

@@ -2,22 +2,24 @@
 set -e
 
 platform="$1"
+target="$2"
+main_include="$3"
+test -n "${main_include}" || main_include="${target}"
 
-builddir="$(dirname "${BASH_SOURCE[0]}")"
-basedir="$(realpath --relative-to="$PWD" "${builddir}/..")"
-emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
+emulatordir="$(dirname "${BASH_SOURCE[0]}")"
+basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${platform}files")"
-logfile="${cbmfiles}/cc64.log"
+logfile="${cbmfiles}/${target}.log"
 
-rm -f "${cbmfiles}/cc64"
+rm -f "${cbmfiles}/${target}"
 rm -f "${logfile}"
 
-keybuf="include cc64-main.fth\nsaveall cc64\ndos s0:notdone"
+keybuf="include ${main_include}.fth\nsaveall ${target}\ndos s0:notdone"
 if [ "${platform}" == "c64" ]; then
   keybuf="include set-d000.fth\ncold\n${keybuf}"
 fi
 
-export OUTFILES="cc64 cc64.log"
+export OUTFILES="${target} ${target}.log"
 "${emulatordir}/run-in-${platform}emu.sh" "vf-build-base" "${keybuf}"
 
 petscii2ascii "${logfile}" | \

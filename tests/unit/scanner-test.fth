@@ -7,6 +7,8 @@
 \log include logtofile.fth
 \log logopen scanner-test.log
 
+\needs \prof  ' \ alias \prof immediate
+
   ' noop   alias ~
   ' noop  alias ~on
   ' noop  alias ~off
