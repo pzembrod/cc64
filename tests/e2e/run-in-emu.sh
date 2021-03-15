@@ -7,7 +7,7 @@ testbinary="${1}"
 test -n "${testbinary}" || exit 1
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-source "${testdir}/basedir.sh"
+source "${testdir}/basedir.shlib"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 targetfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64TARGET}files")"
 

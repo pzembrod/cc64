@@ -1,1 +1,3 @@
+#!/bin/echo Please source this file
+
 basedir="$(realpath --relative-to="$PWD" "${testdir}/../..")"

@@ -10,7 +10,7 @@ IFS=_ read host target <<< "${host_target}"
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-source "${testdir}/basedir.sh"
+source "${testdir}/basedir.shlib"
 hostfiles="${testdir}/${host}files"
 targetfiles="${testdir}/${target}files"
 

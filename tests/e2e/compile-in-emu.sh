@@ -9,7 +9,7 @@ cc64="${2}"
 test -n "${cc64}" || cc64="cc64"
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-source "${testdir}/basedir.sh"
+source "${testdir}/basedir.shlib"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 hostfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64HOST}files")"
 
