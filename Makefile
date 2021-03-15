@@ -186,10 +186,10 @@ clean:
 	rm -f c64files/*.fth c16files/*.fth x16files/*.fth
 	rm -f c64files/*.log c16files/*.log x16files/*.log
 	rm -f x16files.img recompile-readme
-	rm -f [cx][16][64]files/notdone
-	rm -f emulator/sdcard.img tmp/* cc64-doc.zip
+	rm -f [cx][16][64]files/notdone cc64-doc.zip
 	rm -rf release
 	rm -rf $(recompile_dir) $(recompile_dir).zip
+	$(MAKE) -C emulator clean
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
 	$(MAKE) -C tests/peddi clean
@@ -259,7 +259,7 @@ sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64
 
 x16files/cc64: $(cc64srcs_x16) \
  emulator/build-binary.sh emulator/run-in-x16emu.sh \
- x16files/vf-build-base emulator/sdcard.img
+ x16files/vf-build-base
 	emulator/build-binary.sh x16 cc64
 
 
@@ -394,12 +394,6 @@ autostart-c16/%.T64: forth/%
 
 autostart-x16/%.T64: x16files/%
 	bin2t64 $< $@
-
-
-# X16 emulator rules
-
-emulator/sdcard.img: emulator/sdcard.sfdisk emulator/mk-sdcard.sh
-	emulator/mk-sdcard.sh emulator/sdcard.sfdisk $@
 
 
 # Generic rules to populate c64files/, c16files/, x16files/
