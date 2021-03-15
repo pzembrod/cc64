@@ -1,15 +1,5 @@
 
-\ with build log:
-' noop alias \log
-\ without build log:
-\ ' \ alias \log
-
-\log include logtofile.fth
-\log logopen cc64.log
-
-\ with profiling, only on C64:
-\ | ' \ (64 drop ' noop C) alias \prof
-\ without profiling:
+\needs \log  ' \ alias \log immediate
 \needs \prof  | ' \ alias \prof immediate
 
 | ' |     alias ~

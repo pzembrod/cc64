@@ -14,7 +14,7 @@ logfile="${cbmfiles}/${target}.log"
 rm -f "${cbmfiles}/${target}"
 rm -f "${logfile}"
 
-keybuf="include ${main_include}.fth\nsaveall ${target}\ndos s0:notdone"
+keybuf="include ${main_include}-log.fth\ninclude ${main_include}.fth\nsaveall ${target}\ndos s0:notdone"
 if [ "${platform}" == "c64" ]; then
   keybuf="include set-d000.fth\ncold\n${keybuf}"
 fi

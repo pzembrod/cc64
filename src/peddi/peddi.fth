@@ -1,11 +1,6 @@
 
-\ with build log:
-' noop alias \log
-\ without build log:
-\ ' \ alias \log
-
-\log include logtofile.fth
-\log logopen peddi.log
+\needs \log  ' \ alias \log immediate
+\needs \prof  | ' \ alias \prof immediate
 
   onlyforth  decimal
   | ' |     alias ~

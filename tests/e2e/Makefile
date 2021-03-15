@@ -151,6 +151,9 @@ cc64-suite-%.result: *-test.c *.golden
 cc64pe-suite-%.result: *-test.c *.golden
 	./compile-run-suite.sh cc64pe $*
 
+cc64prof-suite-c64_c64.result: *-test.c *.golden
+	./compile-run-suite.sh cc64prof $*
+
 
 cc64-suite-c64_x16.result: $(basedir)/emulator/sdcard.img
 

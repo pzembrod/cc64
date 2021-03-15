@@ -242,25 +242,25 @@ sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64
 %files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) \
  emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
-	emulator/build-binary.sh $* cc64 cc64-main
+	emulator/build-binary.sh $* cc64
 
 %files/cc64pe: \
  $(cc64srcs_c64) $(cc64srcs_c16) \
  $(peddisrcs_c64) $(peddisrcs_c16) \
  emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
-	emulator/build-binary.sh $* cc64pe cc64pe-main
+	emulator/build-binary.sh $* cc64pe
 
 %files/peddi: $(peddisrcs_c64) $(peddisrcs_c16) \
  emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
-	emulator/build-binary.sh $* peddi peddi-main
+	emulator/build-binary.sh $* peddi
 
 
 x16files/cc64: $(cc64srcs_x16) \
  emulator/build-binary.sh emulator/run-in-x16emu.sh \
  x16files/vf-build-base emulator/sdcard.img
-	emulator/build-binary.sh x16 cc64 cc64-main
+	emulator/build-binary.sh x16 cc64
 
 
 c64files/cc64prof: $(cc64srcs_c64) \
