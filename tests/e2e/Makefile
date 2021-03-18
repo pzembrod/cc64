@@ -23,7 +23,7 @@ suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 suite_results_c64_hosted = \
     $(patsubst %, cc64-%, $(suite_c64_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c64_suffixes)) \
-    cc64prof-suite-c64_c64.result
+    cc64prof-suite-c64_c64.result suite.profile
 suite_results_c16_hosted = \
     $(patsubst %, cc64-%, $(suite_c16_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c16_suffixes))
@@ -52,7 +52,7 @@ slowtests: separate-tests-c64_c64.result
 
 petests: cc64pe-suite-c64_c64.result
 
-proftests: cc64prof-suite-c64_c64.result
+proftests: cc64prof-suite-c64_c64.result suite.profile
 
 allcrosstests: fastcrosstests slowcrosstests pecrosstests
 
@@ -157,19 +157,9 @@ cc64pe-suite-%.result: *-test.c *.golden
 cc64prof-suite-c64_c64.result: *-test.c *.golden
 	./compile-run-suite.sh cc64prof c64_c64
 
+suite.profile: *-test.c *.golden
+	./profile-suite.sh cc64prof
 
-cc64-suite-c64_x16.result: $(basedir)/emulator/sdcard.img
-
-cc64pe-suite-c64_x16.result: $(basedir)/emulator/sdcard.img
-
-cc64-suite-c16_x16.result: $(basedir)/emulator/sdcard.img
-
-cc64pe-suite-c16_x16.result: $(basedir)/emulator/sdcard.img
-
-cc64-suite-x16_x16.result: $(basedir)/emulator/sdcard.img
-
-$(basedir)/emulator/sdcard.img: $(basedir)/emulator/sdcard.sfdisk
-	$(basedir)/emulator/mk-sdcard.sh $< $@
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
