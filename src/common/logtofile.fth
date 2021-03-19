@@ -24,4 +24,4 @@ Output: alsologtofile
   alsologtofile ;
 
 : logclose
-  log-cr  log-dev-2nd@ busclose  display ;
+  cr  display  log-dev-2nd@ busclose ;

@@ -1,0 +1,7 @@
+
+dos s0:cc64-1.profile
+profile-cc64-1
+logfile cc64-1.profile
+cc suite.c
+report
+logclose

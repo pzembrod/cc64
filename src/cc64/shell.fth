@@ -62,7 +62,9 @@
 
 \log : logfile  logopen alsologtofile ;
 
-\log : logclose  display logclose ;
+\log ' logclose alias logclose
+
+' include alias exec
 
 : list!  ( flag -- )  listing ! ;
 : list?  ( -- )  listing @ . ;

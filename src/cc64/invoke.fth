@@ -71,5 +71,5 @@
      ." compilation done" cr
      scratchfiles
      \prof read-50ms-timer - ms. cr
-     \prof profiler-report
+     \prof profiler-end
      ;

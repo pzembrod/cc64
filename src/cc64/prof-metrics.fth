@@ -31,3 +31,5 @@ profiler-metric:[ profile-scanner2
   [scanner-comment]
   [scanner-rest]
 ]profiler-metric
+
+' profiler-report alias report

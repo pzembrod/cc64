@@ -37,6 +37,8 @@ c16_rt_files = \
 x16_rt_files = \
     $(patsubst $(basedir)/runtime/%, x16files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
 
+profile_scripts = $(patsubst %, c64files/%, $(wildcard *.pfs))
+
 tests: fasttests64
 
 alltests: fasttests slowtests petests proftests
@@ -157,7 +159,8 @@ cc64pe-suite-%.result: *-test.c *.golden
 cc64prof-suite-c64_c64.result: *-test.c *.golden
 	./compile-run-suite.sh cc64prof c64_c64
 
-suite.profile: *-test.c *.golden
+suite.profile: *-test.c *.golden $(profile_scripts) \
+    $(basedir)/autostart-c64/cc64prof.T64
 	./profile-suite.sh cc64prof
 
 
@@ -194,3 +197,7 @@ x16files/%.h: %.h
 x16files/cc64: $(basedir)/x16files/cc64
 	test -d x16files || mkdir x16files
 	cp $< $@
+
+c64files/%.pfs: %.pfs
+	test -d c64files || mkdir c64files
+	ascii2petscii $< $@

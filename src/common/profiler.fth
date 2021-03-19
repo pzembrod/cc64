@@ -5,6 +5,7 @@ create prevTime  4 allot
 create deltaTime 4 allot
 variable currentBucket
 variable currentBucketOpen
+variable metric-name
 
 create <buckets[    #buckets 1+ allot
 create >buckets[    #buckets 1+ allot
@@ -101,15 +102,15 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 
 : end-bucket  ( bucket -- )  here swap 2+ ! ;
 
-: measure-bucket  ( bucket -- )
+: activate-bucket  ( bucket -- )
   currentBucket @ 1+ dup >r currentBucket ! \ check for #buckets
   dup @ >lo/hi  >buckets[ r@ + c!  <buckets[ r@ + c!
   2+  @ >lo/hi  >]buckets r@ + c!  <]buckets r> + c! ;
 
 : profiler-metric:[
-  create $0f ]
-  does> profiler-init-buckets
-  BEGIN dup @ ?dup WHILE execute measure-bucket  2+ REPEAT drop ;
+  create  last @ ,  $0f ]
+  does> profiler-init-buckets  dup @ metric-name !  2+
+  BEGIN dup @ ?dup WHILE execute activate-bucket  2+ REPEAT drop ;
 
 : ]profiler-metric  $0f ?pairs  [compile] [  0 , ;  immediate restrict
 
@@ -118,6 +119,8 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   bucketCounts #buckets 1+ 4 * erase
   reset-32bit-timer  prevTime 4 erase
   install-prNext ;
+
+' end-trace alias profiler-end
 
 : d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 
@@ -128,7 +131,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
     <]buckets over + c@ swap >]buckets + c@ $100 * + ;
 
 : profiler-report
-    end-trace
+    cr ." profiler report " metric-name @ count $1f and type cr
     ." b# addr[  ]addr  nextcounts  clockticks  name" cr
     #buckets 1+ 0 DO
       I .  I bucket[ u.  I ]bucket u.
