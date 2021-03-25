@@ -2,6 +2,8 @@
 set -e
 
 cc64="$1"
+shift
+metrics="$@"
 
 host="c64"
 
@@ -24,13 +26,25 @@ source "${testdir}/concat-suite.shlib"
 rm -f "${hostfiles}/suite" "${hostfiles}/suite.T64"
 testname="suite"
 rm -f "${hostfiles}/${testname}.log"
-# keybuf="profile-cc64-1\ncc ${testname}.c\nlogfile ${testname}.log\n\
-# report\nlogclose\n\
 
 keybuf="exec cc64-1.pfs\nexec scanner1.pfs\ndos s0:notdone"
-CC64HOST="${host}" OUTFILES=suite CBMFILES="${hostfiles}" \
-  "${emulatordir}/run-in-${host}emu.sh" "${cc64}" "${keybuf}"
+keybuf=""
+outfiles=""
+for metric in "$@"; do
+  keybuf="${keybuf}exec ${metric}.pfs\n"
+  outfiles="${outfiles} ${metric}.profile"
+done
+keybuf="${keybuf}dos s0:notdone"
+#if [ -n "${metric}" ]; then
+#  keybuf="exec ${metric}.pfs\ndos s0:notdone"
+#fi
+export CC64HOST="${host}"
+export OUTFILES="${outfiles}"
+export CBMFILES="${hostfiles}"
+"${emulatordir}/run-in-${host}emu.sh" "${cc64}" "${keybuf}"
 
-petscii2ascii "${hostfiles}/${testname}.log" suite.profile
+for profile in ${outfiles}; do
+  petscii2ascii "${hostfiles}/${profile}" "${profile}"
+done
 
 # cmp "${hostfiles}/suite" reference/suite_c64

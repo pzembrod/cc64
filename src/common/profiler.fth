@@ -14,6 +14,10 @@ create >]buckets    #buckets 1+ allot
 create bucketTimes  #buckets 1+ 4 * allot
 create bucketCounts #buckets 1+ 4 * allot
 
+create timestamps[  $10 allot
+here constant ]timestamps
+variable timestamp>
+
 Assembler also definitions
 
 : calcTime
@@ -108,19 +112,26 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   2+  @ >lo/hi  >]buckets r@ + c!  <]buckets r> + c! ;
 
 : profiler-metric:[
-  create  last @ ,  $0f ]
+  create  last @ ,  here $0f ]
   does> profiler-init-buckets  dup @ metric-name !  2+
   BEGIN dup @ ?dup WHILE execute activate-bucket  2+ REPEAT drop ;
 
-: ]profiler-metric  $0f ?pairs  [compile] [  0 , ;  immediate restrict
+: ]profiler-metric  $0f ?pairs  [compile] [
+  here swap -  #buckets 2* > abort" too many buckets in metric"
+  0 , ;  immediate restrict
+
+: profiler-timestamp
+  read-32bit-timer  timestamp> @
+  dup 4+  dup ]timestamps > abort" too many timestamps"
+  timestamp> !  ! ;
 
 : profiler-start
   bucketTimes  #buckets 1+ 4 * erase
   bucketCounts #buckets 1+ 4 * erase
-  reset-32bit-timer  prevTime 4 erase
-  install-prNext ;
+  prevTime 4 erase  timestamps[ timestamp> !
+  reset-32bit-timer  profiler-timestamp  install-prNext ;
 
-' end-trace alias profiler-end
+: profiler-end  end-trace  profiler-timestamp ;
 
 : d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 
@@ -130,8 +141,16 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 : ]bucket  ( I -- addr )
     <]buckets over + c@ swap >]buckets + c@ $100 * + ;
 
+: d..  ( d -- )
+  <# # #s #>  BEGIN swap dup c@ emit 1+ swap 1- dup WHILE
+  dup 3 mod 0= IF ascii . emit THEN REPEAT 2drop bl emit ;
+
 : profiler-report
     cr ." profiler report " metric-name @ count $1f and type cr
+    ." timestamps" cr
+    timestamps[ 4+ BEGIN dup timestamp> @ < WHILE
+    dup 2@ dnegate timestamps[ 2@ d+ d.. 4+ REPEAT drop
+    cr cr ." buckets" cr
     ." b# addr[  ]addr  nextcounts  clockticks  name" cr
     #buckets 1+ 0 DO
       I .  I bucket[ u.  I ]bucket u.

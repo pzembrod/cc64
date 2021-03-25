@@ -49,7 +49,6 @@
   : cc  ( -- )
      clearstack
      \prof profiler-start
-     \prof read-50ms-timer
      init
      bl word   dup c@ 0= ?usage
      dup exe-name strcpy
@@ -65,11 +64,10 @@
         IF ." error(s) occured" cr
         close-files scratchfiles exit
         THEN
-     \prof dup read-50ms-timer - ms. cr
+     \prof profiler-timestamp
      ." pass 2:" cr
      pass2  cr
      ." compilation done" cr
      scratchfiles
-     \prof read-50ms-timer - ms. cr
      \prof profiler-end
      ;

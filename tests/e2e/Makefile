@@ -23,7 +23,7 @@ suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 suite_results_c64_hosted = \
     $(patsubst %, cc64-%, $(suite_c64_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c64_suffixes)) \
-    cc64prof-suite-c64_c64.result suite.profile
+    cc64prof-suite-c64_c64.result suite.profile $(profiles)
 suite_results_c16_hosted = \
     $(patsubst %, cc64-%, $(suite_c16_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c16_suffixes))
@@ -37,7 +37,10 @@ c16_rt_files = \
 x16_rt_files = \
     $(patsubst $(basedir)/runtime/%, x16files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
 
-profile_scripts = $(patsubst %, c64files/%, $(wildcard *.pfs))
+profile_scripts = $(sort $(wildcard *.pfs))
+c64_profile_scripts = $(patsubst %, c64files/%, $(profile_scripts))
+profile_names = $(patsubst %.pfs, %, $(profile_scripts))
+profiles = $(patsubst %, %.profile, $(profile_names))
 
 tests: fasttests64
 
@@ -114,13 +117,13 @@ separate-tests-x16_x16.result: $(test_results_x16_x16)
 	cat $^ >$@
 
 $(test_results_c64_hosted) $(suite_results_c64_hosted): \
-    $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files) *.sh *.h
+    $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files) *.sh *.shlib *.h
 
 $(test_results_c16_hosted) $(suite_results_c16_hosted): \
-    $(basedir)/autostart-c16/cc64.T64 $(c16_rt_files) *.sh *.h
+    $(basedir)/autostart-c16/cc64.T64 $(c16_rt_files) *.sh *.shlib *.h
 
 $(test_results_x16_hosted) $(suite_results_x16_hosted): \
-    x16files/cc64 $(x16_rt_files) *.sh *.h
+    x16files/cc64 $(x16_rt_files) *.sh *.shlib *.h
 
 $(test_results_c64_c64): %-c64_c64.result: %-test.c %.golden
 	./compile-run-test.sh $* c64_c64
@@ -159,9 +162,14 @@ cc64pe-suite-%.result: *-test.c *.golden
 cc64prof-suite-c64_c64.result: *-test.c *.golden
 	./compile-run-suite.sh cc64prof c64_c64
 
-suite.profile: *-test.c *.golden $(profile_scripts) \
+suite.profile: *-test.c $(c64_profile_scripts) \
     $(basedir)/autostart-c64/cc64prof.T64
-	./profile-suite.sh cc64prof
+	./profile-suite.sh cc64prof $(profile_names)
+	cat $(profiles) >$@
+
+%.profile: *-test.c c64files/%.pfs \
+    $(basedir)/autostart-c64/cc64prof.T64
+	./profile-suite.sh cc64prof $*
 
 
 clean:
