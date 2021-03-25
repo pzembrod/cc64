@@ -164,11 +164,13 @@ cc64prof-suite-c64_c64.result: *-test.c *.golden
 
 suite.profile: *-test.c $(c64_profile_scripts) \
     $(basedir)/autostart-c64/cc64prof.T64
+	rm -f c64files/*.profile
 	./profile-suite.sh cc64prof $(profile_names)
 	cat $(profiles) >$@
 
 %.profile: *-test.c c64files/%.pfs \
     $(basedir)/autostart-c64/cc64prof.T64
+	rm -f c64files/$*.profile
 	./profile-suite.sh cc64prof $*
 
 

@@ -32,4 +32,6 @@ profiler-metric:[ profile-scanner2
   [scanner-rest]
 ]profiler-metric
 
-' profiler-report alias report
+' profiler-report alias profile
+
+\log : profile2file  logfile profiler-report logclose ;

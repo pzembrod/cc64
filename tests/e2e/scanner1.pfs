@@ -1,7 +1,4 @@
 
-dos s0:scanner1.profile
 profile-scanner1
 cc suite.c
-logfile scanner1.profile
-report
-logclose
+profile2file scanner1.profile

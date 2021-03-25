@@ -1,7 +1,4 @@
 
-dos s0:cc64-1.profile
 profile-cc64-1
 cc suite.c
-logfile cc64-1.profile
-report
-logclose
+profile2file cc64-1.profile
