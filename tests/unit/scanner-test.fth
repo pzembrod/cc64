@@ -49,13 +49,13 @@
   ' id-buf alias idbuf
   tmpclear
 
+  do$: string2stack  noop noop noop ;
+
   init
   src-begin test-src1
   src@ int i;  "asd"     @
   src@ i = c + 5 && 'x'; @
   src-end
-
-  do$: string2stack  noop noop noop ;
 
   test-src1
   T{ nextword -> <int> #keyword# }T
@@ -75,6 +75,49 @@
   T{ nextword -> <l-and> #oper# }T
   T{ nextword -> ascii x  #number# }T
   T{ nextword -> ascii ; #char# }T
+  T{ nextword -> #eof# }T
+
+  init
+  src-begin test-operator
+  src@ ++ += + -- -= - *= * /= /* bla */ / %= % @
+  src@ &= && & |= || | ^= ^ != ! == = @
+  src@ <<= << <= < >>= >> >= > ~ @
+  src-end
+
+  test-operator
+  T{ nextword -> <++> #oper# }T
+  T{ nextword -> <+=> #oper# }T
+  T{ nextword -> <+> #oper# }T
+  T{ nextword -> <--> #oper# }T
+  T{ nextword -> <-=> #oper# }T
+  T{ nextword -> <-> #oper# }T
+  T{ nextword -> <*=> #oper# }T
+  T{ nextword -> <*> #oper# }T
+  T{ nextword -> </=> #oper# }T
+  T{ nextword -> </> #oper# }T
+  T{ nextword -> <%=> #oper# }T
+  T{ nextword -> <%> #oper# }T
+  T{ nextword -> <and=> #oper# }T
+  T{ nextword -> <l-and> #oper# }T
+  T{ nextword -> <and> #oper# }T
+  T{ nextword -> <or=> #oper# }T
+  T{ nextword -> <l-or> #oper# }T
+  T{ nextword -> <or> #oper# }T
+  T{ nextword -> <xor=> #oper# }T
+  T{ nextword -> <xor> #oper# }T
+  T{ nextword -> <!=> #oper# }T
+  T{ nextword -> <!> #oper# }T
+  T{ nextword -> <==> #oper# }T
+  T{ nextword -> <=> #oper# }T
+  T{ nextword -> <<<=> #oper# }T
+  T{ nextword -> <<<> #oper# }T
+  T{ nextword -> <<=> #oper# }T
+  T{ nextword -> <<> #oper# }T
+  T{ nextword -> <>>=> #oper# }T
+  T{ nextword -> <>>> #oper# }T
+  T{ nextword -> <>=> #oper# }T
+  T{ nextword -> <>> #oper# }T
+  T{ nextword -> <inv> #oper# }T
   T{ nextword -> #eof# }T
 
   cr hex here u. s0 @ u.
