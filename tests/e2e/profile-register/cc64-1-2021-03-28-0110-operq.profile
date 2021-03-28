@@ -1,0 +1,19 @@
+2021-03-28T01:10:29+01:00
+operator? in scanner optimized for speed, no more loop
+
+profiler report PROFILE-CC64-1
+timestamps
+728.681.644 887.934.157 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535       475431    52874525  (etc)
+1 19316 21453      1035478   114299050  [MEMMAN-ETC]
+2 21457 22676      1384214   153217916  [FILE-HANDLING]
+3 22680 23337       313708    34400869  [INPUT]
+4 23341 25905      1750140   196516875  [SCANNER]
+5 25909 27285       153639    17400568  [SYMTAB]
+6 27289 35263      1826434   197743285  [PARSER]
+7 35267 36825      1100611   121544654  [PASS2]
+8 36968 37719            0           0  [SHELL]
+
