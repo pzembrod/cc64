@@ -112,10 +112,12 @@
 \prof [scanner-identifier] end-bucket
 \prof profiler-bucket [scanner-operator]
 
-|| create operator-list
+|| create oper-1st-ch
  ," +++---**///%%&&&|||^^!!==<<<<>>>>~"
  ," += -= = =* = =& =| = = = <<= >>=  "
  ,"                          =   =    "
+oper-1st-ch count + dup 1+ || constant oper-2nd-ch
+count + 1+ || constant oper-3rd-ch
 
 || stringtab op
   ~on
@@ -164,19 +166,18 @@
      dup $1f and $1b > IF xc-oper? exit THEN
      drop false ;
 
-|| : th-char ( tokenvalue1 n -- tokenvalue2 )
-     operator-list swap 1
-        DO count + LOOP count rot
-        DO dup I + c@  dup  bl =
-           IF 2drop
-           I UNLOOP exit THEN
-        char> =
-           IF drop +char
-           I UNLOOP exit THEN
-        LOOP  *compiler* fatal ;
+|| : c@-bl=-if-#oper#-exit
+       ( tokenvalue ptr> -- tokenvalue chr / -- tokenvalue #oper# )
+     c@ dup bl = IF drop #oper# rdrop exit THEN ;
+
+|| : limit-oper-loop  ( n -- n )
+     dup <inv> > *compiler* ?fatal ;
 
 || : operator ( tokenvalue1 -- tokenvalue2 #op# )
-     2 th-char  3 th-char  #oper# ;
+     BEGIN dup oper-2nd-ch + c@-bl=-if-#oper#-exit
+     char> - WHILE 1+ limit-oper-loop REPEAT +char
+     BEGIN dup oper-3rd-ch + c@-bl=-if-#oper#-exit
+     char> - WHILE 1+ limit-oper-loop REPEAT +char #oper# ;
 
 \prof [scanner-operator] end-bucket
 \prof profiler-bucket [scanner-number]
@@ -402,7 +403,7 @@
 
 || : emit' ( c ) dup bl -
           IF emit ELSE drop THEN ;
-|| : oper. ( n )  operator-list 2dup
+|| : oper. ( n )  oper-1st-ch 2dup
        1+ + c@ emit    count + 2dup
        1+ + c@ emit'   count +
        1+ + c@ emit' ;
