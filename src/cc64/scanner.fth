@@ -140,12 +140,29 @@
 
 \   scanner:                   08oct90pz
 
-|| : operator?  ( c -- tokenvalue t/ -- f )
-     operator-list count 0
-     DO 2dup I + c@ =
-       IF 2drop  +char
-       I true UNLOOP exit THEN
-     LOOP  2drop false ;
+|| create 2x-tab
+  $ff    c,  <!=>   c,  $ff    c,  $ff    c,
+  $ff    c,  <%=>   c,  <and=> c,  $ff    c,
+  $ff    c,  $ff    c,  <*=>   c,  <++>   c,
+  $ff    c,  <-->   c,  $ff    c,  </=>   c,
+
+|| : 2x-oper?  ( c -- tokenvalue t / c -- f )
+     $0f and 2x-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
+
+|| create xc-tab
+  <<<=>  c,  <==>   c,  <>>=>  c,  $ff    c,
+  $ff    c,  $ff    c,  <xor=> c,  $ff    c,
+  <or=>  c,  $ff    c,  <inv>  c,  $ff    c,
+
+|| : xc-oper?  ( c -- tokenvalue t / c -- f )
+     dup 3 and swap $e0 and $20 -
+     dup $20 > IF $a0 - IF drop false exit THEN $40 THEN 2/ 2/ 2/ +
+     xc-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
+
+|| : operator?  ( c -- tokenvalue t / c -- f )
+     dup $f0 and $20 = IF 2x-oper? exit THEN
+     dup $1f and $1b > IF xc-oper? exit THEN
+     drop false ;
 
 || : th-char ( tokenvalue1 n -- tokenvalue2 )
      operator-list swap 1
