@@ -17,7 +17,7 @@ profiler-metric:[ profile-scanner1
   [scanner-operator]
   [scanner-number]
   [scanner-char/string]
-  [scanner-nextword]
+  [scanner-(nextword]
   [scanner-comment]
 ]profiler-metric
 
@@ -27,9 +27,28 @@ profiler-metric:[ profile-scanner2
   [scanner-operator]
   [scanner-number]
   [scanner-char/string]
-  [scanner-nextword]
+  [scanner-(nextword]
   [scanner-comment]
   [scanner-rest]
+]profiler-metric
+
+profiler-metric:[ profile-scanner3
+  [scanner-alphanum]
+  [scanner-identifier]
+  [scanner-operator]
+  [scanner-char/string]
+  [scanner-(nextword]
+  [scanner-comment]
+  [scanner-nextword]
+  [scanner-rest]
+]profiler-metric
+
+profiler-metric:[ profile-scanner-nextword
+  [scanner-nextword-vars]
+  [scanner-nextword-core]
+  [scanner-nextword-backword]
+  [scanner-nextword-mark]
+  [scanner-nextword-advanced?]
 ]profiler-metric
 
 ' profiler-report alias profile

@@ -312,7 +312,7 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
      $pending on  0 #string# ;
 
 \prof [scanner-char/string] end-bucket
-\prof profiler-bucket [scanner-nextword]
+\prof profiler-bucket [scanner-(nextword]
 
 || : (nextword ( -- tokenvalue token )
      $pending @  *compiler* ?fatal
@@ -336,7 +336,7 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
 \   scanner:                   09oct90pz
 
-\prof [scanner-nextword] end-bucket
+\prof [scanner-(nextword] end-bucket
 \prof profiler-bucket [scanner-comment]
 
 || : is-comment? ( w t -- w t flag )
@@ -363,11 +363,16 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 \   scanner:                   11mar91pz
 
 \prof [scanner-comment] end-bucket
-\prof profiler-bucket [scanner-rest]
+\prof profiler-bucket [scanner-nextword]
+
+\prof profiler-bucket [scanner-nextword-vars]
 
 || create word'  4 allot
 || variable back
 || variable word#
+
+\prof [scanner-nextword-vars] end-bucket
+\prof profiler-bucket [scanner-nextword-core]
 
 ~ : nextword ( -- tokenvalue token )
      back @ back off  IF word' 2@ ELSE
@@ -376,14 +381,28 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
       2dup word' 2! THEN
      1 word# +! ;
 
+\prof [scanner-nextword-core] end-bucket
+\prof profiler-bucket [scanner-nextword-backword]
+
 ~ : backword ( -- )
      back @ *compiler* ?fatal
      back on  -1 word# +! ;
 
+\prof [scanner-nextword-backword] end-bucket
+\prof profiler-bucket [scanner-nextword-mark]
+
 ~ : mark ( -- word# )  word# @ ;
+
+\prof [scanner-nextword-mark] end-bucket
+\prof profiler-bucket [scanner-nextword-advanced?]
 
 ~ : advanced? ( word# -- flag )
      word# @ = 0= ;
+
+\prof [scanner-nextword-advanced?] end-bucket
+
+\prof [scanner-nextword] end-bucket
+\prof profiler-bucket [scanner-rest]
 
 || : init-scanner
    back off  $pending off  word# off ;
