@@ -14,10 +14,10 @@ tests: parser-test scanner-test
 
 
 parser-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
-	./build-test.sh parser-test
+	./build-run-test.sh parser-test
 
 scanner-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
-	./build-test.sh scanner-test
+	./build-run-test.sh scanner-test
 
 clean:
 	rm -f c64files/* c16files/* x16files/*

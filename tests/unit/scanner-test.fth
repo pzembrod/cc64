@@ -118,8 +118,16 @@
   T{ nextword -> <inv> #oper# }T
   T{ nextword -> #eof# }T
 
-  cr hex here u. s0 @ u.
+  : bl/cr ( I cols -- ) swap 1+ swap mod 0= IF cr ELSE bl emit THEN ;
+  : test-word.
+    ." testing word." cr
+    <while> 1+ 0 DO I #keyword# word. I 6 bl/cr LOOP cr
+    <inv> 1+ 0 DO I #oper# word. I 12 bl/cr LOOP cr
+    ;
+  cr test-word.
 
   cr .( test completed with ) #errors @ . .( errors) cr
 
 \log logclose
+
+  cr hex here u. s0 @ u.
