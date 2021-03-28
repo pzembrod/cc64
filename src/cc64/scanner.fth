@@ -112,12 +112,9 @@
 \prof [scanner-identifier] end-bucket
 \prof profiler-bucket [scanner-operator]
 
-|| create oper-1st-ch
- ," +++---**///%%&&&|||^^!!==<<<<>>>>~"
- ," += -= = =* = =& =| = = = <<= >>=  "
- ,"                          =   =    "
-oper-1st-ch count + dup 1+ || constant oper-2nd-ch
-count + 1+ || constant oper-3rd-ch
+here ," +++---**///%%&&&|||^^!!==<<<<>>>>~" 1+ || constant oper-1st-ch
+here ," += -= = =* = =& =| = = = <<= >>=  " 1+ || constant oper-2nd-ch
+here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
 || stringtab op
   ~on
@@ -403,10 +400,11 @@ count + 1+ || constant oper-3rd-ch
 
 || : emit' ( c ) dup bl -
           IF emit ELSE drop THEN ;
-|| : oper. ( n )  oper-1st-ch 2dup
-       1+ + c@ emit    count + 2dup
-       1+ + c@ emit'   count +
-       1+ + c@ emit' ;
+
+|| : oper. ( n )
+     dup oper-1st-ch + c@ emit
+     dup oper-2nd-ch + c@ emit'
+         oper-3rd-ch + c@ emit' ;
 
 ~ : word.  ( n typ )
   #keyword# case? IF keyword. exit THEN

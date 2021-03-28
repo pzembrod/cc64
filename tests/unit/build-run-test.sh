@@ -9,6 +9,7 @@ source "${testdir}/basedir.shlib"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 cbmfiles="$(realpath --relative-to="$PWD" "${testdir}/${platform}files")"
 logfile="${cbmfiles}/${testname}.log"
+goldenfile="${testdir}/${testname}.golden"
 
 rm -f "${logfile}"
 
@@ -29,4 +30,8 @@ petscii2ascii "${logfile}" | \
 petscii2ascii "${logfile}" | \
   grep -qF 'test completed with 0 errors' || \
   (echo "Test completed with errors: ${logfile}" && exit 1)
+
+if [[ -f "${goldenfile}" ]]; then
+  petscii2ascii "${logfile}" | diff "${goldenfile}" -
+fi
 
