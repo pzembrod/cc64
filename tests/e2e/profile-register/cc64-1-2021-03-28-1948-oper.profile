@@ -1,0 +1,19 @@
+2021-03-28T19:48:20+02:00
+operator optimized for speed, too, after operator?
+
+profiler report PROFILE-CC64-1
+timestamps
+724.749.484 884.001.997 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535       475431    52856950  (etc)
+1 19316 21453      1038030   114537078  [MEMMAN-ETC]
+2 21457 22676      1384214   153200867  [FILE-HANDLING]
+3 22680 23337       313708    34374813  [INPUT]
+4 23341 25905      1713684   192370861  [SCANNER]
+5 25909 27285       153639    17406319  [SYMTAB]
+6 27289 35263      1826434   197768726  [PARSER]
+7 35267 36825      1100611   121532616  [PASS2]
+8 36968 37719            0           0  [SHELL]
+
