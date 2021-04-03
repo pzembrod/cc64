@@ -1,0 +1,19 @@
+2021-04-04T00:11:31+02:00
+smaller parser code, common snippets extracted, case? replaced by tables
+
+profiler report PROFILE-SCANNER2
+timestamps
+639.880.620 799.657.164 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535      6387624   702592982  (etc)
+1 23093 23199       247524    29352218  [SCANNER-ALPHANUM]
+2 23488 23643        66366     7048216  [SCANNER-IDENTIFIER]
+3 23647 24231        93760    10001112  [SCANNER-OPERATOR]
+4 24235 24475        27320     3490233  [SCANNER-NUMBER]
+5 24479 24992       237738    26069586  [SCANNER-CHAR/STRING]
+6 24996 25156       150422    15868836  [SCANNER-(NEXTWORD]
+7 25160 25306        43885     5187677  [SCANNER-COMMENT]
+8 25579 25793           14        1551  [SCANNER-REST]
+

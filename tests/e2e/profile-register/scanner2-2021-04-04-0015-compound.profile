@@ -1,0 +1,19 @@
+2021-04-04T00:15:14+02:00
+same compacted parser code, but with extra compound test in test suite
+
+profiler report PROFILE-SCANNER2
+timestamps
+645.057.964 806.079.692 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535      6439068   708199980  (etc)
+1 23093 23199       249734    29608769  [SCANNER-ALPHANUM]
+2 23488 23643        66969     7116341  [SCANNER-IDENTIFIER]
+3 23647 24231        94351    10056614  [SCANNER-OPERATOR]
+4 24235 24475        27320     3490986  [SCANNER-NUMBER]
+5 24479 24992       240309    26349198  [SCANNER-CHAR/STRING]
+6 24996 25156       151636    15992366  [SCANNER-(NEXTWORD]
+7 25160 25306        44171     5220390  [SCANNER-COMMENT]
+8 25579 25793           14        1551  [SCANNER-REST]
+
