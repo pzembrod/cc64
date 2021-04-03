@@ -17,21 +17,26 @@
 \ parser: tools                22feb91pz
 
 : comes? ( tokenvalue token -- flag )
-    \ ."  comes? " 2dup . .
     thisword dnegate d+ or
     IF false ELSE accept true THEN ;
 
 : comes-a? ( token -- tokenvalue true )
            ( token -- false )
-    \ ."  comes-a? " dup .
     thisword rot = dup not
     IF nip THEN ;
 
 : expect ( tokenvalue token -- )
     2dup comes?
        IF 2drop
-       ELSE *expected* error word.
+       ELSE word. *expected* error
        THEN ;
+
+: expect';'  ascii ; #char# expect ;
+: expect':'  ascii : #char# expect ;
+: expect'('  ascii ( #char# expect ;
+: expect')'  ascii ) #char# expect ;
+: expect']'  ascii ] #char# expect ;
+
 
 \ : skipword ( -- )
 \    *ignored* error nextword word. ;
@@ -70,7 +75,8 @@ do$: compile$  ( -- adr )
       IF drop compile$
       do-stringatom  accept exit THEN
    ." a value" *expected* error
-   accept 0 do-numatom ;
+   \ consider skipword
+   0 do-numatom ;
 
 
 \ *** Block No. 51, Hexblock 33
@@ -84,7 +90,7 @@ doer assign
    value
    expression value  do-add
    do-pointer
-   ascii ] #char# expect ;
+   expect']' ;
 
 
 \ *** Block No. 52, Hexblock 34
@@ -104,12 +110,12 @@ doer assign
      %stdfctn is?
         IF ascii ) #char# comes? not
            IF std-arguments
-           ascii ) #char# expect THEN
+           expect')' THEN
         do-std-call
         ELSE prepare-call
         ascii ) #char# comes? not
            IF arguments
-           ascii ) #char# expect THEN
+           expect')' THEN
         do-call THEN ;
 
 
@@ -121,7 +127,7 @@ doer assign
      teststack
      ascii ( #char# comes?
         IF expression
-        ascii ) #char# expect
+        expect')'
         ELSE atom THEN
      BEGIN mark >r
      ascii ( #char# comes?
@@ -137,57 +143,51 @@ doer assign
 
 \ parser: unary                22feb91pz
 
+: comes-tab-token? ( tab token -- cfa true )
+                   ( tab token -- false )
+     comes-a?
+        IF swap  dup 2+ swap @ bounds
+        DO dup I @ =
+          IF accept  drop  I 2+ @
+          true UNLOOP exit THEN
+        4 +LOOP
+        THEN
+     drop  false ;
+
+create unary-tab1  7  4 * ,
+  <->   ,  ' do-neg     ,
+  <!>   ,  ' do-not     ,
+  <inv> ,  ' do-inv     ,
+  <*>   ,  ' do-pointer ,
+  <and> ,  ' do-adress  ,
+  <++>  ,  ' do-preinc  ,
+  <-->  ,  ' do-predec  ,
+
+create unary-tab2  2  4 * ,
+  <++>  ,  ' do-postinc ,
+  <-->  ,  ' do-postdec ,
+
 : unary ( -- obj )  recursive
-
-   #oper# comes-a? IF
-    <-> case? IF accept unary do-neg exit THEN
-    <!> case? IF accept unary do-not exit THEN
-    <inv> case?
-          IF accept unary do-inv     exit THEN
-    <*> case?
-          IF accept unary do-pointer exit THEN
-    <and> case?
-          IF accept unary do-adress  exit THEN
-    <++> case?
-          IF accept unary do-preinc  exit THEN
-    <--> case?
-          IF accept unary do-predec  exit THEN
-    drop THEN
+   unary-tab1 #oper# comes-tab-token?
+     IF >r unary r> execute  exit THEN
    primary
-   #oper# comes-a? IF
-    <++> case? IF accept do-postinc  exit THEN
-    <--> case? IF accept do-postdec  exit THEN
-    drop THEN ;
-
+   unary-tab2 #oper# comes-tab-token?
+     IF execute  exit THEN ;
 
 
 \ *** Block No. 55, Hexblock 37
 
 \ parser: binary               06mar91pz
 
-: comes-op? ( tab -- cfa true )
-              ( tab -- false )
-     #oper# comes-a?
-        IF swap  dup 2+ swap @ bounds
-        DO dup I @ =
-          IF drop  I 2+ @  true
-          UNLOOP accept exit THEN
-        4 +LOOP
-        THEN
-     drop  false ;
-
 : binary  ( tab -- )
     create , dup 4 * ,  0
      DO swap , , LOOP
     does>   ( tab -- obj )
      dup @ execute
-     BEGIN 2 pick 2+ comes-op? WHILE >r
+     BEGIN 2 pick 2+ #oper# comes-tab-token? WHILE >r
      value  2 pick @ execute value
      r> execute REPEAT
      2 roll drop ;
-
-\ fuer assign wird 'von hand' eine
-\ 'comes-op?'-tabelle angelegt !
 
 
 \ *** Block No. 56, Hexblock 38
@@ -254,7 +254,7 @@ doer assign
         IF do-cond1
         recursive conditional
         do-cond2
-        ascii : #char# expect
+        expect':'
         recursive conditional
         do-cond3 THEN ;
 
@@ -264,22 +264,17 @@ doer assign
 \ parser: assign               06mar91pz
 
 create assign-oper  11  4 * ,
-  <=>      0          swap  , ,
-  <*=>   ' do-mult    swap  , ,
-  </=>   ' do-div     swap  , ,
-  <%=>   ' do-mod     swap  , ,
-  <+=>   ' do-add     swap  , ,
-  <-=>   ' do-sub     swap  , ,
-  <<<=>  ' do-shl     swap  , ,
-  <>>=>  ' do-shr     swap  , ,
-  <and=> ' do-and     swap  , ,
-  <xor=> ' do-xor     swap  , ,
-  <or=>  ' do-or      swap  , ,
-
-\ hier wird eine tabelle angelegt,
-\ die mit dem format der 'binary'-
-\ tabellen uebereinstimmt, also
-\ mit 'comes-op?' durchsucht wird.
+  <=>    ,    0       ,
+  <*=>   ,  ' do-mult ,
+  </=>   ,  ' do-div  ,
+  <%=>   ,  ' do-mod  ,
+  <+=>   ,  ' do-add  ,
+  <-=>   ,  ' do-sub  ,
+  <<<=>  ,  ' do-shl  ,
+  <>>=>  ,  ' do-shr  ,
+  <and=> ,  ' do-and  ,
+  <xor=> ,  ' do-xor  ,
+  <or=>  ,  ' do-or   ,
 
 
 \ *** Block No. 60, Hexblock 3c
@@ -288,7 +283,7 @@ create assign-oper  11  4 * ,
 
   make assign ( -- obj )
      conditional
-     assign-oper comes-op?
+     assign-oper #oper# comes-tab-token?
         IF ?dup
            IF >r  prepare-asgnop
            recursive assign value
@@ -330,8 +325,6 @@ create assign-oper  11  4 * ,
 doer compound
 doer statement
 
-: expect';'  ascii ; #char# expect ;
-
 : expression-stmt ( -- )
       expression  expect';' ;
 
@@ -346,9 +339,7 @@ doer statement
 \   parser: statement          22feb91pz
 
 : (expression)  ( -- )
-     ascii ( #char# expect
-     expression
-     ascii ) #char# expect ;
+     expect'('  expression  expect')' ;
 
 : if-stmt  ( -- )
      (expression)
@@ -414,7 +405,7 @@ variable cases
 
 : case-stmt ( -- )
      constant-expression
-     ascii : #char# expect
+     expect':'
      switch-state @ 0=   IF drop
         *noswitch* error exit THEN
      heap> ?dup 0= ?drop&exit
@@ -422,7 +413,7 @@ variable cases
      2+ .label over !  2+ ! ;
 
 : default-stmt ( -- )
-     ascii : #char# expect
+     expect':'
      switch-state @ 1+
         IF *ill-default* error
         ELSE .label switch-state !
@@ -495,7 +486,7 @@ variable cases
 : 3rd-expression  ( -- )
      ascii ) #char# comes? not
         IF expression
-        ascii ) #char# expect THEN ;
+        expect')' THEN ;
 
 
 \ *** Block No. 70, Hexblock 46
@@ -504,7 +495,7 @@ variable cases
 
 : for-stmt ( -- )
      breaks new  conts new
-     ascii ( #char# expect
+     expect'('
      1st-expression
      .label                     \ X
      2nd-expression? dup >r     \ ^
@@ -527,29 +518,21 @@ variable cases
 
 \   parser: statement          12mar91pz
 
+create statement-tab  10  4 * ,
+  <break>   ,  ' break-stmt    ,
+  <cont>    ,  ' continue-stmt ,
+  <if>      ,  ' if-stmt       ,
+  <do>      ,  ' do-stmt       ,
+  <while>   ,  ' while-stmt    ,
+  <for>     ,  ' for-stmt      ,
+  <case>    ,  ' case-stmt     ,
+  <default> ,  ' default-stmt  ,
+  <switch>  ,  ' switch-stmt   ,
+  <return>  ,  ' return-stmt   ,
+
 : statement? ( -- flag )  true
-  #keyword# comes-a? IF
-  <break> case? IF accept break-stmt exit THEN
-  <cont> case?
-             IF accept continue-stmt exit THEN
-  <if> case?    IF accept if-stmt    exit THEN
-  <do> case?    IF accept do-stmt    exit THEN
-  <while> case? IF accept while-stmt exit THEN
-  <for> case?   IF accept for-stmt   exit THEN
-  <case> case?  IF accept case-stmt  exit THEN
-  <default> case?
-             IF accept default-stmt  exit THEN
-  <switch> case?
-             IF accept switch-stmt   exit THEN
-  <return> case?
-             IF accept return-stmt   exit THEN
-  drop THEN
-
-
-\ *** Block No. 72, Hexblock 48
-
-\   parser: statement          11sep94pz
-
+  statement-tab #keyword# comes-tab-token?
+    IF execute  exit THEN
   #char# comes-a? IF
   ascii { case? IF accept compound   exit THEN
   ascii ; case? IF accept            exit THEN
@@ -669,23 +652,20 @@ defer 'class?
 
 create id-buf /id 1+ allot
 
-: handle-id  ( -- )
-     id-buf off  #id# comes-a? accept
-        IF id-buf over c@ 1+ cmove
-        ELSE *expected* error
-        ." identifier" THEN ;
+: expect-id,ok?  ( -- tokenvalue true / -- false)
+     #id# comes-a? dup IF accept
+       ELSE ." identifier" *expected* error THEN ;
 
+: handle-id  ( -- )
+     id-buf off  expect-id,ok? IF id-buf over c@ 1+ cmove THEN ;
 
 : [parameters]) ( -- )
      dyn-reset
      ascii ) #char# comes? not
-        IF BEGIN #id# comes-a? accept
-           IF putlocal
-           2 dyn-allot %local  rot 2!
-           ELSE *expected* error
-           ." identifier" THEN
+        IF BEGIN expect-id,ok?
+           IF putlocal  2 dyn-allot %local  rot 2! THEN
         ascii , #char# comes? not UNTIL
-        ascii ) #char# expect THEN ;
+        expect')' THEN ;
 
 
 \ *** Block No. 79, Hexblock 4f
@@ -705,7 +685,7 @@ create id-buf /id 1+ allot
         ELSE %reference clr THEN
      function?
         IF nestlocal [parameters])
-        ELSE ascii ) #char# expect
+        ELSE expect')'
         THEN ;
 
 
@@ -723,7 +703,7 @@ create id-buf /id 1+ allot
         constant-expression r>
            IF drop *???* error
            ELSE #/obj ! []dim'd on THEN
-        ascii ] #char# expect THEN
+        expect']' THEN
      set-pointer  %function isn't?
         IF %reference clr THEN ;
 
@@ -748,7 +728,7 @@ create id-buf /id 1+ allot
      *double-ptr* ?error true REPEAT >r
      ascii ( #char# comes?
         IF recursive (declarator
-           ascii ) #char# expect
+           expect')'
         ELSE handle-id THEN
      BEGIN mark >r
      ascii [ #char# comes?

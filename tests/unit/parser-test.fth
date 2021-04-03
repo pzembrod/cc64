@@ -80,12 +80,25 @@
   T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> false }T
+  T{ thisword -> #eof# }T
 
   T{ fetchglobal" i" -> $9ffe %int %extern %reference + + }T
   T{ fetchglobal" x" -> $9ffd %reference }T
   T{ fetchglobal" a" -> $0a %extern %reference + }T
   T{ fetchglobal" e" -> $0e %int %reference + }T
   T{ fetchglobal" p" -> $9ffb %extern %reference + %pointer + }T
+
+  src-begin test-stmt
+  src@ for @
+  src@ for(;;); @
+  src@ {for(;;);} @
+  src-end
+
+  init  test-stmt fetchword
+  T{ statement-tab #keyword# comes-tab-token? -> ' for-stmt true }T
+  T{ statement? -> true }T
+  T{ statement? -> true }T
+  T{ thisword -> #eof# }T
 
   cr hex .( here, s0: ) here u. s0 @ u.
 

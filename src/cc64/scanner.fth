@@ -411,19 +411,19 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
 \   scanner: word.             03oct90pz
 
-|| : keyword. ( n )
+|| : keyword. ( tokenvalue )
      keywords swap string[]
      >string count type ;
 
-|| : emit' ( c ) dup bl -
+|| : emit' ( char ) dup bl -
           IF emit ELSE drop THEN ;
 
-|| : oper. ( n )
+|| : oper. ( tokenvalue )
      dup oper-1st-ch + c@ emit
      dup oper-2nd-ch + c@ emit'
          oper-3rd-ch + c@ emit' ;
 
-~ : word.  ( n typ )
+~ : word.  ( tokenvalue token )
   #keyword# case? IF keyword. exit THEN
   #oper#    case? IF oper.    exit THEN
   #number#  case? IF .        exit THEN
