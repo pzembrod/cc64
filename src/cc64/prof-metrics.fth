@@ -45,8 +45,8 @@ profiler-metric:[ profile-scanner3
 
 profiler-metric:[ profile-scanner-nextword
   [scanner-nextword-vars]
-  [scanner-nextword-core]
-  [scanner-nextword-backword]
+  [scanner-fetchword]
+  [scanner-thisword]
   [scanner-nextword-mark]
   [scanner-nextword-advanced?]
 ]profiler-metric

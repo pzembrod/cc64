@@ -50,6 +50,7 @@
   tmpclear
 
   do$: string2stack  noop noop noop ;
+  : nextword  thisword accept ;
 
   init
   src-begin test-src1
@@ -57,14 +58,15 @@
   src@ i = c + 5 && 'x'; @
   src-end
 
-  test-src1
+  test-src1 fetchword
   T{ nextword -> <int> #keyword# }T
   T{ nextword -> idbuf #id# }T
-  cr idbuf count .s type cr
+  cr .( idbuf: ) idbuf count type cr
   T{ idbuf count swap c@ -> 1  ascii i }T
   T{ nextword -> ascii ; #char# }T
-  T{ nextword -> 0 #string# }T
+  T{ thisword -> 0 #string# }T
   T{ string2stack -> ascii a  ascii s  ascii d  0 }T
+  accept
   T{ nextword -> idbuf #id# }T
   T{ idbuf count swap c@ -> 1  ascii i }T
   T{ nextword -> <=> #oper# }T
@@ -84,7 +86,7 @@
   src@ <<= << <= < >>= >> >= > ~ @
   src-end
 
-  test-operator
+  test-operator fetchword
   T{ nextword -> <++> #oper# }T
   T{ nextword -> <+=> #oper# }T
   T{ nextword -> <+> #oper# }T

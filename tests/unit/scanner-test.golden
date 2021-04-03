@@ -11,7 +11,7 @@ fake-memsym.fth
 symboltable.fth
 fake-input.fth
 scanner.fth
-1 21996 i
+idbuf: i
 
 testing word.
 auto break case char continue default

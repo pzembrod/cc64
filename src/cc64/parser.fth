@@ -17,13 +17,15 @@
 \ parser: tools                22feb91pz
 
 : comes? ( tokenvalue token -- flag )
-    nextword dnegate d+ or
-    IF backword false ELSE true THEN ;
+    \ ."  comes? " 2dup . .
+    thisword dnegate d+ or
+    IF false ELSE accept true THEN ;
 
 : comes-a? ( token -- tokenvalue true )
            ( token -- false )
-    nextword rot = dup not
-    IF nip backword THEN ;
+    \ ."  comes-a? " dup .
+    thisword rot = dup not
+    IF nip THEN ;
 
 : expect ( tokenvalue token -- )
     2dup comes?
@@ -61,14 +63,14 @@ do$: compile$  ( -- adr )
 
 : atom ( -- obj )
    #number# comes-a?
-      IF do-numatom  exit THEN
+      IF accept do-numatom  exit THEN
    #id#     comes-a?
-      IF do-idatom   exit THEN
+      IF accept do-idatom   exit THEN
    #string# comes-a?
       IF drop compile$
-      do-stringatom  exit THEN
+      do-stringatom  accept exit THEN
    ." a value" *expected* error
-   0 do-numatom ;
+   accept 0 do-numatom ;
 
 
 \ *** Block No. 51, Hexblock 33
@@ -138,24 +140,24 @@ doer assign
 : unary ( -- obj )  recursive
 
    #oper# comes-a? IF
-    <-> case? IF unary do-neg exit THEN
-    <!> case? IF unary do-not exit THEN
+    <-> case? IF accept unary do-neg exit THEN
+    <!> case? IF accept unary do-not exit THEN
     <inv> case?
-          IF unary do-inv     exit THEN
+          IF accept unary do-inv     exit THEN
     <*> case?
-          IF unary do-pointer exit THEN
+          IF accept unary do-pointer exit THEN
     <and> case?
-          IF unary do-adress  exit THEN
+          IF accept unary do-adress  exit THEN
     <++> case?
-          IF unary do-preinc  exit THEN
+          IF accept unary do-preinc  exit THEN
     <--> case?
-          IF unary do-predec  exit THEN
-    drop  backword THEN
+          IF accept unary do-predec  exit THEN
+    drop THEN
    primary
    #oper# comes-a? IF
-    <++> case? IF do-postinc  exit THEN
-    <--> case? IF do-postdec  exit THEN
-    drop  backword THEN ;
+    <++> case? IF accept do-postinc  exit THEN
+    <--> case? IF accept do-postdec  exit THEN
+    drop THEN ;
 
 
 
@@ -169,9 +171,9 @@ doer assign
         IF swap  dup 2+ swap @ bounds
         DO dup I @ =
           IF drop  I 2+ @  true
-          UNLOOP exit THEN
+          UNLOOP accept exit THEN
         4 +LOOP
-        backword THEN
+        THEN
      drop  false ;
 
 : binary  ( tab -- )
@@ -527,21 +529,21 @@ variable cases
 
 : statement? ( -- flag )  true
   #keyword# comes-a? IF
-  <break> case? IF break-stmt exit THEN
+  <break> case? IF accept break-stmt exit THEN
   <cont> case?
-             IF continue-stmt exit THEN
-  <if> case?    IF if-stmt    exit THEN
-  <do> case?    IF do-stmt    exit THEN
-  <while> case? IF while-stmt exit THEN
-  <for> case?   IF for-stmt   exit THEN
-  <case> case?  IF case-stmt  exit THEN
+             IF accept continue-stmt exit THEN
+  <if> case?    IF accept if-stmt    exit THEN
+  <do> case?    IF accept do-stmt    exit THEN
+  <while> case? IF accept while-stmt exit THEN
+  <for> case?   IF accept for-stmt   exit THEN
+  <case> case?  IF accept case-stmt  exit THEN
   <default> case?
-             IF default-stmt  exit THEN
+             IF accept default-stmt  exit THEN
   <switch> case?
-             IF switch-stmt   exit THEN
+             IF accept switch-stmt   exit THEN
   <return> case?
-             IF return-stmt   exit THEN
-  drop  backword THEN
+             IF accept return-stmt   exit THEN
+  drop THEN
 
 
 \ *** Block No. 72, Hexblock 48
@@ -549,11 +551,10 @@ variable cases
 \   parser: statement          11sep94pz
 
   #char# comes-a? IF
-  ascii { case? IF compound   exit THEN
-  ascii ; case? IF            exit THEN
-  ascii } case? IF backword  not
-                              exit THEN
-  drop  backword THEN  drop
+  ascii { case? IF accept compound   exit THEN
+  ascii ; case? IF accept            exit THEN
+  ascii } case? IF not               exit THEN
+  drop THEN  drop
   mark expression-stmt advanced? ;
 
 
@@ -669,7 +670,7 @@ defer 'class?
 create id-buf /id 1+ allot
 
 : handle-id  ( -- )
-     id-buf off  #id# comes-a?
+     id-buf off  #id# comes-a? accept
         IF id-buf over c@ 1+ cmove
         ELSE *expected* error
         ." identifier" THEN ;
@@ -678,7 +679,7 @@ create id-buf /id 1+ allot
 : [parameters]) ( -- )
      dyn-reset
      ascii ) #char# comes? not
-        IF BEGIN #id# comes-a?
+        IF BEGIN #id# comes-a? accept
            IF putlocal
            2 dyn-allot %local  rot 2!
            ELSE *expected* error
@@ -834,7 +835,7 @@ do$: init$ ( type -- values )
      ascii { #char# comes?  \ }
         IF init[] exit THEN
      #string# comes-a?
-        IF drop init$ exit THEN
+        IF drop init$ accept exit THEN
      >inittype 14 and 14 xor ?1more
      constant-expression '1more ;
 
@@ -1021,8 +1022,7 @@ variable protos2resolve
 
 : define-function ( type -- )
      #char# comes-a?
-        IF backword
-        dup ascii ; = swap ascii , = or
+        IF dup ascii ; = swap ascii , = or
            IF prototype exit THEN THEN
      1st?
         IF .label swap
@@ -1096,6 +1096,7 @@ variable protos2resolve
 ~ variable main()-adr
 
 ~ : compile-program ( -- )
+     fetchword
      BEGIN definition? not UNTIL
      " main" findglobal ?dup 0=
         IF main()-adr off exit THEN

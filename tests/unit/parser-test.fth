@@ -64,15 +64,17 @@
   : fetchglobal"  ascii " word findglobal 2@ ;
 
   src-begin test-src1
-  src@ int i; @
+  src@ int i = 0; @
   src@ static char x; @
   src@ extern char a /= 0x0a; @
   src@ static int e /= 0x0e; @
+  src@ char *p; @
   src-end
   
   init  $a000 >staticadr
 
-  test-src1
+  test-src1 fetchword
+  T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> true }T
@@ -83,6 +85,7 @@
   T{ fetchglobal" x" -> $9ffd %reference }T
   T{ fetchglobal" a" -> $0a %extern %reference + }T
   T{ fetchglobal" e" -> $0e %int %reference + }T
+  T{ fetchglobal" p" -> $9ffb %extern %reference + %pointer + }T
 
   cr hex .( here, s0: ) here u. s0 @ u.
 

@@ -368,27 +368,25 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 \prof profiler-bucket [scanner-nextword-vars]
 
 || create word'  4 allot
-|| variable back
 || variable word#
 
 \prof [scanner-nextword-vars] end-bucket
-\prof profiler-bucket [scanner-nextword-core]
+\prof profiler-bucket [scanner-fetchword]
 
-~ : nextword ( -- tokenvalue token )
-     back @ back off  IF word' 2@ ELSE
-      BEGIN (nextword is-comment? WHILE
-      2drop skip-comment REPEAT
-      2dup word' 2! THEN
-     1 word# +! ;
+~ : fetchword ( -- tokenvalue token )
+     BEGIN (nextword is-comment? WHILE
+     2drop skip-comment REPEAT \ ."  fetchword: " 2dup u. u.
+     word' 2! ;
 
-\prof [scanner-nextword-core] end-bucket
-\prof profiler-bucket [scanner-nextword-backword]
+~ : accept ( -- )
+     1 word# +!  fetchword ;
 
-~ : backword ( -- )
-     back @ *compiler* ?fatal
-     back on  -1 word# +! ;
+\prof [scanner-fetchword] end-bucket
+\prof profiler-bucket [scanner-thisword]
 
-\prof [scanner-nextword-backword] end-bucket
+~ : thisword ( -- tokenvalue token )  word' 2@ ;
+
+\prof [scanner-thisword] end-bucket
 \prof profiler-bucket [scanner-nextword-mark]
 
 ~ : mark ( -- word# )  word# @ ;
@@ -405,7 +403,7 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 \prof profiler-bucket [scanner-rest]
 
 || : init-scanner
-   back off  $pending off  word# off ;
+   $pending off  word# off ;
     init: init-scanner
 
 
@@ -437,4 +435,3 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
   ." token/val:" . . ;
 
 \prof [scanner-rest] end-bucket
-
