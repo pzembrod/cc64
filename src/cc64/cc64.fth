@@ -6,7 +6,7 @@
 | ' |on   alias ~on
 | ' |off  alias ~off
 
-  (64 include tmpheap.fth C)
+  (64 include trnstmpheap.fth C)
   (64 $2000 mk-tmp-heap C)
   (16 include notmpheap.fth C)
   (CX include x16tmpheap.fth C)
