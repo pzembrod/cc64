@@ -179,6 +179,7 @@ clean:
 	rm -f cc64-suite-[cx]??_[cx]??.* cc64pe-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
 	rm -f *.out *.T64 *.result *-generated.c
+	rm -f *.profile
 
 c64files/rt-%: $(basedir)/c64files/rt-%
 	test -d c64files || mkdir c64files
