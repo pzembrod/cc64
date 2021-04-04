@@ -89,7 +89,7 @@
   ' dev
   ' compiler
 
-  clear
+  tmpclear  clear
 
 | alias compiler
 

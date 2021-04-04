@@ -48,7 +48,7 @@ reset-tmp-heap
   REPEAT drop ;
 
 | : remove-tmp-words  ( -- )
- voc-link  BEGIN  @ ?dup
+  voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
 ~ : tmpclear  ( -- )

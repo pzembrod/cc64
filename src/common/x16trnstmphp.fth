@@ -1,5 +1,5 @@
 
-\ This is a variant of the reference implementation tmpheap.fth
+\ This is a variant of the X16 implementation x16tmpheap.fth
 \ which places all the code for the tmpheap onto the heap,
 \ just like the transient 6502 assembler trns6502asm.fth.
 \ So after a SAVE or CLEAR, the tmpheap code is all gone, which is
@@ -17,10 +17,7 @@ variable tmpheap[
 variable tmpheap>
 variable ]tmpheap
 
-up@ dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
-
-: mk-tmp-heap  ( size -- )
-    heap dup ]tmpheap ! tmpheap> !  hallot  heap tmpheap[ ! ;
+ 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> !
 
 : tmp-hallot  ( size -- addr )
     tmpheap> @ swap -
@@ -48,7 +45,7 @@ up@ dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
     THEN
   REPEAT drop ;
 
-: remove-tmp-words  ( -- )
+: remove-tmp-words ( -- )
   voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
@@ -56,7 +53,7 @@ up@ dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
   remove-tmp-words
   \ Uncomment the following line to help determine the ideal tmpheap
   \ size for your project.
-  \ tmpheap> @ tmpheap[ @ - cr u. ." spare tmpheap bytes"
+  \ tmpheap> @ tmpheap[ @ - cr u. ." tmpheap spare"
   ]tmpheap @ tmpheap> !  last off ;
 
 here cr .( trnstmpheap act end: ) u. cr

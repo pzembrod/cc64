@@ -9,7 +9,7 @@
   (64 include trnstmpheap.fth C)
   (64 $2000 mk-tmp-heap C)
   (16 include notmpheap.fth C)
-  (CX include x16tmpheap.fth C)
+  (CX include x16trnstmphp.fth C)
 
   onlyforth  decimal
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
@@ -104,6 +104,7 @@
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
   s0 @ here - u. .( dictionary bytes to spare pre save ) cr
+  tmpclear
 \log display
   save
 \log alsologtofile
