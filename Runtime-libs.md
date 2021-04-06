@@ -85,21 +85,21 @@ in hex, and one string parameter, a file base name. It has the following form:
 *statics-start*, *statics-end*, *rt-basename*
 
 - *cc-sp*:
-- - a zero page address pair used as stack pointer for C local variables
+  - a zero page address pair used as stack pointer for C local variables
 - *zp*:
-- - a second zero page address pair that the compiled code may use
+  - a second zero page address pair that the compiled code may use
 - *rt-start*:
-- - the first code address of the runtime module
+  - the first code address of the runtime module
 - *rt-jumplist*:
-- - the address of the runtime modules jump list (see below)
+  - the address of the runtime modules jump list (see below)
 - *rt-end*:
-- - the first free code address after the end of the runtime module
+  - the first free code address after the end of the runtime module
 - *statics-start*:
-- - the lowest address of the runtime module's static vars
+  - the lowest address of the runtime module's static vars
 - *statics-end*:
-- - the hightest address + 1 of the runtime module's static vars
+  - the hightest address + 1 of the runtime module's static vars
 - *rt-basename*:
-- - the base filename of the runtime module. *basename*.o is then the
+  - the base filename of the runtime module. *basename*.o is then the
 code, *basename*.i the initialzation values of the module's static vars. (Of
 course *basename*.h is the header file containing the module's symbol
 definitions and the #pragma cc64 directive.)
@@ -125,17 +125,17 @@ statics_last  .word 0
 The first part of the jumplist is a list of 4 addresses:
 
 - `rt_jumplist`
-- - This address (equal to main_addr, of course) is #pragma cc64's 4th param
+  - This address (equal to main_addr, of course) is #pragma cc64's 4th param
 and the runtime module's anchor for the compiler.
 - `main_adr`
-- - Here the main()-function's address is inserted by the compiler. The
+  - Here the main()-function's address is inserted by the compiler. The
 runtime module's initialization calls main() with a jmp (main.adr).
 - `code_last`
-- - Here the last address + 1 of the generated code is inserted by the compiler.
+  - Here the last address + 1 of the generated code is inserted by the compiler.
 - `statics_first`
-- - Here the first address of the generated code is inserted by the compiler.
+  - Here the first address of the generated code is inserted by the compiler.
 - `statics_last`
-- - Here the last address + 1 of the generated code is inserted by the compiler.
+  - Here the last address + 1 of the generated code is inserted by the compiler.
 
 As described above, statics are allocated from the end of the used memory
 downwards. The statics' initialization values are placed by the
@@ -147,10 +147,10 @@ In case of no static variables, init_first will be equal to init_last.
 After the addresses follows a list of 6 jmp instructions:
 
 - `jmp (zp)`
-- - This it is used to emulate `jsr (zp)`. zp is the second zero
+  - This it is used to emulate `jsr (zp)`. zp is the second zero
 page pointer used by the compiler.
 - `jmp switch`
-- - Code generated for switch statements consists of loading into a/x
+  - Code generated for switch statements consists of loading into a/x
 the 16 bit value to match to case statements and a jsr to this address.
 Following the calling jsr-instruction will be an array of pairs of 16 bit
 values, one pair per case statement. The second value in each pair is the case
@@ -163,15 +163,15 @@ It then compares a/x to the 2nd value of each pair, jumps to the pair's first
 address in case of match, and in case of no match jumps behind the terminating
 0 at the end of the list.
 - jmp mult
-- - Multiplies (signed) the content of a/x with the integer in zp/zp+1,
+  - Multiplies (signed) the content of a/x with the integer in zp/zp+1,
 leaving the result in a/x.
 - jmp divmod
-- - Divides (signed) zp/zp+1 by a/x, leaving the result in a/x and the
+  - Divides (signed) zp/zp+1 by a/x, leaving the result in a/x and the
 remainder in zp/zp+1.
 - jmp shl
-- - Arithmetically shifts left a/x by y bits.
+  - Arithmetically shifts left a/x by y bits.
 - jmp shr
-- - Arithmetically shifts right a/x by y bits.
+  - Arithmetically shifts right a/x by y bits.
 
 The jumplist may be positioned anywhere in the library.
 
