@@ -15,6 +15,7 @@
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
   include util-words.fth
+  include strings.fth
   cr
 | vocabulary compiler
   compiler also definitions

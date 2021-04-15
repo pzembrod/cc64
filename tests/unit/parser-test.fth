@@ -27,6 +27,7 @@
 
   onlyforth  decimal
   include util-words.fth
+  include strings.fth
   cr
   vocabulary compiler
   compiler also definitions

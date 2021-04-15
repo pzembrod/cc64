@@ -19,6 +19,9 @@
   \prof include 6526timer.fth
   \prof include profiler.fth
   \prof profiler-init-buckets
+  \prof profiler-bucket [strings]
+  include strings.fth
+  \prof [strings] end-bucket
 ~ vocabulary compiler
   compiler also definitions
 

@@ -2,6 +2,7 @@
 tmpheap.fth
 tester.fth
 util-words.fth
+strings.fth
 
 init.fth
 strtab.fth

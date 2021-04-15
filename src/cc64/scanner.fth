@@ -16,17 +16,6 @@
 
 \prof profiler-bucket [scanner-alphanum]
 
-|| : alpha?  ( c -- flag )
-    dup  ascii a ascii [ uwithin
-    over ascii A ascii { uwithin or  \ }
-    swap ascii _ = or ;
-
-|| : num?  ( c -- flag )
-    ascii 0  ascii :  uwithin ;
-
-|| : alphanum? ( c -- flag )
-    dup alpha?  swap num?  or ;
-
 || : skipblanks  ( -- )
      BEGIN char> bl = WHILE
      +char REPEAT ;

@@ -1,5 +1,6 @@
 
 profiler-metric:[ profile-cc64-1
+  [strings]
   [memman-etc]
   [file-handling]
   [input]
@@ -7,7 +8,6 @@ profiler-metric:[ profile-cc64-1
   [symtab]
   [parser]
   [pass2]
-  [shell]
 ]profiler-metric
 
 profiler-metric:[ profile-scanner1
