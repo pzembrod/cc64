@@ -27,6 +27,7 @@
 
   onlyforth  decimal
   include util-words.fth
+  include tmp6502asm.fth
   include strings.fth
   cr
   vocabulary compiler

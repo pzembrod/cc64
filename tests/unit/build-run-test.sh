@@ -32,6 +32,6 @@ petscii2ascii "${logfile}" | \
   (echo "Test completed with errors: ${logfile}" && exit 1)
 
 if [[ -f "${goldenfile}" ]]; then
-  petscii2ascii "${logfile}" | diff "${goldenfile}" -
+  petscii2ascii "${logfile}" | ./filter.awk | diff "${goldenfile}" -
 fi
 

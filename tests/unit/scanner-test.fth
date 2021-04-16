@@ -13,9 +13,8 @@
   ' noop  alias ~on
   ' noop  alias ~off
 
-  (64 include tmpheap.fth C)
-  (64 $2000 mk-tmp-heap C)
-  (16 include notmpheap.fth C)
+  include tmpheap.fth
+  $2000 mk-tmp-heap
 
   : dos  ( -- )
    bl word count ?dup
@@ -29,6 +28,7 @@
 
   onlyforth  decimal
   include util-words.fth
+  include tmp6502asm.fth
   include strings.fth
   cr
   vocabulary compiler
@@ -123,6 +123,7 @@
   T{ nextword -> <inv> #oper# }T
   T{ nextword -> #eof# }T
 
+  .( SECTION-START) cr
   : bl/cr ( I cols -- ) swap 1+ swap mod 0= IF cr ELSE bl emit THEN ;
   : test-word.
     ." testing word." cr
@@ -130,6 +131,40 @@
     <inv> 1+ 0 DO I #oper# word. I 12 bl/cr LOOP cr
     ;
   cr test-word.
+  .( SECTION-END) cr
+
+  T{ $100 alpha? -> 0 }T
+  T{ 0 alpha? -> 0 }T
+  T{ ascii a alpha? -> -1 }T
+  T{ ascii z alpha? -> -1 }T
+  T{ ascii A alpha? -> -1 }T
+  T{ ascii Z alpha? -> -1 }T
+  T{ ascii a 1- alpha? -> 0 }T
+  T{ ascii z 1+ alpha? -> 0 }T
+  T{ ascii A 1- alpha? -> 0 }T
+  T{ ascii Z 1+ alpha? -> 0 }T
+
+  T{ $100 num? -> 0 }T
+  T{ 0 num? -> 0 }T
+  T{ ascii 0 num? -> -1 }T
+  T{ ascii 9 num? -> -1 }T
+  T{ ascii 0 1- num? -> 0 }T
+  T{ ascii 9 1+ num? -> 0 }T
+
+  T{ $100 alphanum? -> 0 }T
+  T{ 0 alphanum? -> 0 }T
+  T{ ascii a alphanum? -> -1 }T
+  T{ ascii z alphanum? -> -1 }T
+  T{ ascii A alphanum? -> -1 }T
+  T{ ascii Z alphanum? -> -1 }T
+  T{ ascii a 1- alphanum? -> 0 }T
+  T{ ascii z 1+ alphanum? -> 0 }T
+  T{ ascii A 1- alphanum? -> 0 }T
+  T{ ascii Z 1+ alphanum? -> 0 }T
+  T{ ascii 0 alphanum? -> -1 }T
+  T{ ascii 9 alphanum? -> -1 }T
+  T{ ascii 0 1- alphanum? -> 0 }T
+  T{ ascii 9 1+ alphanum? -> 0 }T
 
   cr .( test completed with ) #errors @ . .( errors) cr
 
