@@ -15,7 +15,9 @@
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
   include util-words.fth
-  \prof include tmp6502asm.fth
+  (64  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
+  (16 include trns6502asm.fth  C) \ 6502 assembler on heap
+  (CX  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
   \prof include 6526timer.fth
   \prof include profiler.fth
   \prof profiler-init-buckets
@@ -63,7 +65,6 @@
 
   onlyforth
   (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
-  (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   include lowlevel.fth
   (CX include x16edit.fth  C)

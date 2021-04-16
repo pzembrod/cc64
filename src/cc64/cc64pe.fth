@@ -15,6 +15,9 @@
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
   include util-words.fth
+  (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
+  (16 include trns6502asm.fth  C) \ 6502 assembler on heap
+  (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   include strings.fth
   cr
 | vocabulary compiler
@@ -47,7 +50,6 @@
 
   onlyforth
   (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
-  (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   include lowlevel.fth
   onlyforth compiler also definitions
