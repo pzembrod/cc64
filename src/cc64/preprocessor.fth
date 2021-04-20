@@ -114,7 +114,7 @@
 \   preprocessor:              07may95pz
 
 || : cpp-pragma  ( -- )
-     cpp-nextword " cc64" strcmp
+     cpp-nextword " cc64" streq
                0= ?cpp-errorexit
      cpp-number? ?cpp-fatal   >base !
      cpp-number? ?cpp-fatal   >zp   !

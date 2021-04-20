@@ -57,7 +57,7 @@
      ?DO dup I c@ > not
         IF 2drop 0 UNLOOP exit THEN
      I c@ /name > IF 1
-        ELSE over I strcmp
+        ELSE over I streq
            IF 2drop I count +
            UNLOOP exit THEN
         I c@ 1+ /symbol + THEN
@@ -116,7 +116,7 @@
      DO I ]hash u< not
         IF hash[ >I THEN
      I @ ?dup
-        IF over strcmp
+        IF over streq
            IF drop I @ count +  true
            UNLOOP exit THEN
         ELSE drop I  false UNLOOP exit

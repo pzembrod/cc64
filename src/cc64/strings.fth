@@ -1,6 +1,5 @@
-\ strcmp                       09may94pz
 
-~ : strcmp  ( str1 str2 -- flag )
+~ : streq  ( str1 str2 -- flag )
    count rot count rot over =
       IF 0 ?DO
       over I + c@  over I + c@ -

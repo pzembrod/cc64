@@ -46,7 +46,7 @@
 
 \ forth definitions
 
-  : cc  ( -- )
+~ : cc  ( -- )
      clearstack
      \prof profiler-start
      init
