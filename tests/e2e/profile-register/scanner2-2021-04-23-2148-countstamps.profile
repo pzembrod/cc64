@@ -1,0 +1,21 @@
+2021-04-23T21:48:00+02:00
+added deterministic countstamps. fixed timestamps low word random bug
+
+profiler report PROFILE-SCANNER2
+timestamps
+579.999.656 740.837.617 
+countstamps
+5.290.027 6.743.516 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535      6064480   666575373  (etc)
+1 23605 23650        54266     5737381  [SCANNER-ALPHANUM]
+2 23976 24131        66969     7264370  [SCANNER-IDENTIFIER]
+3 24135 24720        94351    10067124  [SCANNER-OPERATOR]
+4 24724 24964        27320     3471712  [SCANNER-NUMBER]
+5 24968 25481       240309    26414713  [SCANNER-CHAR/STRING]
+6 25485 25645       151636    16069120  [SCANNER-(NEXTWORD]
+7 25649 25795        44171     5236194  [SCANNER-COMMENT]
+8 26068 26282           14        1508  [SCANNER-REST]
+
