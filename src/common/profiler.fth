@@ -1,5 +1,6 @@
 
 8 constant #buckets
+4 constant #timestamps
 
 create prevTime  4 allot
 create deltaTime 4 allot
@@ -14,9 +15,15 @@ create >]buckets    #buckets 1+ allot
 create bucketTimes  #buckets 1+ 4 * allot
 create bucketCounts #buckets 1+ 4 * allot
 
-create timestamps[  $10 allot
+create initialTimeStamp 4 allot
+create timestamps[  #timestamps 4 * allot
 here constant ]timestamps
 variable timestamp>
+
+create mainCount 4 allot
+create countstamps[  #timestamps 4 * allot
+here constant ]countstamps
+variable countstamps>
 
 Assembler also definitions
 
@@ -46,6 +53,11 @@ Assembler also definitions
 : incCountOfBucket
   bucketCounts 2+ ,x inc 0= ?[ bucketCounts 3+ ,x inc 0= ?[
      bucketCounts ,x inc 0= ?[ bucketCounts 1+ ,x inc  ]? ]? ]?
+;
+
+: incMainCount
+  mainCount 2+ inc 0= ?[ mainCount 3+ inc 0= ?[
+     mainCount inc 0= ?[ mainCount 1+ inc  ]? ]? ]?
 ;
 
 Label compareIp
@@ -79,6 +91,7 @@ Label prNext
   incCountOfBucket
   addTimeToBucket
   setPrevTime
+  incMainCount
   0 # ldx  pla  timerActrl sta
   IP lda  2 # adc  Next $e + jmp
 
@@ -122,14 +135,17 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 
 : profiler-timestamp
   read-32bit-timer  timestamp> @
-  dup 4+  dup ]timestamps > abort" too many timestamps"
-  timestamp> !  ! ;
+  dup  4+ dup ]timestamps > abort" too many timestamps"
+  timestamp> !  2!
+  mainCount 2@  countstamps> @  dup 4+ countstamps> !  2! ;
 
 : profiler-start
   bucketTimes  #buckets 1+ 4 * erase
   bucketCounts #buckets 1+ 4 * erase
-  prevTime 4 erase  timestamps[ timestamp> !
-  reset-32bit-timer  profiler-timestamp  install-prNext ;
+  prevTime 4 erase   timestamps[ timestamp> !
+  mainCount 4 erase  countstamps[ countstamps> !
+  reset-32bit-timer  read-32bit-timer initialTimeStamp 2!
+  install-prNext ;
 
 : profiler-end  end-trace  profiler-timestamp ;
 
@@ -148,9 +164,12 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 : profiler-report
     cr ." profiler report " metric-name @ count $1f and type cr
     ." timestamps" cr
-    timestamps[ 4+ BEGIN dup timestamp> @ < WHILE
-    dup 2@ dnegate timestamps[ 2@ d+ d.. 4+ REPEAT drop
-    cr cr ." buckets" cr
+    timestamps[ BEGIN dup timestamp> @ < WHILE
+    dup 2@ dnegate initialTimestamp 2@ d+ d.. 4+ REPEAT drop cr
+    ." countstamps" cr
+    countstamps[ BEGIN dup countstamps> @ < WHILE
+    dup 2@ d.. 4+ REPEAT drop cr
+    cr ." buckets" cr
     ." b# addr[  ]addr  nextcounts  clockticks  name" cr
     #buckets 1+ 0 DO
       I .  I bucket[ u.  I ]bucket u.
