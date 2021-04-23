@@ -38,27 +38,36 @@
 
 || stringtab keywords
 
+~ x <do>       x" do"
+~ x <if>       x" if"
+~ x <for>      x" for"
+~ x <int>      x" int"
 ~ x <auto>     x" auto"
-~ x <break>    x" break"
 ~ x <case>     x" case"
 ~ x <char>     x" char"
-~ x <cont>     x" continue"
-~ x <default>  x" default"
-~ x <do>       x" do"
 ~ x <else>     x" else"
-~ x <extern>   x" extern"
-~ x <for>      x" for"
 ~ x <goto>     x" goto"
-~ x <if>       x" if"
-~ x <int>      x" int"
-~ x <register> x" register"
+~ x <break>    x" break"
+~ x <while>    x" while"
+~ x <extern>   x" extern"
 ~ x <return>   x" return"
 ~ x <static>   x" static"
 ~ x <switch>   x" switch"
-~ x <while>    x" while"
+~ x <default>  x" default"
+~ x <cont>     x" continue"
+~ x <register> x" register"
 
   endtab
 
+|| create keywords-index  8 c, 2 c,
+  keywords <do> string[] , <do> ,
+  keywords <for> string[] , <for> ,
+  keywords <auto> string[] , <auto> ,
+  keywords <break> string[] , <break> ,
+  keywords <extern> string[] , <extern> ,
+  keywords <default> string[] , <default> ,
+  keywords <cont> string[] , <cont> ,
+  0 ,  <register> 1+ ,
 
 \ *** Block No. 39, Hexblock 27
 
@@ -66,7 +75,8 @@
 
 || : keyword?  ( adr -- false )
               ( adr -- token true )
-     keywords  findstr ;
+\     keywords  findstr ;
+     keywords-index  findstr2 ;
 
 
 \ *** Block No. 40, Hexblock 28

@@ -142,15 +142,19 @@
 
 || stringtab cpp-keywords
 
+|| x #pragma    x" pragma"
 || x #define    x" define"
 || x #include   x" include"
-|| x #pragma    x" pragma"
 
 endtab
 
 || create cpp-commands
- ' cpp-define ,  ' cpp-include ,  ' cpp-pragma ,
+ ' cpp-pragma ,  ' cpp-define ,  ' cpp-include ,
 
+|| create cpp-keywords-index  7 c, 6 c,
+  cpp-keywords #pragma string[] , #pragma ,
+  cpp-keywords #include string[] , #include ,
+  0 ,  #include 1+ ,
 
 make preprocess ( -- )
    $pending @
@@ -158,7 +162,8 @@ make preprocess ( -- )
       clearline  exit THEN
    comment-state @ ?exit
    char> ascii # - ?exit  +char
-   cpp-nextword cpp-keywords findstr
+\   cpp-nextword cpp-keywords findstr
+   cpp-nextword cpp-keywords-index findstr2
       IF 2* cpp-commands + perform
       exit THEN
    cpp-error ;

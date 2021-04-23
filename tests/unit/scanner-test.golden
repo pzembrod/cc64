@@ -1,8 +1,8 @@
 
 testing word.
-auto break case char continue default
-do else extern for goto if
-int register return static switch while
+do if for int auto case
+char else goto break while extern
+return static switch default continue register
 
 ++ += + -- -= - *= * /= /* / %=
 % &= && & |= || | ^= ^ != ! ==

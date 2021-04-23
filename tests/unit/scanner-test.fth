@@ -81,6 +81,34 @@
   T{ nextword -> #eof# }T
 
   init
+  src-begin test-keyword
+  src@ auto break case char continue default @
+  src@ do else extern for goto if @
+  src@ int register return static switch while @
+  src-end
+
+  test-keyword  fetchword
+  T{ nextword -> <auto> #keyword# }T
+  T{ nextword -> <break> #keyword# }T
+  T{ nextword -> <case> #keyword# }T
+  T{ nextword -> <char> #keyword# }T
+  T{ nextword -> <cont> #keyword# }T
+  T{ nextword -> <default> #keyword# }T
+  T{ nextword -> <do> #keyword# }T
+  T{ nextword -> <else> #keyword# }T
+  T{ nextword -> <extern> #keyword# }T
+  T{ nextword -> <for> #keyword# }T
+  T{ nextword -> <goto> #keyword# }T
+  T{ nextword -> <if> #keyword# }T
+  T{ nextword -> <int> #keyword# }T
+  T{ nextword -> <register> #keyword# }T
+  T{ nextword -> <return> #keyword# }T
+  T{ nextword -> <static> #keyword# }T
+  T{ nextword -> <switch> #keyword# }T
+  T{ nextword -> <while> #keyword# }T
+  T{ nextword -> #eof# }T
+
+  init
   src-begin test-operator
   src@ ++ += + -- -= - *= * /= /* bla */ / %= % @
   src@ &= && & |= || | ^= ^ != ! == = @
@@ -127,44 +155,11 @@
   : bl/cr ( I cols -- ) swap 1+ swap mod 0= IF cr ELSE bl emit THEN ;
   : test-word.
     ." testing word." cr
-    <while> 1+ 0 DO I #keyword# word. I 6 bl/cr LOOP cr
+    <register> 1+ 0 DO I #keyword# word. I 6 bl/cr LOOP cr
     <inv> 1+ 0 DO I #oper# word. I 12 bl/cr LOOP cr
     ;
   cr test-word.
   .( SECTION-END) cr
-
-  T{ $100 alpha? -> 0 }T
-  T{ 0 alpha? -> 0 }T
-  T{ ascii a alpha? -> -1 }T
-  T{ ascii z alpha? -> -1 }T
-  T{ ascii A alpha? -> -1 }T
-  T{ ascii Z alpha? -> -1 }T
-  T{ ascii a 1- alpha? -> 0 }T
-  T{ ascii z 1+ alpha? -> 0 }T
-  T{ ascii A 1- alpha? -> 0 }T
-  T{ ascii Z 1+ alpha? -> 0 }T
-
-  T{ $100 num? -> 0 }T
-  T{ 0 num? -> 0 }T
-  T{ ascii 0 num? -> -1 }T
-  T{ ascii 9 num? -> -1 }T
-  T{ ascii 0 1- num? -> 0 }T
-  T{ ascii 9 1+ num? -> 0 }T
-
-  T{ $100 alphanum? -> 0 }T
-  T{ 0 alphanum? -> 0 }T
-  T{ ascii a alphanum? -> -1 }T
-  T{ ascii z alphanum? -> -1 }T
-  T{ ascii A alphanum? -> -1 }T
-  T{ ascii Z alphanum? -> -1 }T
-  T{ ascii a 1- alphanum? -> 0 }T
-  T{ ascii z 1+ alphanum? -> 0 }T
-  T{ ascii A 1- alphanum? -> 0 }T
-  T{ ascii Z 1+ alphanum? -> 0 }T
-  T{ ascii 0 alphanum? -> -1 }T
-  T{ ascii 9 alphanum? -> -1 }T
-  T{ ascii 0 1- alphanum? -> 0 }T
-  T{ ascii 9 1+ alphanum? -> 0 }T
 
   cr .( test completed with ) #errors @ . .( errors) cr
 
