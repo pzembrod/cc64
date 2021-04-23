@@ -1,0 +1,19 @@
+2021-04-23T10:12:41+02:00
+string-length indexed string search in string tabs.
+
+profiler report PROFILE-CC64-1
+timestamps
+579.980.460 740.543.948 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535       216506    22950222  (etc)
+1 18921 19129       114310    12976436  [STRINGS]
+2 19141 21392       742175    83029931  [MEMMAN-ETC]
+3 21396 22616      1396517   154575151  [FILE-HANDLING]
+4 22620 23277       316896    34740882  [INPUT]
+5 23281 25976       832390    90869725  [SCANNER]
+6 25980 27372       155294    17623890  [SYMTAB]
+7 27376 35180      1858844   201608564  [PARSER]
+8 35184 36735      1109737   122235615  [PASS2]
+
