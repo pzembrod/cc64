@@ -2,38 +2,28 @@
 
 \ stringtabellen               30sep90pz
 
-|| variable n
-|| variable m
+|| variable next-idx
+|| variable tabsize
+|| variable strarray>
 
-~ : x ( -- )  n @  1 n +!  constant ;
-~ : x"  ( -- )   here m @ !  here m !
-    2 allot  [compile] ," ;
+~ : x ( -- )  next-idx @  1 next-idx +!  constant ;
+~ : x"  ( -- )
+    here strarray> @ !  2 strarray> +!
+    [compile] ," ;
 
-  here 0 ,   | constant nil
-  here nil , ," end of table"
-             | constant void
+~ : stringtab ( size -- )
+     tabsize !  next-idx off  create
+     here strarray> !  tabsize @ 2* allot ;
 
-~ : stringtab ( -- )
-     create  here m !  2 allot  0 n !
-    does> ( -- 1.adr )  @ ;
-~ : endtab ( -- )  nil m @ ! ;
+~ : endtab ( -- )
+     next-idx @ tabsize @ -
+       IF next-idx @ . ." actual size" cr abort THEN ;
 
-~ : >string  ( adr -- str )  2+ ;
-~ : +string  ( adr1 -- adr2/0 ) @ ;
-~ : string[] ( tab n -- adr )
-     0 ?DO +string ?dup 0= IF void THEN
-    LOOP ;
-
-|| variable token
-
-~ : findstr  ( adr table -- false )
-            ( adr table -- token true )
-     token off
-     BEGIN ?dup WHILE
-     2dup >string streq
-        IF 2drop token @ true exit THEN
-     +string  1 token +! REPEAT
-     drop false ;
+\ ~ : >string  ( adr -- str )  @ ;
+\ ~ : +string  ( adr1 -- adr2/0 ) 2+ ;
+~ ' @ alias >string  ( adr -- str )
+~ ' 2+ alias +string  ( adr1 -- adr2 )
+~ : string[] ( tab n -- adr )  2* + ;
 
 ~ : findstr2  ( adr idxtbl -- false )
               ( adr idxtbl -- token true )
@@ -41,8 +31,8 @@
      u< IF drop 2drop false exit THEN ( adr idxtbl len )
      over 1+ c@ - ( adr idxtbl len-idxminlen )
      dup 0< IF drop 2drop false exit THEN
-     2* 2* + 2+ ( adr idxtbl[len-1] )
-     dup @ swap 2+ dup 4 + @ swap @
+     over + 4 + ( adr idxtbl idxtbl[len-1] )
+     swap >r dup 1+ c@ swap c@  r> 2+ @ over string[] -rot
      ( adr str[len-1] token[len-1] token[len] )
      DO ( adr str[len-1] )
        2dup >string streq IF 2drop I true UNLOOP exit THEN

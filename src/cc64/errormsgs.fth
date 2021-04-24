@@ -6,7 +6,7 @@
 
 \ errormessages                11sep94pz
 
-~ stringtab errormessage
+~ 40 stringtab errormessage
 
 ~ x *syntax*      x" syntax error"
 \ x *in-file*     x" source file error"

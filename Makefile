@@ -212,8 +212,8 @@ petscii64: $(cc64srcs_c64) $(peddisrcs_c64)
 
 
 test64: autostart-c64/cc64.T64
-	$(MAKE) -C tests/e2e fasttests64
 	$(MAKE) -C tests/unit tests
+	$(MAKE) -C tests/e2e fasttests64
 	$(MAKE) -C tests/integration tests
 
 alltests: sut

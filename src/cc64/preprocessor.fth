@@ -140,7 +140,7 @@
 
 \   preprocessor:              07may95pz
 
-|| stringtab cpp-keywords
+|| 3 stringtab cpp-keywords
 
 || x #pragma    x" pragma"
 || x #define    x" define"
@@ -151,10 +151,10 @@ endtab
 || create cpp-commands
  ' cpp-pragma ,  ' cpp-define ,  ' cpp-include ,
 
-|| create cpp-keywords-index  7 c, 6 c,
-  cpp-keywords #pragma string[] , #pragma ,
-  cpp-keywords #include string[] , #include ,
-  0 ,  #include 1+ ,
+|| create cpp-keywords-index  7 c, 6 c, cpp-keywords ,
+  #pragma c,
+  #include c,
+  #include 1+ c,
 
 make preprocess ( -- )
    $pending @

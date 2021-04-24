@@ -69,7 +69,7 @@
   T{ ascii 9 1+ alphanum? -> 0 }T
 
 
-stringtab keywords
+18 stringtab keywords
 
 ~ x <do>       x" do"
 ~ x <if>       x" if"
@@ -92,15 +92,19 @@ stringtab keywords
 
   endtab
 
-create keywords-index 8 c,  2 c,
-  keywords <do> string[] , <do> ,
-  keywords <for> string[] , <for> ,
-  keywords <auto> string[] , <auto> ,
-  keywords <break> string[] , <break> ,
-  keywords <extern> string[] , <extern> ,
-  keywords <default> string[] , <default> ,
-  keywords <cont> string[] , <cont> ,
-  0 ,  <register> 1+ ,
+  T{ keywords <do> string[] -> keywords }T
+  .( string[<do>]) cr
+  keywords <do> string[] >string count type cr
+
+create keywords-index  8 c, 2 c, keywords ,
+  <do> c,
+  <for> c,
+  <auto> c,
+  <break> c,
+  <extern> c,
+  <default> c,
+  <cont> c,
+  <register> 1+ c,
 
 create "goto" ," goto"
 create "next" ," next"

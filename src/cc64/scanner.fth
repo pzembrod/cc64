@@ -36,7 +36,7 @@
 
 \   scanner:                   12jan91pz
 
-|| stringtab keywords
+|| 18 stringtab keywords
 
 ~ x <do>       x" do"
 ~ x <if>       x" if"
@@ -59,15 +59,15 @@
 
   endtab
 
-|| create keywords-index  8 c, 2 c,
-  keywords <do> string[] , <do> ,
-  keywords <for> string[] , <for> ,
-  keywords <auto> string[] , <auto> ,
-  keywords <break> string[] , <break> ,
-  keywords <extern> string[] , <extern> ,
-  keywords <default> string[] , <default> ,
-  keywords <cont> string[] , <cont> ,
-  0 ,  <register> 1+ ,
+|| create keywords-index  8 c, 2 c, keywords ,
+  <do> c,
+  <for> c,
+  <auto> c,
+  <break> c,
+  <extern> c,
+  <default> c,
+  <cont> c,
+  <register> 1+ c,
 
 \ *** Block No. 39, Hexblock 27
 
@@ -115,7 +115,7 @@ here ," +++---**///%%&&&|||^^!!==<<<<>>>>~" 1+ || constant oper-1st-ch
 here ," += -= = =* = =& =| = = = <<= >>=  " 1+ || constant oper-2nd-ch
 here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
-|| stringtab op
+|| 34 stringtab op
   ~on
   x <++>    x <+=>    x <+>
   x <-->    x <-=>    x <->
@@ -138,28 +138,28 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
 \   scanner:                   08oct90pz
 
-|| create 2x-tab
+|| create $2?-tab
   $ff    c,  <!=>   c,  $ff    c,  $ff    c,
   $ff    c,  <%=>   c,  <and=> c,  $ff    c,
   $ff    c,  $ff    c,  <*=>   c,  <++>   c,
   $ff    c,  <-->   c,  $ff    c,  </=>   c,
 
-|| : 2x-oper?  ( c -- tokenvalue t / c -- f )
-     $0f and 2x-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
+|| : $2?-oper?  ( c -- tokenvalue t / c -- f )
+     $0f and $2?-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
 
-|| create xc-tab
+|| create $?c-tab
   <<<=>  c,  <==>   c,  <>>=>  c,  $ff    c,
   $ff    c,  $ff    c,  <xor=> c,  $ff    c,
   <or=>  c,  $ff    c,  <inv>  c,  $ff    c,
 
-|| : xc-oper?  ( c -- tokenvalue t / c -- f )
+|| : $?c-oper?  ( c -- tokenvalue t / c -- f )
      dup 3 and swap $e0 and $20 -
      dup $20 > IF $a0 - IF drop false exit THEN $40 THEN 2/ 2/ 2/ +
-     xc-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
+     $?c-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
 
 || : operator?  ( c -- tokenvalue t / c -- f )
-     dup $f0 and $20 = IF 2x-oper? exit THEN
-     dup $1f and $1b > IF xc-oper? exit THEN
+     dup $f0 and $20 = IF $2?-oper? exit THEN
+     dup $1f and $1b > IF $?c-oper? exit THEN
      drop false ;
 
 || : c@-bl=-if-#oper#-exit

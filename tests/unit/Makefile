@@ -10,7 +10,7 @@ testsrcs_ascii = $(wildcard *.fth)
 testsrcs_c64 = $(patsubst %, c64files/%, $(testsrcs_ascii))
 
 
-tests: parser-test scanner-test strings-test
+tests: strings-test scanner-test parser-test
 
 
 parser-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
