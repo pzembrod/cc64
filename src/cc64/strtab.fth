@@ -2,6 +2,11 @@
 
 \ stringtabellen               30sep90pz
 
+~ : enum ( -- next-idx 30 )  0 30 ;
+~ : y ( last-idx 30 -- next-idx 30 )
+    30 ?pairs  dup constant  1+ 30 ;
+~ : end-enum ( last-idx 30 -- )  30 ?pairs  drop ;
+
 || variable next-idx
 || variable tabsize
 || variable strarray>

@@ -115,23 +115,23 @@ here ," +++---**///%%&&&|||^^!!==<<<<>>>>~" 1+ || constant oper-1st-ch
 here ," += -= = =* = =& =| = = = <<= >>=  " 1+ || constant oper-2nd-ch
 here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
-|| 34 stringtab op
+enum
   ~on
-  x <++>    x <+=>    x <+>
-  x <-->    x <-=>    x <->
-  x <*=>    x <*>
-  x </=>    x <comment>         x </>
-  x <%=>    x <%>
-  x <and=>  x <l-and> x <and>
-  x <or=>   x <l-or>  x <or>
-  x <xor=>  x <xor>
-  x <!=>    x <!>
-  x <==>    x <=>
-  x <<<=>   x <<<>    x <<=>    x <<>
-  x <>>=>   x <>>>    x <>=>    x <>>
-  x <inv>
+  y <++>    y <+=>    y <+>
+  y <-->    y <-=>    y <->
+  y <*=>    y <*>
+  y </=>    y <comment>         y </>
+  y <%=>    y <%>
+  y <and=>  y <l-and> y <and>
+  y <or=>   y <l-or>  y <or>
+  y <xor=>  y <xor>
+  y <!=>    y <!>
+  y <==>    y <=>
+  y <<<=>   y <<<>    y <<=>    y <<>
+  y <>>=>   y <>>>    y <>=>    y <>>
+  y <inv>
   ~off
-  endtab
+end-enum
 
 
 \ *** Block No. 42, Hexblock 2a
