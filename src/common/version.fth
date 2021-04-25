@@ -1,4 +1,4 @@
 
-~ : .version  ."  V0.9 dev"
+~ : .version  ."  V0.9"
 \prof ."  profiling"
 ;
