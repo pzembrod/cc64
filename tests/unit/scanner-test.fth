@@ -39,16 +39,16 @@
   include strtab.fth
   include errormsgs.fth
   include errorhandler.fth
-  tmpclear
+  tmp-clear
 
   include fake-memsym.fth
   include symboltable.fth
-  tmpclear
+  tmp-clear
 
   include fake-input.fth
   include scanner.fth
   ' id-buf alias idbuf
-  tmpclear
+  tmp-clear
 
   do$: string2stack  noop noop noop ;
   : nextword  thisword accept ;

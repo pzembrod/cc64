@@ -34,16 +34,16 @@
   include errormsgs.fth
   include errorhandler.fth
   include memman.fth
-  tmpclear
+  tmp-clear
   \prof [memman-etc] end-bucket
 
   \prof profiler-bucket [file-handling]
   include fileio.fth
   include fileman.fth
-  tmpclear
+  tmp-clear
 
   include codehandler.fth
-  tmpclear
+  tmp-clear
   include rt-ptrs.fth
   \prof [file-handling] end-bucket
 
@@ -56,12 +56,12 @@
   \prof profiler-bucket [symtab]
   include symboltable.fth
   include preprocessor.fth
-  tmpclear
+  tmp-clear
   \prof [symtab] end-bucket
 
   \prof profiler-bucket [parser]
   include listman.fth
-  tmpclear
+  tmp-clear
 
   onlyforth
   (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
@@ -76,7 +76,7 @@
 
   \prof profiler-bucket [pass2]
   include p2write-decl.fth
-  tmpclear
+  tmp-clear
   include pass2.fth
   include invoke.fth
   \prof [pass2] end-bucket
@@ -108,7 +108,7 @@
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
   s0 @ here - u. .( dictionary bytes to spare pre save ) cr
-  tmpclear
+  tmp-clear
 \log display
   save
 \log alsologtofile

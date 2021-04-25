@@ -38,19 +38,19 @@
   include strtab.fth
   include errormsgs.fth
   include errorhandler.fth
-  tmpclear
+  tmp-clear
 
   include fake-memsym.fth
   include symboltable.fth
-  tmpclear
+  tmp-clear
 
   include fake-input.fth
   include scanner.fth
-  tmpclear
+  tmp-clear
 
   include fake-memheap.fth
   include listman.fth
-  tmpclear
+  tmp-clear
 
   include fake-codeh.fth
   include fake-v-asm.fth

@@ -17,8 +17,8 @@ Output: alsologtofile
  c64at c64at? ;
 
 : logopen
-  bl parse  log-dev-2nd@ busopen
-  2dup type
+  bl parse  2dup type
+  log-dev-2nd@ busopen
   bustype " ,s,w" count bustype busoff
   i/o-status? IF c64cr log-dev c@ dos-error abort THEN
   alsologtofile ;

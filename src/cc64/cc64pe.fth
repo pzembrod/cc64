@@ -29,24 +29,24 @@
   include errormsgs.fth
   include errorhandler.fth
   include memman.fth
-  tmpclear
+  tmp-clear
 
   include fileio.fth
   include fileman.fth
-  tmpclear
+  tmp-clear
 
   include codehandler.fth
-  tmpclear
+  tmp-clear
   include rt-ptrs.fth
 
   include input.fth
   include scanner.fth
   include symboltable.fth
   include preprocessor.fth
-  tmpclear
+  tmp-clear
 
   include listman.fth
-  tmpclear
+  tmp-clear
 
   onlyforth
   (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
@@ -54,12 +54,10 @@
   include lowlevel.fth
   onlyforth compiler also definitions
   include v-assembler.fth
-  \ tmpclear
-
   include codegen.fth
   include parser.fth
   include p2write-decl.fth
-  tmpclear
+  tmp-clear
   include pass2.fth
   include invoke.fth
   \ words
@@ -92,7 +90,7 @@
   ' dev
   ' compiler
 
-  tmpclear  clear
+  tmp-clear  clear
 
 | alias compiler
 

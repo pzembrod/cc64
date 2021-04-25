@@ -29,11 +29,11 @@ variable ]tmpheap
    tmpheap> @ over - ;
 
 : tmp-heapmove1x   ( from size -- from offset )
-   tmp-heapmove  ?heapmovetx off ;
+   tmp-heapmove  ?headmove-xt off ;
 
-: ||     ['] tmp-heapmove1x  ?heapmovetx ! ;
-: ||on   ['] tmp-heapmove    ?heapmovetx ! ;
-: ||off  ?heapmovetx off ;
+: ||     ['] tmp-heapmove1x  ?headmove-xt ! ;
+: ||on   ['] tmp-heapmove    ?headmove-xt ! ;
+: ||off  ?headmove-xt off ;
 
 
 : remove-tmp-words-in-voc  ( voc -- )
@@ -49,7 +49,7 @@ variable ]tmpheap
   voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
-: tmpclear  ( -- )
+: tmp-clear  ( -- )
   remove-tmp-words
   \ Uncomment the following line to help determine the ideal tmpheap
   \ size for your project.

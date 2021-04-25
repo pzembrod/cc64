@@ -2,7 +2,7 @@
 \ This is the reference implementation of tmpheap which allocates
 \ the tmpheap on the regular heap and moves definitons prefixed
 \ with || or within a ||on to ||off range onto the tmpheap.
-\ tmpclear will remove all words on the tmpheap, wheras regular clear
+\ tmp-clear will remove all words on the tmpheap, wheras regular clear
 \ will remove all words on tmpheap and heap together.
 
 \ Before the first use of ||, the tmpheap size in bytes must be
@@ -31,11 +31,11 @@ reset-tmp-heap
    tmpheap> @ over - ;
 
 | : tmp-heapmove1x   ( from size -- from offset )
-   tmp-heapmove  ?heapmovetx off ;
+   tmp-heapmove  ?headmove-xt off ;
 
-~ : ||     ['] tmp-heapmove1x  ?heapmovetx ! ;
-~ : ||on   ['] tmp-heapmove    ?heapmovetx ! ;
-~ : ||off  ?heapmovetx off ;
+~ : ||     ['] tmp-heapmove1x  ?headmove-xt ! ;
+~ : ||on   ['] tmp-heapmove    ?headmove-xt ! ;
+~ : ||off  ?headmove-xt off ;
 
 
 | : remove-tmp-words-in-voc  ( voc -- )
@@ -51,7 +51,7 @@ reset-tmp-heap
   voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
-~ : tmpclear  ( -- )
+~ : tmp-clear  ( -- )
   remove-tmp-words
   \ Uncomment the following line to help determine the ideal tmpheap
   \ size for your project.
