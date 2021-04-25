@@ -7,28 +7,26 @@
     30 ?pairs  dup constant  1+ 30 ;
 ~ : end-enum ( last-idx 30 -- )  30 ?pairs  drop ;
 
-|| variable next-idx
-|| variable tabsize
-|| variable strarray>
-
-~ : x ( -- )  next-idx @  1 next-idx +!  constant ;
-~ : x"  ( -- )
-    here strarray> @ !  2 strarray> +!
-    [compile] ," ;
-
-~ : stringtab ( size -- )
-     tabsize !  next-idx off  create
-     here strarray> !  tabsize @ 2* allot ;
-
-~ : endtab ( -- )
-     next-idx @ tabsize @ -
-       IF next-idx @ . ." actual size" cr abort THEN ;
-
 \ ~ : >string  ( adr -- str )  @ ;
 \ ~ : +string  ( adr1 -- adr2/0 ) 2+ ;
 ~ ' @ alias >string  ( adr -- str )
 ~ ' 2+ alias +string  ( adr1 -- adr2 )
-~ : string[] ( tab n -- adr )  2* + ;
+~ : string[] ( tab n -- adr )  2* + 2+ ;
+
+~ : x ( next-idx 31 -- next-idx 32 )
+    31 ?pairs  dup constant  32 ;
+
+~ : x"  ( tab last-idx 32 -- tab next-idx 31 )
+    32 ?pairs
+    2dup string[] here swap !
+    [compile] ,"  1+ 31 ;
+
+~ : stringtab ( size -- tab next-idx 31 )
+     create  here swap dup ,  2* allot  0 31 ;
+
+~ : endtab ( tab next-idx 31 -- )
+     31 ?pairs  over @ over -
+       IF . ." actual size" cr abort ELSE 2drop THEN ;
 
 ~ : findstr2  ( adr idxtbl -- false )
               ( adr idxtbl -- token true )
