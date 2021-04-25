@@ -234,8 +234,10 @@ slowtests: sut
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
 
-sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64
-
+sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
+  autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \
+  autostart-c64/peddi.T64 autostart-c16/peddi.T64 \
+  autostart-c64/cc64prof.T64
 
 # cc64 build rules
 
