@@ -69,7 +69,7 @@
   T{ ascii 9 1+ alphanum? -> 0 }T
 
 
-18 stringtab keywords
+18 string-tab keywords
 
 ~ x <do>       x" do"
 ~ x <if>       x" if"
@@ -90,30 +90,30 @@
 ~ x <cont>     x" continue"
 ~ x <register> x" register"
 
-  endtab
+end-tab
 
-  T{ keywords <do> string[] -> keywords }T
+  T{ keywords <do> string[] -> keywords 2+ }T
   .( string[<do>]) cr
   keywords <do> string[] >string count type cr
 
-create keywords-index  8 c, 2 c, keywords ,
-  <do> c,
-  <for> c,
-  <auto> c,
-  <break> c,
-  <extern> c,
-  <default> c,
-  <cont> c,
-  <register> 1+ c,
+keywords 2 8 length-index keywords-index
+  <do> idx,
+  <for> idx,
+  <auto> idx,
+  <break> idx,
+  <extern> idx,
+  <default> idx,
+  <cont> idx,
+end-index
 
 create "goto" ," goto"
 create "next" ," next"
 create "long" ," somethingverylong"
   hex
-  \ debug findstr2
-  T{ "long" keywords-index findstr2 -> false }T
-  T{ "next" keywords-index findstr2 -> false }T
-  T{ "goto" keywords-index findstr2 -> <goto> true }T
+  \ debug find-via-index
+  T{ "long" keywords-index find-via-index -> false }T
+  T{ "next" keywords-index find-via-index -> false }T
+  T{ "goto" keywords-index find-via-index -> <goto> true }T
 
   cr .( test completed with ) #errors @ . .( errors) cr
 

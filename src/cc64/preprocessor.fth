@@ -17,31 +17,33 @@
 
 \   preprocessor:              11sep94pz
 
-|| : clearline ( -- )
+||on
+
+  : clearline ( -- )
      linebuf off res-inptr ;
 
-|| : cpp-error  ( -- )
+  : cpp-error  ( -- )
      *preprocessor* error  clearline ;
 
-|| : check-eol  ( -- )
+  : check-eol  ( -- )
      skipblanks  char> 0=
         IF rdrop  cpp-error THEN ;
 
-|| : ?cpp-errorexit  ( flag -- )
+  : ?cpp-errorexit  ( flag -- )
        IF rdrop cpp-error THEN ;
 
-|| : ?cpp-fatal *preprocessor* ?fatal ;
+  : ?cpp-fatal *preprocessor* ?fatal ;
 
-|| create include-name /filename allot
+  create include-name /filename allot
 
-|| create delim  1 allot
+  create delim  1 allot
 
 
 \ *** Block No. 106, Hexblock 6a
 
 \   preprocessor:              11sep94pz
 
-|| : cpp-include ( -- )
+  : cpp-include ( -- )
      check-eol
      char> ascii < =
      char> ascii " =
@@ -67,14 +69,14 @@
 
 \   preprocessor:              19apr94pz
 
-|| variable minus
+  variable minus
 
-|| : cpp-number? ( -- n false/ -- true )
+  : cpp-number? ( -- n false/ -- true )
      skipblanks
      char> num? 0= ?dup ?exit
      number drop  false ;
 
-|| : cpp-define ( -- )
+  : cpp-define ( -- )
      check-eol
      char> alpha? 0= ?cpp-errorexit
      get-id
@@ -95,9 +97,9 @@
 
 \   preprocessor:              19apr94pz
 
-|| create cpp-word 17 allot
+  create cpp-word 17 allot
 
-|| : cpp-nextword  ( -- adr )
+  : cpp-nextword  ( -- adr )
      skipblanks
      cpp-word 1+ 16 bounds DO
      char> 0= char> bl = or
@@ -113,7 +115,7 @@
 
 \   preprocessor:              07may95pz
 
-|| : cpp-pragma  ( -- )
+  : cpp-pragma  ( -- )
      cpp-nextword " cc64" streq
                0= ?cpp-errorexit
      cpp-number? ?cpp-fatal   >base !
@@ -140,21 +142,23 @@
 
 \   preprocessor:              07may95pz
 
-|| 3 stringtab cpp-keywords
+3 string-tab cpp-keywords
 
-|| x #pragma    x" pragma"
-|| x #define    x" define"
-|| x #include   x" include"
+  x #pragma    x" pragma"
+  x #define    x" define"
+  x #include   x" include"
 
-endtab
+end-tab
 
-|| create cpp-commands
+create cpp-commands
  ' cpp-pragma ,  ' cpp-define ,  ' cpp-include ,
 
-|| create cpp-keywords-index  7 c, 6 c, cpp-keywords ,
-  #pragma c,
-  #include c,
-  #include 1+ c,
+cpp-keywords 6 7 length-index cpp-keywords-index
+  #pragma idx,
+  #include idx,
+end-index
+
+||off
 
 make preprocess ( -- )
    $pending @
@@ -163,7 +167,7 @@ make preprocess ( -- )
    comment-state @ ?exit
    char> ascii # - ?exit  +char
 \   cpp-nextword cpp-keywords findstr
-   cpp-nextword cpp-keywords-index findstr2
+   cpp-nextword cpp-keywords-index find-via-index
       IF 2* cpp-commands + perform
       exit THEN
    cpp-error ;

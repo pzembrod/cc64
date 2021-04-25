@@ -1,6 +1,4 @@
-\ *** Block No. 9, Hexblock 9
-
-\ stringtabellen               30sep90pz
+\ enums and string tables
 
 ~ : enum ( -- next-idx 30 )  0 30 ;
 ~ : y ( last-idx 30 -- next-idx 30 )
@@ -21,15 +19,23 @@
     2dup string[] here swap !
     [compile] ,"  1+ 31 ;
 
-~ : stringtab ( size -- tab next-idx 31 )
+~ : string-tab ( size -- tab next-idx 31 )
      create  here swap dup ,  2* allot  0 31 ;
 
-~ : endtab ( tab next-idx 31 -- )
+~ : end-tab ( tab next-idx 31 -- )
      31 ?pairs  over @ over -
        IF . ." actual size" cr abort ELSE 2drop THEN ;
 
-~ : findstr2  ( adr idxtbl -- false )
-              ( adr idxtbl -- token true )
+~ : length-index  ( stringtab min-idx max-idx -- stringtab 33 )
+     create  c, c, dup , 33 ;
+
+~ : end-index  ( stringtab 33 -- )
+     33 ?pairs  @ c, ;
+
+~ ' c, alias idx,
+
+~ : find-via-index  ( adr idxtbl -- false )
+                    ( adr idxtbl -- token true )
      over c@  over c@ over ( adr idxtbl len idxmaxlen len )
      u< IF drop 2drop false exit THEN ( adr idxtbl len )
      over 1+ c@ - ( adr idxtbl len-idxminlen )

@@ -36,7 +36,7 @@
 
 \   scanner:                   12jan91pz
 
-|| 18 stringtab keywords
+|| 18 string-tab keywords
 
 ~ x <do>       x" do"
 ~ x <if>       x" if"
@@ -57,26 +57,25 @@
 ~ x <cont>     x" continue"
 ~ x <register> x" register"
 
-  endtab
+end-tab
 
-|| create keywords-index  8 c, 2 c, keywords ,
-  <do> c,
-  <for> c,
-  <auto> c,
-  <break> c,
-  <extern> c,
-  <default> c,
-  <cont> c,
-  <register> 1+ c,
+|| keywords 2 8 length-index keywords-index
+  <do> idx,
+  <for> idx,
+  <auto> idx,
+  <break> idx,
+  <extern> idx,
+  <default> idx,
+  <cont> idx,
+end-index
 
 \ *** Block No. 39, Hexblock 27
 
 \   scanner:                   18apr94pz
 
 || : keyword?  ( adr -- false )
-              ( adr -- token true )
-\     keywords  findstr ;
-     keywords-index  findstr2 ;
+               ( adr -- token true )
+     keywords-index  find-via-index ;
 
 
 \ *** Block No. 40, Hexblock 28
