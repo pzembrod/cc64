@@ -166,7 +166,6 @@ make preprocess ( -- )
       clearline  exit THEN
    comment-state @ ?exit
    char> ascii # - ?exit  +char
-\   cpp-nextword cpp-keywords findstr
    cpp-nextword cpp-keywords-index find-via-index
       IF 2* cpp-commands + perform
       exit THEN

@@ -10,6 +10,7 @@ all: $(tools)
 clean:
 	rm -f  $(tools)
 	rm -f *.o test_*.fth
+	rm petscii_test
 
 
 ascii2petscii: ascii2petscii.o petscii.o openfiles.o
