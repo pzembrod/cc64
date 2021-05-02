@@ -1,5 +1,16 @@
 # cc64 versions
 
+## v0.9
+
+Main topic of v0.9 is compile speed. With the help of a simple profiler
+I was able to optimize a few performance hotspots in the scanner and in
+the scanner/parser interface, resulting in more than 20% compile time
+saved or more than 30% speed gained.
+
+Also, Source code listing during compile can now be switched on and off.
+Default is off; it turns out that switching off listing decreases
+compile time by another ~10%.
+
 ## v0.8.1
 
 v0.8.1 brings fixes for 2 bugs around declaring and exporting symbols for new runtime libraries. Thanks to buzzphp for finding and reporting them.
