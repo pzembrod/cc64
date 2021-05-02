@@ -2,7 +2,7 @@
 \ This is a custom implementation of tmpheap for the X16 which
 \ allocates the tmpheap in a RAM bank and moves definitons prefixed
 \ with || or within a ||on to ||off range there.
-\ tmpclear will remove all words on the tmpheap, wheras regular clear
+\ tmp-clear will remove all words on the tmpheap, wheras regular clear
 \ will remove all words on tmpheap and heap together.
 
 \ Other than the reference tmpheap living on the regular heap, this
@@ -25,11 +25,11 @@
    tmpheap> @ over - ;
 
 | : tmp-heapmove1x   ( from size -- from offset )
-   tmp-heapmove  ?heapmovetx off ;
+   tmp-heapmove  ?headmove-xt off ;
 
-~ : ||     ['] tmp-heapmove1x  ?heapmovetx ! ;
-~ : ||on   ['] tmp-heapmove    ?heapmovetx ! ;
-~ : ||off  ?heapmovetx off ;
+~ : ||     ['] tmp-heapmove1x  ?headmove-xt ! ;
+~ : ||on   ['] tmp-heapmove    ?headmove-xt ! ;
+~ : ||off  ?headmove-xt off ;
 
 
 | : remove-tmp-words-in-voc  ( voc -- )
@@ -42,14 +42,14 @@
   REPEAT drop ;
 
 | : remove-tmp-words ( -- )
- voc-link  BEGIN  @ ?dup
+  voc-link  BEGIN  @ ?dup
   WHILE  dup 4 - remove-tmp-words-in-voc REPEAT  ;
 
-~ : tmpclear  ( -- )
+~ : tmp-clear  ( -- )
   remove-tmp-words
   \ Uncomment the following line to help determine the ideal tmpheap
   \ size for your project.
   \ tmpheap> @ tmpheap[ @ - cr u. ." tmpheap spare"
   ]tmpheap @ tmpheap> !  last off ;
 
-' tmpclear is custom-remove
+' tmp-clear is custom-remove

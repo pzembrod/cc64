@@ -1,6 +1,6 @@
 
 create log-dev  8 c,
-create log-2nd  2 c,
+create log-2nd  9 c,
 : log-dev-2nd@ log-dev c@ log-2nd c@ ;
 
 : log-emit
@@ -16,12 +16,12 @@ Output: alsologtofile
  log-emit log-cr log-type c64del c64page
  c64at c64at? ;
 
-: logopen"
-  ascii " parse  log-dev-2nd@ busopen
-  2dup type
+: logopen
+  bl parse  2dup type
+  log-dev-2nd@ busopen
   bustype " ,s,w" count bustype busoff
   i/o-status? IF c64cr log-dev c@ dos-error abort THEN
   alsologtofile ;
 
 : logclose
-  log-dev-2nd@ busclose  display ;
+  cr  display  log-dev-2nd@ busclose ;

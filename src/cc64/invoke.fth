@@ -44,10 +44,12 @@
 
 \   invoke :  start compiler   13sep94pz
 
-forth definitions
+\ forth definitions
 
-  : cc  ( -- )
-     clearstack  init
+~ : cc  ( -- )
+     clearstack
+     \prof profiler-start
+     init
      bl word   dup c@ 0= ?usage
      dup exe-name strcpy
          source-name strcpy
@@ -62,7 +64,10 @@ forth definitions
         IF ." error(s) occured" cr
         close-files scratchfiles exit
         THEN
+     \prof profiler-timestamp
      ." pass 2:" cr
      pass2  cr
      ." compilation done" cr
-     scratchfiles ;
+     scratchfiles
+     \prof profiler-end
+     ;

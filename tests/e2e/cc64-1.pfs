@@ -1,0 +1,4 @@
+
+profile-cc64-1
+cc suite.c
+profile2file cc64-1.profile

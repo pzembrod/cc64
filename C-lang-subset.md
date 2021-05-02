@@ -22,11 +22,11 @@ accordingly.
 - No implicit `int f(int i)` function declaration.
 All functions must be declared or defined before first calling them.
 - No real preprocessor.
-- - `#define` just defines a constant on the compiler level. There's no
+  - `#define` just defines a constant on the compiler level. There's no
 text substitution as such.
-- - Accordingly no macros with parameters. No #undef. No #ifdef/#ifndef.
-- - `#include` works as expected, with max 4 levels of include files.
-- - `#pragma cc64` defines the memory layout for the code generator and is
+  - Accordingly no macros with parameters. No #undef. No #ifdef/#ifndef.
+  - `#include` works as expected, with max 4 levels of include files.
+  - `#pragma cc64` defines the memory layout for the code generator and is
 described in [runtime libraries](Runtime-libs.md).
 
 

@@ -2,7 +2,7 @@
 set -e
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-source "${testdir}/basedir.sh"
+source "${testdir}/basedir.shlib"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 c64files="$(realpath --relative-to="$PWD" "${testdir}/c64files")"
 

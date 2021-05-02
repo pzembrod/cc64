@@ -6,7 +6,7 @@
 
 \ errormessages                11sep94pz
 
-~ stringtab errormessage
+~ 40 string-tab errormessage
 
 ~ x *syntax*      x" syntax error"
 \ x *in-file*     x" source file error"
@@ -75,7 +75,8 @@
 ~ x *stack*     x" stack overflow"
 ~ x *rstack*  x" return stack overflow"
 ~ x *compiler*   x" compiler error"
-  endtab
+
+end-tab
 
 \ see issue 11. this here was broken.
 \ ~ create err-blk  0 ,

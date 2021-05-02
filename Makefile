@@ -68,7 +68,7 @@ c16: cc64-c16-t64 $(c16dir_files) cc64-c16files.zip cc64-c16files.d64
 
 x16: $(x16dir_files) cc64-x16files.zip cc64-x16files-sdcard.zip
 
-cc64-c64-t64: $(cc64_c64_t64_files)
+cc64-c64-t64: $(cc64_c64_t64_files) autostart-c64/cc64prof.T64
 
 cc64-c16-t64: $(cc64_c16_t64_files)
 
@@ -81,10 +81,6 @@ cc64-c16files.zip: $(c16dir_files) COPYING
 	zip -r $@ $^
 
 cc64-x16files.zip: $(x16dir_files) COPYING
-	rm -f $@
-	zip -r $@ $^
-
-$(recompile_dir).zip: $(recompile_srcs) $(recompile_forths) COPYING
 	rm -f $@
 	zip -r $@ $^
 
@@ -190,10 +186,10 @@ clean:
 	rm -f c64files/*.fth c16files/*.fth x16files/*.fth
 	rm -f c64files/*.log c16files/*.log x16files/*.log
 	rm -f x16files.img recompile-readme
-	rm -f [cx][16][64]files/notdone
-	rm -f emulator/sdcard.img tmp/* cc64-doc.zip
-	rm -rf release
+	rm -f [cx][16][64]files/notdone cc64-doc.zip
+	rm -rf release tmp/*
 	rm -rf $(recompile_dir) $(recompile_dir).zip
+	$(MAKE) -C emulator clean
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
 	$(MAKE) -C tests/peddi clean
@@ -210,10 +206,14 @@ veryclean: clean
 	rm -f autostart-c64/*.T64 autostart-c16/*.T64
 	rm -f runtime/*
 
+# Convenience rule for interactive debugging/developing:
+# Provide all Forth sources in c64files/ in PETSCII format.
+petscii64: $(cc64srcs_c64) $(peddisrcs_c64)
+
 
 test64: autostart-c64/cc64.T64
-	$(MAKE) -C tests/e2e fasttests64
 	$(MAKE) -C tests/unit tests
+	$(MAKE) -C tests/e2e fasttests64
 	$(MAKE) -C tests/integration tests
 
 alltests: sut
@@ -234,33 +234,41 @@ slowtests: sut
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
 
-sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64
-
+sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
+  autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \
+  autostart-c64/peddi.T64 autostart-c16/peddi.T64 \
+  autostart-c64/cc64prof.T64
 
 # cc64 build rules
 
 %files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) \
- build/build-cc64.sh emulator/run-in-vice.sh \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
-	build/build-cc64.sh $*
+	emulator/build-binary.sh $* cc64
 
 %files/cc64pe: \
  $(cc64srcs_c64) $(cc64srcs_c16) \
  $(peddisrcs_c64) $(peddisrcs_c16) \
- build/build-cc64pe.sh emulator/run-in-vice.sh \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
-	build/build-cc64pe.sh $*
+	emulator/build-binary.sh $* cc64pe
 
 %files/peddi: $(peddisrcs_c64) $(peddisrcs_c16) \
- build/build-peddi.sh emulator/run-in-vice.sh \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
-	build/build-peddi.sh $*
+	emulator/build-binary.sh $* peddi
 
 
 x16files/cc64: $(cc64srcs_x16) \
- build/build-cc64.sh emulator/run-in-x16emu.sh \
- x16files/vf-build-base emulator/sdcard.img
-	build/build-cc64.sh x16
+ emulator/build-binary.sh emulator/run-in-x16emu.sh \
+ x16files/vf-build-base
+	emulator/build-binary.sh x16 cc64
+
+
+c64files/cc64prof: $(cc64srcs_c64) \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
+ autostart-c64/vf-build-base.T64
+	emulator/build-binary.sh c64 cc64prof
 
 
 # build base rule
@@ -281,28 +289,28 @@ $(recompile_dir)/%: forth/%
 # Runtime module rules
 
 runtime/rt-c64-0801.o runtime/rt-c64-0801.h: \
-    src/runtime/rt-c64-0801.a build/generate_pragma_cc64.awk
+    src/runtime/rt-c64-0801.a src/runtime/generate_pragma_cc64.awk
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/rt-c64-0801.sym -o runtime/rt-c64-0801.o \
 	  src/runtime/rt-c64-0801.a
-	awk -f build/generate_pragma_cc64.awk -F '$$' tmp/rt-c64-0801.sym \
-	  > runtime/rt-c64-0801.h
+	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
+	  tmp/rt-c64-0801.sym > runtime/rt-c64-0801.h
 
 runtime/rt-c16-1001.o runtime/rt-c16-1001.h: \
-    src/runtime/rt-c16-1001.a build/generate_pragma_cc64.awk
+    src/runtime/rt-c16-1001.a src/runtime/generate_pragma_cc64.awk
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/rt-c16-1001.sym -o runtime/rt-c16-1001.o \
 	  src/runtime/rt-c16-1001.a
-	awk -f build/generate_pragma_cc64.awk -F '$$' tmp/rt-c16-1001.sym \
-	  > runtime/rt-c16-1001.h
+	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
+	  tmp/rt-c16-1001.sym > runtime/rt-c16-1001.h
 
 runtime/rt-x16-0801.o runtime/rt-x16-0801.h: \
-    src/runtime/rt-x16-0801.a build/generate_pragma_cc64.awk
+    src/runtime/rt-x16-0801.a src/runtime/generate_pragma_cc64.awk
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/rt-x16-0801.sym -o runtime/rt-x16-0801.o \
 	  src/runtime/rt-x16-0801.a
-	awk -f build/generate_pragma_cc64.awk -F '$$' tmp/rt-x16-0801.sym \
-	  > runtime/rt-x16-0801.h
+	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
+	  tmp/rt-x16-0801.sym > runtime/rt-x16-0801.h
 
 runtime/rt-c64-0801.i:
 	awk 'BEGIN{ printf("\x00\x90");}' > $@
@@ -388,12 +396,6 @@ autostart-c16/%.T64: forth/%
 
 autostart-x16/%.T64: x16files/%
 	bin2t64 $< $@
-
-
-# X16 emulator rules
-
-emulator/sdcard.img: emulator/sdcard.sfdisk emulator/mk-sdcard.sh
-	emulator/mk-sdcard.sh emulator/sdcard.sfdisk $@
 
 
 # Generic rules to populate c64files/, c16files/, x16files/

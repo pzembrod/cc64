@@ -1,0 +1,4 @@
+
+profile-scanner-nextword
+cc suite.c
+profile2file nextword.profile

@@ -1,0 +1,19 @@
+2021-04-16T01:31:47+02:00
+strcmp/spy/cat and alpha/num/alphanum moved to strings.fth
+
+profiler report PROFILE-CC64-1
+timestamps
+644.730.028 805.359.052 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535       216494    22948435  (etc)
+1 18921 19116       480396    56645293  [STRINGS]
+2 19128 21266       947278   104421341  [MEMMAN-ETC]
+3 21270 22490      1396465   154541959  [FILE-HANDLING]
+4 22494 23151       316896    34711112  [INPUT]
+5 23155 25816       832390    90610649  [SCANNER]
+6 25820 27196       155294    17603763  [SYMTAB]
+7 27200 35003      1858844   201343115  [PARSER]
+8 35007 36565      1109617   122555758  [PASS2]
+

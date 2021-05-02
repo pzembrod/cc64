@@ -5,7 +5,7 @@ testname="${1}"
 platform="c64"
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-source "${testdir}/basedir.sh"
+source "${testdir}/basedir.shlib"
 emulatordir="$(realpath --relative-to="$PWD" "${basedir}/emulator")"
 cbmfiles="$(realpath --relative-to="$PWD" "${testdir}/${platform}files")"
 logfile="${cbmfiles}/${testname}.log"
@@ -32,6 +32,6 @@ petscii2ascii "${logfile}" | \
   (echo "Test completed with errors: ${logfile}" && exit 1)
 
 if [[ -f "${goldenfile}" ]]; then
-  petscii2ascii "${logfile}" | diff "${goldenfile}" -
+  petscii2ascii "${logfile}" | ./filter.awk | diff "${goldenfile}" -
 fi
 

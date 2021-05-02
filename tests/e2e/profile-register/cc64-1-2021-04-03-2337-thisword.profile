@@ -1,0 +1,19 @@
+2021-04-03T23:37:17+02:00
+nextword/backword replaced by thisword/accept
+
+profiler report PROFILE-CC64-1
+timestamps
+635.227.308 794.348.749 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535       497891    55192602  (etc)
+1 19316 21453       939654   103578004  [MEMMAN-ETC]
+2 21457 22676      1384422   153259960  [FILE-HANDLING]
+3 22680 23337       313716    34378460  [INPUT]
+4 23341 26062      1019251   113532446  [SCANNER]
+5 26066 27442       153639    17411979  [SYMTAB]
+6 27446 35465      1805554   195706591  [PARSER]
+7 35469 37027      1101091   121325306  [PASS2]
+8 37170 37920            0           0  [SHELL]
+

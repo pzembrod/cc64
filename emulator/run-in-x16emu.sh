@@ -13,6 +13,7 @@ test -n "${x16filesdir}" || \
 sdcard="${emulatordir}/sdcard.img"
 x16script="${basedir}/tmp/x16script"
 
+make -C "${emulatordir}" sdcard.img
 mformat -i "${sdcard}" -F
 for asciifile in  $(cd "${x16filesdir}" && ls *)
 do
@@ -86,4 +87,7 @@ for outfile in ${OUTFILES}
 do
   sdfile="$(echo "${outfile}"|ascii2petscii - |tr -d '\r')"
   mcopy -i "${sdcard}" "::${sdfile}" "${x16filesdir}/${outfile}"
+  # Timestamps on the sdcard from x16emu seem to not be reliable.
+  # Touch the outfiles so make's dependency analysis works.
+  touch "${x16filesdir}/${outfile}"
 done

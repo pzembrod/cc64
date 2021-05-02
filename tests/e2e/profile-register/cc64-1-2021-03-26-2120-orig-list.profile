@@ -1,0 +1,19 @@
+2021-03-26T21:20:39+01:00
+Original version with src list during compile
+
+profiler report PROFILE-CC64-1
+timestamps
+919.522.732 1.078.906.060 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15887 65535       475419    52822277  (etc)
+1 19318 21455      1037243   114416784  [MEMMAN-ETC]
+2 21459 22678      1384162   153154008  [FILE-HANDLING]
+3 22682 23339       797224   122822197  [INPUT]
+4 23343 25749      2695157   299076306  [SCANNER]
+5 25753 27129       153639    17403250  [SYMTAB]
+6 27133 35110      1826434   197679185  [PARSER]
+7 35114 36672      1100491   121509788  [PASS2]
+8 36815 37565            0           0  [SHELL]
+

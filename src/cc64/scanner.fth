@@ -14,20 +14,14 @@
 
 \   scanner:                   26feb91pz
 
-|| : alpha?  ( c -- flag )
-    dup  ascii a ascii [ uwithin
-    over ascii A ascii { uwithin or  \ }
-    swap ascii _ = or ;
-
-|| : num?  ( c -- flag )
-    ascii 0  ascii :  uwithin ;
-
-|| : alphanum? ( c -- flag )
-    dup alpha?  swap num?  or ;
+\prof profiler-bucket [scanner-alphanum]
 
 || : skipblanks  ( -- )
      BEGIN char> bl = WHILE
      +char REPEAT ;
+
+\prof [scanner-alphanum] end-bucket
+\prof profiler-bucket [scanner-keyword]
 
 ~ 0 constant #char#
 ~ 1 constant #id#
@@ -42,53 +36,54 @@
 
 \   scanner:                   12jan91pz
 
-| stringtab keyword
+|| 18 string-tab keywords
 
+~ x <do>       x" do"
+~ x <if>       x" if"
+~ x <for>      x" for"
+~ x <int>      x" int"
 ~ x <auto>     x" auto"
-~ x <break>    x" break"
 ~ x <case>     x" case"
 ~ x <char>     x" char"
-~ x <cont>     x" continue"
-~ x <default>  x" default"
-~ x <do>       x" do"
 ~ x <else>     x" else"
-~ x <extern>   x" extern"
-~ x <for>      x" for"
 ~ x <goto>     x" goto"
-~ x <if>       x" if"
-~ x <int>      x" int"
-~ x <register> x" register"
+~ x <break>    x" break"
+~ x <while>    x" while"
+~ x <extern>   x" extern"
 ~ x <return>   x" return"
 ~ x <static>   x" static"
 ~ x <switch>   x" switch"
-~ x <while>    x" while"
+~ x <default>  x" default"
+~ x <cont>     x" continue"
+~ x <register> x" register"
 
-  endtab
+end-tab
 
+|| keywords 2 8 length-index keywords-index
+  <do> idx,
+  <for> idx,
+  <auto> idx,
+  <break> idx,
+  <extern> idx,
+  <default> idx,
+  <cont> idx,
+end-index
 
 \ *** Block No. 39, Hexblock 27
 
 \   scanner:                   18apr94pz
 
-|| variable token
-
-|| : scanword  ( adr table -- false )
-            ( adr table -- token true )
-     token off
-     BEGIN ?dup WHILE
-     2dup >string strcmp
-        IF 2drop token @ true exit THEN
-     +string  1 token +! REPEAT
-     drop false ;
-
 || : keyword?  ( adr -- false )
-              ( adr -- token true )
-     keyword  scanword ;
+               ( adr -- token true )
+     keywords-index  find-via-index ;
 
 
 \ *** Block No. 40, Hexblock 28
 
 \   scanner:                   18apr94pz
+
+\prof [scanner-keyword] end-bucket
+\prof profiler-bucket [scanner-identifier]
 
 || create id-buf  /id 1+ allot
 
@@ -112,55 +107,58 @@
 
 \   scanner:                   08oct90pz
 
+\prof [scanner-identifier] end-bucket
+\prof profiler-bucket [scanner-operator]
+
 here ," +++---**///%%&&&|||^^!!==<<<<>>>>~" 1+ || constant oper-1st-ch
 here ," += -= = =* = =& =| = = = <<= >>=  " 1+ || constant oper-2nd-ch
 here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
-|| stringtab op
+enum
   ~on
-  x <++>    x <+=>    x <+>
-  x <-->    x <-=>    x <->
-  x <*=>    x <*>
-  x </=>    x <comment>         x </>
-  x <%=>    x <%>
-  x <and=>  x <l-and> x <and>
-  x <or=>   x <l-or>  x <or>
-  x <xor=>  x <xor>
-  x <!=>    x <!>
-  x <==>    x <=>
-  x <<<=>   x <<<>    x <<=>    x <<>
-  x <>>=>   x <>>>    x <>=>    x <>>
-  x <inv>
+  y <++>    y <+=>    y <+>
+  y <-->    y <-=>    y <->
+  y <*=>    y <*>
+  y </=>    y <comment>         y </>
+  y <%=>    y <%>
+  y <and=>  y <l-and> y <and>
+  y <or=>   y <l-or>  y <or>
+  y <xor=>  y <xor>
+  y <!=>    y <!>
+  y <==>    y <=>
+  y <<<=>   y <<<>    y <<=>    y <<>
+  y <>>=>   y <>>>    y <>=>    y <>>
+  y <inv>
   ~off
-  endtab
+end-enum
 
 
 \ *** Block No. 42, Hexblock 2a
 
 \   scanner:                   08oct90pz
 
-|| create 2x-tab
+|| create $2?-tab
   $ff    c,  <!=>   c,  $ff    c,  $ff    c,
   $ff    c,  <%=>   c,  <and=> c,  $ff    c,
   $ff    c,  $ff    c,  <*=>   c,  <++>   c,
   $ff    c,  <-->   c,  $ff    c,  </=>   c,
 
-|| : 2x-oper?  ( c -- tokenvalue t / c -- f )
-     $0f and 2x-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
+|| : $2?-oper?  ( c -- tokenvalue t / c -- f )
+     $0f and $2?-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
 
-|| create xc-tab
+|| create $?c-tab
   <<<=>  c,  <==>   c,  <>>=>  c,  $ff    c,
   $ff    c,  $ff    c,  <xor=> c,  $ff    c,
   <or=>  c,  $ff    c,  <inv>  c,  $ff    c,
 
-|| : xc-oper?  ( c -- tokenvalue t / c -- f )
+|| : $?c-oper?  ( c -- tokenvalue t / c -- f )
      dup 3 and swap $e0 and $20 -
      dup $20 > IF $a0 - IF drop false exit THEN $40 THEN 2/ 2/ 2/ +
-     xc-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
+     $?c-tab + c@ dup $ff = IF drop false ELSE +char true THEN ;
 
 || : operator?  ( c -- tokenvalue t / c -- f )
-     dup $f0 and $20 = IF 2x-oper? exit THEN
-     dup $1f and $1b > IF xc-oper? exit THEN
+     dup $f0 and $20 = IF $2?-oper? exit THEN
+     dup $1f and $1b > IF $?c-oper? exit THEN
      drop false ;
 
 || : c@-bl=-if-#oper#-exit
@@ -176,6 +174,8 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
      BEGIN dup oper-3rd-ch + c@-bl=-if-#oper#-exit
      char> - WHILE 1+ limit-oper-loop REPEAT +char #oper# ;
 
+\prof [scanner-operator] end-bucket
+\prof profiler-bucket [scanner-number]
 
 \ *** Block No. 43, Hexblock 2b
 
@@ -215,6 +215,8 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
                   ELSE octnum THEN
         ELSE deznum THEN #number# ;
 
+\prof [scanner-number] end-bucket
+\prof profiler-bucket [scanner-char/string]
 
 || create charlist ," ()[]{},;:"
 
@@ -307,6 +309,8 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 || : string ( -- ??? #string# )
      $pending on  0 #string# ;
 
+\prof [scanner-char/string] end-bucket
+\prof profiler-bucket [scanner-(nextword]
 
 || : (nextword ( -- tokenvalue token )
      $pending @  *compiler* ?fatal
@@ -329,6 +333,9 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 \ *** Block No. 49, Hexblock 31
 
 \   scanner:                   09oct90pz
+
+\prof [scanner-(nextword] end-bucket
+\prof profiler-bucket [scanner-comment]
 
 || : is-comment? ( w t -- w t flag )
      2dup <comment> #oper# dnegate d+
@@ -353,28 +360,48 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
 \   scanner:                   11mar91pz
 
+\prof [scanner-comment] end-bucket
+\prof profiler-bucket [scanner-nextword]
+
+\prof profiler-bucket [scanner-nextword-vars]
+
 || create word'  4 allot
-|| variable back
 || variable word#
 
-~ : nextword ( -- tokenvalue token )
-     back @ back off  IF word' 2@ ELSE
-      BEGIN (nextword is-comment? WHILE
-      2drop skip-comment REPEAT
-      2dup word' 2! THEN
-     1 word# +! ;
+\prof [scanner-nextword-vars] end-bucket
+\prof profiler-bucket [scanner-fetchword]
 
-~ : backword ( -- )
-     back @ *compiler* ?fatal
-     back on  -1 word# +! ;
+~ : fetchword ( -- tokenvalue token )
+     BEGIN (nextword is-comment? WHILE
+     2drop skip-comment REPEAT \ ."  fetchword: " 2dup u. u.
+     word' 2! ;
+
+~ : accept ( -- )
+     1 word# +!  fetchword ;
+
+\prof [scanner-fetchword] end-bucket
+\prof profiler-bucket [scanner-thisword]
+
+~ : thisword ( -- tokenvalue token )  word' 2@ ;
+
+\prof [scanner-thisword] end-bucket
+\prof profiler-bucket [scanner-nextword-mark]
 
 ~ : mark ( -- word# )  word# @ ;
+
+\prof [scanner-nextword-mark] end-bucket
+\prof profiler-bucket [scanner-nextword-advanced?]
 
 ~ : advanced? ( word# -- flag )
      word# @ = 0= ;
 
+\prof [scanner-nextword-advanced?] end-bucket
+
+\prof [scanner-nextword] end-bucket
+\prof profiler-bucket [scanner-rest]
+
 || : init-scanner
-   back off  $pending off  word# off ;
+   $pending off  word# off ;
     init: init-scanner
 
 
@@ -382,19 +409,19 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
 
 \   scanner: word.             03oct90pz
 
-|| : keyword. ( n )
-     keyword swap string[]
+|| : keyword. ( tokenvalue )
+     keywords swap string[]
      >string count type ;
 
-|| : emit' ( c ) dup bl -
+|| : emit' ( char ) dup bl -
           IF emit ELSE drop THEN ;
 
-|| : oper. ( n )
+|| : oper. ( tokenvalue )
      dup oper-1st-ch + c@ emit
      dup oper-2nd-ch + c@ emit'
          oper-3rd-ch + c@ emit' ;
 
-~ : word.  ( n typ )
+~ : word.  ( tokenvalue token )
   #keyword# case? IF keyword. exit THEN
   #oper#    case? IF oper.    exit THEN
   #number#  case? IF .        exit THEN
@@ -404,3 +431,5 @@ here ,"                          =   =    " 1+ || constant oper-3rd-ch
   #string#  case? IF ." string @ " u.
                               exit THEN
   ." token/val:" . . ;
+
+\prof [scanner-rest] end-bucket

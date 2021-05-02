@@ -1,0 +1,21 @@
+2021-04-25T16:23:23+02:00
+stringtab switched from linked list to array. length index formalized.
+
+profiler report PROFILE-SCANNER3
+timestamps
+579.960.678 741.006.321 
+countstamps
+5.291.411 6.744.798 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15885 65535      5942080   653937471  (etc)
+1 23593 23638        54266     5739682  [SCANNER-ALPHANUM]
+2 23941 24096        66969     7214216  [SCANNER-IDENTIFIER]
+3 24100 24680        94351    10077598  [SCANNER-OPERATOR]
+4 24928 25441       240309    26381021  [SCANNER-CHAR/STRING]
+5 25445 25605       151636    16043648  [SCANNER-(NEXTWORD]
+6 25609 25755        44171     5234848  [SCANNER-COMMENT]
+7 25759 26024       151002    16376079  [SCANNER-NEXTWORD]
+8 26028 26242           14        1636  [SCANNER-REST]
+

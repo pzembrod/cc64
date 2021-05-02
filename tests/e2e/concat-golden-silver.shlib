@@ -1,0 +1,17 @@
+#!/bin/echo Please source this file
+
+# imput:
+# $tests
+
+# Build golden (and silver) file.
+# It is not named suite.golden so the make rules depending on *.golden
+# don't trigger on this generated golden file being new.
+rm -f suite.joined-golden suite.joined-silver
+touch suite.joined-golden suite.joined-silver
+for t in $tests; do
+  echo "${t}-test:" >> suite.joined-golden
+  cat ${t}.golden >> suite.joined-golden
+  # joined-silver doesn't contain test sections, so diffing against it
+  # will highlight the test sections as well as actuall output diffs.
+  cat ${t}.golden >> suite.joined-silver
+done

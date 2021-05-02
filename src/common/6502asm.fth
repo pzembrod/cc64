@@ -1,3 +1,6 @@
+
+Onlyforth  Assembler also definitions
+
 \ *** Block No. 122, Hexblock 7a
 
 \ Forth-83 6502-Assembler      20oct87re
@@ -10,13 +13,13 @@ $8009 , $1D0D , $8019 , $8080 ,
 $0080 , $1404 , $8014 , $8080 ,
 $8080 , $1C0C , $801C , $2C80 ,
 
-| Variable mode
+Variable mode
 
 : Mode:  ( n -)   Create c,
   Does>  ( -)     c@ mode ! ;
 
 0   Mode: .A        1    Mode: #
-2 | Mode: mem       3    Mode: ,X
+2   Mode: mem       3    Mode: ,X
 4   Mode: ,Y        5    Mode: X)
 6   Mode: )Y       $F    Mode: )
 
@@ -25,7 +28,7 @@ $8080 , $1C0C , $801C , $2C80 ,
 
 \ upmode  cpu                  20oct87re
 
-| : upmode ( addr0 f0 - addr1 f1)
+: upmode ( addr0 f0 - addr1 f1)
  IF mode @  8 or mode !   THEN
  1 mode @  $F and ?dup IF
  0 DO  dup +  LOOP THEN
@@ -76,7 +79,7 @@ $0484 $20 m/cpu bit
 
 \ Assembler conditionals       20oct87re
 
-| : range?   ( branch -- branch )
+: range?   ( branch -- branch )
  dup abs  $7F u> Abort" out of range " ;
 
 : [[  ( BEGIN)  here ;
@@ -154,7 +157,7 @@ immediate
 : Code  Create here dup 2- ! Assembler ;
 
 : >label  ( adr -)
- here | Create  immediate  swap ,
+ here || Create  immediate  swap ,
  4 hallot heap 1 and hallot ( 6502-alig)
  here 4 - heap  4  cmove
  heap last @ count $1F and + !  dp !
@@ -163,3 +166,5 @@ immediate
 
 : Label
  [ Assembler ]  here >label Assembler ;
+
+Onlyforth

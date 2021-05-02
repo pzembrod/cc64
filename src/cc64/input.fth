@@ -100,7 +100,7 @@
 
 \   input :  nextline           14sep94pz
 
-~ variable listing  listing on
+~ variable listing  listing off
 
 || : printsourceline  ( -- )
      linebuf /linebuf bounds

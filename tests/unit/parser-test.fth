@@ -5,7 +5,9 @@
 \ ' \ alias \log
 
 \log include logtofile.fth
-\log logopen" parser-test.log"
+\log logopen parser-test.log
+
+\needs \prof  ' \ alias \prof immediate
 
   ' noop   alias ~
   ' noop  alias ~on
@@ -25,6 +27,8 @@
 
   onlyforth  decimal
   include util-words.fth
+  include tmp6502asm.fth
+  include strings.fth
   cr
   vocabulary compiler
   compiler also definitions
@@ -34,19 +38,19 @@
   include strtab.fth
   include errormsgs.fth
   include errorhandler.fth
-  tmpclear
+  tmp-clear
 
   include fake-memsym.fth
   include symboltable.fth
-  tmpclear
+  tmp-clear
 
   include fake-input.fth
   include scanner.fth
-  tmpclear
+  tmp-clear
 
   include fake-memheap.fth
   include listman.fth
-  tmpclear
+  tmp-clear
 
   include fake-codeh.fth
   include fake-v-asm.fth
@@ -62,25 +66,41 @@
   : fetchglobal"  ascii " word findglobal 2@ ;
 
   src-begin test-src1
-  src@ int i; @
+  src@ int i = 0; @
   src@ static char x; @
   src@ extern char a /= 0x0a; @
   src@ static int e /= 0x0e; @
+  src@ char *p; @
   src-end
   
   init  $a000 >staticadr
 
-  test-src1
+  test-src1 fetchword
+  T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> true }T
   T{ definition? -> false }T
+  T{ thisword -> #eof# }T
 
   T{ fetchglobal" i" -> $9ffe %int %extern %reference + + }T
   T{ fetchglobal" x" -> $9ffd %reference }T
   T{ fetchglobal" a" -> $0a %extern %reference + }T
   T{ fetchglobal" e" -> $0e %int %reference + }T
+  T{ fetchglobal" p" -> $9ffb %extern %reference + %pointer + }T
+
+  src-begin test-stmt
+  src@ for @
+  src@ for(;;); @
+  src@ {for(;;);} @
+  src-end
+
+  init  test-stmt fetchword
+  T{ statement-tab #keyword# comes-tab-token? -> ' for-stmt true }T
+  T{ statement? -> true }T
+  T{ statement? -> true }T
+  T{ thisword -> #eof# }T
 
   cr hex .( here, s0: ) here u. s0 @ u.
 

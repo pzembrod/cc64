@@ -1,26 +1,9 @@
 
-tmpheap.fth
-tester.fth
-util-words.fth
-
-init.fth
-strtab.fth
-errormsgs.fth
-errorhandler.fth
-fake-memsym.fth
-symboltable.fth
-fake-input.fth
-scanner.fth
-1 21996 i
-
 testing word.
-auto break case char continue default
-do else extern for goto if
-int register return static switch while
+do if for int auto case
+char else goto break while extern
+return static switch default continue register
 
 ++ += + -- -= - *= * /= /* / %=
 % &= && & |= || | ^= ^ != ! ==
 = <<= << <= < >>= >> >= > ~ 
-
-test completed with 0 errors
-

@@ -10,6 +10,7 @@ all: $(tools)
 clean:
 	rm -f  $(tools)
 	rm -f *.o test_*.fth
+	rm petscii_test
 
 
 ascii2petscii: ascii2petscii.o petscii.o openfiles.o
@@ -60,7 +61,8 @@ petscii.o: petscii.c petscii.h
 install: $(tools)
 	cp $+ $(bindir)/
 
-test: test_ufscr2file_file test_ufscr2file_stdout test_petscii
+test: test_ufscr2file_file test_ufscr2file_stdout test_petscii \
+  test_ufscr2file_buffered test_ufscr2file_shadow
 
 test_ufscr2file_file: ufscr2file
 	./ufscr2file testdata/testsrc.d64 test_file.fth
@@ -69,6 +71,14 @@ test_ufscr2file_file: ufscr2file
 test_ufscr2file_stdout: ufscr2file
 	./ufscr2file testdata/testsrc.d64 >test_stdout.fth
 	diff test_stdout.fth testdata/testsrc.fth
+
+test_ufscr2file_buffered: ufscr2file
+	./ufscr2file -b testdata/testsrc.d64 test_file.fth
+	diff test_file.fth testdata/testsrc.fth
+
+test_ufscr2file_shadow: ufscr2file
+	./ufscr2file -s testdata/testshadow.d64 test_file.fth
+	diff test_file.fth testdata/testshadow.fth
 
 test_petscii: petscii_test
 	./petscii_test

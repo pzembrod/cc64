@@ -1,0 +1,18 @@
+#!/bin/echo Please source this file
+
+# imput:
+# $suitename
+
+# output:
+# $result
+
+rm -f "${suitename}.result"
+set +e
+diff suite.joined-golden "${suitename}.out"
+result=$?
+set -e
+test $result -eq 0 \
+  && echo "${suitename} PASS" > "${suitename}.result" \
+  || diff suite.joined-silver "${suitename}.out" > "${suitename}.result"
+  # diff with suite.silver will additionally show test sections as diff.
+cat "${suitename}.result"

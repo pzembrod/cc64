@@ -60,6 +60,14 @@
    i/o-status? UNTIL busoff
    dev 2 busclose ;
 
+\log : logfile  logopen alsologtofile ;
+
+\log ' logclose alias logclose
+
+' include alias exec
+
+: list!  ( flag -- )  listing ! ;
+: list?  ( -- )  listing @ . ;
 
 \ *** Block No. 130, Hexblock 82
 

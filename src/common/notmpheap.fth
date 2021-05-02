@@ -8,4 +8,4 @@
 ~ ' |on  alias ||on
 ~ ' |off alias ||off
 
-~ ' noop alias tmpclear
+~ ' noop alias tmp-clear

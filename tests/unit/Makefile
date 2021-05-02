@@ -10,14 +10,20 @@ testsrcs_ascii = $(wildcard *.fth)
 testsrcs_c64 = $(patsubst %, c64files/%, $(testsrcs_ascii))
 
 
-tests: parser-test scanner-test
+tests: strings-test scanner-test parser-test
 
 
 parser-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
 	./build-run-test.sh parser-test
 
+profilertest: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
+	./build-run-test.sh profilertest
+
 scanner-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
 	./build-run-test.sh scanner-test
+
+strings-test: $(cc64srcs_c64) $(commonsrcs_c64) $(testsrcs_c64)
+	./build-run-test.sh strings-test
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
