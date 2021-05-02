@@ -27,7 +27,6 @@ rm -f "${hostfiles}/suite" "${hostfiles}/suite.T64"
 testname="suite"
 rm -f "${hostfiles}/${testname}.log"
 
-keybuf="exec cc64-1.pfs\nexec scanner1.pfs\ndos s0:notdone"
 keybuf=""
 outfiles=""
 for metric in "$@"; do
