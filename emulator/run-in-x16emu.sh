@@ -2,6 +2,7 @@
 set -e
 
 x16filesdir="${CBMFILES}"
+x16rom="${X16ROM}"
 
 executable="${1}"
 keybuf="${2}"
@@ -10,6 +11,8 @@ emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
 test -n "${x16filesdir}" || \
   x16filesdir="$(realpath --relative-to="$PWD" "${basedir}/x16files")"
+test -n "${x16rom}" || \
+  x16rom="${emulatordir}/x16-c-rom.bin"
 sdcard="${emulatordir}/sdcard.img"
 x16script="${basedir}/tmp/x16script"
 
@@ -58,7 +61,7 @@ fi
 x16emu \
   -keymap de \
   -sdcard "${sdcard}" \
-  -rom "${emulatordir}/x16-c-rom.bin" \
+  -rom "${x16rom}" \
   $autostart \
   $script \
   $warp \
