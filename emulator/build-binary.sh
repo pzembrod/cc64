@@ -25,3 +25,6 @@ export OUTFILES="${target} ${target}.log"
 petscii2ascii "${logfile}" | \
   grep -F 'compile successful' || \
   (echo "check logfile ${logfile}" && exit 1)
+
+echo "$(date +%F-%H%M) $(wc -c "${cbmfiles}/${target}")" \
+  >> "${platform}-${target}.sizes"
