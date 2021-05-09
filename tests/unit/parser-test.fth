@@ -63,7 +63,8 @@
 
   include tester.fth
 
-  : fetchglobal"  ascii " word findglobal 2@ ;
+  : fetchglobal"  ascii " word findglobal ?dup IF 2@ THEN ;
+  : fetchlocal"  ascii " word findlocal ?dup IF 2@ THEN ;
 
   src-begin test-src1
   src@ int i = 0; @
@@ -100,6 +101,33 @@
   T{ statement-tab #keyword# comes-tab-token? -> ' for-stmt true }T
   T{ statement? -> true }T
   T{ statement? -> true }T
+  T{ thisword -> #eof# }T
+
+  src-begin test-func
+  src@ int f(i,p) @
+  src@ int i; @
+  src@ char *p; @
+  src@ {} @
+  src-end
+
+  init  test-func fetchword
+  T{ definition? -> true }T
+  T{ thisword -> #eof# }T
+
+  src-begin test-func-params
+  src@ f(i,p) @
+  src@ int i; @
+  src@ char *p; @
+  src-end
+
+  init  test-func-params fetchword
+  T{ %int (declarator -> %int %function + }T
+  T{ id-buf @ -> ascii f $100 * 1+ }T
+  T{ fetchlocal" i" -> 0 %int %offset + %reference + }T
+  T{ fetchlocal" p" -> 2 %int %offset + %reference + }T
+  T{ declare-parameters -> }T
+  T{ fetchlocal" i" -> 0 %int %offset + %reference + }T
+  T{ fetchlocal" p" -> 2 %offset %reference + %pointer + }T
   T{ thisword -> #eof# }T
 
   cr hex .( here, s0: ) here u. s0 @ u.
