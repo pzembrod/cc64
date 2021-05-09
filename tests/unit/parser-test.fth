@@ -85,11 +85,11 @@
   T{ definition? -> false }T
   T{ thisword -> #eof# }T
 
-  T{ fetchglobal" i" -> $9ffe %int %extern %reference + + }T
-  T{ fetchglobal" x" -> $9ffd %reference }T
-  T{ fetchglobal" a" -> $0a %extern %reference + }T
-  T{ fetchglobal" e" -> $0e %int %reference + }T
-  T{ fetchglobal" p" -> $9ffb %extern %reference + %pointer + }T
+  T{ fetchglobal" i" -> $9ffe %int %extern %l-value + + }T
+  T{ fetchglobal" x" -> $9ffd %l-value }T
+  T{ fetchglobal" a" -> $0a %extern %l-value + }T
+  T{ fetchglobal" e" -> $0e %int %l-value + }T
+  T{ fetchglobal" p" -> $9ffb %extern %l-value + %pointer + }T
 
   src-begin test-stmt
   src@ for @
@@ -123,11 +123,11 @@
   init  test-func-params fetchword
   T{ %int (declarator -> %int %function + }T
   T{ id-buf @ -> ascii f $100 * 1+ }T
-  T{ fetchlocal" i" -> 0 %int %offset + %reference + }T
-  T{ fetchlocal" p" -> 2 %int %offset + %reference + }T
+  T{ fetchlocal" i" -> 0 %int %offset + %l-value + }T
+  T{ fetchlocal" p" -> 2 %int %offset + %l-value + }T
   T{ declare-parameters -> }T
-  T{ fetchlocal" i" -> 0 %int %offset + %reference + }T
-  T{ fetchlocal" p" -> 2 %offset %reference + %pointer + }T
+  T{ fetchlocal" i" -> 0 %int %offset + %l-value + }T
+  T{ fetchlocal" p" -> 2 %offset %l-value + %pointer + }T
   T{ thisword -> #eof# }T
 
   cr hex .( here, s0: ) here u. s0 @ u.

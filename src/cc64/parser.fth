@@ -681,8 +681,8 @@ create id-buf /id 1+ allot
      %pointer is?
         IF []dim'd @ *???* ?error
         []dim'd off  1 #/obj !
-        %pointer clr  %reference set
-        ELSE %reference clr THEN
+        %pointer clr  %l-value set
+        ELSE %l-value clr THEN
      function?
         IF nestlocal [parameters])
         ELSE expect')'
@@ -705,12 +705,12 @@ create id-buf /id 1+ allot
            ELSE #/obj ! []dim'd on THEN
         expect']' THEN
      set-pointer  %function isn't?
-        IF %reference clr THEN ;
+        IF %l-value clr THEN ;
 
 \ frueher:
 \     set-pointer  %function is?
 \        IF ascii ] #char# expect
-\        ELSE %reference clr
+\        ELSE %l-value clr
 \        ascii ] #char# comes? not
 \           IF constant-expression
 \           #/obj !  []dim'd on
@@ -856,7 +856,7 @@ do$: init$ ( type -- values )
      []dim'd @ 0=
         IF []init'd @
            IF #inits @ #/obj !
-           ELSE %reference set THEN
+           ELSE %l-value set THEN
         THEN ;
 
 : size/# ( type -- type n )

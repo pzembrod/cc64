@@ -23,7 +23,7 @@
 ~ x *nofunc*      x" bad function call"
 ~ x *inc-nest*
      x" include nesting too deep"
-~ x *noref*       x" reference needed"
+~ x *nolval*      x" l-value needed"
 ~ x *novector*    x" vector needed"
 ~ x *noptr*       x" pointer needed"
 ~ x *noconst*

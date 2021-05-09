@@ -20,7 +20,7 @@
 
 \ and object type
 
- $100 constant %reference \ provided
+ $100 constant %l-value \ provided
  $200 constant %pointer   \ by the
  $400 constant %function  \ symbol
  $800 constant %offset    \ table
@@ -67,16 +67,16 @@ $8000 constant %constant  \ generated
      is-char? r> and 2+ ;
 
 \ size? und .size machen nur bei
-\ %reference-objekten sinn !
+\ %l-value-objekten sinn !
 
 
 0 set-int  constant %default
   \ default data type, e.g type of
   \ a multipication's result
 
-  0 set-int %reference %extern + set
+  0 set-int %l-value %extern + set
 constant %global
-  0 set-int %reference %offset + set
+  0 set-int %l-value %offset + set
 constant %local
   ( default definition types )
 
@@ -88,20 +88,20 @@ $3f01 constant %decl.mask
 
 \ *** Block No. 16, Hexblock 10
 
-\ codegen: reference/value     26sep90pz
+\ codegen: need-l-value/value     26sep90pz
 
 defer 'value      ( obj1 -- obj2 )
 
 : value ( obj1 -- obj2 )
-   %reference is?
-      IF 'value  %reference clr
+   %l-value is?
+      IF 'value  %l-value clr
       %function %pointer + isn't?
          IF set-int THEN THEN ;
 
-: reference ( obj1 -- obj2 )
-   %reference is?
-      IF %reference clr
-      ELSE *noref* error THEN ;
+: need-l-value ( obj1 -- obj2 )
+   %l-value is?
+      IF %l-value clr
+      ELSE *nolval* error THEN ;
 
 
 \ *** Block No. 17, Hexblock 11
@@ -147,12 +147,12 @@ variable vector
   ( both for pointer scaling )
 
 : array? ( type -- type flag )
-     %reference %function + isn't? >r
+     %l-value %function + isn't? >r
      %pointer is? r> and ;
   ( for definitions )
 
 : function? ( type -- type flag )
-     %function is? >r %reference isn't?
+     %function is? >r %l-value isn't?
      r> and ;
   ( for prepare-call and definitions )
 
@@ -203,7 +203,7 @@ variable vector
      %offset isn't?
         IF ['] do-lda(a)  IS 'value
         %constant set  exit THEN
-     %reference is?
+     %l-value is?
         IF ['] do-lda(base),# IS 'value
         ELSE require-accu  .lda-base
         over .add#  %offset clr THEN ;
@@ -261,15 +261,15 @@ variable vector
 \   codegen: primary           23feb91pz
 
 : do-pointer ( obj1 -- obj2 )
-   %reference is? >r  value
+   %l-value is? >r  value
    %function is?
       IF r>
-         IF %reference clr
+         IF %l-value clr
          ELSE drop %default
          *novector* error THEN
       ELSE rdrop  %pointer isn't?
          *noptr* ?error
-      %pointer clr  %reference set
+      %pointer clr  %l-value set
       ['] do-lda(a) IS 'value
       THEN ;
 
@@ -279,7 +279,7 @@ variable vector
 \ codegen: unary               27may91pz
 
 : do-adress ( obj1 -- obj2 )
-   reference
+   need-l-value
    %offset is?
       IF require-accu
       .lda-base  over .add#
@@ -308,7 +308,7 @@ variable vector
 : incop ( cfa6 cfa4 cfa2 cfa0 -- )
      create , , , ,
     does> ( obj1 pfa -- obj2 ) vector !
-     reference  size? .size
+     need-l-value  size? .size
      %constant is?
         IF %constant clr  require-accu
         int-pointer? 2 and doit
@@ -563,13 +563,13 @@ binop do-shr
 \   codegen: assign            27may91pz
 
 : prepare-asgnop ( obj1 -- obj2 obj3 )
-     reference
+     need-l-value
      %constant %offset + isn't?
         IF .pha THEN
-     2dup %reference set  value ;
+     2dup %l-value set  value ;
 
-: prepare-assign ( obj1 -- obj2 )
-     reference ;
+\ : prepare-assign ( obj1 -- obj2 )  need-l-value ;
+' need-l-value alias prepare-assign ( obj1 -- obj2 )
 
 : do-assign ( obj1 obj2 -- obj1 )
      ( value ) non-constant  2drop
