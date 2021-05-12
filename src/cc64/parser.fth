@@ -656,16 +656,32 @@ create id-buf /id 1+ allot
      #id# comes-a? dup IF accept
        ELSE ." identifier" *expected* error THEN ;
 
-: handle-id  ( -- )
-     id-buf off  expect-id,ok? IF id-buf over c@ 1+ cmove THEN ;
+: id-to-buf  ( -- id-buf )
+     expect-id,ok? IF id-buf over c@ 1+ cmove THEN id-buf ;
+
+: id-to-local  ( -- local-entry )
+     expect-id,ok?
+     IF putlocal ELSE id-buf ( as dummy local-entry ) THEN ;
+
+variable handle-id-xt  ' id-to-buf handle-id-xt !
+
+doer (declarator
+
+: typed-parameters) ( -- )
+     handle-id-xt push  ['] id-to-local handle-id-xt !
+     BEGIN %local register-or-type?
+       IF (declarator  2 dyn-allot swap rot 2! ELSE 2drop THEN
+     ascii , #char# comes? not UNTIL ;
+
+: id-parameters) ( -- )
+     BEGIN expect-id,ok? IF putlocal  2 dyn-allot %local  rot 2! THEN
+     ascii , #char# comes? not UNTIL ;
 
 : [parameters]) ( -- )
      dyn-reset
-     ascii ) #char# comes? not
-        IF BEGIN expect-id,ok?
-           IF putlocal  2 dyn-allot %local  rot 2! THEN
-        ascii , #char# comes? not UNTIL
-        expect')' THEN ;
+     ascii ) #char# comes? ?exit
+     #id# comes-a? IF drop id-parameters) ElSE typed-parameters) THEN
+     expect')' ;
 
 
 \ *** Block No. 79, Hexblock 4f
@@ -722,18 +738,18 @@ create id-buf /id 1+ allot
 
 \   parser: declarator         06mar91pz
 
-: (declarator ( type -- type' )
+make (declarator ( type -- id-handle type' )
      1 #/obj !  []dim'd off
     false BEGIN <*> #oper# comes? WHILE
      *double-ptr* ?error true REPEAT >r
-     ascii ( #char# comes?
+     ascii ( #char# comes?  \ )
         IF recursive (declarator
            expect')'
-        ELSE handle-id THEN
+        ELSE handle-id-xt perform swap THEN
      BEGIN mark >r
      ascii [ #char# comes?
         IF handle-array THEN
-     ascii ( #char# comes?
+     ascii ( #char# comes?  \ )
         IF handle-function THEN
      r> advanced? not UNTIL
      r> IF set-pointer THEN ;
@@ -741,7 +757,7 @@ create id-buf /id 1+ allot
 defer 'declarator ( type' -- )
 
 : declarator ( type -- )
-     (declarator 'declarator ;
+     id-buf off  (declarator 'declarator ;
 
 
 \ *** Block No. 82, Hexblock 52
@@ -979,11 +995,12 @@ variable protos2resolve
 
 \   parser: define-function    14mar91pz
 
-: parameter' ( type -- )
+: parameter' ( id-buf type -- )
+     nip
      function? dup >r
         IF unnestlocal THEN
      array? r> or
-        IF *param* error
+        IF *param* error drop
         ELSE id-buf findparam
         ?dup 0= IF *undef* error drop
                 ELSE >type ! THEN
@@ -1027,12 +1044,14 @@ variable protos2resolve
      ['] putlocal IS 'putsymbol ;
 
 
-: declaration' ( type -- )
+: declaration' ( id-buf type -- )
+     nip
      function?
         IF unnestlocal declare
         ELSE local define-data THEN ;
 
-: definition' ( type -- )
+: definition' ( id-buf type -- )
+     nip
      extern-op?
         IF define-extern exit THEN
      function?

@@ -118,17 +118,23 @@
   src@ f(i,p) @
   src@ int i; @
   src@ char *p; @
+  src@ g(int j, char *q) @
   src-end
 
   init  test-func-params fetchword
-  T{ %int (declarator -> %int %function + }T
+  T{ %int (declarator -> id-buf %int %function + }T
   T{ id-buf @ -> ascii f $100 * 1+ }T
   T{ fetchlocal" i" -> 0 %int %offset + %l-value + }T
   T{ fetchlocal" p" -> 2 %int %offset + %l-value + }T
   T{ declare-parameters -> }T
   T{ fetchlocal" i" -> 0 %int %offset + %l-value + }T
   T{ fetchlocal" p" -> 2 %offset %l-value + %pointer + }T
+  T{ %int (declarator -> id-buf %int %function + }T
+  T{ id-buf @ -> ascii g $100 * 1+ }T
+  T{ fetchlocal" j" -> 0 %int %offset + %l-value + }T
+  T{ fetchlocal" q" -> 2 %offset %l-value + %pointer + }T
   T{ thisword -> #eof# }T
+  thisword word.
 
   cr hex .( here, s0: ) here u. s0 @ u.
 
