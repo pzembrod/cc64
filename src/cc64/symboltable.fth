@@ -109,6 +109,10 @@
      0 swap count bounds
         ?DO 2* I c@ + LOOP ;
 
+\ true/false flag: found name in global symbols
+\ dfa: data field address of found symbol
+\ adr: address in hash table for name
+\ 0: hash table full
 | : (findglb) ( name -- dfa   true )
               ( name -- adr/0 false )
      dup hash #globals u/mod drop

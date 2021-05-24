@@ -34,3 +34,6 @@
 
 ~ : 2@  ( adr -- d)  dup 2+ @ swap @ ;
 ~ : 2!  ( d adr --)  under !  2+ ! ;
+
+~ ' 2* alias cells
+~ ' 2+ alias cell+

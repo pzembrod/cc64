@@ -15,7 +15,6 @@
 \ locals using { ... } and the FSL use of } 
 
 \ Needed ANS words that VolksForth does't (yet) supply:
-  : cells  2* ;
   : s"  [compile] " compile count ; immediate restrict
   : [char]  [compile] ascii ; immediate
 
@@ -62,12 +61,12 @@ CREATE ACTUAL-RESULTS 20 CELLS ALLOT
       DEPTH ?DUP IF         \ IF THERE IS SOMETHING ON THE STACK
          0  DO            \ FOR EACH STACK ITEM
            ACTUAL-RESULTS I CELLS + @   \ COMPARE ACTUAL WITH EXPECTED
-           = 0= IF S" INCORRECT RESULT: " ERROR .actual-result
+           = 0= IF S" FAIL: INCORRECT RESULT: " ERROR .actual-result
                 LEAVE THEN
          LOOP
       THEN
    ELSE               \ DEPTH MISMATCH
-      S" WRONG NUMBER OF RESULTS: " ERROR .actual-result
+      S" FAIL: WRONG NUMBER OF RESULTS: " ERROR .actual-result
    THEN ;
 
 : TESTING   \ ( -- ) TALKING COMMENT.

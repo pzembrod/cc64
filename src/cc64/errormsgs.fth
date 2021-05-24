@@ -48,7 +48,7 @@
 ~ x *ignored*     x" word ignored: "
 \ x *file*        x" file error"
 \ x *stackovfl*   x" stack overflow"
-~ x *expected*    x" expected: "
+~ x *expected*    x"  expected"
 ~ x *initer*      x" bad initializer"
 ~ x *???*         x" makes no sense"
 ~ x *double-func* x" double function"

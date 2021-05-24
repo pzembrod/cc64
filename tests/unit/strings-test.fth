@@ -24,10 +24,11 @@
    BEGIN bus@ con! i/o-status? UNTIL
    busoff ;
 
-  include tester.fth
 
   decimal
   include util-words.fth
+  include tester.fth
+  decimal
   include trns6502asm.fth
   include tracer.fth
   include strings.fth

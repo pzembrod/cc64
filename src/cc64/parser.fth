@@ -544,8 +544,7 @@ create statement-tab  10  4 * ,
  make statement ( -- )
   teststack
   statement? not
-     IF *expected* error
-     ." a statement" THEN ;
+     IF ." statement" *expected* error THEN ;
 
 
 \ *** Block No. 73, Hexblock 49
@@ -665,12 +664,24 @@ create id-buf /id 1+ allot
 
 variable handle-id-xt  ' id-to-buf handle-id-xt !
 
-doer (declarator
+doer (declarator ( type -- id-handle type' )
+
+: param-ok? ( id-handle type -- id-handle type true )
+            ( id-handle type -- false )
+    array? []dim'd @ 0= and IF %l-value set THEN
+    function? dup >r IF unnestlocal THEN
+    array? r> or IF *param* error 2drop false ELSE true THEN ;
+
+: parameter' ( id-buf type -- )
+    param-ok? IF
+      swap findparam ?dup 0=
+        IF *undef* error drop ELSE >type ! THEN
+    THEN ;
 
 : typed-parameters) ( -- )
      handle-id-xt push  ['] id-to-local handle-id-xt !
-     BEGIN %local register-or-type?
-       IF (declarator  2 dyn-allot swap rot 2! ELSE 2drop THEN
+     BEGIN %local register-or-type? not IF 2drop exit THEN
+     (declarator  param-ok? IF 2 dyn-allot swap rot 2! THEN
      ascii , #char# comes? not UNTIL ;
 
 : id-parameters) ( -- )
@@ -844,8 +855,8 @@ do$: init$ ( type -- values )
      xor %decl.mask and
      *!=type* ?error ;
 
-: declare ( type -- )
-     id-buf findglobal ?dup
+: declare ( id-buf type -- )
+     swap findglobal ?dup
         IF >type @ check-types-equal
         ELSE drop *undef* error THEN ;
 
@@ -858,10 +869,10 @@ do$: init$ ( type -- values )
         true
         ELSE </=> #oper# comes? THEN ;
 
-: define-extern ( type -- )
-     function? IF unnestlocal THEN
-     constant-expression swap
-     id-buf putglobal  2! ;
+: define-extern ( id-buf type -- )
+    function? IF unnestlocal THEN
+    swap putglobal
+    constant-expression -rot 2! ;
 
 
 \ *** Block No. 86, Hexblock 56
@@ -920,7 +931,7 @@ defer 'stat,
 
 defer 'putsymbol
 
-: define-data ( type -- )
+: define-data ( id-buf type -- )
      extern @
         IF declare exit THEN
      #inits off  []init'd off
@@ -931,7 +942,7 @@ defer 'putsymbol
      %offset is?
         IF create-dyn
         ELSE create-static THEN
-     id-buf 'putsymbol 2! ;
+     rot 'putsymbol 2! ;
 
 
 \ *** Block No. 90, Hexblock 5a
@@ -940,12 +951,12 @@ defer 'putsymbol
 
 variable protos2resolve
 
-: prototype ( type -- )
+: prototype ( id-buf type -- )
      unnestlocal
-     id-buf findglobal ?dup
-        IF >type @ check-types-equal
+     over findglobal ?dup
+        IF >type @ check-types-equal drop
         ELSE %proto set  .label swap
-        id-buf putglobal  dup >r  2!
+        rot putglobal  dup >r  2!
         heap> ?dup
            IF dup 2+  r> over !
                   2+  .jmp-ahead 1+ swap !
@@ -983,28 +994,17 @@ variable protos2resolve
      ( obj element)  2 pick over 2+ !
      dup 4 + @  sort-in  hook-into r> ;
 
-: find/putglobal ( obj -- obj desc )
-     id-buf findglobal ?dup
+: find/putglobal ( obj id-buf -- obj desc )
+     dup findglobal ?dup
         IF dup >type @ %proto is?
-           IF adjust-prototype exit
+           IF rot drop adjust-prototype exit
            ELSE 2drop THEN THEN
-     id-buf putglobal ;
+     putglobal ;
 
 
 \ *** Block No. 92, Hexblock 5c
 
 \   parser: define-function    14mar91pz
-
-: parameter' ( id-buf type -- )
-     nip
-     function? dup >r
-        IF unnestlocal THEN
-     array? r> or
-        IF *param* error drop
-        ELSE id-buf findparam
-        ?dup 0= IF *undef* error drop
-                ELSE >type ! THEN
-        THEN ;
 
 : declare-parameters ( -- )
      ['] parameter' IS 'declarator
@@ -1017,20 +1017,19 @@ variable protos2resolve
 
 \   parser: define function    14mar91pz
 
-: define-function ( type -- )
+: define-function ( id-buf type -- )
      #char# comes-a?
         IF dup ascii ; = swap ascii , = or
            IF prototype exit THEN THEN
      1st?
-        IF .label swap
-        find/putglobal 2!
+        IF .label swap rot find/putglobal 2!
          declare-parameters
           ascii { #char# expect  \ }
           compound
          unnestlocal
         .rts  flushcode
         function defined
-        ELSE drop *syntax* error THEN ;
+        ELSE 2drop *syntax* error THEN ;
 
 
 \ *** Block No. 94, Hexblock 5e
@@ -1045,13 +1044,11 @@ variable protos2resolve
 
 
 : declaration' ( id-buf type -- )
-     nip
      function?
-        IF unnestlocal declare
+        IF unnestlocal %offset clr %extern set declare
         ELSE local define-data THEN ;
 
 : definition' ( id-buf type -- )
-     nip
      extern-op?
         IF define-extern exit THEN
      function?

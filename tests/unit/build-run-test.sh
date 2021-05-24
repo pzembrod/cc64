@@ -24,8 +24,8 @@ petscii2ascii "${logfile}" | \
   (echo "Test did not complete: ${logfile}" && exit 1)
 
 petscii2ascii "${logfile}" | \
-  grep -A 1 -F 'T{' && \
-  echo "Incorrect result(s): ${logfile}" && exit 1 || true
+  grep -E -A 1 'FAIL:' && \
+  echo "Failure: ${logfile}" && exit 1 || true
 
 petscii2ascii "${logfile}" | \
   grep -qF 'test completed with 0 errors' || \

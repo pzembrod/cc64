@@ -22,8 +22,8 @@
   : init-static  $a000 >staticadr ;
   init: init-static
 
-  : stat,  ." stat, "  .  -2 staticadr +! ;
-  : cstat, ." cstat, " .  -1 staticadr +! ;
+  : stat,   . ." stat, "   -2 staticadr +! ;
+  : cstat,  . ." cstat, "  -1 staticadr +! ;
 
   : flushcode ;
   : flushstatic ;

@@ -20,7 +20,7 @@
 
 \ and object type
 
- $100 constant %l-value \ provided
+ $100 constant %l-value   \ provided
  $200 constant %pointer   \ by the
  $400 constant %function  \ symbol
  $800 constant %offset    \ table

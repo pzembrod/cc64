@@ -139,7 +139,7 @@
   : .label      ( -- adr )
      >label @ dup ." *label*: " u. +label cr ;
   : .jmp-ahead ( -- adr )
-     ." jmp ahead " >label @ dup u. +label @ cr ;
+     ." jmp ahead " >label @ dup u. +label cr ;
   : .resolve-jmp ( adr -- )
      ." patch " u. cr ;
 

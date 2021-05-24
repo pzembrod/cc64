@@ -1,0 +1,18 @@
+TEST-GLOBAL-DEFINITIONS
+0 stat, 0 cstat, 0 stat, 
+TEST-FOR
+*label*: 1 
+jmp ahead 2 
+*label*: 3 
+jmp 1 
+patch 2 
+jmp 3 
+*label*: 4 
+jmp ahead 5 
+*label*: 6 
+jmp 4 
+patch 5 
+jmp 6 
+TEST-KR-FUNC
+*label*: 1 
+rts
