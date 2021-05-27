@@ -1,5 +1,17 @@
 # cc64 versions
 
+## v0.10-dev
+
+ANSI style function definitions are now possible.
+There's no matching or checking, however,
+of declared parmeter types
+in the function definition and actual parmeter
+types in calls to that function.
+
+Also more parser unit tests, some bug fixes,
+and binary sizes are now tracked in
+[bin-size-register](bin-size-register).
+
 ## v0.9
 
 Main topic of v0.9 is compile speed. With the help of a simple profiler

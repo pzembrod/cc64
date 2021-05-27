@@ -7,8 +7,8 @@ cc64 was inspired by Ron Cain and James E. Hendrix'
 
 ## C language limitations
 
-- cc64 uses the old K&R standard. No ANSI, not even for function
-parameter declaration. Sorry.
+- As of v0.10, cc64 supports ANSI-style function
+parameter declarations.
 - Only (signed) int and (unsigned) char as basic data types.
 - No unsigned. No long.
 - No floats. No void.
