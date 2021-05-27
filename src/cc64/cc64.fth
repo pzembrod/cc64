@@ -77,6 +77,15 @@
   \prof profiler-bucket [pass2]
   include p2write-decl.fth
   tmp-clear
+
+  \ From here on everything can go onto
+  \ the tmpheap, interface or not,
+  \ because the next tmp-clear comes
+  \ directly before the save.
+  \ Else on the X16 dictionary space
+  \ becomes tight.
+  || ' || alias ~
+
   include pass2.fth
   include invoke.fth
   \prof [pass2] end-bucket
