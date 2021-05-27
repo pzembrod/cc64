@@ -7,8 +7,7 @@ int noconst(i)
 int i;
 { return i; }
 
-print(s)
-char *s;
+print(char *s)
 {
   while(*s != 0)
      putc(*s++);
@@ -22,8 +21,7 @@ char *s;
 
 extern __chkout() *= 0xffc9 ;
 
-_chkout(lfn)
-int lfn;
+_chkout(int lfn)
 { __chkout(lfn<<8); }
 
 extern _close() *= 0xffc3 ;
@@ -92,9 +90,7 @@ char *message;
   }
 }
 
-assertTrue(expression, message)
-int expression;
-char *message;
+assertTrue(int expression, char *message)
 {
   if (!expression) {
     print("Assert failed: "); println(message);

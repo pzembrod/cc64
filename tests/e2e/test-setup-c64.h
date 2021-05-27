@@ -7,23 +7,20 @@ extern putc() *= 0xffd2;
  * as a non-constant value. */
 extern int noconst() *= 0xfd0f;
 
-print(s)
-char *s;
+print(char *s)
 {
   while(*s != 0)
      putc(*s++);
 }
 
-println(s)
-char *s;
+println(char *s)
 {
   print(s); putc('\n');
 }
 
 extern __chkout() *= 0xffc9 ;
 
-_chkout(lfn)
-int lfn;
+_chkout(int lfn)
 { __chkout(lfn<<8); }
 
 extern _close() *= 0xffc3 ;
@@ -36,9 +33,7 @@ extern char _kernal_sa /= 0xb9;
 extern char _kernal_fa /= 0xba;
 extern int _kernal_fnam /= 0xbb;
 
-_open(lfn, fa, sa, fnam)
-char lfn, fa, sa;
-char *fnam;
+_open(char lfn, char fa, char sa, char *fnam)
 {
   char *p;
   for(p=fnam; *p; ++p);
@@ -50,8 +45,7 @@ char *fnam;
   __open();
 }
 
-char* itoa(i)
-int i;
+char* itoa(int i)
 {
   static char buffer[10];
   int n, d;
@@ -79,10 +73,7 @@ int i;
 
 int failedAsserts = 0;
 
-assertEq(actual, expected, message)
-int actual;
-int expected;
-char *message;
+assertEq(int actual, int expected, char *message)
 {
   if (actual != expected) {
     print("Assert failed: "); print(message);
@@ -92,9 +83,7 @@ char *message;
   }
 }
 
-assertTrue(expression, message)
-int expression;
-char *message;
+assertTrue(int expression, char *message)
 {
   if (!expression) {
     print("Assert failed: "); println(message);

@@ -11,8 +11,7 @@ int i;
   forward_declared(i);
 }
 
-forward_declared(i)
-int i;
+forward_declared(int i)
 {
   print("forward "); println(itoa(i));
 }
