@@ -1,0 +1,21 @@
+2021-05-27T22:41:16+02:00
+ansi-style function defs added, test suite migratged, some bugfixes
+
+profiler report PROFILE-CC64-1
+timestamps
+578.131.731 738.913.886 
+countstamps
+5.277.772 6.731.159 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15742 65535       216332    22922983  (etc)
+1 19079 19287       112526    12753566  [STRINGS]
+2 19299 21538       742680    82661819  [MEMMAN-ETC]
+3 21542 22761      1394433   154278990  [FILE-HANDLING]
+4 22765 23423       314520    34460427  [INPUT]
+5 23427 26096       827801    90355819  [SCANNER]
+6 26100 27485       153896    17449103  [SYMTAB]
+7 27489 35439      1858814   201415283  [PARSER]
+8 35443 36994      1110157   122615774  [PASS2]
+

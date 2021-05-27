@@ -1,0 +1,21 @@
+2021-05-27T22:41:16+02:00
+ansi-style function defs added, test suite migratged, some bugfixes
+
+profiler report PROFILE-SCANNER1
+timestamps
+578.395.255 739.471.237 
+countstamps
+5.277.772 6.731.159 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15742 65535      6054013   665482889  (etc)
+1 23447 23492        53962     5686886  [SCANNER-ALPHANUM]
+2 23496 23791         2316      250789  [SCANNER-KEYWORD]
+3 23795 23950        66105     7113761  [SCANNER-IDENTIFIER]
+4 23954 24534        94045    10059219  [SCANNER-OPERATOR]
+5 24538 24778        27320     3483757  [SCANNER-NUMBER]
+6 24782 25295       238983    26231016  [SCANNER-CHAR/STRING]
+7 25299 25459       150530    15973066  [SCANNER-(NEXTWORD]
+8 25463 25609        43885     5189732  [SCANNER-COMMENT]
+
