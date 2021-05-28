@@ -192,6 +192,7 @@ clean:
 	$(MAKE) -C emulator clean
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
+	$(MAKE) -C tests/lib clean
 	$(MAKE) -C tests/peddi clean
 	$(MAKE) -C tests/unit clean
 
