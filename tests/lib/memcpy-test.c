@@ -1,6 +1,4 @@
 
-#include <memcpy.c>
-
 memcpy_test() {
   static char s[] = "xxxxxxxxxxx";
   assertEq(memcpy( s, abcde, 6 ), s, "memcpy( s, abcde, 6 )");

@@ -1,6 +1,8 @@
 
 #include "rt-c16-1001.h"
 
+#include "lib.c"
+
 extern putc() *= 0xffd2;
 /* At 0xfcaf the C16 Kernal has a rts opcode.
  * This makes for a convenient fast function that returns its parameter

@@ -19,12 +19,7 @@ c16_rt_files = \
 x16_rt_files = \
     $(patsubst $(basedir)/runtime/%, x16files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
 
-c64_lib_files = \
-    $(patsubst $(basedir)/src/lib/%, c64files/%, $(wildcard $(basedir)/src/lib/*.c))
-c16_lib_files = \
-    $(patsubst $(basedir)/src/lib/%, c16files/%, $(wildcard $(basedir)/src/lib/*.c))
-x16_lib_files = \
-    $(patsubst $(basedir)/src/lib/%, x16files/%, $(wildcard $(basedir)/src/lib/*.c))
+lib_files = $(sort $(wildcard $(basedir)/src/lib/*.c))
 
 tests: libtests64
 
@@ -52,13 +47,16 @@ libcrosstests: \
 lib-suite-%.result: *-test.c *.golden
 	./compile-run-suite.sh cc64 $*
 
-$(suite_results_c64_hosted): $(c64_lib_files) \
+lib.c: $(lib_files)
+	cat $(lib_files) >$@
+
+$(suite_results_c64_hosted): c64files/lib.c \
     $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files) *.sh *.shlib *.h
 
-$(suite_results_c16_hosted): $(c16_lib_files) \
+$(suite_results_c16_hosted): c16files/lib.c \
     $(basedir)/autostart-c16/cc64.T64 $(c16_rt_files) *.sh *.shlib *.h
 
-$(suite_results_x16_hosted): $(x16_lib_files) \
+$(suite_results_x16_hosted): x16files/lib.c \
     x16files/cc64 $(x16_rt_files) *.sh *.shlib *.h
 
 
@@ -66,9 +64,8 @@ $(suite_results_x16_hosted): $(x16_lib_files) \
 clean:
 	rm -f c64files/* c16files/* x16files/*
 	rm -f cc64-suite-[cx]??_[cx]??.* cc64pe-suite-[cx]??_[cx]??.*
-	rm -f suite.joined-*
+	rm -f suite.joined-* lib.c
 	rm -f *.out *.T64 *.result *-generated.c
-	rm -f *.profile
 
 c64files/rt-%: $(basedir)/c64files/rt-%
 	test -d c64files || mkdir c64files
@@ -94,15 +91,15 @@ x16files/%.h: %.h
 	test -d x16files || mkdir x16files
 	ascii2petscii $< $@
 
-c64files/%.c: $(basedir)/src/lib/%.c
+c64files/%.c: %.c
 	test -d c64files || mkdir c64files
 	ascii2petscii $< $@
 
-c16files/%.c: $(basedir)/src/lib/%.c
+c16files/%.c: %.c
 	test -d c16files || mkdir c16files
 	ascii2petscii $< $@
 
-x16files/%.c: $(basedir)/src/lib/%.c
+x16files/%.c: %.c
 	test -d x16files || mkdir x16files
 	ascii2petscii $< $@
 
