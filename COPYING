@@ -44,3 +44,9 @@ All rights reserved.
 
 The tests directory of cc64 contains John Hayes' tester.fth which is
 (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
+
+
+The C library and its tests in src/lib and tests/lib is based on the
+PDCLib (see https://pdclib.rootdirectory.de)
+which is maintained by Martin Baute and is distributed under the
+Creative Commons Public Domain Dedication CC0.
