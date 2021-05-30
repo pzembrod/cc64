@@ -794,57 +794,40 @@ variable (1st
 
 \ *** Block No. 83, Hexblock 53
 
-\   parser: initializer        11sep94pz
+\   parser: static initialization
+
+\ Because we allocate static variables from the top of the available
+\ memory downwards, and we issue static init values downward, too,
+\ accordingly, we need to issue array init values starting at the end
+\ of the array, thus we need to reverse their order. That's why we
+\ leave the init values on the stack instead of issuing them directly.
 
 : 1more ( n -- n )
      teststack  1 #inits +! ;
 
-: nomore ( n -- )  drop ;
+do$: init$ ( -- values )
+        noop 1more noop ;
 
-defer '1more
-
-: ?1more  ( flag -- )
-        IF ['] 1more
-        ELSE *initer* error
-        ['] nomore THEN
-     IS '1more ;
-
-: >inittype ( type -- inittype )
-     ( bit 0: int     bit 1: array   )
-     ( bit 2: offset  bit 3: []dim'd )
-     is-int? 1 and >r array? 2 and >r
-     %offset is? 4 and nip r> or r> or
-     []dim'd @ 8 and or ;
-
-: (init$   >inittype 7 and 2 =
-     dup []init'd !  ?1more ;
-
-
-\ *** Block No. 84, Hexblock 54
-
-\   parser: initializer        12mar91pz
-
-: init[] ( type -- values )
-     >inittype 6 and 2 =
-     dup []init'd !  ?1more
-     BEGIN constant-expression '1more
+: init[] ( -- values )
+     BEGIN constant-expression 1more
      ascii } #char# comes? not WHILE
      ascii , #char# expect
      ascii } #char# comes?
-        IF 0  '1more  true
+        IF 0  1more  true
         ELSE false THEN
      UNTIL ;
 
-do$: init$ ( type -- values )
-        (init$ '1more noop ;
-
-: initializer ( type -- values )
-     ascii { #char# comes?  \ }
-        IF init[] exit THEN
+: static-init ( type -- values )
+     is-char? swap array? nip  ( is-char? array? )
      #string# comes-a?
-        IF drop init$ accept exit THEN
-     >inittype 14 and 14 xor ?1more
-     constant-expression '1more ;
+        IF drop
+        and 0= *!=type* ?error
+        []init'd on  init$ accept exit THEN
+     ascii { #char# comes?  \ }
+        IF nip 0= *!=type* ?error
+        []init'd on  init[] exit THEN
+     2drop
+     constant-expression 1more ;
 
 
 \ *** Block No. 85, Hexblock 55
@@ -918,11 +901,8 @@ defer 'stat,
 
 \   parser: define-data        11sep94pz
 
-: create-dyn ( [value] type -- obj )
-     size/# #/obj @ *  dyn-allot swap
-     #inits @
-        IF size/# .size  rot .lda#.s
-        over .sta.s(base),# THEN ;
+: create-dyn ( type -- obj )
+     size/# #/obj @ *  dyn-allot swap ;
 
 
 \ *** Block No. 89, Hexblock 59
@@ -932,17 +912,18 @@ defer 'stat,
 defer 'putsymbol
 
 : define-data ( id-buf type -- )
-     extern @
-        IF declare exit THEN
-     #inits off  []init'd off
-     <=> #oper# comes?
-        IF dup >r initializer r> THEN
-     array?
-        IF dim-array THEN
-     %offset is?
-        IF create-dyn
-        ELSE create-static THEN
-     rot 'putsymbol 2! ;
+    extern @
+       IF declare exit THEN
+    #inits off  []init'd off
+    %offset is?
+      IF array? IF dim-array THEN
+      create-dyn  <=> #oper# comes?
+        IF size/# .size  constant-expression .lda#.s
+        over .sta.s(base),# THEN
+      ELSE <=> #oper# comes? IF dup >r static-init r> THEN
+      array? IF dim-array THEN
+      create-static THEN
+    rot 'putsymbol 2! ;
 
 
 \ *** Block No. 90, Hexblock 5a
