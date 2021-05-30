@@ -311,7 +311,7 @@ create assign-oper  11  4 * ,
      assign value  %constant isn't?
      *noconst* ?error  drop ;
 
-: expression  ( -- )
+: expr-to-accu  ( -- )
      expression value non-constant
      2drop release-accu ;
 
@@ -326,7 +326,7 @@ doer compound
 doer statement
 
 : expression-stmt ( -- )
-      expression  expect';' ;
+      expr-to-accu  expect';' ;
 
 : return-stmt ( -- )
       ascii ; #char# comes? not
@@ -338,11 +338,11 @@ doer statement
 
 \   parser: statement          22feb91pz
 
-: (expression)  ( -- )
-     expect'('  expression  expect')' ;
+: (expr-to-accu)  ( -- )
+     expect'('  expr-to-accu  expect')' ;
 
 : if-stmt  ( -- )
-     (expression)
+     (expr-to-accu)
      .jmz-ahead
      statement
      <else> #keyword# comes?
@@ -433,7 +433,7 @@ variable cases
 : switch-stmt  ( -- )
      switch-state @ switch-state on
      breaks new  cases new
-     (expression)  .jmp-ahead
+     (expr-to-accu)  .jmp-ahead
      statement
      .jmp-ahead  swap  .resolve-jmp
      .switch  cases-resolve
@@ -456,12 +456,12 @@ variable cases
      breaks new  conts new
      .label  statement  conts resolve
      <while> #keyword# expect
-     (expression)  .jmn
+     (expr-to-accu)  .jmn
      breaks resolve  expect';' ;
 
 : while-stmt  ( -- )
      breaks new  conts new
-     .label  (expression)
+     .label  (expr-to-accu)
      .jmz-ahead
      statement  conts resolve
      swap .jmp  .resolve-jmp
@@ -474,18 +474,18 @@ variable cases
 
 \ : 1st-expression  ( -- )
 \    ascii ; #char# comes? not
-\      IF expression  expect';' THEN ;
+\      IF expr-to-accu  expect';' THEN ;
 
 : 2nd-expression? ( -- flag )
      ascii ; #char# comes? not dup
-       IF expression  expect';' THEN ;
+       IF expr-to-accu  expect';' THEN ;
 
 : 1st-expression  ( -- )
      2nd-expression? drop ;
 
 : 3rd-expression  ( -- )
      ascii ) #char# comes? not
-        IF expression
+        IF expr-to-accu
         expect')' THEN ;
 
 
