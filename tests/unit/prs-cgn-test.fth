@@ -12,7 +12,7 @@
   : init-fake-statics  $a000 >staticadr ;
   init: init-fake-statics
 
-  .( GOLDEN-SECTION-START) cr
+  cr .( GOLDEN-SECTION-START) cr
 
   src-begin test-global-definitions
     src@ int i = 0; @
@@ -53,7 +53,91 @@
     T{ definition? -> true }T
   test-end
 
-  .( GOLDEN-SECTION-END) cr
+  src-begin test-int-array-init
+    src@ static int a[3]; @
+    src@ static int b[3] = {1, 2, 3}; @
+    src@ static int d[3] = {4, 5}; @
+    src@ static int e[]  = {7, 8, 9}; @
+    src@ static int f[2] = {10, 11, 12}; @
+  test-begin
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    *initer* expect-error
+    T{ fetchglobal" a" nip -> %int %pointer + }T
+    T{ fetchglobal" b" nip -> %int %pointer + }T
+    T{ fetchglobal" d" nip -> %int %pointer + }T
+    T{ fetchglobal" e" nip -> %int %pointer + }T
+    T{ fetchglobal" f" nip -> %int %pointer + }T
+  test-end
+
+  src-begin test-char-array-init
+    src@ static char a[4]; @
+    src@ static char b[4] = "abc"; @
+    src@ static char d[4] = "de"; @
+    src@ static char e[]  = "ghi"; @
+    src@ static char f[3] = "jkl"; @
+  test-begin
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    T{ definition? -> true }T cr
+    *initer* expect-error
+    T{ fetchglobal" a" nip -> %pointer }T
+    T{ fetchglobal" b" nip -> %pointer }T
+    T{ fetchglobal" d" nip -> %pointer }T
+    T{ fetchglobal" e" nip -> %pointer }T
+    T{ fetchglobal" f" nip -> %pointer }T
+  test-end
+
+  src-begin test-local-init
+    src@ static int  a = 1; @
+    src@ static char b = '2'; @
+    src@ static char d[] = 1234; @
+    src@ int  e = 3; @
+    src@ char f = '4'; @
+    src@ char g[] = 5678; @
+  test-begin
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ fetchlocal" a" nip -> %l-value %int + }T
+    T{ fetchlocal" b" nip -> %l-value }T
+    T{ fetchlocal" d" nip -> %l-value %pointer + }T
+    T{ fetchlocal" e" nip -> %l-value %offset + %int + }T
+    T{ fetchlocal" f" nip -> %l-value %offset + }T
+    T{ fetchlocal" g" nip -> %l-value %offset + %pointer + }T
+  test-end
+
+  src-begin test-local-no-init
+    src@ static int  a; @
+    src@ static char b; @
+    src@ static char d[]; @
+    src@ int  e; @
+    src@ char f; @
+    src@ char g[]; @
+  test-begin
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ declaration? -> true }T cr
+    T{ fetchlocal" a" nip -> %l-value %int + }T
+    T{ fetchlocal" b" nip -> %l-value }T
+    T{ fetchlocal" d" nip -> %l-value %pointer + }T
+    T{ fetchlocal" e" nip -> %l-value %offset + %int + }T
+    T{ fetchlocal" f" nip -> %l-value %offset + }T
+    T{ fetchlocal" g" nip -> %l-value %offset + %pointer + }T
+  test-end
+
+  cr .( GOLDEN-SECTION-END) cr
   cr hex .( here, s0: ) here u. s0 @ u.
 
   cr .( test completed with ) #errors @ . .( errors) cr
