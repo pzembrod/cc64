@@ -24,7 +24,7 @@
 ~ x *inc-nest*
      x" include nesting too deep"
 ~ x *nolval*      x" l-value needed"
-~ x *novector*    x" vector needed"
+~ x *nofctnptr*   x" function ptr needed"
 ~ x *noptr*       x" pointer needed"
 ~ x *noconst*
      x" constant expression needed"

@@ -119,7 +119,7 @@ variable a-used
 
 : non-constant ( obj1 -- obj2 )
      %constant is?  IF %constant clr
-       require-accu  over .lda# THEN ;
+       require-accu  size? .size over .lda#.s THEN ;
 
    init: release-accu
 
@@ -228,11 +228,11 @@ variable vector
 
 \   codegen: primary           27may91pz
 
-: prepare-call ( obj1 -- obj2 args )
+: prepare-call ( obj1 -- obj2 #args )
      function? not *nofunc* ?error
      value 0 ;
 
-: put-argument  ( args obj -- args' )
+: put-argument  ( #args obj -- #args' )
      value  non-constant  2drop
      2 .size
      2 dyn-allot .sta.s(base),#
@@ -243,10 +243,10 @@ variable vector
 
 \   codegen: primary           27may91pz
 
-: do-call ( obj2 args -- obj3 )
+: do-call ( obj2 #args -- obj3 )
      dyn-allot dyn-offs - 2/ >r
-     %constant isn't?
-     IF .sta-zp ELSE require-accu THEN
+     %constant is?
+     IF require-accu ELSE .sta-zp THEN
      dyn-offs .link#
      r> .args
      %constant is?
@@ -266,7 +266,7 @@ variable vector
       IF r>
          IF %l-value clr
          ELSE drop %default
-         *novector* error THEN
+         *nofctnptr* error THEN
       ELSE rdrop  %pointer isn't?
          *noptr* ?error
       %pointer clr  %l-value set

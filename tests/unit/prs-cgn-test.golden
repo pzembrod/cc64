@@ -40,14 +40,19 @@ TEST-LOCAL-INIT
 1234 stat, 
 size: 2 
 lda.s #3 
+size: 2 
 sta.s (base),#4 
 
-size: 1 
+#GOLDEN TODO: Change back to size: 1 when issue/28
+#GOLDEN (8/16-bit smart expressions) is solved.
+size: 2 
 lda.s #52 
+size: 1 
 sta.s (base),#6 
 
 size: 2 
 lda.s #5678 
+size: 2 
 sta.s (base),#7 
 
 TEST-LOCAL-NO-INIT

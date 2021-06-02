@@ -32,6 +32,8 @@ petscii2ascii "${logfile}" | \
   (echo "Test completed with errors: ${logfile}" && exit 1)
 
 if [[ -f "${goldenfile}" ]]; then
-  petscii2ascii "${logfile}" | ./filter.awk | diff "${goldenfile}" -
+  # golden file lines starting with #GOLDEN are considered comments:
+  grep -v '^#GOLDEN ' "${goldenfile}" >"${goldenfile}.tmp"
+  petscii2ascii "${logfile}" | ./filter.awk | diff "${goldenfile}.tmp" -
 fi
 

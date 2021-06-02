@@ -27,7 +27,7 @@ strings-test:
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
-	rm -f *.result *.out
+	rm -f *.result *.out *.tmp
 
 c64files/%.fth: %.fth
 	ascii2petscii $< $@

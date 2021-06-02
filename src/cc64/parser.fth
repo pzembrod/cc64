@@ -917,9 +917,9 @@ defer 'putsymbol
     #inits off  []init'd off
     %offset is?
       IF array? IF dim-array THEN
-      create-dyn  <=> #oper# comes?
-        IF size/# .size  constant-expression .lda#.s
-        over .sta.s(base),# THEN
+      create-dyn
+      <=> #oper# comes?
+        IF expr-to-accu  size/# .size  over .sta.s(base),# THEN
       ELSE <=> #oper# comes? IF dup >r static-init r> THEN
       array? IF dim-array THEN
       create-static THEN
