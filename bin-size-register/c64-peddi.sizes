@@ -1,3 +1,4 @@
 2021-05-08-2222 18618 c64files/peddi v0.9
 2021-05-08-2236 18623 c64files/peddi bumped version v0.9 to v0.10-dev
 2021-05-08-2236 18623 c64files/peddi ANSI style function declarations plus some bug fixes.
+2021-05-08-2236 18623 c64files/peddi enabled non-constant initializers of non-static local vars
