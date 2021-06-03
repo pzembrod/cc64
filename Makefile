@@ -19,7 +19,10 @@ cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 rt_files = \
   rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
   rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o \
-  rt-x16-0801.h rt-x16-0801.i rt-x16-0801.o
+  rt-x16-0801.h rt-x16-0801.i rt-x16-0801.o \
+  rt-c64-08-9f.h rt-c64-08-9f.i rt-c64-08-9f.o \
+  rt-c16-10-7f.h rt-c16-10-7f.i rt-c16-10-7f.o \
+  rt-x16-08-9e.h rt-x16-08-9e.i rt-x16-08-9e.o
 
 sample_files = helloworld-c64.c helloworld-c16.c helloworld-x16.c \
   kernal-io-c64.c kernal-io-c16.c sieve-c64.c
@@ -289,74 +292,27 @@ $(recompile_dir)/%: forth/%
 
 # Runtime module rules
 
-runtime/rt-c64-0801.o runtime/rt-c64-0801.h: \
-    src/runtime/rt-c64-0801.a src/runtime/generate_pragma_cc64.awk
+runtime/rt-%.o runtime/rt-%.h: \
+    src/runtime/rt-%.a src/runtime/generate_pragma_cc64.awk
 	test -d tmp || mkdir tmp
-	acme -f cbm -l tmp/rt-c64-0801.sym -o runtime/rt-c64-0801.o \
-	  src/runtime/rt-c64-0801.a
+	acme -f cbm -l tmp/rt-$*.sym -o runtime/rt-$*.o \
+	  -I src/runtime src/runtime/rt-$*.a
 	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
-	  tmp/rt-c64-0801.sym > runtime/rt-c64-0801.h
+	  tmp/rt-$*.sym > runtime/rt-$*.h
 
-runtime/rt-c16-1001.o runtime/rt-c16-1001.h: \
-    src/runtime/rt-c16-1001.a src/runtime/generate_pragma_cc64.awk
-	test -d tmp || mkdir tmp
-	acme -f cbm -l tmp/rt-c16-1001.sym -o runtime/rt-c16-1001.o \
-	  src/runtime/rt-c16-1001.a
-	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
-	  tmp/rt-c16-1001.sym > runtime/rt-c16-1001.h
-
-runtime/rt-x16-0801.o runtime/rt-x16-0801.h: \
-    src/runtime/rt-x16-0801.a src/runtime/generate_pragma_cc64.awk
-	test -d tmp || mkdir tmp
-	acme -f cbm -l tmp/rt-x16-0801.sym -o runtime/rt-x16-0801.o \
-	  src/runtime/rt-x16-0801.a
-	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
-	  tmp/rt-x16-0801.sym > runtime/rt-x16-0801.h
-
-runtime/rt-c64-0801.i:
+runtime/rt-%.i:
 	awk 'BEGIN{ printf("\x00\x90");}' > $@
 	# An empty binary file with (arbitrary) load address $9000
 	# Might be worth encoding in an asm source for clarity.
 
-runtime/rt-c16-1001.i:
-	awk 'BEGIN{ printf("\x00\x90");}' > $@
-	# An empty binary file with (arbitrary) load address $9000
-	# Might be worth encoding in an asm source for clarity.
+c64files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
 
-runtime/rt-x16-0801.i:
-	awk 'BEGIN{ printf("\x00\x90");}' > $@
-	# An empty binary file with (arbitrary) load address $9000
-	# Might be worth encoding in an asm source for clarity.
+c16files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
 
-%files/rt-c64-0801.h: runtime/rt-c64-0801.h
-	ascii2petscii $< $@
-	touch -r $< $@
-
-%files/rt-c64-0801.i: runtime/rt-c64-0801.i
-	cp $< $@
-
-%files/rt-c64-0801.o: runtime/rt-c64-0801.o
-	cp $< $@
-
-%files/rt-c16-1001.h: runtime/rt-c16-1001.h
-	ascii2petscii $< $@
-	touch -r $< $@
-
-%files/rt-c16-1001.i: runtime/rt-c16-1001.i
-	cp $< $@
-
-%files/rt-c16-1001.o: runtime/rt-c16-1001.o
-	cp $< $@
-
-%files/rt-x16-0801.h: runtime/rt-x16-0801.h
-	ascii2petscii $< $@
-	touch -r $< $@
-
-%files/rt-x16-0801.i: runtime/rt-x16-0801.i
-	cp $< $@
-
-%files/rt-x16-0801.o: runtime/rt-x16-0801.o
-	cp $< $@
+x16files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
 
 
 # Charset rules

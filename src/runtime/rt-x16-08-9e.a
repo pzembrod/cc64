@@ -1,0 +1,312 @@
+
+; cc64 runtime module
+; to run on Commander X16 at $0801-$9f00
+
+!addr   cc64_statics_start = $9f00
+!addr   cc64_statics_end   = $9f00
+!addr   cc64_sp            = $40
+!addr   cc64_zp            = $42
+
+!addr   tmp_zp1            = $44
+!addr   tmp_zp2            = $46
+
+!addr   primm       = $ff7d
+!addr   enter_basic = $ff47
+
+        *= $0801
+
+cc64_lib_start
+        !word baslink
+        !word 2020
+        !byte $9e
+        !pet " 2081:"
+        !byte $8f
+        !pet " cc64 rt-lib v0.6", 0
+baslink !word 0
+
+        jmp init
+
+division_by_zero
+        jsr primm
+        !pet "division by zero", $0d, 0
+        clc
+        jmp enter_basic
+
+cc64_lib_jumplist
+main_adr      !word 0  ; the start addr of the main() function
+code_last     !word 0
+statics_first !word 0
+statics_last  !word 0
+
+        jmp (cc64_zp)
+        jmp switch
+        jmp mult
+        jmp divmod
+        jmp shl
+        jmp shr
+
+init    lda code_last
+        sta cc64_sp
+        lda code_last + 1
+        sta cc64_sp + 1
+        lda statics_last
+        sta tmp_zp2
+        ldx statics_last + 1
+        stx tmp_zp2 + 1
+        ldy #0
+init1   cmp statics_first
+        bne init2
+        cpx statics_first + 1
+init2   beq init5
+        sec
+        sbc #1
+        bcs init3
+        dex
+init3   sta tmp_zp2
+        stx tmp_zp2 + 1
+        lda (cc64_sp),y
+        sta (tmp_zp2),y
+        inc cc64_sp
+        bne init4
+        inc cc64_sp + 1
+init4   lda tmp_zp2
+        jmp init1
+
+init5   jmp (main_adr)
+
+switch  tay
+        pla
+        clc
+        adc #1
+        sta cc64_zp
+        pla
+        adc #0
+        sta cc64_zp + 1
+        tya
+        ldy #0
+switch1 pha
+        lda (cc64_zp),y
+        sta tmp_zp1
+        iny
+        ora (cc64_zp),y
+        beq switch_default
+        lda (cc64_zp),y
+        sta tmp_zp1+1
+        iny
+        bne switch2
+        inc cc64_zp + 1
+switch2 pla
+        cmp (cc64_zp),y
+        php
+        iny
+        plp
+        bne switch4
+        pha
+        txa
+        cmp (cc64_zp),y
+        bne switch3
+        pla
+        jmp (tmp_zp1)
+switch3 pla
+switch4 iny
+        bne switch1
+        inc cc64_zp + 1
+        jmp switch1
+
+switch_default
+        pla
+        sec  ; instead of iny and clc
+        tya
+        adc cc64_zp
+        sta cc64_zp
+        bcc switch6
+        inc cc64_zp + 1
+switch6 jmp (cc64_zp)
+
+
+
+mult    stx tmp_zp1 + 1
+        lsr tmp_zp1 + 1
+        ror
+        sta tmp_zp1     ; multiplikator
+
+        lda #0
+        sta tmp_zp2
+        ldx #16
+mu1     bcc mu2
+        tay
+        lda tmp_zp2
+        clc
+        adc cc64_zp
+        sta tmp_zp2
+        tya
+        adc cc64_zp + 1
+mu2     ror
+        ror tmp_zp2
+        ror tmp_zp1 + 1
+        ror tmp_zp1
+        dex
+        bne mu1
+;       tay
+        lda tmp_zp1
+        ldx tmp_zp1 + 1  ; lo-word produkt
+;       tya
+;       tax
+;       lda tmp_zp2      ; hi-word produkt
+        rts
+
+
+negate  clc
+        eor #$ff
+        adc #1
+        tay
+        txa
+        eor #$ff
+        adc #0
+        tax
+        tya
+        rts
+
+
+; dividend in a/x
+; divisor in cc64_zp/+1
+divmod  stx tmp_zp2 + 1 ; sign of dividend
+        bit tmp_zp2 + 1
+        bpl dividend_is_positive
+        jsr negate
+        ; TODO: Handle case where divident was -32768. That negated
+        ; would be -32768 again.
+dividend_is_positive
+        tay         ; save dividend-lo
+        lda cc64_zp + 1
+        sta tmp_zp2      ; sign of divisor
+        eor tmp_zp2 + 1  ; sign of dividend
+        asl
+        ror tmp_zp2  ; sign of result in bit7, sign of divisor in bit6
+        bit tmp_zp2  ; sign of divisor
+        bvc divisor_is_positive
+        clc
+        lda cc64_zp
+        eor #$ff
+        adc #1
+        sta cc64_zp
+        lda cc64_zp + 1
+        eor #$ff
+        adc #0
+        sta cc64_zp + 1
+        ; TODO: Handle case where divisor was -32768. That negated
+        ; would be -32768 again.
+divisor_is_positive
+        tya      ; restore dividend-lo
+        ldy #0
+        sty tmp_zp1
+        sty tmp_zp1 + 1
+
+; shift left divisor in cc64_zp/+1 until larger than dividend.
+div_shl_divisor
+        cpx cc64_zp + 1
+        bne div4
+        cmp cc64_zp
+div4    bcc div_loop
+        asl cc64_zp
+        rol cc64_zp + 1
+        iny
+        bpl div_shl_divisor
+        jmp division_by_zero
+
+div_loop
+        dey
+        bmi division_done
+        lsr cc64_zp + 1
+        ror cc64_zp
+        cpx cc64_zp + 1
+        bne div6
+        cmp cc64_zp
+div6    bcc div_rol_result
+        sbc cc64_zp
+        pha
+        txa
+        sbc cc64_zp + 1
+        tax
+        pla
+        sec
+div_rol_result
+        rol tmp_zp1
+        rol tmp_zp1 + 1
+        jmp div_loop
+
+division_done  ; remainder is in a/x; result in tmp_zp1/+1
+        ; in cc64_zp/+1 is shifted back positive divisor
+        tay
+        bne div_handle_remainder
+        cpx #0
+        beq div_store_remainder
+
+div_handle_remainder
+        bit tmp_zp2 + 1
+        bpl div_positive_remainder
+        jsr negate
+div_positive_remainder
+        bit tmp_zp2
+        bpl div_store_remainder
+        inc tmp_zp1
+        bne div_add_or_subtract_divisor
+        inc tmp_zp1 + 1
+
+div_add_or_subtract_divisor
+        ; no need for bit instruction again; inc doesn't touch V flag
+        ; bit tmp_zp2
+        bvs div_subtract_divisor
+        clc
+        adc cc64_zp
+        tay
+        txa
+        adc cc64_zp + 1
+        tax
+        jmp div_store_remainder
+
+div_subtract_divisor
+        sec
+        sbc cc64_zp
+        tay
+        txa
+        sbc cc64_zp + 1
+        tax
+
+div_store_remainder
+        sty cc64_zp
+        stx cc64_zp + 1
+        lda tmp_zp1
+        ldx tmp_zp1 + 1
+        bit tmp_zp2
+        bpl return
+        jsr negate
+return  rts
+
+
+shl     iny
+shl1    dey
+        beq return
+        asl
+        pha
+        txa
+        rol
+        tax
+        pla
+        jmp shl1
+
+
+shr     iny
+shr1    dey
+        beq return
+        pha
+        txa
+        asl
+        txa
+        ror
+        tax
+        pla
+        ror
+        jmp shr1
+
+cc64_lib_end
