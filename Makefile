@@ -17,9 +17,6 @@ cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 
 # runtime and sample files
 rt_files = \
-  rt-c64-0801.h rt-c64-0801.i rt-c64-0801.o \
-  rt-c16-1001.h rt-c16-1001.i rt-c16-1001.o \
-  rt-x16-0801.h rt-x16-0801.i rt-x16-0801.o \
   rt-c64-08-9f.h rt-c64-08-9f.i rt-c64-08-9f.o \
   rt-c16-10-7f.h rt-c16-10-7f.i rt-c16-10-7f.o \
   rt-x16-08-9e.h rt-x16-08-9e.i rt-x16-08-9e.o
@@ -91,15 +88,15 @@ cc64-c64files.d64: $(c64dir_files) tmp/copying
 	rm -f $@
 	c1541 -format cc64-c64,cc d64 $@
 	c1541 -attach $@ $(patsubst %, -write c64files/%, $(cc64_binaries))
-	c1541 -attach $@ -write c64files/rt-c64-0801.h rt-c64-0801.h,s
-	c1541 -attach $@ -write c64files/rt-c64-0801.i
-	c1541 -attach $@ -write c64files/rt-c64-0801.o
-	c1541 -attach $@ -write c64files/rt-c16-1001.h rt-c16-1001.h,s
-	c1541 -attach $@ -write c64files/rt-c16-1001.i
-	c1541 -attach $@ -write c64files/rt-c16-1001.o
-	c1541 -attach $@ -write c64files/rt-x16-0801.h rt-x16-0801.h,s
-	c1541 -attach $@ -write c64files/rt-x16-0801.i
-	c1541 -attach $@ -write c64files/rt-x16-0801.o
+	c1541 -attach $@ -write c64files/rt-c64-08-9f.h rt-c64-08-9f.h,s
+	c1541 -attach $@ -write c64files/rt-c64-08-9f.i
+	c1541 -attach $@ -write c64files/rt-c64-08-9f.o
+	c1541 -attach $@ -write c64files/rt-c16-10-7f.h rt-c16-10-7f.h,s
+	c1541 -attach $@ -write c64files/rt-c16-10-7f.i
+	c1541 -attach $@ -write c64files/rt-c16-10-7f.o
+	c1541 -attach $@ -write c64files/rt-x16-08-9e.h rt-x16-08-9e.h,s
+	c1541 -attach $@ -write c64files/rt-x16-08-9e.i
+	c1541 -attach $@ -write c64files/rt-x16-08-9e.o
 	c1541 -attach $@ -write c64files/c-charset
 	c1541 -attach $@ -write c64files/helloworld-c64.c helloworld-c64.c,s
 	c1541 -attach $@ -write c64files/kernal-io-c64.c kernal-io-c64.c,s
@@ -111,15 +108,15 @@ cc64-c16files.d64: $(c16dir_files) tmp/copying
 	rm -f $@
 	c1541 -format cc64-c16,cc d64 $@
 	c1541 -attach $@ $(patsubst %, -write c16files/%, $(cc64_binaries))
-	c1541 -attach $@ -write c16files/rt-c64-0801.h rt-c64-0801.h,s
-	c1541 -attach $@ -write c16files/rt-c64-0801.i
-	c1541 -attach $@ -write c16files/rt-c64-0801.o
-	c1541 -attach $@ -write c16files/rt-c16-1001.h rt-c16-1001.h,s
-	c1541 -attach $@ -write c16files/rt-c16-1001.i
-	c1541 -attach $@ -write c16files/rt-c16-1001.o
-	c1541 -attach $@ -write c16files/rt-x16-0801.h rt-x16-0801.h,s
-	c1541 -attach $@ -write c16files/rt-x16-0801.i
-	c1541 -attach $@ -write c16files/rt-x16-0801.o
+	c1541 -attach $@ -write c16files/rt-c64-08-9f.h rt-c64-08-9f.h,s
+	c1541 -attach $@ -write c16files/rt-c64-08-9f.i
+	c1541 -attach $@ -write c16files/rt-c64-08-9f.o
+	c1541 -attach $@ -write c16files/rt-c16-10-7f.h rt-c16-10-7f.h,s
+	c1541 -attach $@ -write c16files/rt-c16-10-7f.i
+	c1541 -attach $@ -write c16files/rt-c16-10-7f.o
+	c1541 -attach $@ -write c16files/rt-x16-08-9e.h rt-x16-08-9e.h,s
+	c1541 -attach $@ -write c16files/rt-x16-08-9e.i
+	c1541 -attach $@ -write c16files/rt-x16-08-9e.o
 	c1541 -attach $@ -write c16files/c-charset
 	c1541 -attach $@ -write c16files/helloworld-c64.c helloworld-c64.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c64.c kernal-io-c64.c,s

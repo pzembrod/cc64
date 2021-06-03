@@ -1,5 +1,5 @@
 
-#include "rt-c16-1001.h"
+#include "rt-c16-10-7f.h"
 
 extern putchar() *= 0xffd2 ;
 

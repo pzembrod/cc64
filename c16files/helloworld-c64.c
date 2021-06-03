@@ -1,1 +1,1 @@
-#INCLUDE "RT-C64-0801.H"EXTERN PUTCHAR() *= 0XFFD2 ;INT PUTS(S)CHAR *S;Û  WHILE(*S != 0)     PUTCHAR(*S++);ÝMAIN()Û  INT I;  FOR(I=1;I<=4;++I)    Û      PUTS("HELLO, WORLD!\N");    ÝÝ
+#INCLUDE "RT-C64-08-9F.H"EXTERN PUTCHAR() *= 0XFFD2 ;INT PUTS(S)CHAR *S;Û  WHILE(*S != 0)     PUTCHAR(*S++);ÝMAIN()Û  INT I;  FOR(I=1;I<=4;++I)    Û      PUTS("HELLO, WORLD!\N");    ÝÝ
