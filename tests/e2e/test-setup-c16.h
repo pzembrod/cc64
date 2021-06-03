@@ -1,5 +1,5 @@
 
-#include "rt-c16-1001.h"
+#include "rt-c16-10-7f.h"
 
 extern putc() *= 0xffd2;
 /* At 0xfcaf the C16 Kernal has a rts opcode.
