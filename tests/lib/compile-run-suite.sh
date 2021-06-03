@@ -17,7 +17,7 @@ targetfiles="${testdir}/${target}files"
 test -d "${hostfiles}"   || mkdir "${hostfiles}"
 test -d "${targetfiles}" || mkdir "${targetfiles}"
 
-tests=$(echo *-test.c| sed 's/-test\.c//g')
+test_paths=$(echo */*-test.c| sed 's/-test\.c//g')
 
 # Create suite.c
 source "${testdir}/concat-suite.shlib"

@@ -1,18 +1,19 @@
 #!/bin/echo Please source this file
 
 # imput:
-# $target $hostfiles $tests
+# $target $hostfiles $test_paths
 
 # Build test binary
 (
   cat "test-setup-${target}.h"
   echo "char *name(){ return \"suite.out,s,w\"; }"
-  for t in $tests; do
-    cat ${t}-test.c
+  for tp in $test_paths; do
+    cat ${tp}-test.c
   done
   echo "test(){"
-  for t in $tests; do
-    echo "  println(\"${t}-test:\");"
+  for tp in $test_paths; do
+    t=$(basename ${tp})
+    echo "  println(\"${tp}-test:\");"
     echo "  ${t}_test();"
   done
   echo "}"

@@ -44,7 +44,7 @@ libcrosstests: \
   lib-suite-x16_x16.result
 
 
-lib-suite-%.result: *-test.c *.golden
+lib-suite-%.result: */*-test.c */*.golden
 	./compile-run-suite.sh cc64 $*
 
 lib.c: $(lib_files)
