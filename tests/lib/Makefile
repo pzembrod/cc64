@@ -22,7 +22,8 @@ c16_rt_files = \
 x16_rt_files = \
     $(patsubst $(basedir)/runtime/%, x16files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
 
-lib_files = $(sort $(wildcard $(basedir)/src/lib/*.c))
+lib_files = $(sort $(wildcard $(basedir)/src/lib/*.c) \
+                   $(wildcard $(basedir)/src/lib/*/*.c))
 
 tests: libtests64
 

@@ -314,7 +314,7 @@ x16files/%: runtime/%
 
 # Library rules
 
-libc_files = $(sort $(wildcard src/lib/*.c))
+libc_files = $(sort $(wildcard src/lib/*.c) $(wildcard src/lib/*/*.c))
 
 lib/libc.c: $(libc_files)
 	cat $(libc_files) >$@
