@@ -1,8 +1,4 @@
 
-#include "rt-c64-08-9f.h"
-
-#include "lib.c"
-
 extern putc() *= 0xffd2;
 /* At 0xfd0f the C64 Kernal has a rts opcode.
  * This makes for a convenient fast function that returns its parameter

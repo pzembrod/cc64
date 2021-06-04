@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cc64="$1"
+lib="$1"
 host_target="$2"
 
 test -n "${host_target}" || host_target=c64_c64
@@ -25,7 +25,7 @@ source "${testdir}/concat-suite.shlib"
 # Build test binary
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
 CC64HOST="${host}" OUTFILES=suite \
-  ./compile-in-emu.sh "suite" "$cc64"
+  ./compile-in-emu.sh "suite"
 
 if [ "${hostfiles}" != "${targetfiles}" ]
 then
@@ -37,7 +37,7 @@ bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 source "${testdir}/concat-golden-silver.shlib"
 
 # Run test binary
-suitename="${cc64}-suite-${host_target}"
+suitename="${lib}-suite-${host_target}"
 rm -f "${targetfiles}/suite.out" "${suitename}.out"
 CC64TARGET="${target}" ./run-in-emu.sh suite
 petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"

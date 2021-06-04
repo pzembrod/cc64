@@ -1,8 +1,4 @@
 
-#include "rt-x16-08-9e.h"
-
-#include "lib.c"
-
 extern putc() *= 0xffd2;
 
 int noconst(i)

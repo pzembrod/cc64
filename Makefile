@@ -312,6 +312,14 @@ x16files/%: runtime/%
 	emulator/copy-to-emu.sh $< $@
 
 
+# Library rules
+
+libc_files = $(sort $(wildcard src/lib/*.c))
+
+lib/libc.c: $(libc_files)
+	cat $(libc_files) >$@
+
+
 # Charset rules
 
 c64files/c-charset: src/runtime/c-charset-c64.a

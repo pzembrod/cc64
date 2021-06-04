@@ -5,6 +5,7 @@
 
 # Build test binary
 (
+  cat "include-${lib}-${target}.h"
   cat "test-setup-${target}.h"
   echo "char *name(){ return \"suite.out,s,w\"; }"
   for tp in $test_paths; do
