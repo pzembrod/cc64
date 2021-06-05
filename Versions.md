@@ -12,6 +12,15 @@ Also more parser unit tests, some bug fixes,
 and binary sizes are now tracked in
 [bin-size-register](bin-size-register).
 
+A start has been made to port parts of PDCLib to cc64, incl. tests.
+So far there is most of <string.h>, available in precompiled runtime
+modules libc-*.[hio], to be used instead of rt-*.[hio].
+
+Naming scheme for the basic runtime libraries rt-*.[hio] now includes
+both start and end address, to facilitate version e.g. using the RAM
+under the BASIC ROM on the C64.
+Also, the runtime libs' shared code has been extracted and unified.
+
 ## v0.9
 
 Main topic of v0.9 is compile speed. With the help of a simple profiler
