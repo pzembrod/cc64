@@ -105,6 +105,15 @@ cc64-c64files.d64: $(c64dir_files) tmp/copying
 	c1541 -attach $@ -write c64files/rt-x16-08-9e.h rt-x16-08-9e.h,s
 	c1541 -attach $@ -write c64files/rt-x16-08-9e.i
 	c1541 -attach $@ -write c64files/rt-x16-08-9e.o
+	c1541 -attach $@ -write c64files/libc-c64.h libc-c64.h,s
+	c1541 -attach $@ -write c64files/libc-c64.i
+	c1541 -attach $@ -write c64files/libc-c64.o
+	c1541 -attach $@ -write c64files/libc-c16.h libc-c16.h,s
+	c1541 -attach $@ -write c64files/libc-c16.i
+	c1541 -attach $@ -write c64files/libc-c16.o
+	c1541 -attach $@ -write c64files/libc-x16.h libc-x16.h,s
+	c1541 -attach $@ -write c64files/libc-x16.i
+	c1541 -attach $@ -write c64files/libc-x16.o
 	c1541 -attach $@ -write c64files/c-charset
 	c1541 -attach $@ -write c64files/helloworld-c64.c helloworld-c64.c,s
 	c1541 -attach $@ -write c64files/kernal-io-c64.c kernal-io-c64.c,s
@@ -125,6 +134,15 @@ cc64-c16files.d64: $(c16dir_files) tmp/copying
 	c1541 -attach $@ -write c16files/rt-x16-08-9e.h rt-x16-08-9e.h,s
 	c1541 -attach $@ -write c16files/rt-x16-08-9e.i
 	c1541 -attach $@ -write c16files/rt-x16-08-9e.o
+	c1541 -attach $@ -write c16files/libc-c64.h libc-c64.h,s
+	c1541 -attach $@ -write c16files/libc-c64.i
+	c1541 -attach $@ -write c16files/libc-c64.o
+	c1541 -attach $@ -write c16files/libc-c16.h libc-c16.h,s
+	c1541 -attach $@ -write c16files/libc-c16.i
+	c1541 -attach $@ -write c16files/libc-c16.o
+	c1541 -attach $@ -write c16files/libc-x16.h libc-x16.h,s
+	c1541 -attach $@ -write c16files/libc-x16.i
+	c1541 -attach $@ -write c16files/libc-x16.o
 	c1541 -attach $@ -write c16files/c-charset
 	c1541 -attach $@ -write c16files/helloworld-c64.c helloworld-c64.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c64.c kernal-io-c64.c,s
