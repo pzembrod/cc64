@@ -8,7 +8,7 @@ executable="${1}"
 keybuf="${2}"
 
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
+source "${emulatordir}/basedir.shlib"
 test -n "${x16filesdir}" || \
   x16filesdir="$(realpath --relative-to="$PWD" "${basedir}/x16files")"
 test -n "${x16rom}" || \

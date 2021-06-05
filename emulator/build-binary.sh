@@ -7,7 +7,7 @@ main_include="$3"
 test -n "${main_include}" || main_include="${target}"
 
 emulatordir="$(dirname "${BASH_SOURCE[0]}")"
-basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
+source "${emulatordir}/basedir.shlib"
 cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${platform}files")"
 logfile="${cbmfiles}/${target}.log"
 

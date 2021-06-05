@@ -59,6 +59,7 @@ lib-suite-%.result: */*-test.c */*.golden
 	./compile-run-suite.sh lib $*
 
 libc-suite-%.result: */*-test.c */*.golden
+	cp -p $(basedir)/c64files/libc-*.[hio] c64files/
 	./compile-run-suite.sh libc $*
 
 lib.c: $(lib_files)

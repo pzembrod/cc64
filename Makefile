@@ -319,6 +319,32 @@ libc_files = $(sort $(wildcard src/lib/*.c) $(wildcard src/lib/*/*.c))
 lib/libc.c: $(libc_files)
 	cat $(libc_files) >$@
 
+lib/libc-c64.c: lib/libc.c
+	echo '#include <rt-c64-08-9f.h>' | cat - $< >$@
+
+lib/libc-c16.c: lib/libc.c
+	echo '#include <rt-c16-10-7f.h>' | cat - $< >$@
+
+lib/libc-x16.c: lib/libc.c
+	echo '#include <rt-x16-08-9e.h>' | cat - $< >$@
+
+c64files/%: lib/%
+	emulator/copy-to-emu.sh $< $@
+
+c16files/%: lib/%
+	emulator/copy-to-emu.sh $< $@
+
+x16files/%: lib/%
+	emulator/copy-to-emu.sh $< $@
+
+c64files/libc-c64.h c64files/libc-c64.i c64files/libc-c64.o: \
+  c64files/libc-c64.c autostart-c64/cc64.T64 \
+  $(patsubst %, c64files/% , $(rt_files))
+	rm -f c64files/libc-c64.h c64files/libc-c64.i
+	rm -f c64files/libc-c64.o c64files/libc-c64.log
+	OUTFILES="libc-c64.h libc-c64.i libc-c64.o libc-c64.log" \
+	  emulator/compile-in-emu.sh libc-c64
+
 
 # Charset rules
 

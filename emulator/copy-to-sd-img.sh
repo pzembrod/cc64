@@ -6,7 +6,7 @@ shift
 x16dir_files=$@
 
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
+source "${emulatordir}/basedir.shlib"
 x16filesdir="$(realpath --relative-to="$PWD" "${basedir}/x16files")"
 
 for asciifile in ${x16dir_files}; do

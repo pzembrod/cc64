@@ -9,7 +9,7 @@ executable="${1}"
 keybuf="${2}"
 
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
+source "${emulatordir}/basedir.shlib"
 test -n "${autostartdir}" || \
   autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
 test -n "${cbmfiles}" || \

@@ -5,7 +5,7 @@ set -e
 
 test -n "$PLATFORM" || export PLATFORM=c64
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
-basedir="$(realpath --relative-to="$PWD" "${emulatordir}/..")"
+source "${emulatordir}/basedir.shlib"
 autostartdir="$(realpath --relative-to="$PWD" "${basedir}/autostart-${PLATFORM}")"
 cbmfiles="$(realpath --relative-to="$PWD" "${basedir}/${PLATFORM}files")"
 
