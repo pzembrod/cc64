@@ -22,7 +22,14 @@ c16_rt_files = \
 x16_rt_files = \
     $(patsubst $(basedir)/runtime/%, x16files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
 
-lib_files = $(sort $(wildcard $(basedir)/src/lib/*.c) \
+c64_lib_files = \
+    $(patsubst $(basedir)/lib/%, c64files/%, $(wildcard $(basedir)/lib/*.[hio]))
+c16_lib_files = \
+    $(patsubst $(basedir)/lib/%, c16files/%, $(wildcard $(basedir)/lib/*.[hio]))
+x16_lib_files = \
+    $(patsubst $(basedir)/lib/%, x16files/%, $(wildcard $(basedir)/lib/*.[hio]))
+
+lib_sources = $(sort $(wildcard $(basedir)/src/lib/*.c) \
                    $(wildcard $(basedir)/src/lib/*/*.c))
 
 tests: libtests64
@@ -59,41 +66,39 @@ lib-suite-%.result: */*-test.c */*.golden
 	./compile-run-suite.sh lib $*
 
 libc-suite-%.result: */*-test.c */*.golden
-	cp -p $(basedir)/c64files/libc-*.[hio] c64files/
 	./compile-run-suite.sh libc $*
 
-lib.c: $(lib_files)
-	cat $(lib_files) >$@
+lib.c: $(lib_sources)
+	cat $(lib_sources) >$@
 
-libc.c: $(basedir)/lib/libc.c
-	cp $< $@
-
-$(suite_results_c64_hosted): c64files/lib.c c64files/libc.c \
+$(suite_results_c64_hosted): c64files/lib.c \
+    $(c64_rt_files) $(c64_lib_files) \
     $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files) *.sh *.shlib *.h
 
-$(suite_results_c16_hosted): c16files/lib.c c16files/libc.c \
-    $(basedir)/autostart-c16/cc64.T64 $(c16_rt_files) *.sh *.shlib *.h
+$(suite_results_c16_hosted): c16files/lib.c \
+    $(c16_rt_files) $(c16_lib_files) \
+    $(basedir)/autostart-c16/cc64.T64 *.sh *.shlib *.h
 
-$(suite_results_x16_hosted): x16files/lib.c x16files/libc.c \
-    x16files/cc64 $(x16_rt_files) *.sh *.shlib *.h
-
+$(suite_results_x16_hosted): x16files/lib.c \
+    $(x16_rt_files) $(x16_lib_files) \
+    x16files/cc64 *.sh *.shlib *.h
 
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
-	rm -f cc64-suite-[cx]??_[cx]??.* cc64pe-suite-[cx]??_[cx]??.*
+	rm -f lib-suite-[cx]??_[cx]??.* libc-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-* lib.c libc.c
 	rm -f *.out *.T64 *.result *-generated.c
 
-c64files/rt-%: $(basedir)/c64files/rt-%
+c64files/%: $(basedir)/c64files/%
 	test -d c64files || mkdir c64files
 	cp $< $@
 
-c16files/rt-%: $(basedir)/c16files/rt-%
+c16files/%: $(basedir)/c16files/%
 	test -d c16files || mkdir c16files
 	cp $< $@
 
-x16files/rt-%: $(basedir)/x16files/rt-%
+x16files/%: $(basedir)/x16files/%
 	test -d x16files || mkdir x16files
 	cp $< $@
 
@@ -120,7 +125,3 @@ c16files/%.c: %.c
 x16files/%.c: %.c
 	test -d x16files || mkdir x16files
 	ascii2petscii $< $@
-
-x16files/cc64: $(basedir)/x16files/cc64
-	test -d x16files || mkdir x16files
-	cp $< $@

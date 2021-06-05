@@ -15,25 +15,33 @@ cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
 cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
 
-# runtime and sample files
+# runtime, lib and sample files
 rt_files = \
   rt-c64-08-9f.h rt-c64-08-9f.i rt-c64-08-9f.o \
   rt-c16-10-7f.h rt-c16-10-7f.i rt-c16-10-7f.o \
   rt-x16-08-9e.h rt-x16-08-9e.i rt-x16-08-9e.o
 
+lib_files = \
+  libc-c64.h libc-c64.i libc-c64.o \
+  libc-c16.h libc-c16.i libc-c16.o \
+  libc-x16.h libc-x16.i libc-x16.o
+
 sample_files = helloworld-c64.c helloworld-c16.c helloworld-x16.c \
   kernal-io-c64.c kernal-io-c16.c sieve-c64.c
 
 # c64files content
-c64dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
+c64dir_content = $(cc64_binaries) $(rt_files) $(lib_files) \
+  $(sample_files) c-charset
 c64dir_files = $(patsubst %, c64files/% , $(c64dir_content))
 
 # c16files content
-c16dir_content = $(cc64_binaries) $(rt_files) $(sample_files) c-charset
+c16dir_content = $(cc64_binaries) $(rt_files) $(lib_files) \
+  $(sample_files) c-charset
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 
 # x16files content
-x16dir_content = cc64 $(rt_files) $(sample_files) c-charset
+x16dir_content = cc64 $(rt_files) $(lib_files) \
+  $(sample_files) c-charset
 x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
 # PETSCII sources and VolksForth bases for manual recompile
@@ -189,6 +197,7 @@ clean:
 	rm -f [cx][16][64]files/notdone cc64-doc.zip
 	rm -rf release tmp/*
 	rm -rf $(recompile_dir) $(recompile_dir).zip
+	rm -rf lib/cbmfiles/*
 	$(MAKE) -C emulator clean
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
@@ -302,15 +311,6 @@ runtime/rt-%.i:
 	# An empty binary file with (arbitrary) load address $9000
 	# Might be worth encoding in an asm source for clarity.
 
-c64files/%: runtime/%
-	emulator/copy-to-emu.sh $< $@
-
-c16files/%: runtime/%
-	emulator/copy-to-emu.sh $< $@
-
-x16files/%: runtime/%
-	emulator/copy-to-emu.sh $< $@
-
 
 # Library rules
 
@@ -319,31 +319,17 @@ libc_files = $(sort $(wildcard src/lib/*.c) $(wildcard src/lib/*/*.c))
 lib/libc.c: $(libc_files)
 	cat $(libc_files) >$@
 
-lib/libc-c64.c: lib/libc.c
-	echo '#include <rt-c64-08-9f.h>' | cat - $< >$@
+lib/libc-c64.c: $(libc_files)
+	echo '#include <rt-c64-08-9f.h>' | cat - $(libc_files) >$@
 
-lib/libc-c16.c: lib/libc.c
-	echo '#include <rt-c16-10-7f.h>' | cat - $< >$@
+lib/libc-c16.c: $(libc_files)
+	echo '#include <rt-c16-10-7f.h>' | cat - $(libc_files) >$@
 
-lib/libc-x16.c: lib/libc.c
-	echo '#include <rt-x16-08-9e.h>' | cat - $< >$@
+lib/libc-x16.c: $(libc_files)
+	echo '#include <rt-x16-08-9e.h>' | cat - $(libc_files) >$@
 
-c64files/%: lib/%
-	emulator/copy-to-emu.sh $< $@
-
-c16files/%: lib/%
-	emulator/copy-to-emu.sh $< $@
-
-x16files/%: lib/%
-	emulator/copy-to-emu.sh $< $@
-
-c64files/libc-c64.h c64files/libc-c64.i c64files/libc-c64.o: \
-  c64files/libc-c64.c autostart-c64/cc64.T64 \
-  $(patsubst %, c64files/% , $(rt_files))
-	rm -f c64files/libc-c64.h c64files/libc-c64.i
-	rm -f c64files/libc-c64.o c64files/libc-c64.log
-	OUTFILES="libc-c64.h libc-c64.i libc-c64.o libc-c64.log" \
-	  emulator/compile-in-emu.sh libc-c64
+lib/%.h lib/%.i lib/%.o: lib/%.c autostart-c64/cc64.T64 runtime/*
+	emulator/compile-lib.sh $*
 
 
 # Charset rules
@@ -388,26 +374,29 @@ autostart-x16/%.T64: x16files/%
 
 # Generic rules to populate c64files/, c16files/, x16files/
 
-c64files/%.fth: src/*/%.fth
-	ascii2petscii $< $@
-	touch -r $< $@
+c64files/%: src/*/%
+	emulator/copy-to-emu.sh $< $@
 
-c64files/%.c: src/*/%.c
-	ascii2petscii $< $@
-	touch -r $< $@
+c16files/%: src/*/%
+	emulator/copy-to-emu.sh $< $@
 
-c16files/%.fth: src/*/%.fth
-	ascii2petscii $< $@
-	touch -r $< $@
+x16files/%: src/*/%
+	emulator/copy-to-emu.sh $< $@
 
-c16files/%.c: src/*/%.c
-	ascii2petscii $< $@
-	touch -r $< $@
+c64files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
 
-x16files/%.fth: src/*/%.fth
-	ascii2petscii $< $@
-	touch -r $< $@
+c16files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
 
-x16files/%.c: src/*/%.c
-	ascii2petscii $< $@
-	touch -r $< $@
+x16files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
+
+c64files/%: lib/%
+	emulator/copy-to-emu.sh $< $@
+
+c16files/%: lib/%
+	emulator/copy-to-emu.sh $< $@
+
+x16files/%: lib/%
+	emulator/copy-to-emu.sh $< $@

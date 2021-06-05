@@ -1,4 +1,2 @@
 
-#include "rt-c16-10-7f.h"
-
-#include "libc.c"
+#include <libc-c16.h>

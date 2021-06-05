@@ -4,9 +4,6 @@ set -e
 
 src="$1"
 dst="$2"
-dstdir="$(dirname "${dst}")"
-
-test -d "${dstdir}" || mkdir "${dstdir}"
 
 if [[ "${src}" =~ \.[io]$ ]]; then
   cp -p "${src}" "${dst}"
@@ -15,7 +12,7 @@ fi
 
 if [[ "${src}" =~ \.[ch]$ ]] || [[ "${src}" =~ \.fth$ ]]
 then
-  ascii2petscii "${src}" "${dst}"
+  petscii2ascii "${src}" "${dst}"
   touch -r  "${src}" "${dst}"
   exit 0
 fi
