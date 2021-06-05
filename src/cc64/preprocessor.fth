@@ -89,7 +89,10 @@
         IF negate +char THEN minus !
      cpp-number? ?cpp-errorexit
      minus @ *
-     dup $ff00 and 0<> 1 and
+     \ Hack: Set type to %char or %int, with %extern set.
+     \ TODO: Extract type constants from codegen.fth so
+     \ preprocessor.fth already can use them.
+     dup $ff00 and 0<> 1 and $2000 or
      id-buf putglobal 2!  clearline ;
 
 

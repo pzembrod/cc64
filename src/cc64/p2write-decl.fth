@@ -1,8 +1,8 @@
 
 ~ : (write-decl ( name val type -- )
-     %function %l-value %pointer + +
-     isn't? >r  %extern isn't? r> or
-       IF 2drop drop exit THEN
+     %extern isn't? IF 2drop drop exit THEN
+     %function %l-value %pointer + + isn't?
+       IF drop " #define " str!  swap str! hex! cr! exit THEN
      " extern " str!
      is-char? IF   " char "
               ELSE " int " THEN str!
