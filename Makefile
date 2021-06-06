@@ -320,11 +320,11 @@ $(recompile_dir)/%: forth/%
 # Runtime module rules
 
 runtime/%.o runtime/%.h: \
-    src/runtime/%.a src/runtime/generate_pragma_cc64.awk
+    src/runtime/%.a src/runtime/generate_runtime_h.awk
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/$*.sym -o runtime/$*.o \
 	  -I src/runtime src/runtime/$*.a
-	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
+	awk -f src/runtime/generate_runtime_h.awk -F '$$' \
 	  tmp/$*.sym > runtime/$*.h
 
 runtime/%.i:

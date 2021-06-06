@@ -11,6 +11,7 @@ BEGIN {
   statics_start = "";
   statics_end = "";
   lib_name = "";
+  # fastcall_functions = []
 }
 
 /cc64_sp/ {
@@ -43,12 +44,24 @@ BEGIN {
   split($2, a, /\s+/); statics_end = a[1];
 }
 
+/cc64_fastcall_/ {
+  f = $1; 
+  gsub(/\s+/, "", f);
+  sub(/cc64_fastcall_/, "", f);
+  sub(/=/, "", f);
+  split($2, a, /\s+/);
+  fastcall_functions[f] = a[1];
+}
+
 END {
   if (cc64_sp && cc64_zp && lib_start && lib_jumplist && lib_end &&
       statics_start && statics_end && lib_name) {
     printf("#pragma cc64 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s %s\n",
            cc64_sp, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name);
+    for (name in fastcall_functions) {
+      printf("%s() *= 0x%s;\n", name, fastcall_functions[name]);
+    }
   } else {
     printf("Somethings missing when parsing %s\n" \
            " cc64_sp = '%s'\n cc64_zp = '%s'\n lib_start = '%s'\n" \
