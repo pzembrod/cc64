@@ -1,0 +1,42 @@
+
+!ct pet
+
+fold_cases = %01111111 ; 'a' xor 'A' xor $ff
+
+cc64_fastcall_isdigit
+        cpx #0
+        bne ldx_0_return_false
+        cmp #$30
+        bcc return_false
+        cmp #$3a
+        bcs return_false
+        bcc return_true
+
+cc64_fastcall_isalnum
+        cpx #0
+        bne ldx_0_return_false
+        cmp #$30
+        bcc return_false
+        cmp #$3a
+        bcc return_true
+        bcs isalpha
+
+cc64_fastcall_isalpha
+        cpx #0
+        bne ldx_0_return_false
+isalpha
+        cmp #$5f ; underscore
+        beq return_true
+        and #fold_cases
+        cmp #$41
+        bcc return_false
+        cmp #$5b
+        bcs return_false
+return_true
+        lda #$01
+        rts
+ldx_0_return_false
+        ldx #0
+return_false
+        txa
+        rts

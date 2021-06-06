@@ -1,0 +1,34 @@
+
+; cc64 runtime module start
+; to run on c64 at $0801-$a000
+
+!addr   cc64_statics_start = $a000
+!addr   cc64_statics_end   = $a000
+!addr   cc64_sp            = $fd
+!addr   cc64_zp            = $fb
+
+!addr   tmp_zp1            = $22
+!addr   tmp_zp2            = $24
+
+!addr   strout    = $ab1e
+!addr   warmstart = $e37b
+
+        *= $0801
+
+cc64_lib_start
+        !word baslink
+        !word 2020
+        !byte $9e
+        !pet " 2081:"
+        !byte $8f
+        !pet " cc64 rt-lib v0.6", 0
+baslink !word 0
+
+        jmp init
+
+division_by_zero
+        lda #<div_zero
+        ldy #>div_zero
+        jsr strout
+        jmp warmstart
+div_zero !pet "division by zero", $0d, 0

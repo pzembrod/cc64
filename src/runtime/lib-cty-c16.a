@@ -1,9 +1,11 @@
 
-; cc64 minimal runtime module
+; cc64 runtime module including ctype.a as basis for libc
 ; to run on c16/plus4 at $1001-$8000
 
 !source "bas-c16-10-7f.a"
 
 !source "rt-core.a"
+
+!source "ctype.a"
 
 cc64_lib_end

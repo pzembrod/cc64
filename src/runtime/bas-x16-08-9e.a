@@ -1,0 +1,33 @@
+
+; cc64 runtime module start
+; to run on Commander X16 at $0801-$9f00
+
+!addr   cc64_statics_start = $9f00
+!addr   cc64_statics_end   = $9f00
+!addr   cc64_sp            = $40
+!addr   cc64_zp            = $42
+
+!addr   tmp_zp1            = $44
+!addr   tmp_zp2            = $46
+
+!addr   primm       = $ff7d
+!addr   enter_basic = $ff47
+
+        *= $0801
+
+cc64_lib_start
+        !word baslink
+        !word 2020
+        !byte $9e
+        !pet " 2081:"
+        !byte $8f
+        !pet " cc64 rt-lib v0.6", 0
+baslink !word 0
+
+        jmp init
+
+division_by_zero
+        jsr primm
+        !pet "division by zero", $0d, 0
+        clc
+        jmp enter_basic

@@ -1,9 +1,11 @@
 
-; cc64 minimal runtime module
+; cc64 runtime module including ctype.a as basis for libc
 ; to run on Commander X16 at $0801-$9f00
 
 !source "bas-x16-08-9e.a"
 
 !source "rt-core.a"
+
+!source "ctype.a"
 
 cc64_lib_end

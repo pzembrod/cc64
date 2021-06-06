@@ -1,4 +1,4 @@
-#include <rt-c64-08-9f.h>
+#include <lib-cty-c64.h>
 
 #define NULL 0
 

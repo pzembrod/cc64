@@ -1,4 +1,6 @@
 
+%.o: %.c
+
 # cc64 sources and binaries
 commonsrcs_ascii = $(wildcard src/common/*.fth)
 commonsrcs = $(patsubst src/common/%, %, $(commonsrcs_ascii))
@@ -317,15 +319,15 @@ $(recompile_dir)/%: forth/%
 
 # Runtime module rules
 
-runtime/rt-%.o runtime/rt-%.h: \
-    src/runtime/rt-%.a src/runtime/generate_pragma_cc64.awk
+runtime/%.o runtime/%.h: \
+    src/runtime/%.a src/runtime/generate_pragma_cc64.awk
 	test -d tmp || mkdir tmp
-	acme -f cbm -l tmp/rt-$*.sym -o runtime/rt-$*.o \
-	  -I src/runtime src/runtime/rt-$*.a
+	acme -f cbm -l tmp/$*.sym -o runtime/$*.o \
+	  -I src/runtime src/runtime/$*.a
 	awk -f src/runtime/generate_pragma_cc64.awk -F '$$' \
-	  tmp/rt-$*.sym > runtime/rt-$*.h
+	  tmp/$*.sym > runtime/$*.h
 
-runtime/rt-%.i:
+runtime/%.i:
 	awk 'BEGIN{ printf("\x00\x90");}' > $@
 	# An empty binary file with (arbitrary) load address $9000
 	# Might be worth encoding in an asm source for clarity.
@@ -335,20 +337,18 @@ runtime/rt-%.i:
 
 libc_files = $(sort $(wildcard src/lib/*.c) $(wildcard src/lib/*/*.c))
 
-lib/libc.c: $(libc_files)
-	cat $(libc_files) >$@
-
 lib/libc-c64.c: $(libc_files)
-	echo '#include <rt-c64-08-9f.h>' | cat - $(libc_files) >$@
+	echo '#include <lib-cty-c64.h>' | cat - $(libc_files) >$@
 
 lib/libc-c16.c: $(libc_files)
-	echo '#include <rt-c16-10-7f.h>' | cat - $(libc_files) >$@
+	echo '#include <lib-cty-c16.h>' | cat - $(libc_files) >$@
 
 lib/libc-x16.c: $(libc_files)
-	echo '#include <rt-x16-08-9e.h>' | cat - $(libc_files) >$@
+	echo '#include <lib-cty-x16.h>' | cat - $(libc_files) >$@
 
-lib/%.h lib/%.i lib/%.o: lib/%.c autostart-c64/cc64.T64 runtime/*
-	emulator/compile-lib.sh $*
+lib/libc-%.h lib/libc-%.i lib/libc-%.o: lib/libc-%.c autostart-c64/cc64.T64 \
+  runtime/lib-cty-%.h runtime/lib-cty-%.i runtime/lib-cty-%.o
+	emulator/compile-lib.sh libc-$*
 
 
 # Charset rules
