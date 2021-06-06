@@ -19,7 +19,6 @@ modules libc-*.[hio], to be used instead of rt-*.[hio].
 Naming scheme for the basic runtime libraries rt-*.[hio] now includes
 both start and end address, to facilitate version e.g. using the RAM
 under the BASIC ROM on the C64.
-Also, the runtime libs' shared code has been extracted and unified.
 
 ## v0.9
 

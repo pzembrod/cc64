@@ -265,7 +265,8 @@ slowtests: sut
 sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
   autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \
   autostart-c64/peddi.T64 autostart-c16/peddi.T64 \
-  autostart-c64/cc64prof.T64
+  autostart-c64/cc64prof.T64 \
+  $(c64dir_files) $(c16dir_files) $(x16dir_files)
 
 # cc64 build rules
 

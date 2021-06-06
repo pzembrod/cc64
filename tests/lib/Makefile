@@ -43,6 +43,17 @@ libctests: \
   libc-suite-c16_c16.result \
   libc-suite-x16_x16.result
 
+libccrosstests: \
+  libc-suite-c64_c64.result \
+  libc-suite-c64_c16.result \
+  libc-suite-c64_x16.result \
+  libc-suite-c16_c64.result \
+  libc-suite-c16_c16.result \
+  libc-suite-c16_x16.result \
+  libc-suite-x16_c64.result \
+  libc-suite-x16_c16.result \
+  libc-suite-x16_x16.result
+
 libtests64: lib-suite-c64_c64.result
 
 libtests: \
