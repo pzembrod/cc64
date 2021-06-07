@@ -1,8 +1,7 @@
 
-!ct pet
-
 fold_cases = %01111111 ; 'a' xor 'A' xor $ff
 
+cc64_type_isdigit = 1
 cc64_fastcall_isdigit
         cpx #0
         bne ldx_0_return_false
@@ -12,6 +11,7 @@ cc64_fastcall_isdigit
         bcs return_false
         bcc return_true
 
+cc64_type_isalnum = 1
 cc64_fastcall_isalnum
         cpx #0
         bne ldx_0_return_false
@@ -21,6 +21,7 @@ cc64_fastcall_isalnum
         bcc return_true
         bcs isalpha
 
+cc64_type_isalpha = 1
 cc64_fastcall_isalpha
         cpx #0
         bne ldx_0_return_false

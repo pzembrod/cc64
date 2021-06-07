@@ -12,6 +12,10 @@ BEGIN {
   statics_end = "";
   lib_name = "";
   # fastcall_functions = []
+  type_code[1] = "int ";
+  type_code[2] = "char ";
+  type_code[3] = "int *";
+  type_code[4] = "char *";
 }
 
 /cc64_sp/ {
@@ -53,6 +57,17 @@ BEGIN {
   fastcall_functions[f] = a[1];
 }
 
+/cc64_type_/ {
+  t = $1;
+  gsub(/\s+/, "", t);
+  sub(/cc64_type_/, "", t);
+  sub(/=/, "", t);
+  split($2, a, /\s+/);
+  if (a[1] in type_code) {
+    fastcall_types[t] = type_code[a[1]];
+  }
+}
+
 END {
   if (cc64_sp && cc64_zp && lib_start && lib_jumplist && lib_end &&
       statics_start && statics_end && lib_name) {
@@ -60,6 +75,9 @@ END {
            cc64_sp, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name);
     for (name in fastcall_functions) {
+      if (name in fastcall_types) {
+        printf("%s", fastcall_types[name]);
+      }
       printf("%s() *= 0x%s;\n", name, fastcall_functions[name]);
     }
   } else {

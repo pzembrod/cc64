@@ -332,6 +332,7 @@ runtime/%.i:
 	# An empty binary file with (arbitrary) load address $9000
 	# Might be worth encoding in an asm source for clarity.
 
+runtime/lib-cty-*: src/runtime/ctype.a
 
 # Library rules
 
