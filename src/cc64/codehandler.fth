@@ -66,7 +66,7 @@
     (CX enable-code[]-bank C)
     codeoffset @ - dup
     code[ ]code 1- uwithin
-    0= *functolong* ?fatal ;
+    0= *functoolong* ?fatal ;
 
 ~ : b! ( 8b pc-adr -- )  >codeadr c! ;
 ~ : w! ( 16b pc-adr -- )  >codeadr ! ;

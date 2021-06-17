@@ -191,6 +191,12 @@
      exe-name count 2 - fputs
      cr! cr! ;
 
+|| : checksize ( -- )
+     statics.last @ lib.first @ u> IF
+       \ assuming soft stack starts after static init values:
+       statics.first @ statics.last @ over - - code.last @
+       2dup - . ." free dyn mem" cr
+       $100 + u< *codetoolong* ?fatal THEN ;
 
 \ *** Block No. 117, Hexblock 75
 
@@ -234,6 +240,7 @@
      link-statics ;
 
 ~ : pass2  ( -- )
+     checksize
      main()-adr @
         IF link-exe
         ELSE link-lib THEN ;

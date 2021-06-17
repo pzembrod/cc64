@@ -26,18 +26,18 @@
 
 \ symtab: div.                 11mar91pz
 
-| 63 constant /name
-| 255 constant )local   \ marken
-| 254 constant )block   \
+|| 63 constant /name
+|| 255 constant )local   \ marken
+|| 254 constant )block   \
 \ es muss /name < )block < )local < 256
 
-| : cutname ( name -- )
+|| : cutname ( name -- )
      dup c@ /name umin swap c! ;
 
-| create dummy  /symbol allot
+|| create dummy  /symbol allot
 
-| variable globals>
-| variable locals>
+|| variable globals>
+|| variable locals>
 
 ~ : init-symtab
      hash[ ]hash over - erase
@@ -52,7 +52,7 @@
 
 \ symtab: locals               14feb91pz
 
-| : (findloc) ( name endmark -- dfa/0 )
+|| : (findloc) ( name endmark -- dfa/0 )
      ]symtab locals> @
      ?DO dup I c@ > not
         IF 2drop 0 UNLOOP exit THEN
@@ -69,7 +69,7 @@
 ~ : findparam ( name -- dfa/0 )
      dup cutname  )block (findloc) ;
 
-| : spacious? ( n -- flag )
+|| : spacious? ( n -- flag )
      locals> @ globals> @ - u> 0= ;
 
 
@@ -105,7 +105,7 @@
 
 \ symtab: globals              18feb91pz
 
-| : hash ( name -- n )
+|| : hash ( name -- n )
      0 swap count bounds
         ?DO 2* I c@ + LOOP ;
 
@@ -113,7 +113,7 @@
 \ dfa: data field address of found symbol
 \ adr: address in hash table for name
 \ 0: hash table full
-| : (findglb) ( name -- dfa   true )
+|| : (findglb) ( name -- dfa   true )
               ( name -- adr/0 false )
      dup hash #globals u/mod drop
      2* hash[ + dup

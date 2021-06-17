@@ -6,7 +6,7 @@
 
 \ errormessages                11sep94pz
 
-~ 40 string-tab errormessage
+~ 41 string-tab errormessage
 
 ~ x *syntax*      x" syntax error"
 \ x *in-file*     x" source file error"
@@ -17,7 +17,7 @@
      x" double defined symbol"
 ~ x *glbovfl*
      x" hash table overflow"
-~ x *functolong*  x" function too long"
+~ x *functoolong*  x" function too long"
 \ x *out-file*    x" output file error"
 ~ x *undef*       x" undefined symbol"
 ~ x *nofunc*      x" bad function call"
@@ -75,6 +75,7 @@
 ~ x *stack*     x" stack overflow"
 ~ x *rstack*  x" return stack overflow"
 ~ x *compiler*   x" compiler error"
+~ x *codetoolong*  x" code too long"
 
 end-tab
 
