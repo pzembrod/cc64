@@ -6,14 +6,14 @@ suite_c64_suffixes = $(patsubst %, suite-c64_%, $(suite_suffixes))
 suite_c16_suffixes = $(patsubst %, suite-c16_%, $(suite_suffixes))
 suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 suite_results_c64_hosted = \
-    $(patsubst %, lib-%, $(suite_c64_suffixes)) \
-    $(patsubst %, libc-%, $(suite_c64_suffixes))
+    $(patsubst %, string-%, $(suite_c64_suffixes)) \
+    $(patsubst %, ctype-%, $(suite_c64_suffixes))
 suite_results_c16_hosted = \
-    $(patsubst %, lib-%, $(suite_c16_suffixes)) \
-    $(patsubst %, libc-%, $(suite_c16_suffixes))
+    $(patsubst %, string-%, $(suite_c16_suffixes)) \
+    $(patsubst %, ctype-%, $(suite_c16_suffixes))
 suite_results_x16_hosted = \
-    $(patsubst %, lib-%, $(suite_x16_suffixes)) \
-    $(patsubst %, libc-%, $(suite_x16_suffixes))
+    $(patsubst %, string-%, $(suite_x16_suffixes)) \
+    $(patsubst %, ctype-%, $(suite_x16_suffixes))
 
 c64_rt_files = \
     $(patsubst $(basedir)/runtime/%, c64files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
@@ -29,76 +29,75 @@ c16_lib_files = \
 x16_lib_files = \
     $(patsubst $(basedir)/lib/%, x16files/%, $(wildcard $(basedir)/lib/*.[hio]))
 
-lib_sources = $(sort $(wildcard $(basedir)/src/lib/*.c) \
-                   $(wildcard $(basedir)/src/lib/*/*.c))
 
-tests: libtests64
+tests: tests64
 
-alltests: libtests
+alltests: \
+  ctypetests \
+  stringtests
 
-libctests64: libc-suite-c64_c64.result
+allcrosstests: \
+  ctypecrosstests \
+  stringcrosstests
 
-libctests: \
-  libc-suite-c64_c64.result \
-  libc-suite-c16_c16.result \
-  libc-suite-x16_x16.result
+tests64: \
+  ctype-suite-c64_c64.result \
+  string-suite-c64_c64.result
 
-libccrosstests: \
-  libc-suite-c64_c64.result \
-  libc-suite-c64_c16.result \
-  libc-suite-c64_x16.result \
-  libc-suite-c16_c64.result \
-  libc-suite-c16_c16.result \
-  libc-suite-c16_x16.result \
-  libc-suite-x16_c64.result \
-  libc-suite-x16_c16.result \
-  libc-suite-x16_x16.result
+ctypetests: \
+  ctype-suite-c64_c64.result \
+  ctype-suite-c16_c16.result \
+  ctype-suite-x16_x16.result
 
-libtests64: lib-suite-c64_c64.result
+stringtests: \
+  string-suite-c64_c64.result \
+  string-suite-c16_c16.result \
+  string-suite-x16_x16.result
 
-libtests: \
-  lib-suite-c64_c64.result \
-  lib-suite-c16_c16.result \
-  lib-suite-x16_x16.result
+ctypecrosstests: \
+  ctype-suite-c64_c64.result \
+  ctype-suite-c64_c16.result \
+  ctype-suite-c64_x16.result \
+  ctype-suite-c16_c64.result \
+  ctype-suite-c16_c16.result \
+  ctype-suite-c16_x16.result \
+  ctype-suite-x16_c64.result \
+  ctype-suite-x16_c16.result \
+  ctype-suite-x16_x16.result
 
-libcrosstests: \
-  lib-suite-c64_c64.result \
-  lib-suite-c64_c16.result \
-  lib-suite-c64_x16.result \
-  lib-suite-c16_c64.result \
-  lib-suite-c16_c16.result \
-  lib-suite-c16_x16.result \
-  lib-suite-x16_c64.result \
-  lib-suite-x16_c16.result \
-  lib-suite-x16_x16.result
+stringcrosstests: \
+  string-suite-c64_c64.result \
+  string-suite-c64_c16.result \
+  string-suite-c64_x16.result \
+  string-suite-c16_c64.result \
+  string-suite-c16_c16.result \
+  string-suite-c16_x16.result \
+  string-suite-x16_c64.result \
+  string-suite-x16_c16.result \
+  string-suite-x16_x16.result
 
 
-lib-suite-%.result: */*-test.c */*.golden
-	./compile-run-suite.sh lib $*
+ctype-suite-%.result: ctype/*
+	./compile-run-suite.sh ctype $*
 
-libc-suite-%.result: */*-test.c */*.golden
-	./compile-run-suite.sh libc $*
+string-suite-%.result: string/*
+	./compile-run-suite.sh string $*
 
-lib.c: $(lib_sources)
-	cat $(lib_sources) >$@
 
-$(suite_results_c64_hosted): c64files/lib.c \
-    $(c64_rt_files) $(c64_lib_files) \
-    $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files) *.sh *.shlib *.h
+$(suite_results_c64_hosted): $(c64_lib_files) \
+    $(basedir)/autostart-c64/cc64.T64 *.sh *.shlib *.h
 
-$(suite_results_c16_hosted): c16files/lib.c \
-    $(c16_rt_files) $(c16_lib_files) \
+$(suite_results_c16_hosted): $(c16_lib_files) \
     $(basedir)/autostart-c16/cc64.T64 *.sh *.shlib *.h
 
-$(suite_results_x16_hosted): x16files/lib.c \
-    $(x16_rt_files) $(x16_lib_files) \
+$(suite_results_x16_hosted): $(x16_lib_files) \
     x16files/cc64 *.sh *.shlib *.h
 
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
-	rm -f lib-suite-[cx]??_[cx]??.* libc-suite-[cx]??_[cx]??.*
-	rm -f suite.joined-* lib.c libc.c
+	rm -f *-suite-[cx]??_[cx]??.*
+	rm -f suite.joined-*
 	rm -f *.out *.T64 *.result *-generated.c
 
 c64files/%: $(basedir)/c64files/%
