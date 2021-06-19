@@ -2,3 +2,4 @@
 2021-05-08-2238 18691 c16files/peddi bumped version v0.9 to v0.10-dev
 2021-05-08-2238 18691 c16files/peddi ANSI style function declarations plus some bug fixes.
 2021-05-08-2238 18691 c16files/peddi enabled non-constant initializers of non-static local vars
+2021-06-05-2251 18691 c16files/peddi added memory overflow check in pass2
