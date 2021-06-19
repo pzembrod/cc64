@@ -41,3 +41,15 @@ ldx_0_return_false
 return_false
         txa
         rts
+
+cc64_type_isspace = 1
+cc64_fastcall_isspace
+        cpx #0
+        bne ldx_0_return_false
+        cmp #$20
+        beq return_true
+        cmp #$0e
+        bcs return_false
+        cmp #$09
+        bcc return_false
+        bcs return_true

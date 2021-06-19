@@ -9,9 +9,11 @@
 rm -f suite.joined-golden suite.joined-silver
 touch suite.joined-golden suite.joined-silver
 for tp in $test_paths; do
+  golden="${tp}.golden"
+  test -f "${golden}" || golden="default.golden"
   echo "${tp}-test:" >> suite.joined-golden
-  cat ${tp}.golden >> suite.joined-golden
+  cat "${golden}" >> suite.joined-golden
   # joined-silver doesn't contain test sections, so diffing against it
   # will highlight the test sections as well as actuall output diffs.
-  cat ${tp}.golden >> suite.joined-silver
+  cat "${golden}" >> suite.joined-silver
 done
