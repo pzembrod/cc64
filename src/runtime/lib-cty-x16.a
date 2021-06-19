@@ -6,6 +6,6 @@
 
 !source "rt-core.a"
 
-!source "ctype.a"
+!source "ctype-petscii.a"
 
 cc64_lib_end

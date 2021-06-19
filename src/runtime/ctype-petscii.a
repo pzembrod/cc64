@@ -1,4 +1,7 @@
 
+; assembly implementation of ctype.h
+; the implementation is petscii-specific.
+
 fold_cases = %01111111 ; 'a' xor 'A' xor $ff
 
 cc64_type_isdigit = 1
