@@ -1,52 +1,52 @@
 
-extern putc() *= 0xffd2;
+extern tst_putc() *= 0xffd2;
 
 int noconst(i)
 int i;
 { return i; }
 
-print(char *s)
+tst_print(char *s)
 {
   while(*s != 0)
-     putc(*s++);
+     tst_putc(*s++);
 }
 
-println(s)
+tst_println(s)
 char *s;
 {
-  print(s); putc('\n');
+  tst_print(s); tst_putc('\n');
 }
 
-extern __chkout() *= 0xffc9 ;
+extern tst__chkout() *= 0xffc9 ;
 
-_chkout(int lfn)
-{ __chkout(lfn<<8); }
+tst_chkout(int lfn)
+{ tst__chkout(lfn<<8); }
 
-extern _close() *= 0xffc3 ;
-extern _clrchn() *= 0xffcc ;
-extern __open() *= 0xffc0 ;
+extern tst_close() *= 0xffc3 ;
+extern tst_clrchn() *= 0xffcc ;
+extern tst__open() *= 0xffc0 ;
 
-extern char _kernal_fnam_len /= 0x28e;
-extern char _kernal_lfn /= 0x28f;
-extern char _kernal_sa /= 0x290;
-extern char _kernal_fa /= 0x291;
-extern int _kernal_fnam /= 0x8c;
+extern char tst_kernal_fnam_len /= 0x28e;
+extern char tst_kernal_lfn /= 0x28f;
+extern char tst_kernal_sa /= 0x290;
+extern char tst_kernal_fa /= 0x291;
+extern int tst_kernal_fnam /= 0x8c;
 
-_open(lfn, fa, sa, fnam)
+tst_open(lfn, fa, sa, fnam)
 char lfn, fa, sa;
 char *fnam;
 {
   char *p;
   for(p=fnam; *p; ++p);
-  _kernal_fnam_len = p-fnam;
-  _kernal_lfn = lfn;
-  _kernal_fa = fa;
-  _kernal_sa = sa;
-  _kernal_fnam = fnam;
-  __open();
+  tst_kernal_fnam_len = p-fnam;
+  tst_kernal_lfn = lfn;
+  tst_kernal_fa = fa;
+  tst_kernal_sa = sa;
+  tst_kernal_fnam = fnam;
+  tst__open();
 }
 
-char* itoa(i)
+char* tst_itoa(i)
 int i;
 {
   static char buffer[10];
@@ -81,9 +81,9 @@ int expected;
 char *message;
 {
   if (actual != expected) {
-    print("Assert failed: "); print(message);
-    print(" Expected: "); print(itoa(expected));
-    print(" Actual: "); println(itoa(actual));
+    tst_print("Assert failed: "); tst_print(message);
+    tst_print(" Expected: "); tst_print(tst_itoa(expected));
+    tst_print(" Actual: "); tst_println(tst_itoa(actual));
     ++failedAsserts;
   }
 }
@@ -91,17 +91,17 @@ char *message;
 assertTrue(int expression, char *message)
 {
   if (!expression) {
-    print("Assert failed: "); println(message);
+    tst_print("Assert failed: "); tst_println(message);
     ++failedAsserts;
   }
 }
 
 evaluateAsserts() {
   if (failedAsserts) {
-    print(itoa(failedAsserts));
-    println(" assert(s) failed.");
+    tst_print(tst_itoa(failedAsserts));
+    tst_println(" assert(s) failed.");
   } else {
-    println("No assert failed.");
+    tst_println("No assert failed.");
   }
   failedAsserts = 0;
 }

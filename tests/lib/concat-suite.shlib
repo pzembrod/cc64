@@ -14,7 +14,7 @@
   echo "test(){"
   for tp in $test_paths; do
     t=$(basename ${tp})
-    echo "  println(\"${tp}-test:\");"
+    echo "  tst_println(\"${tp}-test:\");"
     echo "  ${t}_test();"
   done
   echo "}"
