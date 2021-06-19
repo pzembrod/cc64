@@ -245,24 +245,28 @@ test64: autostart-c64/cc64.T64
 	$(MAKE) -C tests/unit tests
 	$(MAKE) -C tests/e2e fasttests64
 	$(MAKE) -C tests/integration tests
+	$(MAKE) -C tests/lib tests
 
 alltests: sut
 	$(MAKE) -C tests/e2e alltests
 	$(MAKE) -C tests/unit tests
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
+	$(MAKE) -C tests/lib alltests
 
 fasttests: sut
 	$(MAKE) -C tests/e2e fasttests
 	$(MAKE) -C tests/unit tests
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
+	$(MAKE) -C tests/lib alltests
 
 slowtests: sut
 	$(MAKE) -C tests/e2e slowtests
 	$(MAKE) -C tests/unit tests
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
+	$(MAKE) -C tests/lib alltests
 
 sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
   autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \
