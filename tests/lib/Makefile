@@ -34,20 +34,28 @@ tests: tests64
 
 alltests: \
   ctypetests \
+  strmemtests \
   stringtests
 
 allcrosstests: \
   ctypecrosstests \
+  strmemcrosstests \
   stringcrosstests
 
 tests64: \
   ctype-suite-c64_c64.result \
+  strmem-suite-c64_c64.result \
   string-suite-c64_c64.result
 
 ctypetests: \
   ctype-suite-c64_c64.result \
   ctype-suite-c16_c16.result \
   ctype-suite-x16_x16.result
+
+strmemtests: \
+  strmem-suite-c64_c64.result \
+  strmem-suite-c16_c16.result \
+  strmem-suite-x16_x16.result
 
 stringtests: \
   string-suite-c64_c64.result \
@@ -65,6 +73,17 @@ ctypecrosstests: \
   ctype-suite-x16_c16.result \
   ctype-suite-x16_x16.result
 
+strmemcrosstests: \
+  strmem-suite-c64_c64.result \
+  strmem-suite-c64_c16.result \
+  strmem-suite-c64_x16.result \
+  strmem-suite-c16_c64.result \
+  strmem-suite-c16_c16.result \
+  strmem-suite-c16_x16.result \
+  strmem-suite-x16_c64.result \
+  strmem-suite-x16_c16.result \
+  strmem-suite-x16_x16.result
+
 stringcrosstests: \
   string-suite-c64_c64.result \
   string-suite-c64_c16.result \
@@ -79,6 +98,9 @@ stringcrosstests: \
 
 ctype-suite-%.result: ctype/*
 	./compile-run-suite.sh ctype $*
+
+strmem-suite-%.result: strmem/*
+	./compile-run-suite.sh strmem $*
 
 string-suite-%.result: string/*
 	./compile-run-suite.sh string $*
