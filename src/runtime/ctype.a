@@ -53,3 +53,55 @@ cc64_fastcall_isspace
         cmp #$09
         bcc return_false
         bcs return_true
+
+cc64_type_islower = 1
+cc64_fastcall_islower
+        cpx #0
+        bne ldx_0_return_false
+        cmp #$41
+        bcc return_false
+        cmp #$5b
+        bcc return_true
+        bcs return_false
+
+cc64_type_isupper = 1
+cc64_fastcall_isupper
+        cpx #0
+        bne ldx_0_return_false
+        cmp #$61
+        bcc return_false
+        cmp #$7b
+        bcc return_true
+        cmp #$c1
+        bcc return_false
+        cmp #$db
+        bcc return_true
+        bcs return_false
+
+cc64_type_tolower = 1
+cc64_fastcall_tolower
+        cpx #0
+        bne return_a
+        cmp #$61
+        bcc return_a
+        cmp #$7b
+        bcc and_5f
+        cmp #$c1
+        bcc return_a
+        cmp #$db
+        bcs return_a
+and_5f
+        and #$5f
+return_a
+        rts
+
+cc64_type_toupper = 1
+cc64_fastcall_toupper
+        cpx #0
+        bne return_a
+        cmp #$41
+        bcc return_a
+        cmp #$5b
+        bcs return_a
+        ora #$80
+        rts
