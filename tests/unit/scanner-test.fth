@@ -102,6 +102,13 @@
     T{ nextword -> <inv> #oper# }T
   test-end
 
+  src-begin test-char
+    src@ ? : @
+  test-begin
+    T{ nextword -> ascii ? #char# }T
+    T{ nextword -> ascii : #char# }T
+  test-end
+
   .( GOLDEN-SECTION-START) cr
   init
   : bl/cr ( I cols -- ) swap 1+ swap mod 0= IF cr ELSE bl emit THEN ;

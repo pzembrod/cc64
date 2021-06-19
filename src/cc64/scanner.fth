@@ -218,7 +218,7 @@ end-enum
 \prof [scanner-number] end-bucket
 \prof profiler-bucket [scanner-char/string]
 
-|| create charlist ," ()[]{},;:"
+|| create charlist ," ()[]{},;:?"
 
 || : legalchar? ( c -- c true  )
                ( c --   false )
