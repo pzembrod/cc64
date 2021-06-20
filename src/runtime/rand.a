@@ -1,0 +1,94 @@
+
+; assembly implementation of rand() and srand() in stdlib.h
+
+; ported from from PDCLIB's implemntation:
+; int rand( void )
+; {
+;     _PDCLIB_seed = _PDCLIB_seed * 1103515245 + 12345;
+;     return ( int )( _PDCLIB_seed / 65536 ) % 32768;
+; }
+
+; compare https://en.wikipedia.org/wiki/Random_number_generation#Computational_methods
+; X_n+1 = (a * X_n + b) mod m
+; a = 1103515245 == 0x41c64e6d
+; b = 12345 == 0x3039
+; m = 32768 == 0x8000
+
+rnd_a0 = $6d
+rnd_a1 = $4e
+rnd_a2 = $c6
+rnd_a3 = $41
+rnd_b0 = $39
+rnd_b1 = $30
+
++cc64_static_int ~seedhi, 0
++cc64_static_int ~seedlo, 1
+
+cc64_type_srand = 1
+cc64_fastcall_srand
+        sta seedlo
+        stx seedlo + 1
+        ldy #0
+        sty seedhi
+        sty seedhi + 1
+        rts
+
+cc64_type_rand = 1
+cc64_fastcall_rand
+
+mult32  stx tmp_zp1 + 1
+        lsr seedhi + 1
+        ror seedhi
+        ror seedlo + 1
+        ror seedlo
+
+        lda #0
+        sta tmp_zp2
+        sta tmp_zp1 + 1
+        sta tmp_zp1
+        ldx #32
+mu32_1  bcc mu32_2
+        tay
+        clc
+        lda tmp_zp1
+        adc #rnd_a0
+        sta tmp_zp1
+        lda tmp_zp1 + 1
+        adc #rnd_a1
+        sta tmp_zp1 + 1
+        lda tmp_zp2
+        adc #rnd_a2
+        sta tmp_zp2
+        tya
+        adc #rnd_a3
+mu32_2  ror
+        ror tmp_zp2
+        ror tmp_zp1 + 1
+        ror tmp_zp1
+        ror seedhi + 1
+        ror seedhi
+        ror seedlo + 1
+        ror seedlo
+        dex
+        bne mu32_1
+        sta tmp_zp2 + 1
+        
+        clc
+        lda seedlo
+        adc #rnd_b0
+        sta seedlo
+        lda seedlo + 1
+        adc #rnd_b1
+        sta seedlo + 1
+        lda seedhi
+        adc #0
+        sta seedhi
+        tay
+        lda seedhi + 1
+        adc #0
+        sta seedhi + 1
+
+        and #$7f
+        tax
+        tya
+        rts
