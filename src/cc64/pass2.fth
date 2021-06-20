@@ -145,10 +145,10 @@
      code-file p2closefile ;
 
 || : link-statics  ( -- )
-     statics.libfirst @ statics.first @
-     - static-name (link-statics
      statics.last @ statics.libfirst @
-     - lib.initname (link-statics ;
+     - lib.initname (link-statics
+     statics.libfirst @ statics.first @
+     - static-name (link-statics ;
 
 
 \ *** Block No. 115, Hexblock 73
