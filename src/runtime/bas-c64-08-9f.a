@@ -2,7 +2,7 @@
 ; cc64 runtime module start
 ; to run on c64 at $0801-$a000
 
-!addr   cc64_statics_start = $a000
+!set    cc64_statics_start = $a000
 !addr   cc64_statics_end   = $a000
 !addr   cc64_sp            = $fd
 !addr   cc64_zp            = $fb
@@ -13,7 +13,7 @@
 !addr   strout    = $ab1e
 !addr   warmstart = $e37b
 
-        *= $0801
++cc64_runtime_start $0801
 
 cc64_lib_start
         !word baslink

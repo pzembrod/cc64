@@ -2,7 +2,7 @@
 ; cc64 runtime module start
 ; to run on c16/plus4 at $1001-$8000
 
-!addr   cc64_statics_start = $8000
+!set    cc64_statics_start = $8000
 !addr   cc64_statics_end   = $8000
 !addr   cc64_sp            = $22
 !addr   cc64_zp            = $24
@@ -13,7 +13,7 @@
 !addr   strout    = $9088
 !addr   warmstart = $8003
 
-        *= $1001
++cc64_runtime_start $1001
 
 cc64_lib_start
         !word baslink

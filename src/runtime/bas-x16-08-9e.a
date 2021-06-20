@@ -2,7 +2,7 @@
 ; cc64 runtime module start
 ; to run on Commander X16 at $0801-$9f00
 
-!addr   cc64_statics_start = $9f00
+!set    cc64_statics_start = $9f00
 !addr   cc64_statics_end   = $9f00
 !addr   cc64_sp            = $40
 !addr   cc64_zp            = $42
@@ -13,7 +13,7 @@
 !addr   primm       = $ff7d
 !addr   enter_basic = $ff47
 
-        *= $0801
++cc64_runtime_start $0801
 
 cc64_lib_start
         !word baslink

@@ -1,0 +1,44 @@
+
+!ifdef cc64_generate_statics {
+        !addr cc64_init_code_start = $1000
+        !addr cc64_init_start = $9000
+        cc64_init_cutoff = cc64_init_start - cc64_init_code_start
+        !set cc64_init_pc = cc64_init_start
+
+        ; trick: generate the cbm load address
+        * = cc64_init_start - 2
+        !word cc64_init_start
+}
+
+!macro cc64_runtime_start .start_addr {
+        !ifdef cc64_generate_statics {
+          * = cc64_init_code_start
+        } else {
+          * = .start_addr
+        }
+}
+
+!macro cc64_static_int ~.name, .value {
+        !set cc64_statics_start = cc64_statics_start - 2
+        !set .name = cc64_statics_start
+        !ifdef cc64_generate_statics {
+          !set .pc = *
+          * = cc64_init_pc
+          !byte >.value
+          !byte <.value
+          !set cc64_init_pc = *
+          * = .pc
+        }
+}
+
+!macro cc64_static_char ~.name, .value {
+        !set cc64_statics_start = cc64_statics_start - 1
+        !set .name = cc64_statics_start
+        !ifdef cc64_generate_statics {
+          !set .pc = *
+          * = cc64_init_pc
+          !byte .value
+          !set cc64_init_pc = *
+          * = .pc
+        }
+}

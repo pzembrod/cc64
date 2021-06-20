@@ -2,6 +2,8 @@
 ; cc64 minimal runtime module
 ; to run on c64 at $0801-$a000
 
+!source "statics.a"
+
 !source "bas-c64-08-9f.a"
 
 !source "rt-core.a"

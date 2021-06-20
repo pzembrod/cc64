@@ -2,6 +2,8 @@
 ; cc64 runtime module including ctype.a as basis for libc
 ; to run on c16/plus4 at $1001-$8000
 
+!source "statics.a"
+
 !source "bas-c16-10-7f.a"
 
 !source "rt-core.a"

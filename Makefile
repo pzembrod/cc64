@@ -323,20 +323,19 @@ $(recompile_dir)/%: forth/%
 
 # Runtime module rules
 
-runtime/%.o runtime/%.h: \
-    src/runtime/%.a src/runtime/generate_runtime_h.awk
+runtime/%.o runtime/%.h runtime/%.i: src/runtime/*
 	test -d tmp || mkdir tmp
 	acme -f cbm -l tmp/$*.sym -o runtime/$*.o \
 	  -I src/runtime src/runtime/$*.a
 	awk -f src/runtime/generate_runtime_h.awk -F '$$' \
 	  tmp/$*.sym > runtime/$*.h
-
-runtime/%.i:
-	awk 'BEGIN{ printf("\x00\x90");}' > $@
-	# An empty binary file with (arbitrary) load address $9000
-	# Might be worth encoding in an asm source for clarity.
-
-runtime/lib-cty-*: src/runtime/ctype-petscii.a
+	acme -f cbm -l tmp/$*.staticsym -o tmp/$*.j \
+	  -Dcc64_generate_statics=1 \
+	  -I src/runtime src/runtime/$*.a
+	init_skip=`awk -f src/runtime/extract_init_skip.awk -F '$$' \
+	    tmp/$*.staticsym` && \
+	    echo $$init_skip && \
+	    dd if=tmp/$*.j of=runtime/$*.i bs=$$init_skip skip=1
 
 
 # Library rules
@@ -352,8 +351,9 @@ lib/libc-c16.c: $(libc_files)
 lib/libc-x16.c: $(libc_files)
 	echo '#include <lib-cty-x16.h>' | cat - $(libc_files) >$@
 
-lib/libc-%.h lib/libc-%.i lib/libc-%.o: lib/libc-%.c autostart-c64/cc64.T64 \
-  runtime/lib-cty-%.h runtime/lib-cty-%.i runtime/lib-cty-%.o
+lib/libc-%.h lib/libc-%.i lib/libc-%.o: lib/libc-%.c \
+    autostart-c64/cc64.T64 \
+    runtime/lib-cty-%.h runtime/lib-cty-%.i runtime/lib-cty-%.o
 	emulator/compile-lib.sh libc-$*
 
 
@@ -408,15 +408,6 @@ c16files/%: src/*/%
 x16files/%: src/*/%
 	emulator/copy-to-emu.sh $< $@
 
-c64files/%: runtime/%
-	emulator/copy-to-emu.sh $< $@
-
-c16files/%: runtime/%
-	emulator/copy-to-emu.sh $< $@
-
-x16files/%: runtime/%
-	emulator/copy-to-emu.sh $< $@
-
 c64files/%: lib/%
 	emulator/copy-to-emu.sh $< $@
 
@@ -424,4 +415,13 @@ c16files/%: lib/%
 	emulator/copy-to-emu.sh $< $@
 
 x16files/%: lib/%
+	emulator/copy-to-emu.sh $< $@
+
+c64files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
+
+c16files/%: runtime/%
+	emulator/copy-to-emu.sh $< $@
+
+x16files/%: runtime/%
 	emulator/copy-to-emu.sh $< $@
