@@ -115,28 +115,31 @@ stringcrosstests: \
   string-suite-x16_x16.result
 
 
-ctype-suite-%.result: ctype/*
+ctype-suite-%.result: ctype/*  *.sh *.shlib *.h
 	./compile-run-suite.sh ctype $*
 
-stdlib-suite-%.result: stdlib/*
-	./compile-run-suite.sh stdlib $*
+stdlib-suite-%.result: stdlib/* stdlib/rand-expect.c *.sh *.shlib *.h
+	./compile-run-suite.sh stdlib $* stdlib/rand-expect.c
 
-strmem-suite-%.result: strmem/*
+strmem-suite-%.result: strmem/* *.sh *.shlib *.h
 	./compile-run-suite.sh strmem $*
 
-string-suite-%.result: string/*
+string-suite-%.result: string/* *.sh *.shlib *.h
 	./compile-run-suite.sh string $*
 
-
 $(suite_results_c64_hosted): $(c64_lib_files) \
-    $(basedir)/autostart-c64/cc64.T64 *.sh *.shlib *.h
+    $(basedir)/autostart-c64/cc64.T64
 
 $(suite_results_c16_hosted): $(c16_lib_files) \
-    $(basedir)/autostart-c16/cc64.T64 *.sh *.shlib *.h
+    $(basedir)/autostart-c16/cc64.T64
 
 $(suite_results_x16_hosted): $(x16_lib_files) \
-    x16files/cc64 *.sh *.shlib *.h
+    x16files/cc64
 
+stdlib/rand-expect.c: rand-oracle rand-oracle.sh
+	./rand-oracle.sh $@
+
+rand-oracle: rand-oracle.c
 
 clean:
 	rm -f c64files/* c16files/* x16files/*

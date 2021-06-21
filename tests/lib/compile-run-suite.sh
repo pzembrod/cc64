@@ -3,6 +3,9 @@ set -e
 
 subdir="$1"
 host_target="$2"
+shift
+shift
+extra_setup_paths=$@
 
 test -n "${host_target}" || host_target=c64_c64
 IFS=_ read host target <<< "${host_target}"

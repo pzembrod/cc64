@@ -17,7 +17,7 @@ void mysrand(int seed) {
 int main(int argc, char *argv[]) {
   int count = argc >= 2 ? atoi(argv[1]) : 5;
   if (argc >= 3) { mysrand(atoi(argv[2])); }
-  char *expected = argc >= 4 ? argv[3] : "expected";
+  char *expected = argc >= 4 ? argv[3] : "rand_expected";
   printf("int %s[] = {", expected);
   for (int i = 0; i < count - 1; ++i) {
     printf("%d, ", myrand());

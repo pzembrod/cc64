@@ -10,4 +10,6 @@
 
 !source "ctype-petscii.a"
 
+!source "rand.a"
+
 cc64_lib_end
