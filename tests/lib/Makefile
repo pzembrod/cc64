@@ -6,14 +6,20 @@ suite_c64_suffixes = $(patsubst %, suite-c64_%, $(suite_suffixes))
 suite_c16_suffixes = $(patsubst %, suite-c16_%, $(suite_suffixes))
 suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 suite_results_c64_hosted = \
+    $(patsubst %, ctype-%, $(suite_c64_suffixes)) \
+    $(patsubst %, stdlib-%, $(suite_c64_suffixes)) \
     $(patsubst %, string-%, $(suite_c64_suffixes)) \
-    $(patsubst %, ctype-%, $(suite_c64_suffixes))
+    $(patsubst %, strmem-%, $(suite_c64_suffixes))
 suite_results_c16_hosted = \
+    $(patsubst %, ctype-%, $(suite_c16_suffixes)) \
+    $(patsubst %, stdlib-%, $(suite_c16_suffixes)) \
     $(patsubst %, string-%, $(suite_c16_suffixes)) \
-    $(patsubst %, ctype-%, $(suite_c16_suffixes))
+    $(patsubst %, strmem-%, $(suite_c16_suffixes))
 suite_results_x16_hosted = \
+    $(patsubst %, ctype-%, $(suite_x16_suffixes)) \
+    $(patsubst %, stdlib-%, $(suite_x16_suffixes)) \
     $(patsubst %, string-%, $(suite_x16_suffixes)) \
-    $(patsubst %, ctype-%, $(suite_x16_suffixes))
+    $(patsubst %, strmem-%, $(suite_x16_suffixes))
 
 c64_rt_files = \
     $(patsubst $(basedir)/runtime/%, c64files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
