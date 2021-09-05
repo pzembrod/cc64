@@ -60,20 +60,20 @@ Assembler also definitions
      mainCount inc 0= ?[ mainCount 1+ inc  ]? ]? ]?
 ;
 
-Label compareIp
+: compareIp
   IP 1+ lda  >buckets[ ,x cmp  0= ?[ IP lda  <buckets[ ,x cmp ]?
-  rts
+;
 
 : findBucket
-  0 # ldx  compareIp jsr  CC ?[
+  0 # ldx  compareIp  CC ?[
     currentBucket ldx
-  ][ inx  compareIp jsr  CC ?[
+  ][ inx  compareIp  CC ?[
       dex
     ][
       5 # ldx
-      compareIp jsr  0<> ?[  CC ?[ dex dex ][ inx inx ]?
-      compareIp jsr  0<> ?[  CC ?[ dex     ][ inx     ]?
-      compareIp jsr          CC ?[ dex     ]?             ]? ]?
+      compareIp  0<> ?[  CC ?[ dex dex ][ inx inx ]?
+      compareIp  0<> ?[  CC ?[ dex     ][ inx     ]?
+      compareIp          CC ?[ dex     ]?             ]? ]?
 
       IP 1+ lda  >]buckets ,x cmp  0= ?[ IP lda  <]buckets ,x cmp ]?
         CS ?[ 0 # ldx ]?
