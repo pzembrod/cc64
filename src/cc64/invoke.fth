@@ -47,7 +47,9 @@
 forth definitions
 
   : cc  ( -- )
-     clearstack  init
+     clearstack
+     \time reset-50ms-timer read-50ms-timer
+     init
      bl word   dup c@ 0= ?usage
      dup exe-name strcpy
          source-name strcpy
@@ -65,4 +67,6 @@ forth definitions
      ." pass 2:" cr
      pass2  cr
      ." compilation done" cr
-     scratchfiles ;
+     scratchfiles
+     \time read-50ms-timer - ms. cr
+  ;

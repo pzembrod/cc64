@@ -3,6 +3,8 @@
 ' noop alias \log
 \ without build log:
 \ ' \ alias \log
+(64 | ' noop alias \time immediate C)
+\needs \time | ' \ alias \time immediate
 
 \log include logtofile.fth
 \log logopen" cc64.log"
@@ -53,6 +55,7 @@
   (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
+  \time include 6526timer.fth
   include lowlevel.fth
   (CX include x16edit.fth  C)
   onlyforth compiler also definitions

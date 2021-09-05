@@ -3,6 +3,7 @@
 ' noop alias \log
 \ without build log:
 \ ' \ alias \log
+| ' \ alias \time immediate
 
 \log include logtofile.fth
 \log logopen" cc64pe.log"
