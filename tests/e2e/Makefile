@@ -167,33 +167,32 @@ cc64-suite-%.result: *-test.c *.golden
 cc64pe-suite-%.result: *-test.c *.golden
 	./compile-run-suite.sh cc64pe $*
 
+
+cc64prof-suite-c64_c64.result suite.profile $(profiles): \
+    $(basedir)/autostart-c64/cc64prof.T64
+
+
 cc64prof-suite-c64_c64.result: *-test.c *.golden
 	./compile-run-suite.sh cc64prof c64_c64
 
 cc64time-suite-c64_c64.result: *-test.c *.golden \
     $(basedir)/autostart-c64/cc64time.T64
 	./compile-run-suite.sh cc64time c64_c64
-	petscii2ascii c64files/suite.log cc64time-suite-c64_c64.log
 
 cc64pftm-suite-c64_c64.result: *-test.c *.golden \
     $(basedir)/autostart-c64/cc64pftm.T64
 	./compile-run-suite.sh cc64pftm c64_c64
-	petscii2ascii c64files/suite.log cc64pftm-suite-c64_c64.log
 
 
-cc64prof-suite-c64_c64.result suite.profile $(profiles): \
-    $(basedir)/autostart-c64/cc64prof.T64
-
-suite.profile: *-test.c $(c64_profile_scripts) \
-    $(basedir)/autostart-c64/cc64prof.T64
+suite.profile: *-test.c $(c64_profile_scripts)
 	rm -f c64files/*.profile
 	./profile-suite.sh cc64prof $(profile_names)
 	cat $(profiles) >$@
 
-%.profile: *-test.c c64files/%.pfs \
-    $(basedir)/autostart-c64/cc64prof.T64
+%.profile: *-test.c c64files/%.pfs
 	rm -f c64files/$*.profile
 	./profile-suite.sh cc64prof $*
+
 
 # TODO: Remove rule again once X16 R39 is standard.
 cc64r39-suite-x16_x16.result: *-test.c *.golden
@@ -206,7 +205,7 @@ clean:
 	rm -f c64files/* c16files/* x16files/*
 	rm -f cc64-suite-[cx]??_[cx]??.* cc64pe-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
-	rm -f *.out *.T64 *.result *-generated.c
+	rm -f *.out *.log *.T64 *.result *-generated.c
 	rm -f *.profile
 
 c64files/rt-%: $(basedir)/c64files/rt-%

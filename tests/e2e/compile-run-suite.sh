@@ -5,6 +5,7 @@ cc64="$1"
 host_target="$2"
 
 test -n "${host_target}" || host_target=c64_c64
+suitename="${cc64}-suite-${host_target}"
 IFS=_ read host target <<< "${host_target}"
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -24,8 +25,9 @@ source "${testdir}/concat-suite.shlib"
 
 # Build test binary
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
-CC64HOST="${host}" OUTFILES=suite \
+CC64HOST="${host}" OUTFILES="suite suite.log" \
   ./compile-in-emu.sh "suite" "$cc64"
+petscii2ascii "${hostfiles}/suite.log" "${suitename}.log"
 
 if [ "${hostfiles}" != "${targetfiles}" ]
 then
@@ -37,7 +39,6 @@ bin2t64 "${hostfiles}/suite" "${targetfiles}/suite.T64"
 source "${testdir}/concat-golden-silver.shlib"
 
 # Run test binary
-suitename="${cc64}-suite-${host_target}"
 rm -f "${targetfiles}/suite.out" "${suitename}.out"
 CC64TARGET="${target}" ./run-in-emu.sh suite
 petscii2ascii "${targetfiles}/suite.out" "${suitename}.out"
