@@ -3,3 +3,4 @@
 2021-05-08-2236 18623 c64files/peddi ANSI style function declarations plus some bug fixes.
 2021-05-08-2236 18623 c64files/peddi enabled non-constant initializers of non-static local vars
 2021-06-05-2250 18623 c64files/peddi added memory overflow check in pass2
+2021-09-05-1621 18623 c64files/peddi compiler fixes applied while porting pdclib

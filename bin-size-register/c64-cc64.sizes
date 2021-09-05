@@ -3,3 +3,4 @@
 2021-05-27-1856 32456 c64files/cc64 ANSI style function declarations plus some bug fixes.
 2021-06-02-1423 32366 c64files/cc64 enabled non-constant initializers of non-static local vars
 2021-06-18-1105 32486 c64files/cc64 added memory overflow check in pass2
+2021-09-05-1621 32486 c64files/cc64 compiler fixes applied while porting pdclib
