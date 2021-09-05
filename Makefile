@@ -16,6 +16,8 @@ peddisrcs_c16 = $(patsubst %, c16files/%, $(peddisrcs) $(commonsrcs))
 cc64_binaries = cc64 cc64pe peddi
 cc64_c64_t64_files = $(patsubst %, autostart-c64/%.T64, $(cc64_binaries))
 cc64_c16_t64_files = $(patsubst %, autostart-c16/%.T64, $(cc64_binaries))
+profiler_binaries = cc64time cc64prof cc64pftm
+profiler_t64_files = $(patsubst %, autostart-c64/%.T64, $(profiler_binaries))
 
 # runtime, lib and sample files
 rt_files = \
@@ -78,7 +80,7 @@ c16: cc64-c16-t64 $(c16dir_files) cc64-c16files.zip cc64-c16files.d64
 
 x16: $(x16dir_files) cc64-x16files.zip cc64-x16files-sdcard.zip
 
-cc64-c64-t64: $(cc64_c64_t64_files) autostart-c64/cc64prof.T64
+cc64-c64-t64: $(cc64_c64_t64_files) $(profiler_t64_files)
 
 cc64-c16-t64: $(cc64_c16_t64_files)
 
