@@ -16,14 +16,19 @@ test_results_c64_hosted = $(test_results_c64_c64) $(test_results_c64_c16) $(test
 test_results_c16_hosted = $(test_results_c16_c64) $(test_results_c16_c16) $(test_results_c16_x16)
 test_results_x16_hosted = $(test_results_x16_c64) $(test_results_x16_c16) $(test_results_x16_x16)
 
+
 suite_suffixes = $(patsubst %, %.result, c64 c16 x16)
 suite_c64_suffixes = $(patsubst %, suite-c64_%, $(suite_suffixes))
 suite_c16_suffixes = $(patsubst %, suite-c16_%, $(suite_suffixes))
 suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
+
+instrumented_suite_results = \
+    $(patsubst %, cc64%-suite-c64_c64.result, prof time)
+
 suite_results_c64_hosted = \
     $(patsubst %, cc64-%, $(suite_c64_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c64_suffixes)) \
-    cc64prof-suite-c64_c64.result suite.profile $(profiles)
+    $(instrumented_suite_results) suite.profile $(profiles)
 suite_results_c16_hosted = \
     $(patsubst %, cc64-%, $(suite_c16_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c16_suffixes))
@@ -127,6 +132,7 @@ $(test_results_c16_hosted) $(suite_results_c16_hosted): \
 $(test_results_x16_hosted) $(suite_results_x16_hosted): \
     x16files/cc64 $(x16_rt_files) *.sh *.shlib *.h
 
+
 $(test_results_c64_c64): %-c64_c64.result: %-test.c %.golden
 	./compile-run-test.sh $* c64_c64
 
@@ -163,6 +169,15 @@ cc64pe-suite-%.result: *-test.c *.golden
 
 cc64prof-suite-c64_c64.result: *-test.c *.golden
 	./compile-run-suite.sh cc64prof c64_c64
+
+cc64time-suite-c64_c64.result: *-test.c *.golden \
+    $(basedir)/autostart-c64/cc64time.T64
+	./compile-run-suite.sh cc64time c64_c64
+	petscii2ascii c64files/suite.log cc64time-suite-c64_c64.log
+
+
+cc64prof-suite-c64_c64.result suite.profile $(profiles): \
+    $(basedir)/autostart-c64/cc64prof.T64
 
 suite.profile: *-test.c $(c64_profile_scripts) \
     $(basedir)/autostart-c64/cc64prof.T64

@@ -1,6 +1,7 @@
 
 \needs \log  ' \ alias \log immediate
 \needs \prof  | ' \ alias \prof immediate
+\needs \time  | ' \ alias \time immediate
 
 | ' |     alias ~
 | ' |on   alias ~on

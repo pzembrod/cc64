@@ -49,6 +49,7 @@
 ~ : cc  ( -- )
      clearstack
      \prof profiler-start
+     \time reset-50ms-timer read-50ms-timer
      init
      bl word   dup c@ 0= ?usage
      dup exe-name strcpy
@@ -69,5 +70,6 @@
      pass2  cr
      ." compilation done" cr
      scratchfiles
+     \time read-50ms-timer - ms. cr
      \prof profiler-end
      ;

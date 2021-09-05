@@ -2,4 +2,4 @@
 ' noop alias \log immediate
 
 include logtofile.fth
-logopen cc64pe.log
+logopen cc64time.log

@@ -1,6 +1,8 @@
 
 \needs \log  ' \ alias \log immediate
 \needs \prof  | ' \ alias \prof immediate
+\needs \6526  | ' \ alias \6526 immediate
+\needs \time  | ' \ alias \time immediate
 
 | ' |     alias ~
 | ' |on   alias ~on
@@ -18,7 +20,7 @@
   (64  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
-  \prof include 6526timer.fth
+  \6526 include 6526timer.fth
   \prof include profiler.fth
   \prof profiler-init-buckets
   \prof profiler-bucket [strings]
