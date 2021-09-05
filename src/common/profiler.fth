@@ -84,25 +84,33 @@ Label compareIp
   ]?
 ;
 
+
 Label prNext
-  timerActrl lda  pha  $fe and  timerActrl sta
+  timerActrl lda  pha  $fe # and  timerActrl sta
   calcTime
   findBucket
   incCountOfBucket
   addTimeToBucket
   setPrevTime
   incMainCount
-  0 # ldx  pla  timerActrl sta
-  IP lda  2 # adc  Next $e + jmp
+  pla  timerActrl sta
+  0 # ldx  clc  IP lda  Next $c + jmp
 
 onlyforth
 
-Code install-prNext \ installs prNext
+Code install-prNext
  prNext 0 $100 m/mod
-     # lda  Next $c + sta
      # lda  Next $b + sta
- $4C # lda  Next $a + sta  Next jmp
-end-code
+     # lda  Next $a + sta
+ $4C # lda  Next $9 + sta
+ Next jmp  end-code
+
+Code end-profiler
+ $18 # lda  Next $9 + sta
+ $a5 # lda  Next $a + sta
+  IP # lda  Next $b + sta
+ Next jmp   end-code
+
 
 Code init-prevTime  setPrevTime  Next jmp end-code
 
@@ -147,7 +155,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   reset-32bit-timer  read-32bit-timer initialTimeStamp 2!
   install-prNext ;
 
-: profiler-end  end-trace  profiler-timestamp ;
+: profiler-end  end-profiler  profiler-timestamp ;
 
 : d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 

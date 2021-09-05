@@ -14,7 +14,7 @@
     Next jmp  end-code
 
 ~ Code read-32bit-timer  ( -- ud )
-    timerActrl lda  pha  $fe and  timerActrl sta
+    timerActrl lda  pha  $fe # and  timerActrl sta
     SP 2dec  timerAlo lda  SP x) sta  timerAhi lda  SP )y sta
     SP 2dec  timerBlo lda  SP x) sta  timerBhi lda  SP )y sta
     pla  timerActrl sta  Next jmp  end-code
@@ -28,7 +28,7 @@
     Next jmp  end-code
 
 ~ Code read-50ms-timer  ( -- u )
-    timerActrl lda  tax  $fe and  timerActrl sta
+    timerActrl lda  tax  $fe # and  timerActrl sta
     timerBlo lda  pha  timerBhi lda  timerActrl stx
     Push jmp  end-code
 
