@@ -23,7 +23,7 @@ suite_c16_suffixes = $(patsubst %, suite-c16_%, $(suite_suffixes))
 suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 
 instrumented_suite_results = \
-    $(patsubst %, cc64%-suite-c64_c64.result, prof time)
+    $(patsubst %, cc64%-suite-c64_c64.result, prof time pftm)
 
 suite_results_c64_hosted = \
     $(patsubst %, cc64-%, $(suite_c64_suffixes)) \
@@ -174,6 +174,11 @@ cc64time-suite-c64_c64.result: *-test.c *.golden \
     $(basedir)/autostart-c64/cc64time.T64
 	./compile-run-suite.sh cc64time c64_c64
 	petscii2ascii c64files/suite.log cc64time-suite-c64_c64.log
+
+cc64pftm-suite-c64_c64.result: *-test.c *.golden \
+    $(basedir)/autostart-c64/cc64pftm.T64
+	./compile-run-suite.sh cc64pftm c64_c64
+	petscii2ascii c64files/suite.log cc64pftm-suite-c64_c64.log
 
 
 cc64prof-suite-c64_c64.result suite.profile $(profiles): \

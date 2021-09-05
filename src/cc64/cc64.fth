@@ -21,6 +21,7 @@
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
   \6526 include 6526timer.fth
+  \prof \time include mock32timer.fth
   \prof include profiler.fth
   \prof profiler-init-buckets
   \prof profiler-bucket [strings]

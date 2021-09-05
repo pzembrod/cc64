@@ -310,6 +310,11 @@ c64files/cc64time: $(cc64srcs_c64) \
  autostart-c64/vf-build-base.T64
 	emulator/build-binary.sh c64 cc64time
 
+c64files/cc64pftm: $(cc64srcs_c64) \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
+ autostart-c64/vf-build-base.T64
+	emulator/build-binary.sh c64 cc64pftm
+
 
 # build base rule
 
