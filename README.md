@@ -18,6 +18,9 @@ to create a new target.
 
 [Emulator and file formats](File-formats.md) describes the emulator setup I use for developing and testing.
 
+[Design](Design.md) is a first stab at documenting the compiler's
+inner structure.
+
 ### History
 
 I wrote cc64 during my university years; the majority of the code was written 1989-1991. Motivated by buzzphp who's building a
