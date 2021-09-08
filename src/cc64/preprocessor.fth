@@ -121,8 +121,8 @@
   : cpp-pragma  ( -- )
      cpp-nextword " cc64" streq
                0= ?cpp-errorexit
-     cpp-number? ?cpp-fatal   >base !
-     cpp-number? ?cpp-fatal   >zp   !
+     cpp-number? ?cpp-fatal   >frame !
+     cpp-number? ?cpp-fatal   >zp    !
      cpp-number? ?cpp-fatal
      lib.first !
      cpp-number? ?cpp-fatal

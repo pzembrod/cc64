@@ -77,8 +77,8 @@ $ff17 constant &+1
 : >b,    drop >hi b,          1 ;
 : zp,    2drop >zp @    b,    1 ;
 : zp+1,  2drop >zp @ 1+ b,    1 ;
-: ba,    2drop >base @    b,  1 ;
-: ba+1,  2drop >base @ 1+ b,  1 ;
+: ba,    2drop >frame @    b, 1 ;
+: ba+1,  2drop >frame @ 1+ b, 1 ;
 : rt,    1+ c@ >runtime @ + w,
                           drop  2 ;
 

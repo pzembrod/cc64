@@ -13,9 +13,9 @@ statics_last  !word 0
         jmp shr
 
 init    lda code_last
-        sta cc64_sp
+        sta cc64_frameptr
         lda code_last + 1
-        sta cc64_sp + 1
+        sta cc64_frameptr + 1
         lda statics_last
         sta tmp_zp2
         ldx statics_last + 1
@@ -31,11 +31,11 @@ init2   beq init5
         dex
 init3   sta tmp_zp2
         stx tmp_zp2 + 1
-        lda (cc64_sp),y
+        lda (cc64_frameptr),y
         sta (tmp_zp2),y
-        inc cc64_sp
+        inc cc64_frameptr
         bne init4
-        inc cc64_sp + 1
+        inc cc64_frameptr + 1
 init4   lda tmp_zp2
         jmp init1
 

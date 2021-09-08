@@ -4,7 +4,7 @@
 
 !set    cc64_statics_start = $9f00
 !addr   cc64_statics_end   = $9f00
-!addr   cc64_sp            = $40
+!addr   cc64_frameptr      = $40
 !addr   cc64_zp            = $42
 
 !addr   tmp_zp1            = $44

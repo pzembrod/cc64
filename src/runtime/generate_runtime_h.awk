@@ -3,7 +3,7 @@
 # and writes them out in a #pragma cc64 line.
 
 BEGIN {
-  cc64_sp = "";
+  cc64_frameptr = "";
   cc64_zp = "";
   lib_start = "";
   lib_end = "";
@@ -18,8 +18,8 @@ BEGIN {
   type_code[4] = "char *";
 }
 
-/cc64_sp/ {
-  split($2, a, /\s+/); cc64_sp = a[1];
+/cc64_frameptr/ {
+  split($2, a, /\s+/); cc64_frameptr = a[1];
 }
 
 /cc64_zp/ {
@@ -69,10 +69,10 @@ BEGIN {
 }
 
 END {
-  if (cc64_sp && cc64_zp && lib_start && lib_jumplist && lib_end &&
-      statics_start && statics_end && lib_name) {
+  if (cc64_frameptr && cc64_zp && lib_start && lib_jumplist &&
+      lib_end && statics_start && statics_end && lib_name) {
     printf("#pragma cc64 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s %s\n",
-           cc64_sp, cc64_zp, lib_start, lib_jumplist, lib_end,
+           cc64_frameptr, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name);
     for (name in fastcall_functions) {
       if (name in fastcall_types) {
@@ -82,12 +82,12 @@ END {
     }
   } else {
     printf("Somethings missing when parsing %s\n" \
-           " cc64_sp = '%s'\n cc64_zp = '%s'\n lib_start = '%s'\n" \
-           " lib_jumplist = '%s'\n lib_end = '%s'\n" \
-           " statics_start = '%s'\n statics_end = '%s'\n" \
-           " lib_name = '%s'\n",
+           " cc64_frameptr = '%s'\n cc64_zp = '%s'\n" \
+           " lib_start = '%s'\n lib_jumplist = '%s'\n" \
+           " lib_end = '%s'\n statics_start = '%s'\n" \
+           " statics_end = '%s'\n lib_name = '%s'\n",
            FILENAME,
-           cc64_sp, cc64_zp, lib_start, lib_jumplist, lib_end,
+           cc64_frameptr, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name) > "/dev/stderr";
     exit 1;
   }

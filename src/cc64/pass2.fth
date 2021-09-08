@@ -181,7 +181,7 @@
 || : write-libheader ( -- )
      cr!
      " #pragma cc64" str!
-     >base         @ hex!
+     >frame        @ hex!
      >zp           @ hex!
      lib.first     @ hex!
      >runtime      @ hex!
