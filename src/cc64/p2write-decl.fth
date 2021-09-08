@@ -15,6 +15,6 @@
              IF rot str! ELSE " (*" str!
              rot str! ascii ) fputc THEN
           " ()" str! ELSE rot str! THEN
-       %stdfctn is? IF "  *=" ELSE "  /=" THEN
+       %fastcall is? IF "  *=" ELSE "  /=" THEN
        str!  drop hex! THEN
      "  ;" str!  cr! ;

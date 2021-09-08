@@ -24,7 +24,7 @@
  $200 constant %pointer   \ by the
  $400 constant %function  \ symbol
  $800 constant %offset    \ table
-$1000 constant %stdfctn   \
+$1000 constant %fastcall   \
 $2000 constant %extern    \
 $4000 constant %proto
 
@@ -213,14 +213,14 @@ variable vector
 
 \ codegen: primary             22aug94pz
 
-: put-std-argument ( obj -- )
+: put-fast-argument ( obj -- )
      value non-constant 2drop ;
 
-: drop-std-argument ( obj -- )
+: drop-fast-argument ( obj -- )
      value non-constant 2drop .pla ;
 
-: do-std-call ( obj1 -- obj2 )
-     %stdfctn %constant + clr
+: do-fast-call ( obj1 -- obj2 )
+     %fastcall %constant + clr
      over .jsr ;
 
 

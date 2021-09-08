@@ -97,21 +97,21 @@ doer assign
 
 \   parser: primary            26apr20pz
 
-: std-arguments ( -- )
-     assign put-std-argument
+: fast-arguments ( -- )
+     assign put-fast-argument
      BEGIN ascii , #char# comes? WHILE
-     assign drop-std-argument REPEAT ;
+     assign drop-fast-argument REPEAT ;
 
 : arguments  ( -- )
      BEGIN assign put-argument
      ascii , #char# comes? not UNTIL ;
 
 : primary() ( obj1 -- obj2 )
-     %stdfctn is?
+     %fastcall is?
         IF ascii ) #char# comes? not
-           IF std-arguments
+           IF fast-arguments
            expect')' THEN
-        do-std-call
+        do-fast-call
         ELSE prepare-call
         ascii ) #char# comes? not
            IF arguments
@@ -132,7 +132,7 @@ doer assign
      BEGIN mark >r
      ascii ( #char# comes?
         IF primary() THEN
-     %stdfctn is?
+     %fastcall is?
         IF drop %default THEN
      ascii [ #char# comes?
         IF primary[] THEN
@@ -847,7 +847,7 @@ do$: init$ ( -- values )
      ( type -- type' flag )
      <*=> #oper# comes?
         IF function?
-           IF %stdfctn set
+           IF %fastcall set
            ELSE *syntax* error THEN
         true
         ELSE </=> #oper# comes? THEN ;

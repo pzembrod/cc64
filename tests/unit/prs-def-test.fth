@@ -121,7 +121,7 @@
     T{ fetchglobal" k" -> 1234 %int %l-value + %extern + }T
     T{ fetchglobal" lex" -> $5678 %function %extern + }T
     T{ fetchglobal" moot" ->
-       $f %function %extern + %stdfctn + %pointer + }T
+       $f %function %extern + %fastcall + %pointer + }T
   test-end
 
   src-begin test-defdata-global
