@@ -21,7 +21,13 @@
    BEGIN bus@ con! i/o-status? UNTIL
    busoff ;
 
+  : .blk|tib
+     blk @ ?dup IF  ."  Blk " u. ?cr  exit THEN
+     factive? IF tib #tib @ cr type THEN ;
+
   include tester.fth
+
+  ' .blk|tib Is .status
 
   onlyforth  decimal
 
@@ -31,7 +37,8 @@
   include 6502asm.fth
 
   onlyforth assembler also definitions
-  variable ip
+  $fb constant ip
+
   create CIA 16 allot
   CIA 4 + constant timerAlo
   CIA 5 + constant timerAhi
@@ -40,15 +47,11 @@
   CIA $e + constant timerActrl
   CIA $f + constant timerBctrl
   onlyforth
+
   : reset-32bit-timer ;
+  : read-32bit-timer  1 ;
 
   include profiler.fth
-
-  : .blk|tib
-     blk @ ?dup IF  ."  Blk " u. ?cr  exit THEN
-     factive? IF tib #tib @ cr type THEN ;
-
-  \ ' .blk|tib Is .status
 
   Code callFindBucket ( -- )  findBucket  0 # ldx Next jmp end-code
   
@@ -86,13 +89,13 @@
   number-7 end-bucket
 
   profiler-init-buckets
-  number-1 measure-bucket
-  number-2 measure-bucket
-  number-3 measure-bucket
-  number-4 measure-bucket
-  number-5 measure-bucket
-  number-6 measure-bucket
-  number-7 measure-bucket
+  number-1 activate-bucket
+  number-2 activate-bucket
+  number-3 activate-bucket
+  number-4 activate-bucket
+  number-5 activate-bucket
+  number-6 activate-bucket
+  number-7 activate-bucket
 
   T{ ' dup testFindBucket -> $ff }T
   T{ var-bucket-1 testFindBucket -> 0 }T

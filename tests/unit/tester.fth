@@ -17,6 +17,7 @@
 \ Needed ANS words that VolksForth does't (yet) supply:
   : s"  [compile] " compile count ; immediate restrict
   : [char]  [compile] ascii ; immediate
+  ' 2* alias cells
 
 HEX
 
