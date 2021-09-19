@@ -133,13 +133,21 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   2+  @ >lo/hi  >]buckets r@ + c!  <]buckets r> + c! ;
 
 : profiler-metric:[
-  create  last @ ,  here $0f ]
+  create  last @ ,  here $0f ]  ( -- addr $0f )
   does> profiler-init-buckets  dup @ metric-name !  2+
   BEGIN dup @ ?dup WHILE execute activate-bucket  2+ REPEAT drop ;
 
-: ]profiler-metric  $0f ?pairs  [compile] [
-  here swap -  #buckets 2* > abort" too many buckets in metric"
-  0 , ;  immediate restrict
+|| : too-many-buckets?  ( addr -- flag )  here swap -  #buckets 2* > ;
+
+|| : unordered-buckets?  ( addr -- flag )
+  >r ['] forth-83 BEGIN r> dup 2+ >r @ ?dup WHILE
+    \ execute under @ u> IF rdrop @ count type true exit THEN
+    execute under @ u> IF rdrop drop true exit THEN
+    2+ @ REPEAT rdrop drop false ;
+
+: ]profiler-metric  ( addr $0f -- ) $0f ?pairs  [compile] [
+  dup too-many-buckets? abort" too many buckets in metric"
+  0 , unordered-buckets? abort" unordered bucket" ; immediate restrict
 
 : profiler-timestamp
   read-32bit-timer  timestamp> @

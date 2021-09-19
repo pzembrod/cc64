@@ -2,11 +2,12 @@
 \ with build log:
 ' noop alias \log
 \ without build log:
-\ alias \log
+\ ' \ alias \log
 
 \log include logtofile.fth
 \log logopen profilertest.log
 
+  \ ' noop   alias ||
   ' noop   alias ~
   ' noop  alias ~on
   ' noop  alias ~off
@@ -27,7 +28,7 @@
 
   include tester.fth
 
-  ' .blk|tib Is .status
+  \ ' .blk|tib Is .status
 
   onlyforth  decimal
 
@@ -87,6 +88,14 @@
   profiler-bucket number-7
   variable var-bucket6
   number-7 end-bucket
+  profiler-bucket number-8
+  variable var-bucket7
+  number-8 end-bucket
+  profiler-bucket number-9
+  profiler-bucket number-9a
+  variable var-bucket8
+  number-9a end-bucket
+  number-9 end-bucket
 
   profiler-init-buckets
   number-1 activate-bucket
@@ -168,6 +177,30 @@
 
   cr .( report) cr
   profiler-report
+
+  T{ profiler-metric:[ metric-8a
+    number-1 number-2 number-3 number-4
+    number-5 number-6 number-7 number-8
+  [ $0f ?pairs too-many-buckets? -> false }T
+
+  T{ profiler-metric:[ metric-8b
+    number-1 number-2 number-3 number-4
+    number-5 number-6 number-7 number-8
+  [ $0f ?pairs 0 , unordered-buckets? -> false }T
+
+  T{ profiler-metric:[ metric-9
+    number-1 number-2 number-3 number-4
+    number-5 number-6 number-7 number-8
+    number-9
+  [ $0f ?pairs too-many-buckets? -> true }T
+
+  T{ profiler-metric:[ metric-unordered
+    number-2 number-1
+  [ $0f ?pairs 0 , unordered-buckets? -> true }T
+
+  T{ profiler-metric:[ metric-nested
+    number-9 number-9a
+  [ $0f ?pairs 0 , unordered-buckets? -> true }T
 
   cr .( test completed with ) #errors @ . .( errors) cr
 
