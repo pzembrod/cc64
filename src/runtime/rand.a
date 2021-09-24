@@ -24,8 +24,9 @@ rnd_b1 = $30
 +cc64_static_int ~seedhi, 0
 +cc64_static_int ~seedlo, 1
 
-cc64_type_srand = 1
-cc64_fastcall_srand
+; int srand(int seed);
+cc64_type_srand = int_fastcall
+cc64_symbol_srand
         sta seedlo
         stx seedlo + 1
         ldy #0
@@ -33,10 +34,9 @@ cc64_fastcall_srand
         sty seedhi + 1
         rts
 
-cc64_type_rand = 1
-cc64_fastcall_rand
-
-mult32  stx tmp_zp1 + 1
+; int rand();
+cc64_type_rand = int_fastcall
+cc64_symbol_rand
         lsr seedhi + 1
         ror seedhi
         ror seedlo + 1

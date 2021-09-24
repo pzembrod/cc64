@@ -4,8 +4,9 @@
 
 fold_cases = %01111111 ; 'a' xor 'A' xor $ff
 
-cc64_type_isdigit = 1
-cc64_fastcall_isdigit
+; int isdigit(int c);
+cc64_type_isdigit = int_fastcall
+cc64_symbol_isdigit
         cpx #0
         bne ldx_0_return_false
         cmp #$30
@@ -14,8 +15,9 @@ cc64_fastcall_isdigit
         bcs return_false
         bcc return_true
 
-cc64_type_isalnum = 1
-cc64_fastcall_isalnum
+; int isalnum(int c);
+cc64_type_isalnum = int_fastcall
+cc64_symbol_isalnum
         cpx #0
         bne ldx_0_return_false
         cmp #$30
@@ -24,8 +26,9 @@ cc64_fastcall_isalnum
         bcc return_true
         bcs isalpha
 
-cc64_type_isalpha = 1
-cc64_fastcall_isalpha
+; int isalpha(int c);
+cc64_type_isalpha = int_fastcall
+cc64_symbol_isalpha
         cpx #0
         bne ldx_0_return_false
 isalpha
@@ -45,8 +48,9 @@ return_false
         txa
         rts
 
-cc64_type_isspace = 1
-cc64_fastcall_isspace
+; int isspace(int c);
+cc64_type_isspace = int_fastcall
+cc64_symbol_isspace
         cpx #0
         bne ldx_0_return_false
         cmp #$20
@@ -57,8 +61,9 @@ cc64_fastcall_isspace
         bcc return_false
         bcs return_true
 
-cc64_type_islower = 1
-cc64_fastcall_islower
+; int islower(int c);
+cc64_type_islower = int_fastcall
+cc64_symbol_islower
         cpx #0
         bne ldx_0_return_false
         cmp #$41
@@ -67,8 +72,9 @@ cc64_fastcall_islower
         bcc return_true
         bcs return_false
 
-cc64_type_isupper = 1
-cc64_fastcall_isupper
+; int isupper(int c);
+cc64_type_isupper = int_fastcall
+cc64_symbol_isupper
         cpx #0
         bne ldx_0_return_false
         cmp #$61
@@ -81,8 +87,9 @@ cc64_fastcall_isupper
         bcc return_true
         bcs return_false
 
-cc64_type_tolower = 1
-cc64_fastcall_tolower
+; int tolower(int c);
+cc64_type_tolower = int_fastcall
+cc64_symbol_tolower
         cpx #0
         bne return_a
         cmp #$61
@@ -98,8 +105,9 @@ and_5f
 return_a
         rts
 
-cc64_type_toupper = 1
-cc64_fastcall_toupper
+; int toupper(int c);
+cc64_type_toupper = int_fastcall
+cc64_symbol_toupper
         cpx #0
         bne return_a
         cmp #$41

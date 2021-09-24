@@ -11,11 +11,19 @@ BEGIN {
   statics_start = "";
   statics_end = "";
   lib_name = "";
-  # fastcall_functions = []
-  type_code[1] = "int ";
-  type_code[2] = "char ";
-  type_code[3] = "int *";
-  type_code[4] = "char *";
+
+  type_formats[1] = "int %s() *= ";
+  type_formats[2] = "char %s() *= ";
+  type_formats[3] = "int *%s() *= ";
+  type_formats[4] = "char *%s() *= ";
+  type_formats[5] = "int %s() /= ";
+  type_formats[6] = "char %s() /= ";
+  type_formats[7] = "int *%s() /= ";
+  type_formats[8] = "char *%s() /= ";
+  type_formats[9] = "int %s /= ";
+  type_formats[10] = "char %s /= ";
+  type_formats[11] = "int *%s /= ";
+  type_formats[12] = "char *%s /= ";
 }
 
 /cc64_frameptr/ {
@@ -48,23 +56,23 @@ BEGIN {
   split($2, a, /\s+/); statics_end = a[1];
 }
 
-/cc64_fastcall_/ {
-  f = $1; 
-  gsub(/\s+/, "", f);
-  sub(/cc64_fastcall_/, "", f);
-  sub(/=/, "", f);
-  split($2, a, /\s+/);
-  fastcall_functions[f] = a[1];
+/cc64_symbol_/ {
+  name = $1;
+  gsub(/\s+/, "", name);
+  sub(/cc64_symbol_/, "", name);
+  sub(/=/, "", name);
+  split($2, val, /\s+/);
+  symbols[name] = val[1];
 }
 
 /cc64_type_/ {
-  t = $1;
-  gsub(/\s+/, "", t);
-  sub(/cc64_type_/, "", t);
-  sub(/=/, "", t);
-  split($2, a, /\s+/);
-  if (a[1] in type_code) {
-    fastcall_types[t] = type_code[a[1]];
+  name = $1;
+  gsub(/\s+/, "", name);
+  sub(/cc64_type_/, "", name);
+  sub(/=/, "", name);
+  split($2, val, /\s+/);
+  if (val[1] in type_formats) {
+    symbol_formats[name] = type_formats[val[1]];
   }
 }
 
@@ -74,11 +82,14 @@ END {
     printf("#pragma cc64 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s %s\n",
            cc64_frameptr, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name);
-    for (name in fastcall_functions) {
-      if (name in fastcall_types) {
-        printf("%s", fastcall_types[name]);
+    for (name in symbols) {
+      value = symbols[name]
+      if (name in symbol_formats) {
+        printf(symbol_formats[name], name);
+        printf("0x%s;\n", value);
+      } else {
+        printf("%s /= 0x%s;\n", name, value);
       }
-      printf("%s() *= 0x%s;\n", name, fastcall_functions[name]);
     }
   } else {
     printf("Somethings missing when parsing %s\n" \
