@@ -5,25 +5,33 @@ int noconst(i)
 int i;
 { return i; }
 
+extern tst__chkout() *= 0xffc9 ;
+extern tst_clrchn() *= 0xffcc ;
+
+tst_chkout(int lfn)
+{ tst__chkout(lfn<<8); }
+
+#define tst_file_no 14
+
 tst_print(char *s)
 {
+  tst_chkout(tst_file_no);
   while(*s != 0)
-     tst_putc(*s++);
+    tst_putc(*s++);
+  tst_clrchn();
 }
 
 tst_println(s)
 char *s;
 {
-  tst_print(s); tst_putc('\n');
+  tst_chkout(tst_file_no);
+  while(*s != 0)
+    tst_putc(*s++);
+  tst_putc('\n');
+  tst_clrchn();
 }
 
-extern tst__chkout() *= 0xffc9 ;
-
-tst_chkout(int lfn)
-{ tst__chkout(lfn<<8); }
-
 extern tst_close() *= 0xffc3 ;
-extern tst_clrchn() *= 0xffcc ;
 extern tst__open() *= 0xffc0 ;
 
 extern char tst_kernal_fnam_len /= 0x28e;

@@ -2,12 +2,10 @@
 main()
 {
   int i;
-  tst_open(1,8,2, name());
-  tst_chkout(1);
+  tst_open(tst_file_no, 8, 2, name());
   test();
   if (failedAsserts) {
     tst_println("Some test didn't evaluate its asserts.");
   }
-  tst_clrchn();
-  tst_close(1);
+  tst_close(tst_file_no);
 }
