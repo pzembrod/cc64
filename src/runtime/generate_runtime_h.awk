@@ -12,18 +12,18 @@ BEGIN {
   statics_end = "";
   lib_name = "";
 
-  type_formats[1] = "int %s() *= ";
-  type_formats[2] = "char %s() *= ";
-  type_formats[3] = "int *%s() *= ";
-  type_formats[4] = "char *%s() *= ";
-  type_formats[5] = "int %s() /= ";
-  type_formats[6] = "char %s() /= ";
-  type_formats[7] = "int *%s() /= ";
-  type_formats[8] = "char *%s() /= ";
-  type_formats[9] = "int %s /= ";
-  type_formats[10] = "char %s /= ";
-  type_formats[11] = "int *%s /= ";
-  type_formats[12] = "char *%s /= ";
+  type_formats["1"] = "int %s() *= ";
+  type_formats["2"] = "char %s() *= ";
+  type_formats["3"] = "int *%s() *= ";
+  type_formats["4"] = "char *%s() *= ";
+  type_formats["5"] = "int %s() /= ";
+  type_formats["6"] = "char %s() /= ";
+  type_formats["7"] = "int *%s() /= ";
+  type_formats["8"] = "char *%s() /= ";
+  type_formats["9"] = "int %s /= ";
+  type_formats["a"] = "char %s /= ";
+  type_formats["b"] = "int *%s /= ";
+  type_formats["c"] = "char *%s /= ";
 }
 
 /cc64_frameptr/ {

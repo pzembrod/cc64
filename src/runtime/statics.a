@@ -43,18 +43,18 @@
         }
 }
 
-;  type_formats[1] = "int %s() *= ";
-;  type_formats[2] = "char %s() *= ";
-;  type_formats[3] = "int *%s() *= ";
-;  type_formats[4] = "char *%s() *= ";
-;  type_formats[5] = "int %s() /= ";
-;  type_formats[6] = "char %s() /= ";
-;  type_formats[7] = "int *%s() /= ";
-;  type_formats[8] = "char *%s() /= ";
-;  type_formats[9] = "int %s /= ";
-;  type_formats[10] = "char %s /= ";
-;  type_formats[11] = "int *%s /= ";
-;  type_formats[12] = "char *%s /= ";
+;  type_formats["1"] = "int %s() *= ";
+;  type_formats["2"] = "char %s() *= ";
+;  type_formats["3"] = "int *%s() *= ";
+;  type_formats["4"] = "char *%s() *= ";
+;  type_formats["5"] = "int %s() /= ";
+;  type_formats["6"] = "char %s() /= ";
+;  type_formats["7"] = "int *%s() /= ";
+;  type_formats["8"] = "char *%s() /= ";
+;  type_formats["9"] = "int %s /= ";
+;  type_formats["a"] = "char %s /= ";
+;  type_formats["b"] = "int *%s /= ";
+;  type_formats["c"] = "char *%s /= ";
 
 !set int_fastcall = 1
 !set char_fastcall = 2
@@ -65,6 +65,6 @@
 !set int_ptr_func = 7
 !set char_ptr_func = 8
 !set int_var = 9
-!set char_var = 10
-!set int_ptr = 11
-!set char_ptr = 12
+!set char_var = $a
+!set int_ptr = $b
+!set char_ptr = $c
