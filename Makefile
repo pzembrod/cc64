@@ -354,18 +354,18 @@ runtime/%.o runtime/%.h runtime/%.i: src/runtime/*
 
 libc_files = $(sort $(wildcard src/lib/*.c) $(wildcard src/lib/*/*.c))
 
-lib/libc-c64.c: $(libc_files)
-	echo '#include <lib-cty-c64.h>' | cat - $(libc_files) >$@
+lib/libc-c64.c: $(libc_files) runtime/*
+	echo '#include <lib-cio-c64.h>' | cat - $(libc_files) >$@
 
-lib/libc-c16.c: $(libc_files)
-	echo '#include <lib-cty-c16.h>' | cat - $(libc_files) >$@
+lib/libc-c16.c: $(libc_files) runtime/*
+	echo '#include <lib-cio-c16.h>' | cat - $(libc_files) >$@
 
-lib/libc-x16.c: $(libc_files)
-	echo '#include <lib-cty-x16.h>' | cat - $(libc_files) >$@
+lib/libc-x16.c: $(libc_files) runtime/*
+	echo '#include <lib-cio-x16.h>' | cat - $(libc_files) >$@
 
 lib/libc-%.h lib/libc-%.i lib/libc-%.o: lib/libc-%.c \
-    autostart-c64/cc64.T64 \
-    runtime/lib-cty-%.h runtime/lib-cty-%.i runtime/lib-cty-%.o
+  autostart-c64/cc64.T64 \
+  runtime/lib-cio-%.h runtime/lib-cio-%.i runtime/lib-cio-%.o
 	emulator/compile-lib.sh libc-$*
 
 

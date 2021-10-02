@@ -1,0 +1,17 @@
+
+; cc64 runtime module including ctype.a as basis for libc
+; to run on Commander X16 at $0801-$9f00
+
+!source "statics.a"
+
+!source "bas-x16-08-9e.a"
+
+!source "rt-core.a"
+
+!source "ctype-petscii.a"
+
+!source "rand.a"
+
+!source "fileio.a"
+
+cc64_lib_end
