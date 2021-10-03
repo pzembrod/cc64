@@ -61,15 +61,15 @@ remove_4
 
 s0colon !pet "s0:", 0
 
-cc64_type_freefh = char_fastcall
-cc64_symbol_freefh
-        jsr release_file_no
+cc64_type__allocfh = char_fastcall
+cc64_symbol__allocfh
+        jsr allocate_file_no
         ldx #0
         rts
 
-cc64_type_allocfh = char_fastcall
-cc64_symbol_allocfh
-        jsr allocate_file_no
+cc64_type__freefh = char_fastcall
+cc64_symbol__freefh
+        jsr release_file_no
         ldx #0
         rts
 
