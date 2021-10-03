@@ -1,0 +1,153 @@
+
+ACPTR  = $FFA5
+CHKIN  = $FFC6
+CHKOUT = $FFC9
+CHROUT = $FFD2
+CHRIN  = $FFCF
+CINT   = $FF81
+CIOUT  = $FFA8
+CLOSE  = $FFC3
+CLRCHN = $FFCC
+GETIN  = $FFE4
+IOINIT = $FF84
+LISTEN = $FFB1
+OPEN   = $FFC0
+PLOT   = $FFF0
+RESTOR = $FF8A
+SECOND = $FF93
+STOP   = $FFE1
+TALK   = $FFB4
+TKSA   = $FF96
+UDTIM  = $FFEA
+UNLSN  = $FFAE
+UNTLK  = $FFAB
+MEMTOP = $FF99
+SETNAM = $FFBD
+SETLFS = $FFBA
+
+; char fnunit = 8;
++cc64_static_char ~cc64_symbol_fnunit, 8
+cc64_type_fnunit = char_var
+
+; int remove(char* filename);
+cc64_type_remove = int_fastcall
+cc64_symbol_remove
+        sta tmp_zp1
+        stx tmp_zp1 + 1
+        lda cc64_symbol_fnunit
+        jsr LISTEN
+        lda #$ff
+        jsr SECOND
+        ldx #0
+remove_1
+        lda s0colon,x
+        beq remove_2
+        jsr CIOUT
+        inx
+        bne remove_1
+remove_2
+        ldy #0
+remove_3
+        lda (tmp_zp1),y
+        beq remove_4
+        jsr CIOUT
+        iny
+        bne remove_3
+remove_4
+        jsr UNLSN
+        lda #1
+        ldx #0
+        rts
+
+s0colon !pet "s0:", 0
+
+cc64_type_freefh = char_fastcall
+cc64_symbol_freefh
+        jsr release_file_no
+        ldx #0
+        rts
+
+cc64_type_allocfh = char_fastcall
+cc64_symbol_allocfh
+        jsr allocate_file_no
+        ldx #0
+        rts
+
+
+allocate_file_no
+        jsr get_free_file_no
+        tax
+        beq fopen_done
+        lda mask_by_file_no-file_no_offset,x
+        eor #$ff
+        and file_no_mask
+        sta file_no_mask
+        txa
+fopen_done
+        rts
+
+get_free_file_no
+        lda file_no_mask
+        beq no_free_file
+        tax
+        and #$0f
+        bne lookup_file_no
+        txa
+        lsr
+        lsr
+        lsr
+        lsr
+        jsr lookup_file_no
+        clc
+        adc #4
+no_free_file
+        rts
+
+lookup_file_no
+        tax
+        lda file_no_by_mask,x
+        rts
+
+release_file_no
+        tax
+        lda mask_by_file_no-file_no_offset,x
+        ora file_no_mask
+        sta file_no_mask
+        txa
+        rts
+
++cc64_static_char ~file_no_mask, $ff
+
+file_no_offset = 7
+offs = file_no_offset
+
+file_no_by_mask
+        !byte      0, offs, offs+1, offs, offs+2, offs, offs+1, offs
+        !byte offs+3, offs, offs+1, offs, offs+2, offs, offs+1, offs
+
+mask_by_file_no
+        !byte $01, $02, $04, $08, $10, $20, $40, $80
+
+
+cc64_type_fopen = int_func
+cc64_symbol_fopen
+        ; stash away param count
+        tya
+        ldy #4
+        sta (cc64_frameptr),y
+
+        ldy #0
+        lda (cc64_frameptr),y
+        sta cc64_zp
+        iny
+        lda (cc64_frameptr),y
+        sta cc64_zp + 1
+        jsr allocate_file_no
+        ldx #0
+        rts
+
+cc64_type_fclose = int_fastcall
+cc64_symbol_fclose
+        jsr release_file_no
+        ldx #0
+        rts
