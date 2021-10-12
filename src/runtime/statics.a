@@ -43,6 +43,18 @@
         }
 }
 
+!macro cc64_static_buf ~.name, .value, .length {
+        !set cc64_statics_start = cc64_statics_start - 1
+        !set .name = cc64_statics_start
+        !ifdef cc64_generate_statics {
+          !set .pc = *
+          * = cc64_init_pc
+          !fill .value, .length
+          !set cc64_init_pc = *
+          * = .pc
+        }
+}
+
 ;  type_formats["1"] = "int %s() *= ";
 ;  type_formats["2"] = "char %s() *= ";
 ;  type_formats["3"] = "int *%s() *= ";

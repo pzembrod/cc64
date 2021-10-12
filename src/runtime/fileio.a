@@ -77,13 +77,13 @@ cc64_symbol__freefh
 allocate_file_no
         jsr get_free_file_no
         tax
-        beq fopen_done
+        beq allocate_nothing
         lda mask_by_file_no-file_no_offset,x
         eor #$ff
         and file_no_mask
         sta file_no_mask
         txa
-fopen_done
+allocate_nothing
         rts
 
 get_free_file_no
@@ -138,13 +138,47 @@ cc64_symbol_fopen
 
         ldy #0
         lda (cc64_frameptr),y
-        sta cc64_zp
+        sta tmp_zp1
         iny
         lda (cc64_frameptr),y
-        sta cc64_zp + 1
+        sta tmp_zp1 + 1
+        ora tmp_zp1
+        beq fopen_done
+        dey
+        lda (tmp_zp1),y
+        beq fopen_done
+
+fopen_copy_name
+        sta file_name,y  ; TODO: check for comma
+        iny
+        cpy #$10
+        beq fopen_check_mode
+        lda (tmp_zp1),y
+        bne fopen_copy_name
+
+fopen_check_mode
+        tya
+        tax
+
+        ldy #2
+        lda (cc64_frameptr),y
+        sta tmp_zp2
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp2 + 1
+        ora tmp_zp2
+        beq fopen_done
+        ldy #0
+        lda (tmp_zp2),y
+        beq fopen_done
+
         jsr allocate_file_no
+
+fopen_done
         ldx #0
         rts
+
++cc64_static_buf ~file_name, 0, $15
 
 cc64_type_fclose = int_fastcall
 cc64_symbol_fclose
