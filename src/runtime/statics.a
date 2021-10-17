@@ -44,12 +44,12 @@
 }
 
 !macro cc64_static_buf ~.name, .value, .length {
-        !set cc64_statics_start = cc64_statics_start - 1
+        !set cc64_statics_start = cc64_statics_start - .length
         !set .name = cc64_statics_start
         !ifdef cc64_generate_statics {
           !set .pc = *
           * = cc64_init_pc
-          !fill .value, .length
+          !fill .length, .value
           !set cc64_init_pc = *
           * = .pc
         }

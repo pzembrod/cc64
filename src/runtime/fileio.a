@@ -13,6 +13,7 @@ IOINIT = $FF84
 LISTEN = $FFB1
 OPEN   = $FFC0
 PLOT   = $FFF0
+READST = $FFB7
 RESTOR = $FF8A
 SECOND = $FF93
 STOP   = $FFE1
@@ -24,6 +25,14 @@ UNTLK  = $FFAB
 MEMTOP = $FF99
 SETNAM = $FFBD
 SETLFS = $FFBA
+
+
+cc64_type_cbm_k_readst = char_fastcall
+cc64_symbol_cbm_k_readst
+        jsr READST
+        ldx #0
+        rts
+
 
 ; char fnunit = 8;
 +cc64_static_char ~cc64_symbol_fnunit, 8
@@ -137,6 +146,7 @@ cc64_symbol_fopen
         sta (cc64_frameptr),y
 
         ldy #0
+        sty cc64_symbol_errno
         lda (cc64_frameptr),y
         sta tmp_zp1
         iny
@@ -167,21 +177,161 @@ fopen_check_mode
         lda (cc64_frameptr),y
         sta tmp_zp2 + 1
         ora tmp_zp2
-        beq fopen_done
+        beq fopen_filename_ok
         ldy #0
         lda (tmp_zp2),y
-        beq fopen_done
+        beq fopen_filename_ok
+
+fopen_copy_mode
+        sta file_name,x
+        inx
+        iny
+        lda (tmp_zp2),y
+        bne fopen_copy_mode
+
+
+fopen_filename_ok
+        txa
+        ldx #<file_name
+        ldy #>file_name
+        jsr SETNAM
 
         jsr allocate_file_no
+        ldx cc64_symbol_fnunit
+        tay
+        pha
+        jsr SETLFS
 
+        jsr OPEN
+        bcs fopen_error
+        jsr READST
+        bne fopen_readst_error
+        pla
 fopen_done
         ldx #0
         rts
 
+fopen_error
+        sta cc64_symbol_errno
+fopen_readst_error
+        pla
+        jsr release_file_no
+        lda #0
+        beq fopen_done
+
 +cc64_static_buf ~file_name, 0, $15
+; cc64_symbol_fopen_file_name = file_name
+; cc64_type_fopen_file_name = char_ptr
+
++cc64_static_char ~cc64_symbol_errno, 0
+cc64_type_errno = char_var
 
 cc64_type_fclose = int_fastcall
 cc64_symbol_fclose
+        ldx #0
+        sty cc64_symbol_errno
         jsr release_file_no
+        jsr CLOSE
+        bcs fclose_error
+        jsr READST
+        bne fclose_readst_error
+        lda #0
+fclose_done
+        tax
+        rts
+
+fclose_error
+        sta cc64_symbol_errno
+fclose_readst_error
+        lda #$ff
+        bne fclose_done
+
+
+cc64_type_fgetc = int_fastcall
+cc64_symbol_fgetc
+        tax
+        jsr CHKIN
+        bcs fgetc_error
+        jsr CHRIN
+        pha
+        jsr CLRCHN
+        pla
         ldx #0
         rts
+
+fgetc_error
+        sta cc64_symbol_errno
+        lda #$ff
+        tax
+        rts
+
+
+cc64_type_fgets = char_ptr_func
+cc64_symbol_fgets
+        ; stash away param count
+        cpy #3
+        bne fgets_param_error
+
+        ldy #0
+        sty cc64_symbol_errno
+        lda (cc64_frameptr),y
+        sta tmp_zp1
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp1 + 1
+        iny
+        sec
+        lda #0
+        sbc (cc64_frameptr),y
+        sta tmp_zp2
+        iny
+        lda #0
+        sbc (cc64_frameptr),y
+        sta tmp_zp2 + 1
+        iny
+        lda (cc64_frameptr),y
+        tax
+        jsr CHKIN
+        bcs fgets_error
+
+        ldy #0
+fgets_nextchar
+        jsr CHRIN
+        bcs fgets_error
+        sta (tmp_zp1),y
+        iny
+        bne +
+        inc tmp_zp1 + 1
++       cmp #$0d
+        beq fgets_done
+        jsr READST
+        bne fgets_error
+        inc tmp_zp2
+        bne +
+        inc tmp_zp2 + 1
++       bne fgets_nextchar
+
+fgets_done
+        jsr fgets_finish
+        ldy #1
+        lda (cc64_frameptr),y
+        tax
+        dey
+        lda (cc64_frameptr),y
+        rts
+
+fgets_error
+        jsr fgets_finish
+fgets_param_error
+        lda #0
+        tax
+        rts
+
+fgets_finish
+        jsr CLRCHN
+        lda #0
+        sta (tmp_zp1),y
+        rts
+
++cc64_static_int ~cc64_symbol_fileio_debug, 0
+cc64_type_fileio_debug = int_var
