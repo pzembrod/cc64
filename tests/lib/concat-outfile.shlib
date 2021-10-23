@@ -1,0 +1,14 @@
+#!/bin/echo Please source this file
+
+# input:
+# $targetfiles
+# $suitename
+# $suiteshort
+# $out_files
+
+petscii2ascii "${targetfiles}/${suiteshort}.out" "${suitename}.out"
+for out in $out_files; do
+  petscii2ascii "${targetfiles}/${out}" "${out}"
+  echo "${out}:" >> "${suitename}.out"
+  cat "${out}" >> "${suitename}.out"
+done

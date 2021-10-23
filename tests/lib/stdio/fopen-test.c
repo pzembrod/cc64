@@ -1,61 +1,56 @@
 
 /* Temporary file names */
-static char testfile[] = "testfile";
+static char testfile1[] = "fopen.out1";
 
 fopen_test() {
-  /* Some of the tests are not executed for regression tests, as the libc on
-     my system is at once less forgiving (segfaults on mode NULL) and more
-     forgiving (accepts undefined modes).
-  */
-  int fh, c;
+  int fh1, fh2, fh3, c;
   static char buffer[100], *p;
 
-  remove(testfile);
   assertEq(fopen(0, 0), 0, "fopen(0, 0)");
   assertEq(fopen(0, "w"), 0, "fopen(0, \"w\")");
   assertEq(fopen("", 0), 0, "fopen(\"\", 0)");
   assertEq(fopen("", "w"), 0, "fopen(\"\", \"w\")");
 
-  assertTrue((fh = fopen("libc-c64.h,s,r", 0)) != 0,
+  assertTrue((fh1 = fopen("libc-c16.h,s,r", 0)) != 0,
       "fopen(libc.h, 0)");
-  assertEq(fh, 7, "fh");
+  assertEq(fh1, 7, "fh1");
   assertEq(tst_kernal_fnam_len, 14, "tst_kernal_fnam_len");
-  c = fgetc(fh);
-  assertEq(c, 13, "fgetc(fh)");
-  p = fgets(buffer, 8, fh);
+  c = fgetc(fh1);
+  assertEq(c, 13, "fgetc(fh1)");
+  p = fgets(buffer, 8, fh1);
   assertEq(p, buffer, "p = buffer");
   assertEq(strlen(buffer), 8, "strlen(buffer)");
   assertEq(strcmp(buffer, "#pragma "), 0,
       "strcmp(buffer, \"#pragma \")");
-  assertEq(fclose(fh), 0, "flcose(fh)");
-  c = fgetc(fh);
-  assertEq(c, -1, "fgetc(fh) EOF");
+
+  assertTrue((fh2 = fopen("libc-c64.h", ",s,r")) != 0,
+      "fopen(libc.h, 0)");
+  assertEq(errno, 0, "errno");
+  assertEq(fh2, 8, "fh1");
+
+  assertEq(fclose(fh1), 0, "flcose(fh1)");
+  c = fgetc(fh1);
+  assertEq(c, -1, "fgetc(fh1) EOF");
   assertEq(errno, 3, "errno");
 
-  evaluateAsserts();
-  return;
+  assertEq(fgetc(fh2), 13, "fgetc(fh2)");
+  p = fgets(buffer, 99, fh2);
+  assertEq(p, buffer, "p == buffer");
+  assertEq(strlen(buffer), 65, "strlen(buffer)");
+  assertEq(strncmp(buffer, "#pragma ", 8), 0,
+      "strncmp(buffer, \"#pragma \", 8)");
+  assertEq(strcmp(buffer+56, "libc-c64\n"), 0,
+      "strcmp(buffer+56, \"libc-c64\\n\")");
+  assertEq(fclose(fh2), 0, "flcose(fh2)");
 
-  assertTrue((fh = fopen(testfile, "2")) != 0, "fopen(testfile, \"\")");
-  assertEq(fh, 8, "fh");
-  assertEq(tst_kernal_fnam_len, 9, "tst_kernal_fnam_len");
-  assertEq(strncmp(tst_kernal_fnam, "testfile2", 9), 0,
-      "strncmp(tst_kernal_fnam, testfile1)");
+  remove(testfile1);
 
-  assertTrue((fh = fopen(testfile, ",s,w")) != 0,
-      "fopen(testfile, \",s,w\")");
-  assertEq(fh, 9, "fh");
-  assertEq(tst_kernal_fnam_len, 12, "tst_kernal_fnam_len");
-  assertEq(strncmp(tst_kernal_fnam, "testfile,s,w", 12), 0,
-      "strncmp(tst_kernal_fnam, testfile,s,w)");
-
-  /* assertTrue(0, "okay, this triggered"); /**/
-  evaluateAsserts();
-  return;
-  assertEq(fopen(testfile, "wq"), 0); /* Undefined mode */
-  assertEq(fopen(testfile, "wr"), 0); /* Undefined mode */
-  assertTrue((fh = fopen(testfile, "w")) != 0);
-  assertEq(fclose(fh), 0);
-  assertEq(remove(testfile), 0);
+  assertTrue((fh3 = fopen(testfile1, ",s,w")) != 0,
+      "fopen(testfile1, \",s,w\")");
+  assertEq(fh3, 7, "fh3");
+  assertEq(fputc(64, fh3), 64, "fputc(64, fh3)");
+  assertEq(fputc(13, fh3), 13, "fputc(64, fh3)");
+  assertEq(fclose(fh3), 0, "flcose(fh3)");
 
   evaluateAsserts();
 }

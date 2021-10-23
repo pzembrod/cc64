@@ -266,9 +266,30 @@ fgetc_error
         rts
 
 
+cc64_type_fputc = int_func
+cc64_symbol_fputc
+        cpy #2
+        bne fgetc_error
+
+        ldx #0
+        stx cc64_symbol_errno
+        ldy #2
+        lda (cc64_frameptr),y
+        tax
+        jsr CHKOUT
+        bcs fgetc_error
+
+        ldy #0
+        lda (cc64_frameptr),y
+        jsr CHROUT
+        jsr CLRCHN
+        lda (cc64_frameptr),y
+        ldx #0
+        rts
+
+
 cc64_type_fgets = char_ptr_func
 cc64_symbol_fgets
-        ; stash away param count
         cpy #3
         bne fgets_param_error
 

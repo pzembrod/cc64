@@ -17,3 +17,20 @@ for tp in $test_paths; do
   # will highlight the test sections as well as actuall output diffs.
   cat "${golden}" >> suite.joined-silver
 done
+
+#| sed 's/\.out.\.golden//g'
+
+out_files=""
+for tp in $test_paths; do
+  out_goldens=$(echo ${tp}.out?.golden)
+  if [[ "$out_goldens" != *"?"* ]]; then
+    for golden in $out_goldens; do
+      out=$(basename "$(echo ${golden} | sed 's/\.golden//g')")
+      out_files="${out_files} ${out}"
+      echo "${out}:" >> suite.joined-golden
+      cat "${golden}" >> suite.joined-golden
+      # similar as above: joined-silver doesn't contain out file names.
+      cat "${golden}" >> suite.joined-silver
+    done
+  fi
+done

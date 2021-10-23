@@ -44,7 +44,9 @@ source "${testdir}/concat-golden-silver.shlib"
 # Run test binary
 rm -f "${targetfiles}/${suiteshort}.out" "${suitename}.out"
 CC64TARGET="${target}" ./run-in-emu.sh "${suiteshort}"
-petscii2ascii "${targetfiles}/${suiteshort}.out" "${suitename}.out"
+
+# Fetch suite outfile and attach extra outfiles
+source "${testdir}/concat-outfile.shlib"
 
 # Evaluate test output
 source "${testdir}/evaluate-suite.shlib"

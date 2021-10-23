@@ -157,7 +157,7 @@ clean:
 	rm -f c64files/* c16files/* x16files/*
 	rm -f *-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
-	rm -f *.out *.T64 *.result *-generated.c
+	rm -f *.out *.out? *.T64 *.result *-generated.c
 
 c64files/%: $(basedir)/c64files/%
 	test -d c64files || mkdir c64files

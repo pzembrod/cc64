@@ -4,6 +4,8 @@ set -e
 test -n "${CC64TARGET}" || export CC64TARGET=c64
 
 testbinary="${1}"
+shift
+extra_outfiles=$@
 test -n "${testbinary}" || exit 1
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
@@ -13,7 +15,7 @@ targetfiles="$(realpath --relative-to="$PWD" "${testdir}/${CC64TARGET}files")"
 
 keybuf='open1,8,15,"s0:notdone":close1'
 
-export OUTFILES="${testbinary}.out"
+export OUTFILES="${testbinary}.out ${extra_outfiles}"
 export CBMFILES="${targetfiles}"
 export AUTOSTARTDIR="${targetfiles}"
 "${emulatordir}/run-in-${CC64TARGET}emu.sh" "${testbinary}" "${keybuf}"
