@@ -326,7 +326,7 @@ fgets_nextchar
 +       cmp #$0d
         beq fgets_done
         jsr READST
-        bne fgets_error
+        bne fgets_readst_error
         inc tmp_zp2
         bne +
         inc tmp_zp2 + 1
@@ -342,6 +342,8 @@ fgets_done
         rts
 
 fgets_error
+        sta cc64_symbol_errno
+fgets_readst_error
         jsr fgets_finish
 fgets_param_error
         lda #0
@@ -354,5 +356,53 @@ fgets_finish
         sta (tmp_zp1),y
         rts
 
-+cc64_static_int ~cc64_symbol_fileio_debug, 0
-cc64_type_fileio_debug = int_var
+
+cc64_type_fputs = int_func
+cc64_symbol_fputs
+        cpy #2
+        bne fputs_param_error
+
+        ldy #0
+        sty cc64_symbol_errno
+        lda (cc64_frameptr),y
+        sta tmp_zp1
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp1 + 1
+        iny
+        lda (cc64_frameptr),y
+        tax
+        jsr CHKOUT
+        bcs fputs_error
+
+        ldy #0
+fputs_nextchar
+        lda (tmp_zp1),y
+        beq fputs_done
+        jsr CHROUT
+        bcs fputs_error
+        jsr READST
+        bne fputs_readst_error
+        iny
+        bne +
+        inc tmp_zp1 + 1
++       bne fputs_nextchar
+
+fputs_done
+        jsr CLRCHN
+        lda #0
+        tax
+        rts
+
+fputs_error
+        sta cc64_symbol_errno
+fputs_readst_error
+        jsr CLRCHN
+fputs_param_error
+        lda #$ff
+        tax
+        rts
+
+
+; +cc64_static_int ~cc64_symbol_fileio_debug, 0
+; cc64_type_fileio_debug = int_var

@@ -50,6 +50,8 @@ fopen_test() {
   assertEq(fh3, 7, "fh3");
   assertEq(fputc(64, fh3), 64, "fputc(64, fh3)");
   assertEq(fputc(13, fh3), 13, "fputc(64, fh3)");
+  assertEq(fputs("fputs-teststring\n", fh3), 0,
+      "fputs(\"fputs-teststring\n\", fh3)");
   assertEq(fclose(fh3), 0, "flcose(fh3)");
 
   evaluateAsserts();
