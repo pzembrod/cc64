@@ -1,7 +1,8 @@
 #!/bin/echo Please source this file
 
 # imput:
-# $target $hostfiles $test_paths $suiteshort $extra_setup_paths
+# $target $hostfiles $targetfiles
+# $test_paths $suiteshort $extra_setup_paths
 
 # Build test binary
 (
@@ -9,10 +10,10 @@
   cat "test-setup-${target}.h"
   echo "char *name(){ return \"${suiteshort}.out,s,w\"; }"
   for es in $extra_setup_paths; do
-    cat ${es}
+    cat "${es}"
   done
   for tp in $test_paths; do
-    cat ${tp}-test.c
+    cat "${tp}-test.c"
   done
   echo "test(){"
   for tp in $test_paths; do
@@ -22,4 +23,14 @@
   done
   echo "}"
   cat test-main.h
-) | tee suite-generated.c | ascii2petscii - "${hostfiles}/${suiteshort}.c"
+) | tee suite-generated.c \
+  | ascii2petscii - "${hostfiles}/${suiteshort}.c"
+
+for tp in $test_paths; do
+  in_files=$(echo ${tp}.in?)
+  if [[ "$in_files" != *"?"* ]]; then
+    for infile in $in_files; do
+      ascii2petscii "${infile}" "${targetfiles}/$(basename "${infile}")"
+    done
+  fi
+done

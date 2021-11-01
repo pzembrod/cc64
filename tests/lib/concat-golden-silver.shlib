@@ -3,6 +3,9 @@
 # input:
 # $test_paths
 
+# output:
+# $out_files
+
 # Build golden (and silver) file.
 # It is not named suite.golden so the make rules depending on *.golden
 # don't trigger on this generated golden file being new.

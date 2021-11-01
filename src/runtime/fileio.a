@@ -137,6 +137,14 @@ file_no_by_mask
 mask_by_file_no
         !byte $01, $02, $04, $08, $10, $20, $40, $80
 
++cc64_static_buf ~readst_by_file_no, 0, 8
+cc64_type__cc64_last_readst = int_fastcall
+cc64_symbol__cc64_last_readst
+        tax
+        lda readst_by_file_no-file_no_offset,x
+        ldx #0
+        rts
+
 
 cc64_type_fopen = int_func
 cc64_symbol_fopen
@@ -201,20 +209,22 @@ fopen_filename_ok
         tay
         pha
         jsr SETLFS
-
         jsr OPEN
-        bcs fopen_error
-        jsr READST
-        bne fopen_readst_error
+        bcs fopen_open_error
         pla
+        tax
+        jsr READST
+        sta readst_by_file_no-file_no_offset,x
+        bne fopen_readst_error
+        txa
 fopen_done
         ldx #0
         rts
 
-fopen_error
+fopen_open_error
         sta cc64_symbol_errno
-fopen_readst_error
         pla
+fopen_readst_error
         jsr release_file_no
         lda #0
         beq fopen_done
@@ -229,11 +239,13 @@ cc64_type_errno = char_var
 cc64_type_fclose = int_fastcall
 cc64_symbol_fclose
         ldx #0
-        sty cc64_symbol_errno
+        stx cc64_symbol_errno
         jsr release_file_no
         jsr CLOSE
         bcs fclose_error
         jsr READST
+        sta readst_by_file_no-file_no_offset,x
+        and #$bf
         bne fclose_readst_error
         lda #0
 fclose_done
@@ -250,17 +262,30 @@ fclose_readst_error
 cc64_type_fgetc = int_fastcall
 cc64_symbol_fgetc
         tax
+        stx tmp_zp1
+        lda readst_by_file_no-file_no_offset,x
+        and #$40
+        bne fgetc_eof_error
         jsr CHKIN
         bcs fgetc_error
         jsr CHRIN
-        pha
+        bcs fgetc_error
+        tay
+        jsr READST
+        ldx tmp_zp1
+        sta readst_by_file_no-file_no_offset,x
+        and #$bf
+        bne fgetc_readst_error
         jsr CLRCHN
-        pla
+        tya
         ldx #0
         rts
 
 fgetc_error
         sta cc64_symbol_errno
+fgetc_readst_error
+        jsr CLRCHN
+fgetc_eof_error
         lda #$ff
         tax
         rts
