@@ -43,18 +43,21 @@ tests: tests64
 
 alltests: \
   ctypetests \
+  stdiotests \
   stdlibtests \
   strmemtests \
   stringtests
 
 allcrosstests: \
   ctypecrosstests \
+  stdiocrosstests \
   stdlibcrosstests \
   strmemcrosstests \
   stringcrosstests
 
 tests64: \
   ctype-suite-c64_c64.result \
+  stdio-suite-c64_c64.result \
   stdlib-suite-c64_c64.result \
   strmem-suite-c64_c64.result \
   string-suite-c64_c64.result
@@ -63,6 +66,11 @@ ctypetests: \
   ctype-suite-c64_c64.result \
   ctype-suite-c16_c16.result \
   ctype-suite-x16_x16.result
+
+stdiotests: \
+  stdio-suite-c64_c64.result \
+  stdio-suite-c16_c16.result \
+  stdio-suite-x16_x16.result
 
 stdlibtests: \
   stdlib-suite-c64_c64.result \
@@ -89,6 +97,17 @@ ctypecrosstests: \
   ctype-suite-x16_c64.result \
   ctype-suite-x16_c16.result \
   ctype-suite-x16_x16.result
+
+stdiocrosstests: \
+  stdio-suite-c64_c64.result \
+  stdio-suite-c64_c16.result \
+  stdio-suite-c64_x16.result \
+  stdio-suite-c16_c64.result \
+  stdio-suite-c16_c16.result \
+  stdio-suite-c16_x16.result \
+  stdio-suite-x16_c64.result \
+  stdio-suite-x16_c16.result \
+  stdio-suite-x16_x16.result
 
 stdlibcrosstests: \
   stdlib-suite-c64_c64.result \
