@@ -56,7 +56,7 @@ fopen_basic_test() {
   assertEq(fclose(fh3), 0, "flcose(fh3)");
 }
 
-fopen_copy_append_test() {
+fopen_copy_test() {
   int fh1, fh2, fh3, c;
 
   remove(outfile2);
@@ -78,9 +78,20 @@ fopen_copy_append_test() {
   assertEq(fclose(fh3), 0, "flcose(fh3) 2nd");
 }
 
+fopen_append_test() {
+  int fh1, c;
+
+  assertTrue((fh1 = fopen(outfile3, ",s,a")) != 0,
+      "fopen(outfile3, \",s,a\")");
+  assertEq(fputs("fputs-appendstring\n", fh1), 0,
+      "fputs(\"fputs-appendstring\n\", fh1)");
+  assertEq(fclose(fh1), 0, "flcose(fh1) 3rd");
+}
+
 fopen_test() {
   fopen_basic_test();
-  fopen_copy_append_test();
+  fopen_copy_test();
+  fopen_append_test();
 
   evaluateAsserts();
 }

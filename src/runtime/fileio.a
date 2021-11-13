@@ -303,10 +303,18 @@ cc64_symbol_fputc
         tax
         jsr CHKOUT
         bcs fgetc_error
+        jsr READST
+        sta readst_by_file_no-file_no_offset,x
+        bne fgetc_readst_error
 
         ldy #0
         lda (cc64_frameptr),y
         jsr CHROUT
+        bcs fgetc_error
+        jsr READST
+        sta readst_by_file_no-file_no_offset,x
+        bne fgetc_readst_error
+
         jsr CLRCHN
         lda (cc64_frameptr),y
         ldx #0
@@ -337,11 +345,17 @@ cc64_symbol_fgets
         iny
         lda (cc64_frameptr),y
         tax
+        stx cc64_zp
         jsr CHKIN
         bcs fgets_error
 
         ldy #0
 fgets_nextchar
+        ldx cc64_zp
+        lda readst_by_file_no-file_no_offset,x
+        and #$40
+        bne fgets_finish
+
         jsr CHRIN
         bcs fgets_error
         sta (tmp_zp1),y
@@ -350,8 +364,13 @@ fgets_nextchar
         inc tmp_zp1 + 1
 +       cmp #$0d
         beq fgets_done
+
         jsr READST
+        ldx cc64_zp
+        sta readst_by_file_no-file_no_offset,x
+        and #$bf
         bne fgets_readst_error
+
         inc tmp_zp2
         bne +
         inc tmp_zp2 + 1
@@ -366,10 +385,13 @@ fgets_done
         lda (cc64_frameptr),y
         rts
 
+fgets_readst_error
+        ldx cc64_zp
+        sta readst_by_file_no-file_no_offset,x
+        bne +
 fgets_error
         sta cc64_symbol_errno
-fgets_readst_error
-        jsr fgets_finish
++       jsr fgets_finish
 fgets_param_error
         lda #0
         tax
@@ -397,6 +419,7 @@ cc64_symbol_fputs
         iny
         lda (cc64_frameptr),y
         tax
+        stx tmp_zp2
         jsr CHKOUT
         bcs fputs_error
 
@@ -419,10 +442,13 @@ fputs_done
         tax
         rts
 
+fputs_readst_error
+        ldx tmp_zp2
+        sta readst_by_file_no-file_no_offset,x
+        bne +
 fputs_error
         sta cc64_symbol_errno
-fputs_readst_error
-        jsr CLRCHN
++       jsr CLRCHN
 fputs_param_error
         lda #$ff
         tax
