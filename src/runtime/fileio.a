@@ -354,7 +354,7 @@ fgets_nextchar
         ldx cc64_zp
         lda readst_by_file_no-file_no_offset,x
         and #$40
-        bne fgets_finish
+        bne fgets_done
 
         jsr CHRIN
         bcs fgets_error
