@@ -1,9 +1,11 @@
-#include <lib-cty-x16.h>
+#include <lib-cio-x16.h>
 
 #define NULL 0
 #define INT_MAX 32767
 #define INT_MIN -32768
 #define RAND_MAX 32767
+
+#define EOF -1
 
 int abs(int j) {
   return ((j >= 0) ? j : -j);
