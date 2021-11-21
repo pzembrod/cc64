@@ -2,6 +2,8 @@
 ; cc64 minimal runtime module
 ; to run on Commander X16 at $0801-$9f00
 
+!ct pet ; use PETSCII for char constants - important e.g. for printf.a
+
 !source "statics.a"
 
 !source "bas-x16-08-9e.a"

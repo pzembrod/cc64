@@ -13,6 +13,8 @@
 !addr   strout    = $ab1e
 !addr   warmstart = $e37b
 
+!ct pet ; use PETSCII for char constants - important e.g. for printf.a
+
 +cc64_runtime_start $0801
 
 cc64_lib_start

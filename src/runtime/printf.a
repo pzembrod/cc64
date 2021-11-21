@@ -1,0 +1,115 @@
+
++cc64_static_char ~xprintf_param_count, 0
++cc64_static_int ~xprintf_putc_ptr, 0
++cc64_static_int ~xprintf_count, 0
+
+xprintf_putc
+        jmp (xprintf_putc_ptr)
+
+cc64_type_fprintf = int_func
+cc64_symbol_fprintf
+        ; stash away param count
+        sty xprintf_param_count
+        lda #<CHROUT
+        sta xprintf_putc_ptr
+        lda #>CHROUT
+        sta xprintf_putc_ptr + 1
+        ldy #0
+        lda (cc64_frameptr),y
+        tax
+        jsr CHKOUT
+        bcs fprintf_error
+        jsr READST
+        sta readst_by_file_no-file_no_offset,x
+        bne fprintf_readst_error
+
+        ldy #2
+        jsr xprintf
+
+        jsr CLRCHN
+        lda xprintf_count
+        ldx xprintf_count + 1
+        rts
+
+fprintf_error
+        sta cc64_symbol_errno
+fprintf_readst_error
+        jsr CLRCHN
+        lda #$ff
+        tax
+        rts
+
+cc64_type_printf = int_func
+cc64_symbol_printf
+        ; stash away param count
+        sty xprintf_param_count
+        lda #<CHROUT
+        sta xprintf_putc_ptr
+        lda #>CHROUT
+        sta xprintf_putc_ptr + 1
+
+        ldy #0
+        jsr xprintf
+
+        lda xprintf_count
+        ldx xprintf_count + 1
+        rts
+
+xprintf_done
+        rts
+
+xprintf
+        lda (cc64_frameptr),y
+        sta tmp_zp1
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp1 + 1
+        iny
+
+        ldx #0
+        stx xprintf_count
+        stx xprintf_count + 1
+xprintf_next
+        lda (tmp_zp1, x)
+        beq xprintf_done
+        cmp #'%'
+        beq xprintf_format_char
+xprintf_print_char
+        jsr xprintf_putc
+        inc xprintf_count
+        bne +
+        inc xprintf_count + 1
++       inc tmp_zp1
+        bne +
+        inc tmp_zp1 + 1
++       jmp xprintf_next
+
+xprintf_format_char
+        inc tmp_zp1
+        bne +
+        inc tmp_zp1 + 1
++
+        ldx #0
+        lda (tmp_zp1, x)
+        beq xprintf_done
+        cmp #'%'
+        beq xprintf_print_char
+
+        cmp #'d'
+        beq xprintf_print_d
+        cmp #'s'
+        beq xprintf_print_s
+        cmp #'c'
+        beq xprintf_print_c
+        lda #'?'
+        bne xprintf_print_char
+
+xprintf_print_d
+        jmp xprintf_print_char
+xprintf_print_s
+        jmp xprintf_print_char
+xprintf_print_c
+        lda (cc64_frameptr),y
+        iny
+        iny
+        jmp xprintf_print_char

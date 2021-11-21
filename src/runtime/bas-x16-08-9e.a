@@ -13,6 +13,8 @@
 !addr   primm       = $ff7d
 !addr   enter_basic = $ff47
 
+!ct pet ; use PETSCII for char constants - important e.g. for printf.a
+
 +cc64_runtime_start $0801
 
 cc64_lib_start
