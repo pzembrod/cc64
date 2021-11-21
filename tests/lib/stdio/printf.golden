@@ -2,4 +2,7 @@ hello, world!
 foo%bar
 c:@:
 foo-bar-baz
+cold start = $fce2
+tape buffer = $33c
+asc('(') = $28 asc(CR) = $d
 No assert failed.

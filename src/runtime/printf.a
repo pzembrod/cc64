@@ -105,6 +105,11 @@ xprintf_format_char
         lda #'?'
         bne xprintf_print_char
 
+xprintf_print_c
+        lda (cc64_frameptr),y
+        iny
+        iny
+        jmp xprintf_print_char
 xprintf_print_d
         jmp xprintf_print_char
 xprintf_print_s
@@ -124,9 +129,44 @@ xprintf_print_s
         jsr xprintf_putc
         jmp -
 xprintf_print_x
-        jmp xprintf_print_char
-xprintf_print_c
+        iny
         lda (cc64_frameptr),y
+        dey
+        cmp #$10
+        bcs xprintf_print_x_4digits
+        cmp #0
+        bne xprintf_print_x_3digits
+        lda (cc64_frameptr),y
+        cmp #$10
+        bcs xprintf_print_x_2digits
+        bcc xprintf_print_x_1digit
+
+xprintf_print_x_4digits
+        jsr xprintf_print_x_hi_nibble
+        iny
+        lda (cc64_frameptr),y
+        dey
+xprintf_print_x_3digits
+        jsr xprintf_print_x_lo_nibble
+        lda (cc64_frameptr),y
+xprintf_print_x_2digits
+        jsr xprintf_print_x_hi_nibble
+        lda (cc64_frameptr),y
+xprintf_print_x_1digit
+        jsr xprintf_print_x_lo_nibble
         iny
         iny
-        jmp xprintf_print_char
+        jmp xprintf_next
+
+xprintf_print_x_hi_nibble
+        lsr
+        lsr
+        lsr
+        lsr
+xprintf_print_x_lo_nibble
+        and #$0f
+        ora #$30
+        cmp #$3a
+        bcc +
+        adc #$06
++       jmp xprintf_putc
