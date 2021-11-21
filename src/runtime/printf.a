@@ -4,7 +4,10 @@
 +cc64_static_int ~xprintf_count, 0
 
 xprintf_putc
-        jmp (xprintf_putc_ptr)
+        inc xprintf_count
+        bne +
+        inc xprintf_count + 1
++       jmp (xprintf_putc_ptr)
 
 cc64_type_fprintf = int_func
 cc64_symbol_fprintf
@@ -72,26 +75,22 @@ xprintf
 xprintf_next
         lda (tmp_zp1, x)
         beq xprintf_done
-        cmp #'%'
+        inc tmp_zp1
+        bne +
+        inc tmp_zp1 + 1
++       cmp #'%'
         beq xprintf_format_char
 xprintf_print_char
         jsr xprintf_putc
-        inc xprintf_count
-        bne +
-        inc xprintf_count + 1
-+       inc tmp_zp1
-        bne +
-        inc tmp_zp1 + 1
-+       jmp xprintf_next
+        jmp xprintf_next
 
 xprintf_format_char
+        lda (tmp_zp1, x)
+        beq xprintf_done
         inc tmp_zp1
         bne +
         inc tmp_zp1 + 1
 +
-        ldx #0
-        lda (tmp_zp1, x)
-        beq xprintf_done
         cmp #'%'
         beq xprintf_print_char
 
@@ -99,6 +98,8 @@ xprintf_format_char
         beq xprintf_print_d
         cmp #'s'
         beq xprintf_print_s
+        cmp #'x'
+        beq xprintf_print_x
         cmp #'c'
         beq xprintf_print_c
         lda #'?'
@@ -107,6 +108,22 @@ xprintf_format_char
 xprintf_print_d
         jmp xprintf_print_char
 xprintf_print_s
+        lda (cc64_frameptr),y
+        sta tmp_zp2
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp2 + 1
+        iny
+-
+        lda (tmp_zp2, x)
+        beq xprintf_next
+        inc tmp_zp2
+        bne +
+        inc tmp_zp2 + 1
++
+        jsr xprintf_putc
+        jmp -
+xprintf_print_x
         jmp xprintf_print_char
 xprintf_print_c
         lda (cc64_frameptr),y
