@@ -5,4 +5,5 @@ foo-bar-baz
 cold start = $fce2
 tape buffer = $33c
 asc('(') = $28 asc(CR) = $d
+12345 = 12345 ; ten = 00010
 No assert failed.

@@ -110,8 +110,7 @@ xprintf_print_c
         iny
         iny
         jmp xprintf_print_char
-xprintf_print_d
-        jmp xprintf_print_char
+
 xprintf_print_s
         lda (cc64_frameptr),y
         sta tmp_zp2
@@ -128,6 +127,7 @@ xprintf_print_s
 +
         jsr xprintf_putc
         jmp -
+
 xprintf_print_x
         iny
         lda (cc64_frameptr),y
@@ -170,3 +170,60 @@ xprintf_print_x_lo_nibble
         bcc +
         adc #$06
 +       jmp xprintf_putc
+
+
++cc64_static_char ~xprintf_d_count, 0
++cc64_static_buf ~xprintf_d_out, 0, 5
+
+xprintf_print_d
+        lda (cc64_frameptr),y
+        sta tmp_zp2
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp2 + 1
+        iny
+
+        lda #$10
+        sta xprintf_d_count
+        lda #0
+        ldx #4
+-       sta xprintf_d_out, x
+        dex
+        bpl -
+
+xprintf_print_d_next
+        asl tmp_zp2
+        rol tmp_zp2 + 1
+
+        ldx #4
+xprintf_rol_next
+        lda xprintf_d_out, x
+        and #$0f
+        php       ; save carry
+        clc
+        cmp #$05
+        bcc +
+        adc #$02  ; really +3 since carry is set
++       plp       ; restore carry
+        rol
+        sta xprintf_d_out, x
+        asl
+        asl
+        asl
+        asl
+        dex
+        bpl xprintf_rol_next
+
+        dec xprintf_d_count
+        bne xprintf_print_d_next
+
+        ldx #0
+-       lda xprintf_d_out, x
+        and #$0f
+        ora #$30
+        jsr xprintf_putc
+        inx
+        cpx #$05
+        bcc -
+        ldx #0
+        jmp xprintf_next
