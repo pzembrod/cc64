@@ -168,7 +168,7 @@ xprintf_print_x_lo_nibble
         ora #$30
         cmp #$3a
         bcc +
-        adc #$06
+        adc #$06  ; really +7 since carry is set
 +       jmp xprintf_putc
 
 
@@ -218,6 +218,13 @@ xprintf_rol_next
         bne xprintf_print_d_next
 
         ldx #0
+-       lda xprintf_d_out, x
+        and #$0f
+        bne +
+        inx
+        cpx #$04
+        bcc -
++
 -       lda xprintf_d_out, x
         and #$0f
         ora #$30
