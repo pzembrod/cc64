@@ -142,10 +142,9 @@ xprintf_print_x
         bcc xprintf_print_x_1digit
 
 xprintf_print_x_4digits
+        pha
         jsr xprintf_print_x_hi_nibble
-        iny
-        lda (cc64_frameptr),y
-        dey
+        pla
 xprintf_print_x_3digits
         jsr xprintf_print_x_lo_nibble
         lda (cc64_frameptr),y
