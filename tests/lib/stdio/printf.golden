@@ -6,4 +6,5 @@ cold start = $fce2
 tape buffer = $33c
 asc('(') = $28 asc(CR) = $d
 12345 = 12345 ; ten = 10 ; two = 2 ; zero = 0
+0x8000 = 32768 = -32768
 No assert failed.

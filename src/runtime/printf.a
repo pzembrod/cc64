@@ -58,6 +58,16 @@ cc64_symbol_printf
         ldx xprintf_count + 1
         rts
 
+
+xprintf_next_param_to_zp2
+        lda (cc64_frameptr),y
+        sta tmp_zp2
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp2 + 1
+        iny
+        rts
+
 xprintf_done
         rts
 
@@ -94,14 +104,16 @@ xprintf_format_char
         cmp #'%'
         beq xprintf_print_char
 
-        cmp #'d'
-        beq xprintf_print_d
         cmp #'s'
         beq xprintf_print_s
         cmp #'x'
         beq xprintf_print_x
         cmp #'c'
         beq xprintf_print_c
+        cmp #'u'
+        beq xprintf_print_u
+        cmp #'d'
+        beq xprintf_print_d
         lda #'?'
         bne xprintf_print_char
 
@@ -112,12 +124,7 @@ xprintf_print_c
         jmp xprintf_print_char
 
 xprintf_print_s
-        lda (cc64_frameptr),y
-        sta tmp_zp2
-        iny
-        lda (cc64_frameptr),y
-        sta tmp_zp2 + 1
-        iny
+        jsr xprintf_next_param_to_zp2
 -
         lda (tmp_zp2, x)
         beq xprintf_next
@@ -175,13 +182,25 @@ xprintf_print_x_lo_nibble
 +cc64_static_buf ~xprintf_d_out, 0, 5
 
 xprintf_print_d
-        lda (cc64_frameptr),y
+        jsr xprintf_next_param_to_zp2
+        bit tmp_zp2 + 1
+        bpl xprintf_print_d_u
+        clc
+        lda tmp_zp2
+        eor #$ff
+        adc #$01
         sta tmp_zp2
-        iny
-        lda (cc64_frameptr),y
+        lda tmp_zp2 + 1
+        eor #$ff
+        adc #$00
         sta tmp_zp2 + 1
-        iny
+        lda #'-'
+        jsr xprintf_putc
+        jmp xprintf_print_d_u
 
+xprintf_print_u
+        jsr xprintf_next_param_to_zp2
+xprintf_print_d_u
         lda #$10
         sta xprintf_d_count
         lda #0
