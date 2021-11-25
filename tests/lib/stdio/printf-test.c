@@ -10,6 +10,10 @@ printf_test() {
   printf("asc('(') = $%x asc(CR) = $%x\n", '(', '\n');
   printf("12345 = %d ; ten = %d ; two = %d ; zero = %d\n",
       12345, 10, 2, 0);
+  printf("12345: '%9d' ten: '%3d' two: '%2d' zero: '%5d'\n",
+      12345, 10, 2, 0);
+  printf("-12345: '%9d' -10: '%4d' -2: '%3d' -1: '%5d'\n",
+      -12345, -10, -2, -1);
   printf("0x8000 = %u = %d\n", 0x8000, 0x8000);
   tst_clrchn();
 

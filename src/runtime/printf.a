@@ -2,6 +2,12 @@
 +cc64_static_char ~xprintf_param_count, 0
 +cc64_static_int ~xprintf_putc_ptr, 0
 +cc64_static_int ~xprintf_count, 0
++cc64_static_char ~xprintf_d_count, 0
++cc64_static_buf ~xprintf_d_out, 0, 5
++cc64_static_char ~xprintf_leading_char, 0
++cc64_static_char ~xprintf_leading_count, 0
+
+xprintf_param_sign = cc64_zp
 
 xprintf_putc
         inc xprintf_count
@@ -58,18 +64,18 @@ cc64_symbol_printf
         ldx xprintf_count + 1
         rts
 
-
-xprintf_next_param_to_zp2
-        lda (cc64_frameptr),y
-        sta tmp_zp2
-        iny
-        lda (cc64_frameptr),y
-        sta tmp_zp2 + 1
-        iny
-        rts
-
 xprintf_done
+        pla
+        pla
         rts
+
+xprintf_get_next_char
+        lda (tmp_zp1, x)
+        beq xprintf_done
+        inc tmp_zp1
+        bne +
+        inc tmp_zp1 + 1
++       rts
 
 xprintf
         lda (cc64_frameptr),y
@@ -82,28 +88,35 @@ xprintf
         ldx #0
         stx xprintf_count
         stx xprintf_count + 1
-xprintf_next
-        lda (tmp_zp1, x)
-        beq xprintf_done
-        inc tmp_zp1
-        bne +
-        inc tmp_zp1 + 1
-+       cmp #'%'
+xprintf_mainloop
+        jsr xprintf_get_next_char
+        cmp #'%'
         beq xprintf_format_char
 xprintf_print_char
         jsr xprintf_putc
-        jmp xprintf_next
+        jmp xprintf_mainloop
 
 xprintf_format_char
-        lda (tmp_zp1, x)
-        beq xprintf_done
-        inc tmp_zp1
-        bne +
-        inc tmp_zp1 + 1
-+
+        lda #6  ; default: 0 leading characters
+        sta xprintf_leading_count
+        jsr xprintf_get_next_char
+
         cmp #'%'
         beq xprintf_print_char
 
+        cmp #'9'+1
+        bcs xprintf_match_specifyer
+        cmp #'0'
+        bcc xprintf_print_wat
+        ; formula for the comparison value for leading chars:
+        ; -n+6 if n is the value in %nd, e.g. -3+6 for %3d
+        sbc #'0'  ; carry is already set
+        eor #$ff
+        adc #6    ; carry is still set
+        sta xprintf_leading_count
+        jsr xprintf_get_next_char
+
+xprintf_match_specifyer
         cmp #'s'
         beq xprintf_print_s
         cmp #'x'
@@ -114,6 +127,7 @@ xprintf_format_char
         beq xprintf_print_u
         cmp #'d'
         beq xprintf_print_d
+xprintf_print_wat
         lda #'?'
         bne xprintf_print_char
 
@@ -127,7 +141,7 @@ xprintf_print_s
         jsr xprintf_next_param_to_zp2
 -
         lda (tmp_zp2, x)
-        beq xprintf_next
+        beq xprintf_mainloop
         inc tmp_zp2
         bne +
         inc tmp_zp2 + 1
@@ -162,28 +176,13 @@ xprintf_print_x_1digit
         jsr xprintf_print_x_lo_nibble
         iny
         iny
-        jmp xprintf_next
+        jmp xprintf_mainloop
 
-xprintf_print_x_hi_nibble
-        lsr
-        lsr
-        lsr
-        lsr
-xprintf_print_x_lo_nibble
-        and #$0f
-        ora #$30
-        cmp #$3a
-        bcc +
-        adc #$06  ; really +7 since carry is set
-+       jmp xprintf_putc
-
-
-+cc64_static_char ~xprintf_d_count, 0
-+cc64_static_buf ~xprintf_d_out, 0, 5
 
 xprintf_print_d
         jsr xprintf_next_param_to_zp2
-        bit tmp_zp2 + 1
+        sta xprintf_param_sign
+        bit xprintf_param_sign
         bpl xprintf_print_d_u
         clc
         lda tmp_zp2
@@ -194,12 +193,12 @@ xprintf_print_d
         eor #$ff
         adc #$00
         sta tmp_zp2 + 1
-        lda #'-'
-        jsr xprintf_putc
+        inc xprintf_leading_count
         jmp xprintf_print_d_u
 
 xprintf_print_u
         jsr xprintf_next_param_to_zp2
+        stx xprintf_param_sign
 xprintf_print_d_u
         lda #$10
         sta xprintf_d_count
@@ -243,6 +242,19 @@ xprintf_rol_next
         cpx #$04
         bcc -
 +
+-       cpx xprintf_leading_count
+        bmi +
+        lda xprintf_leading_char
+        jsr xprintf_putc
+        inc xprintf_leading_count
+        jmp -
++
+
+        bit xprintf_param_sign
+        bpl +
+        lda #'-'
+        jsr xprintf_putc
++
 -       lda xprintf_d_out, x
         and #$0f
         ora #$30
@@ -251,4 +263,26 @@ xprintf_rol_next
         cpx #$05
         bcc -
         ldx #0
-        jmp xprintf_next
+        jmp xprintf_mainloop
+
+xprintf_next_param_to_zp2
+        lda (cc64_frameptr),y
+        sta tmp_zp2
+        iny
+        lda (cc64_frameptr),y
+        sta tmp_zp2 + 1
+        iny
+        rts
+
+xprintf_print_x_hi_nibble
+        lsr
+        lsr
+        lsr
+        lsr
+xprintf_print_x_lo_nibble
+        and #$0f
+        ora #$30
+        cmp #$3a
+        bcc +
+        adc #$06  ; really +7 since carry is set
++       jmp xprintf_putc
