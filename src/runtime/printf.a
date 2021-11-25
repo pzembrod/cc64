@@ -7,6 +7,8 @@
 +cc64_static_char ~xprintf_leading_char, 0
 +cc64_static_char ~xprintf_leading_count, 0
 
+xprintf_fmt_ptr = tmp_zp1
+xprintf_param_val = tmp_zp2
 xprintf_param_sign = cc64_zp
 
 xprintf_putc
@@ -70,19 +72,19 @@ xprintf_done
         rts
 
 xprintf_get_next_char
-        lda (tmp_zp1, x)
+        lda (xprintf_fmt_ptr, x)
         beq xprintf_done
-        inc tmp_zp1
+        inc xprintf_fmt_ptr
         bne +
-        inc tmp_zp1 + 1
+        inc xprintf_fmt_ptr + 1
 +       rts
 
 xprintf
         lda (cc64_frameptr),y
-        sta tmp_zp1
+        sta xprintf_fmt_ptr
         iny
         lda (cc64_frameptr),y
-        sta tmp_zp1 + 1
+        sta xprintf_fmt_ptr + 1
         iny
 
         ldx #0
@@ -138,13 +140,13 @@ xprintf_print_c
         jmp xprintf_print_char
 
 xprintf_print_s
-        jsr xprintf_next_param_to_zp2
+        jsr xprintf_get_next_param
 -
-        lda (tmp_zp2, x)
+        lda (xprintf_param_val, x)
         beq xprintf_mainloop
-        inc tmp_zp2
+        inc xprintf_param_val
         bne +
-        inc tmp_zp2 + 1
+        inc xprintf_param_val + 1
 +
         jsr xprintf_putc
         jmp -
@@ -180,24 +182,24 @@ xprintf_print_x_1digit
 
 
 xprintf_print_d
-        jsr xprintf_next_param_to_zp2
+        jsr xprintf_get_next_param
         sta xprintf_param_sign
         bit xprintf_param_sign
         bpl xprintf_print_d_u
         clc
-        lda tmp_zp2
+        lda xprintf_param_val
         eor #$ff
         adc #$01
-        sta tmp_zp2
-        lda tmp_zp2 + 1
+        sta xprintf_param_val
+        lda xprintf_param_val + 1
         eor #$ff
         adc #$00
-        sta tmp_zp2 + 1
+        sta xprintf_param_val + 1
         inc xprintf_leading_count
         jmp xprintf_print_d_u
 
 xprintf_print_u
-        jsr xprintf_next_param_to_zp2
+        jsr xprintf_get_next_param
         stx xprintf_param_sign
 xprintf_print_d_u
         lda #$10
@@ -209,8 +211,8 @@ xprintf_print_d_u
         bpl -
 
 xprintf_print_d_next
-        asl tmp_zp2
-        rol tmp_zp2 + 1
+        asl xprintf_param_val
+        rol xprintf_param_val + 1
 
         ldx #4
 xprintf_rol_next
@@ -265,12 +267,12 @@ xprintf_rol_next
         ldx #0
         jmp xprintf_mainloop
 
-xprintf_next_param_to_zp2
+xprintf_get_next_param
         lda (cc64_frameptr),y
-        sta tmp_zp2
+        sta xprintf_param_val
         iny
         lda (cc64_frameptr),y
-        sta tmp_zp2 + 1
+        sta xprintf_param_val + 1
         iny
         rts
 
