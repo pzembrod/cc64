@@ -26,12 +26,12 @@ cc64_symbol_fprintf
         lda #>CHROUT
         sta xprintf_putc_ptr + 1
         ldy #0
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         tax
         jsr CHKOUT
         bcs fprintf_error
         jsr READST
-        sta readst_by_file_no-file_no_offset,x
+        sta readst_by_file_no-file_no_offset, x
         bne fprintf_readst_error
 
         ldy #2
@@ -80,10 +80,10 @@ xprintf_get_next_char
 +       rts
 
 xprintf
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         sta xprintf_fmt_ptr
         iny
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         sta xprintf_fmt_ptr + 1
         iny
 
@@ -101,14 +101,26 @@ xprintf_print_char
 xprintf_format_char
         lda #6  ; default: 0 leading characters
         sta xprintf_leading_count
+        lda #' '
+        sta xprintf_leading_char
+        lda #$80
+        sta xprintf_param_sign
         jsr xprintf_get_next_char
 
         cmp #'%'
         beq xprintf_print_char
 
+
+        cmp #'0'
+        bne xprintf_check_width
+        sta xprintf_leading_char
+        lsr xprintf_param_sign
+        jsr xprintf_get_next_char
+
+xprintf_check_width
         cmp #'9'+1
         bcs xprintf_match_specifyer
-        cmp #'0'
+        cmp #'1'
         bcc xprintf_print_wat
         ; formula for the comparison value for leading chars:
         ; -n+6 if n is the value in %nd, e.g. -3+6 for %3d
@@ -134,7 +146,7 @@ xprintf_print_wat
         bne xprintf_print_char
 
 xprintf_print_c
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         iny
         iny
         jmp xprintf_print_char
@@ -153,13 +165,13 @@ xprintf_print_s
 
 xprintf_print_x
         iny
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         dey
         cmp #$10
         bcs xprintf_print_x_4digits
         cmp #0
         bne xprintf_print_x_3digits
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         cmp #$10
         bcs xprintf_print_x_2digits
         bcc xprintf_print_x_1digit
@@ -170,10 +182,10 @@ xprintf_print_x_4digits
         pla
 xprintf_print_x_3digits
         jsr xprintf_print_x_lo_nibble
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
 xprintf_print_x_2digits
         jsr xprintf_print_x_hi_nibble
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
 xprintf_print_x_1digit
         jsr xprintf_print_x_lo_nibble
         iny
@@ -183,9 +195,8 @@ xprintf_print_x_1digit
 
 xprintf_print_d
         jsr xprintf_get_next_param
-        sta xprintf_param_sign
-        bit xprintf_param_sign
-        bpl xprintf_print_d_u
+        bit xprintf_param_val + 1
+        bpl xprintf_print_d_positive
         clc
         lda xprintf_param_val
         eor #$ff
@@ -200,6 +211,7 @@ xprintf_print_d
 
 xprintf_print_u
         jsr xprintf_get_next_param
+xprintf_print_d_positive
         stx xprintf_param_sign
 xprintf_print_d_u
         lda #$10
@@ -244,6 +256,12 @@ xprintf_rol_next
         cpx #$04
         bcc -
 +
+
+        bit xprintf_param_sign
+        bvc +
+        lda #'-'
+        jsr xprintf_putc
++
 -       cpx xprintf_leading_count
         bmi +
         lda xprintf_leading_char
@@ -251,12 +269,12 @@ xprintf_rol_next
         inc xprintf_leading_count
         jmp -
 +
-
         bit xprintf_param_sign
         bpl +
         lda #'-'
         jsr xprintf_putc
 +
+
 -       lda xprintf_d_out, x
         and #$0f
         ora #$30
@@ -268,10 +286,10 @@ xprintf_rol_next
         jmp xprintf_mainloop
 
 xprintf_get_next_param
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         sta xprintf_param_val
         iny
-        lda (cc64_frameptr),y
+        lda (cc64_frameptr), y
         sta xprintf_param_val + 1
         iny
         rts
