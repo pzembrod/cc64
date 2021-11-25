@@ -7,9 +7,9 @@
 +cc64_static_char ~xprintf_leading_char, 0
 +cc64_static_char ~xprintf_leading_count, 0
 
-xprintf_fmt_ptr = tmp_zp1
-xprintf_param_val = tmp_zp2
-xprintf_param_sign = cc64_zp
+xprintf_fmt_ptr = cc64_zp
+xprintf_param_val = tmp_zp1
+xprintf_param_sign = tmp_zp2
 
 xprintf_putc
         inc xprintf_count
