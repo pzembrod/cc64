@@ -99,7 +99,7 @@ xprintf_print_char
         jmp xprintf_mainloop
 
 xprintf_format_char
-        lda #6  ; default: 0 leading characters
+        lda #6  ; 6 means 0 leading characters
         sta xprintf_leading_count
         lda #' '
         sta xprintf_leading_char
@@ -109,7 +109,6 @@ xprintf_format_char
 
         cmp #'%'
         beq xprintf_print_char
-
 
         cmp #'0'
         bne xprintf_check_width
@@ -122,13 +121,43 @@ xprintf_check_width
         bcs xprintf_match_specifyer
         cmp #'1'
         bcc xprintf_print_wat
+        sbc #'0'  ; carry is already set
+        pha
+        jsr xprintf_get_next_char
+        tax
+        pla
+        cpx #'9'+1
+        bcs xprintf_single_width
+        cpx #'0'
+        bcc xprintf_print_wat
+        stx xprintf_leading_count
+        asl ; this will clear carry
+        tax
+        adc xprintf_leading_count
+        sta xprintf_leading_count
+        txa
+        asl
+        asl ; this will clear carry
+        adc xprintf_leading_count
+        ; the previous adc can't produce a carry set because it max
+        ; adds '9' = 47 and 90. So rather than set carry before the
+        ; following sbc, we leave the carry clear and subtract 1 less.
+        ; sec
+        sbc #'0'-1  ; this will also leave the carry set
+        pha
+        ldx #0
+        jsr xprintf_get_next_char
+        tax
+        pla
+
+xprintf_single_width
         ; formula for the comparison value for leading chars:
         ; -n+6 if n is the value in %nd, e.g. -3+6 for %3d
-        sbc #'0'  ; carry is already set
         eor #$ff
         adc #6    ; carry is still set
         sta xprintf_leading_count
-        jsr xprintf_get_next_char
+        txa
+        ldx #0
 
 xprintf_match_specifyer
         cmp #'s'
@@ -155,7 +184,7 @@ xprintf_print_s
         jsr xprintf_get_next_param
 -
         lda (xprintf_param_val, x)
-        beq xprintf_mainloop
+        beq xprintf_jmp_mainloop
         inc xprintf_param_val
         bne +
         inc xprintf_param_val + 1
@@ -190,8 +219,8 @@ xprintf_print_x_1digit
         jsr xprintf_print_x_lo_nibble
         iny
         iny
+xprintf_jmp_mainloop
         jmp xprintf_mainloop
-
 
 xprintf_print_d
         jsr xprintf_get_next_param
