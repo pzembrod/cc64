@@ -4,8 +4,8 @@
 +cc64_static_int ~xprintf_count, 0
 +cc64_static_char ~xprintf_d_count, 0
 +cc64_static_buf ~xprintf_d_out, 0, 5
-+cc64_static_char ~xprintf_leading_char, 0
-+cc64_static_char ~xprintf_leading_count, 0
++cc64_static_char ~xprintf_padding_char, 0
++cc64_static_char ~xprintf_padding_counter, 0
 
 xprintf_fmt_ptr = cc64_zp
 xprintf_param_val = tmp_zp1
@@ -66,18 +66,18 @@ cc64_symbol_printf
         ldx xprintf_count + 1
         rts
 
-xprintf_done
-        pla
-        pla
-        rts
-
-xprintf_get_next_char
+xprintf_get_next_char_or_done
+        ; this routine depends on x being 0
         lda (xprintf_fmt_ptr, x)
         beq xprintf_done
         inc xprintf_fmt_ptr
         bne +
         inc xprintf_fmt_ptr + 1
 +       rts
+xprintf_done
+        pla
+        pla
+        rts
 
 xprintf
         lda (cc64_frameptr), y
@@ -88,10 +88,12 @@ xprintf
         iny
 
         ldx #0
+        ; a fair part of the code in xprintf depends on x = 0, so
+        ; wherever x is used otherwise, it afterwards is set back to 0.
         stx xprintf_count
         stx xprintf_count + 1
 xprintf_mainloop
-        jsr xprintf_get_next_char
+        jsr xprintf_get_next_char_or_done
         cmp #'%'
         beq xprintf_format_char
 xprintf_print_char
@@ -99,22 +101,38 @@ xprintf_print_char
         jmp xprintf_mainloop
 
 xprintf_format_char
-        lda #6  ; 6 means 0 leading characters
-        sta xprintf_leading_count
+        ; set some defaults for %d and %u:
+        ; set xprintf_padding_counter start to 6 for no minimal field
+        ; width: padding char output loop runs from
+        ; xprintf_padding_counter to (5 - #digits) inclusive(!)
+        ; therefore: xprintf_padding_counter start 5 means min field
+        ; width = 1, start 4 means min field width = 2 etc.
+        ; see xprintf_print_padding: for details.
+        lda #6
+        sta xprintf_padding_counter
+        ; default padding char is space
         lda #' '
-        sta xprintf_leading_char
+        sta xprintf_padding_char
+        ; default assumption: emit sign after the padding.
+        ; this is adjusted if padding char is 0 or number is positive.
+        ; xprintf_param_sign bit 7 set: sign after padding
+        ; xprintf_param_sign bit 6 set: sign before padding
+        ; xprintf_param_sign bit 6 and 7 clear: no sign
         lda #$80
         sta xprintf_param_sign
-        jsr xprintf_get_next_char
+        jsr xprintf_get_next_char_or_done
 
         cmp #'%'
         beq xprintf_print_char
 
         cmp #'0'
         bne xprintf_check_width
-        sta xprintf_leading_char
+        ; set '0' as padding char
+        sta xprintf_padding_char
+        ; shift default set sign bit 7 to bit 6, signalling sign to
+        ; be printed after padding.
         lsr xprintf_param_sign
-        jsr xprintf_get_next_char
+        jsr xprintf_get_next_char_or_done
 
 xprintf_check_width
         cmp #'9'+1
@@ -123,22 +141,22 @@ xprintf_check_width
         bcc xprintf_print_wat
         sbc #'0'  ; carry is already set
         pha
-        jsr xprintf_get_next_char
+        jsr xprintf_get_next_char_or_done
         tax
         pla
         cpx #'9'+1
         bcs xprintf_single_width
         cpx #'0'
         bcc xprintf_print_wat
-        stx xprintf_leading_count
+        stx xprintf_padding_counter
         asl ; this will clear carry
         tax
-        adc xprintf_leading_count
-        sta xprintf_leading_count
+        adc xprintf_padding_counter
+        sta xprintf_padding_counter
         txa
         asl
         asl ; this will clear carry
-        adc xprintf_leading_count
+        adc xprintf_padding_counter
         ; the previous adc can't produce a carry set because it max
         ; adds '9' = 47 and 90. So rather than set carry before the
         ; following sbc, we leave the carry clear and subtract 1 less.
@@ -146,16 +164,20 @@ xprintf_check_width
         sbc #'0'-1  ; this will also leave the carry set
         pha
         ldx #0
-        jsr xprintf_get_next_char
+        jsr xprintf_get_next_char_or_done
         tax
         pla
 
 xprintf_single_width
         ; formula for the comparison value for leading chars:
-        ; -n+6 if n is the value in %nd, e.g. -3+6 for %3d
+        ; -n+6 if n is the value in %nd, e.g. -3+6 for %3d:
+        ; the loop conditions in xprintf_print_padding specifies
+        ; xprintf_padding_counter=6 meaning zero field width, and
+        ; lower values of xprintf_padding_counter, even into the
+        ; negative, means increased field width.
         eor #$ff
         adc #6    ; carry is still set
-        sta xprintf_leading_count
+        sta xprintf_padding_counter
         txa
         ldx #0
 
@@ -235,18 +257,25 @@ xprintf_print_d
         eor #$ff
         adc #$00
         sta xprintf_param_val + 1
-        inc xprintf_leading_count
+        inc xprintf_padding_counter
         jmp xprintf_print_d_u
 
 xprintf_print_u
         jsr xprintf_get_next_param
 xprintf_print_d_positive
+        ; set xprintf_param_sign to 0, i.e. print no sign. note: x = 0
         stx xprintf_param_sign
 xprintf_print_d_u
-        lda #$10
+; the binary-to-decimal conversion used for %d and %u is a
+; double dabble algorithm aka shift-and-add-3, modified to
+; convert a 16 bit int into 5 decimal digits in the lower nibbles
+; instead of producing bcd.
+; the output buffer contains the highest digit (10000s) in xprintf_d_out
+; and the lowest digit (1s) in xprintf_d_out + 4. 
+        lda #$10  ; 16 iterations of the outer loop fir 16 bit int
         sta xprintf_d_count
         lda #0
-        ldx #4
+        ldx #4    ; 5 iterations inner loop over the output buffer
 -       sta xprintf_d_out, x
         dex
         bpl -
@@ -277,41 +306,52 @@ xprintf_rol_next
         dec xprintf_d_count
         bne xprintf_print_d_next
 
+; count leading zeroes
         ldx #0
 -       lda xprintf_d_out, x
         and #$0f
-        bne +
+        bne xprintf_pre_padding_sign
         inx
         cpx #$04
         bcc -
-+
+; either: xprintf_d_out,x contains the highest non-zero digit
+; or: x=4 and xprintf_d_out,x contains the single digit which may be 0.
+; x=0 means 5 digits to print. x=4 means 1 digit to print.
+; extrapolated: x=5 means 0 digit to print.
 
+xprintf_pre_padding_sign
         bit xprintf_param_sign
-        bvc +
+        bvc xprintf_print_padding
         lda #'-'
         jsr xprintf_putc
-+
--       cpx xprintf_leading_count
-        bmi +
-        lda xprintf_leading_char
+
+xprintf_print_padding
+; the print padding loop works by increasing xprintf_padding_counter
+; until it reaches and overtakes x. Therefore a starting value of
+; xprintf_padding_counter=6 means no padding, i.e. zero field width:
+; with x=5 and xprintf_padding_counter=6 the cpx results in n flag set.
+-       cpx xprintf_padding_counter
+        bmi xprintf_post_padding_sign
+        lda xprintf_padding_char
         jsr xprintf_putc
-        inc xprintf_leading_count
+        inc xprintf_padding_counter
         jmp -
-+
+
+xprintf_post_padding_sign
         bit xprintf_param_sign
-        bpl +
+        bpl xprintf_print_d_digits
         lda #'-'
         jsr xprintf_putc
-+
 
+xprintf_print_d_digits
 -       lda xprintf_d_out, x
-        and #$0f
-        ora #$30
+        and #$0f  ; isolate lower nibble (contains $0-$9)
+        ora #$30  ; convert to ascii/petscii digit
         jsr xprintf_putc
         inx
         cpx #$05
         bcc -
-        ldx #0
+        ldx #0    ; main loop needs x = 0
         jmp xprintf_mainloop
 
 xprintf_get_next_param
