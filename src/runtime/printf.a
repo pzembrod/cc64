@@ -206,8 +206,9 @@ xprintf_print_s
         jsr xprintf_get_next_param
 -
         lda (xprintf_param_val, x)
-        beq xprintf_jmp_mainloop
-        inc xprintf_param_val
+        bne +
+        jmp xprintf_mainloop
++       inc xprintf_param_val
         bne +
         inc xprintf_param_val + 1
 +
@@ -215,34 +216,29 @@ xprintf_print_s
         jmp -
 
 xprintf_print_x
+        stx xprintf_d_out
+        stx xprintf_param_sign
+        lda (cc64_frameptr), y
+        tax
+        lsr
+        lsr
+        lsr
+        lsr
+        sta xprintf_d_out + 3
+        txa
+        sta xprintf_d_out + 4
         iny
         lda (cc64_frameptr), y
-        dey
-        cmp #$10
-        bcs xprintf_print_x_4digits
-        cmp #0
-        bne xprintf_print_x_3digits
-        lda (cc64_frameptr), y
-        cmp #$10
-        bcs xprintf_print_x_2digits
-        bcc xprintf_print_x_1digit
-
-xprintf_print_x_4digits
-        pha
-        jsr xprintf_print_x_hi_nibble
-        pla
-xprintf_print_x_3digits
-        jsr xprintf_print_x_lo_nibble
-        lda (cc64_frameptr), y
-xprintf_print_x_2digits
-        jsr xprintf_print_x_hi_nibble
-        lda (cc64_frameptr), y
-xprintf_print_x_1digit
-        jsr xprintf_print_x_lo_nibble
+        tax
+        lsr
+        lsr
+        lsr
+        lsr
+        sta xprintf_d_out + 1
+        txa
+        sta xprintf_d_out + 2
         iny
-        iny
-xprintf_jmp_mainloop
-        jmp xprintf_mainloop
+        jmp xprintf_print_d_u_x
 
 xprintf_print_d
         jsr xprintf_get_next_param
@@ -280,7 +276,7 @@ xprintf_print_d_u
         dex
         bpl -
 
-xprintf_print_d_next
+xprintf_print_d_u_next
         asl xprintf_param_val
         rol xprintf_param_val + 1
 
@@ -304,8 +300,9 @@ xprintf_rol_next
         bpl xprintf_rol_next
 
         dec xprintf_d_count
-        bne xprintf_print_d_next
+        bne xprintf_print_d_u_next
 
+xprintf_print_d_u_x
 ; count leading zeroes
         ldx #0
 -       lda xprintf_d_out, x
@@ -339,15 +336,19 @@ xprintf_print_padding
 
 xprintf_post_padding_sign
         bit xprintf_param_sign
-        bpl xprintf_print_d_digits
+        bpl xprintf_print_d_u_x_digits
         lda #'-'
         jsr xprintf_putc
 
-xprintf_print_d_digits
+xprintf_print_d_u_x_digits
 -       lda xprintf_d_out, x
         and #$0f  ; isolate lower nibble (contains $0-$9)
-        ora #$30  ; convert to ascii/petscii digit
-        jsr xprintf_putc
+        and #$0f
+        ora #$30
+        cmp #$3a
+        bcc +
+        adc #$06  ; really +7 since carry is set
++       jsr xprintf_putc
         inx
         cpx #$05
         bcc -
@@ -362,16 +363,3 @@ xprintf_get_next_param
         sta xprintf_param_val + 1
         iny
         rts
-
-xprintf_print_x_hi_nibble
-        lsr
-        lsr
-        lsr
-        lsr
-xprintf_print_x_lo_nibble
-        and #$0f
-        ora #$30
-        cmp #$3a
-        bcc +
-        adc #$06  ; really +7 since carry is set
-+       jmp xprintf_putc
