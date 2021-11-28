@@ -8,6 +8,7 @@ asc('(') = $28 asc(CR) = $d
 4 digit cold start = $fce2
 4 digit tape buffer = $033c
 2 digit asc('(') = $28 asc(CR) = $0d
+Upper case 2-4 digit: $FCE2 $033C $0FF $FFFF $0D
 12345 = 12345 ; ten = 10 ; two = 2 ; zero = 0
 12345: '    12345' ten: ' 10' two: ' 2' zero: '    0'
 23456: '     23456' ten: '         10' two: '                  2'

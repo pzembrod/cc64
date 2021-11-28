@@ -11,6 +11,8 @@ printf_test() {
   printf("4 digit %s = $%x\n", "cold start", 64738);
   printf("4 digit %s %s = $%04x\n", "tape", "buffer", 828);
   printf("2 digit asc('(') = $%02x asc(CR) = $%02x\n", '(', '\n');
+  printf("Upper case 2-4 digit: $%X $%04X $%03X $%X $%02X\n",
+      64738, 828, 255, 65535, 13);
   printf("12345 = %d ; ten = %d ; two = %d ; zero = %d\n",
       12345, 10, 2, 0);
   printf("12345: '%9d' ten: '%3d' two: '%2d' zero: '%5d'\n",

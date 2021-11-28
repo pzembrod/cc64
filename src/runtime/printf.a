@@ -4,6 +4,7 @@
 +cc64_static_int ~xprintf_count, 0
 +cc64_static_char ~xprintf_d_count, 0
 +cc64_static_buf ~xprintf_d_out, 0, 5
++cc64_static_char ~xprintf_x_toupper, 0
 +cc64_static_char ~xprintf_padding_char, 0
 +cc64_static_char ~xprintf_padding_counter, 0
 
@@ -120,6 +121,8 @@ xprintf_format_char
         ; xprintf_param_sign bit 6 and 7 clear: no sign
         lda #$80
         sta xprintf_param_sign
+        ; default hex output is lowercase
+        stx xprintf_x_toupper
         jsr xprintf_get_next_char_or_done
 
         cmp #'%'
@@ -182,24 +185,27 @@ xprintf_single_width
         ldx #0
 
 xprintf_match_specifyer
-        cmp #'s'
-        beq xprintf_print_s
-        cmp #'x'
-        beq xprintf_print_x
-        cmp #'c'
-        beq xprintf_print_c
-        cmp #'u'
-        beq xprintf_print_u
         cmp #'d'
         beq xprintf_print_d
+        cmp #'u'
+        beq xprintf_print_u
+        cmp #'x'
+        beq xprintf_print_x
+        cmp #'X'
+        beq xprintf_print_x_uppercase
+        cmp #'c'
+        beq xprintf_print_c
+        cmp #'s'
+        beq xprintf_print_s
 xprintf_print_wat
         lda #'?'
-        bne xprintf_print_char
+        bne xprintf_jmp_print_char
 
 xprintf_print_c
         lda (cc64_frameptr), y
         iny
         iny
+xprintf_jmp_print_char
         jmp xprintf_print_char
 
 xprintf_print_s
@@ -215,6 +221,9 @@ xprintf_print_s
         jsr xprintf_putc
         jmp -
 
+xprintf_print_x_uppercase
+        lda #$80
+        sta xprintf_x_toupper
 xprintf_print_x
         stx xprintf_d_out
         stx xprintf_param_sign
@@ -348,6 +357,7 @@ xprintf_print_d_u_x_digits
         cmp #$3a
         bcc +
         adc #$06  ; really +7 since carry is set
+        ora xprintf_x_toupper
 +       jsr xprintf_putc
         inx
         cpx #$05
