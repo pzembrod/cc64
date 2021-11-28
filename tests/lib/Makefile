@@ -146,7 +146,8 @@ stringcrosstests: \
 ctype-suite-%.result: ctype/*  *.sh *.shlib *.h
 	./compile-run-suite.sh ctype $*
 
-stdio-suite-%.result: stdio/* *.sh *.shlib *.h
+stdio-suite-%.result: stdio/* *.sh *.shlib *.h \
+  stdio/printf.golden stdio/printf-test.c
 	./compile-run-suite.sh stdio $*
 
 stdlib-suite-%.result: stdlib/* stdlib/rand-expect.c *.sh *.shlib *.h
@@ -172,11 +173,19 @@ stdlib/rand-expect.c: rand-oracle rand-oracle.sh
 
 rand-oracle: rand-oracle.c
 
+stdio/printf-test.c: stdio/printf-test-src.c stdio/xprintf-test-inc.c
+	PRINTF="p(printf(" awk -f xprintf-test.awk $< > $@
+
+stdio/printf.golden: stdio/xprintf-golden.src
+	awk -f xprintf-golden.awk $< > $@
+
+
 clean:
 	rm -f c64files/* c16files/* x16files/*
 	rm -f *-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
 	rm -f *.out *.out? *.T64 *.result *-generated.c
+	rm stdio/printf.golden stdio/printf-test.c
 
 c64files/%: $(basedir)/c64files/%
 	test -d c64files || mkdir c64files
