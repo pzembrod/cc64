@@ -147,7 +147,8 @@ ctype-suite-%.result: ctype/*  *.sh *.shlib *.h
 	./compile-run-suite.sh ctype $*
 
 stdio-suite-%.result: stdio/* *.sh *.shlib *.h \
-  stdio/printf.golden stdio/printf-test.c
+  stdio/printf-test.c stdio/printf.golden \
+  stdio/fprintf-test.c stdio/fprintf.out1.golden
 	./compile-run-suite.sh stdio $*
 
 stdlib-suite-%.result: stdlib/* stdlib/rand-expect.c *.sh *.shlib *.h
@@ -176,7 +177,13 @@ rand-oracle: rand-oracle.c
 stdio/printf-test.c: stdio/printf-test-src.c stdio/xprintf-test-inc.c
 	PRINTF="p(printf(" awk -f xprintf-test.awk $< > $@
 
+stdio/fprintf-test.c: stdio/fprintf-test-src.c stdio/xprintf-test-inc.c
+	PRINTF="fp(fprintf(fh, " awk -f xprintf-test.awk $< > $@
+
 stdio/printf.golden: stdio/xprintf-golden.src
+	awk -f xprintf-golden.awk $< > $@
+
+stdio/fprintf.out1.golden: stdio/xprintf-golden.src
 	awk -f xprintf-golden.awk $< > $@
 
 
@@ -185,7 +192,8 @@ clean:
 	rm -f *-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
 	rm -f *.out *.out? *.T64 *.result *-generated.c
-	rm stdio/printf.golden stdio/printf-test.c
+	rm -f stdio/printf-test.c stdio/printf.golden
+	rm -f stdio/fprintf-test.c stdio/fprintf.out1.golden
 
 c64files/%: $(basedir)/c64files/%
 	test -d c64files || mkdir c64files
