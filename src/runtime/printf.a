@@ -7,16 +7,53 @@
 +cc64_static_char ~xprintf_x_toupper, 0
 +cc64_static_char ~xprintf_padding_char, 0
 +cc64_static_char ~xprintf_padding_counter, 0
++cc64_static_char ~xprintf_param_sign, 0
++cc64_static_char ~xprintf_save_x, 0
 
 xprintf_fmt_ptr = cc64_zp
 xprintf_param_val = tmp_zp1
-xprintf_param_sign = tmp_zp2
+xprintf_sprintf_ptr = tmp_zp2
 
 xprintf_putc
         inc xprintf_count
         bne +
         inc xprintf_count + 1
 +       jmp (xprintf_putc_ptr)
+
+s_chrout
+        stx xprintf_save_x
+        ldx #0
+        sta (xprintf_sprintf_ptr, x)
+        inc xprintf_sprintf_ptr
+        bne +
+        inc xprintf_sprintf_ptr + 1
++       ldx xprintf_save_x
+        rts
+
+cc64_type_sprintf = int_func
+cc64_symbol_sprintf
+        ; stash away param count
+        sty xprintf_param_count
+        lda #<s_chrout
+        sta xprintf_putc_ptr
+        lda #>s_chrout
+        sta xprintf_putc_ptr + 1
+        ldy #0
+        lda (cc64_frameptr), y
+        sta xprintf_sprintf_ptr
+        iny
+        lda (cc64_frameptr), y
+        sta xprintf_sprintf_ptr + 1
+        iny
+
+        jsr xprintf
+
+        lda #0
+        ldy #0
+        sta (xprintf_sprintf_ptr) ,y
+        lda xprintf_count
+        ldx xprintf_count + 1
+        rts
 
 cc64_type_fprintf = int_func
 cc64_symbol_fprintf

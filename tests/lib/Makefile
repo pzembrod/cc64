@@ -148,7 +148,8 @@ ctype-suite-%.result: ctype/*  *.sh *.shlib *.h
 
 stdio-suite-%.result: stdio/* *.sh *.shlib *.h \
   stdio/printf-test.c stdio/printf.golden \
-  stdio/fprintf-test.c stdio/fprintf.out1.golden
+  stdio/fprintf-test.c stdio/fprintf.out1.golden \
+  stdio/sprintf-test.c stdio/sprintf.golden
 	./compile-run-suite.sh stdio $*
 
 stdlib-suite-%.result: stdlib/* stdlib/rand-expect.c *.sh *.shlib *.h
@@ -180,10 +181,16 @@ stdio/printf-test.c: stdio/printf-test-src.c stdio/xprintf-test-inc.c
 stdio/fprintf-test.c: stdio/fprintf-test-src.c stdio/xprintf-test-inc.c
 	PRINTF="fp(fprintf(fh, " awk -f xprintf-test.awk $< > $@
 
+stdio/sprintf-test.c: stdio/sprintf-test-src.c stdio/xprintf-test-inc.c
+	PRINTF="sp(sprintf(s, " awk -f xprintf-test.awk $< > $@
+
 stdio/printf.golden: stdio/xprintf-golden.src
 	awk -f xprintf-golden.awk $< > $@
 
 stdio/fprintf.out1.golden: stdio/xprintf-golden.src
+	awk -f xprintf-golden.awk $< > $@
+
+stdio/sprintf.golden: stdio/xprintf-golden.src
 	awk -f xprintf-golden.awk $< > $@
 
 

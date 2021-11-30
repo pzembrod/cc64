@@ -1,0 +1,45 @@
+hello, world!
+14
+foo%bar
+8
+c:@:
+5
+foo-bar-baz
+12
+cold start = $fce2
+19
+tape buffer = $33c
+19
+asc('(') = $28 asc(CR) = $d
+28
+4 digit cold start = $fce2
+27
+4 digit tape buffer = $033c
+28
+2 digit asc('(') = $28 asc(CR) = $0d
+37
+Upper case 2-4 digit: $FCE2 $033C $0FF $FFFF $0D
+49
+12345 = 12345 ; ten = 10 ; two = 2 ; zero = 0
+46
+12345: '    12345' ten: ' 10' two: ' 2' zero: '    0'
+54
+23456: '     23456' ten: '         10' two: '                  2'
+66
+-12345: '   -12345' -10: ' -10' -2: ' -2' -1: '   -1'
+54
+12345: '000012345' ten: '010' two: '02' zero: '00000'
+54
+-00012345: '-00012345' -010: '-010' -02: '-02' -0001: '-0001'
+62
+0x8000 = (%u) 32768 = (%d) -32768
+34
+0x7fff = (%u) 32767 = (%d) 32767
+33
+0xffff = (%u) 65535 = (%d) -1
+30
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
+45
+1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12
+39
+No assert failed.
