@@ -7,18 +7,21 @@ suite_c16_suffixes = $(patsubst %, suite-c16_%, $(suite_suffixes))
 suite_x16_suffixes = $(patsubst %, suite-x16_%, $(suite_suffixes))
 suite_results_c64_hosted = \
     $(patsubst %, ctype-%, $(suite_c64_suffixes)) \
+    $(patsubst %, printf-%, $(suite_c64_suffixes)) \
     $(patsubst %, stdio-%, $(suite_c64_suffixes)) \
     $(patsubst %, stdlib-%, $(suite_c64_suffixes)) \
     $(patsubst %, string-%, $(suite_c64_suffixes)) \
     $(patsubst %, strmem-%, $(suite_c64_suffixes))
 suite_results_c16_hosted = \
     $(patsubst %, ctype-%, $(suite_c16_suffixes)) \
+    $(patsubst %, printf-%, $(suite_c16_suffixes)) \
     $(patsubst %, stdio-%, $(suite_c16_suffixes)) \
     $(patsubst %, stdlib-%, $(suite_c16_suffixes)) \
     $(patsubst %, string-%, $(suite_c16_suffixes)) \
     $(patsubst %, strmem-%, $(suite_c16_suffixes))
 suite_results_x16_hosted = \
     $(patsubst %, ctype-%, $(suite_x16_suffixes)) \
+    $(patsubst %, printf-%, $(suite_x16_suffixes)) \
     $(patsubst %, stdio-%, $(suite_x16_suffixes)) \
     $(patsubst %, stdlib-%, $(suite_x16_suffixes)) \
     $(patsubst %, string-%, $(suite_x16_suffixes)) \
@@ -43,6 +46,7 @@ tests: tests64
 
 alltests: \
   ctypetests \
+  printftests \
   stdiotests \
   stdlibtests \
   strmemtests \
@@ -50,6 +54,7 @@ alltests: \
 
 allcrosstests: \
   ctypecrosstests \
+  printfcrosstests \
   stdiocrosstests \
   stdlibcrosstests \
   strmemcrosstests \
@@ -57,6 +62,7 @@ allcrosstests: \
 
 tests64: \
   ctype-suite-c64_c64.result \
+  printf-suite-c64_c64.result \
   stdio-suite-c64_c64.result \
   stdlib-suite-c64_c64.result \
   strmem-suite-c64_c64.result \
@@ -66,6 +72,11 @@ ctypetests: \
   ctype-suite-c64_c64.result \
   ctype-suite-c16_c16.result \
   ctype-suite-x16_x16.result
+
+printftests: \
+  printf-suite-c64_c64.result \
+  printf-suite-c16_c16.result \
+  printf-suite-x16_x16.result
 
 stdiotests: \
   stdio-suite-c64_c64.result \
@@ -97,6 +108,17 @@ ctypecrosstests: \
   ctype-suite-x16_c64.result \
   ctype-suite-x16_c16.result \
   ctype-suite-x16_x16.result
+
+printfcrosstests: \
+  printf-suite-c64_c64.result \
+  printf-suite-c64_c16.result \
+  printf-suite-c64_x16.result \
+  printf-suite-c16_c64.result \
+  printf-suite-c16_c16.result \
+  printf-suite-c16_x16.result \
+  printf-suite-x16_c64.result \
+  printf-suite-x16_c16.result \
+  printf-suite-x16_x16.result
 
 stdiocrosstests: \
   stdio-suite-c64_c64.result \
@@ -146,10 +168,13 @@ stringcrosstests: \
 ctype-suite-%.result: ctype/*  *.sh *.shlib *.h
 	./compile-run-suite.sh ctype $*
 
-stdio-suite-%.result: stdio/* *.sh *.shlib *.h \
-  stdio/printf-test.c stdio/printf.golden \
-  stdio/fprintf-test.c stdio/fprintf.out1.golden \
-  stdio/sprintf-test.c stdio/sprintf.golden
+printf-suite-%.result: printf/* *.sh *.shlib *.h \
+  printf/printf-test.c printf/printf.golden \
+  printf/fprintf-test.c printf/fprintf.out1.golden \
+  printf/sprintf-test.c printf/sprintf.golden
+	./compile-run-suite.sh printf $*
+
+stdio-suite-%.result: stdio/* *.sh *.shlib *.h
 	./compile-run-suite.sh stdio $*
 
 stdlib-suite-%.result: stdlib/* stdlib/rand-expect.c *.sh *.shlib *.h
@@ -199,8 +224,9 @@ clean:
 	rm -f *-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
 	rm -f *.out *.out? *.T64 *.result *-generated.c
-	rm -f stdio/printf-test.c stdio/printf.golden
-	rm -f stdio/fprintf-test.c stdio/fprintf.out1.golden
+	rm -f printf/printf-test.c printf/printf.golden
+	rm -f printf/fprintf-test.c printf/fprintf.out1.golden
+	rm -f printf/sprintf-test.c printf/sprintf.golden
 
 c64files/%: $(basedir)/c64files/%
 	test -d c64files || mkdir c64files
