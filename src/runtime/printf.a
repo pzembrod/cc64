@@ -1,4 +1,5 @@
 
+; static variables used by printf
 +cc64_static_char ~xprintf_param_count, 0
 +cc64_static_int ~xprintf_putc_ptr, 0
 +cc64_static_int ~xprintf_count, 0
@@ -10,50 +11,27 @@
 +cc64_static_char ~xprintf_param_sign, 0
 +cc64_static_char ~xprintf_save_x, 0
 
+; zero page vars used by printf
 xprintf_fmt_ptr = cc64_zp
 xprintf_param_val = tmp_zp1
 xprintf_sprintf_ptr = tmp_zp2
 
-xprintf_putc
-        inc xprintf_count
-        bne +
-        inc xprintf_count + 1
-+       jmp (xprintf_putc_ptr)
-
-s_chrout
-        stx xprintf_save_x
-        ldx #0
-        sta (xprintf_sprintf_ptr, x)
-        inc xprintf_sprintf_ptr
-        bne +
-        inc xprintf_sprintf_ptr + 1
-+       ldx xprintf_save_x
-        rts
-
-cc64_type_sprintf = int_func
-cc64_symbol_sprintf
+cc64_type_printf = int_func
+cc64_symbol_printf
         ; stash away param count
         sty xprintf_param_count
-        lda #<s_chrout
+        lda #<CHROUT
         sta xprintf_putc_ptr
-        lda #>s_chrout
+        lda #>CHROUT
         sta xprintf_putc_ptr + 1
-        ldy #0
-        lda (cc64_frameptr), y
-        sta xprintf_sprintf_ptr
-        iny
-        lda (cc64_frameptr), y
-        sta xprintf_sprintf_ptr + 1
-        iny
 
+        ldy #0
         jsr xprintf
 
-        lda #0
-        ldy #0
-        sta (xprintf_sprintf_ptr) ,y
         lda xprintf_count
         ldx xprintf_count + 1
         rts
+
 
 cc64_type_fprintf = int_func
 cc64_symbol_fprintf
@@ -88,21 +66,53 @@ fprintf_readst_error
         tax
         rts
 
-cc64_type_printf = int_func
-cc64_symbol_printf
+
+cc64_type_sprintf = int_func
+cc64_symbol_sprintf
         ; stash away param count
         sty xprintf_param_count
-        lda #<CHROUT
+        lda #<sprintf_chrout
         sta xprintf_putc_ptr
-        lda #>CHROUT
+        lda #>sprintf_chrout
         sta xprintf_putc_ptr + 1
-
         ldy #0
+        lda (cc64_frameptr), y
+        sta xprintf_sprintf_ptr
+        iny
+        lda (cc64_frameptr), y
+        sta xprintf_sprintf_ptr + 1
+        iny
+
         jsr xprintf
 
+        lda #0
+        ldy #0
+        sta (xprintf_sprintf_ptr) ,y
         lda xprintf_count
         ldx xprintf_count + 1
         rts
+
+sprintf_chrout
+        ; xprintf_putc and thus sprintf_chrout is called in at least
+        ; 2 places where x is used, so we must store and restore x.
+        ; a version for the 65c02 could use sta (zp) and wouldn't need
+        ; to use and to store/restore x.
+        stx xprintf_save_x
+        ldx #0
+        sta (xprintf_sprintf_ptr, x)
+        inc xprintf_sprintf_ptr
+        bne +
+        inc xprintf_sprintf_ptr + 1
++       ldx xprintf_save_x
+        rts
+
+
+xprintf_putc
+        inc xprintf_count
+        bne +
+        inc xprintf_count + 1
++       jmp (xprintf_putc_ptr)
+
 
 xprintf_get_next_char_or_done
         ; this routine depends on x being 0
@@ -137,6 +147,7 @@ xprintf_mainloop
 xprintf_print_char
         jsr xprintf_putc
         jmp xprintf_mainloop
+
 
 xprintf_format_char
         ; set some defaults for %d and %u:
@@ -238,12 +249,14 @@ xprintf_print_wat
         lda #'?'
         bne xprintf_jmp_print_char
 
+
 xprintf_print_c
         lda (cc64_frameptr), y
         iny
         iny
 xprintf_jmp_print_char
         jmp xprintf_print_char
+
 
 xprintf_print_s
         jsr xprintf_get_next_param
@@ -257,6 +270,7 @@ xprintf_print_s
 +
         jsr xprintf_putc
         jmp -
+
 
 xprintf_print_x_uppercase
         lda #$80
@@ -286,6 +300,7 @@ xprintf_print_x
         iny
         jmp xprintf_print_d_u_x
 
+
 xprintf_print_d
         jsr xprintf_get_next_param
         bit xprintf_param_val + 1
@@ -301,6 +316,7 @@ xprintf_print_d
         sta xprintf_param_val + 1
         inc xprintf_padding_counter
         jmp xprintf_print_d_u
+
 
 xprintf_print_u
         jsr xprintf_get_next_param
@@ -401,6 +417,7 @@ xprintf_print_d_u_x_digits
         bcc -
         ldx #0    ; main loop needs x = 0
         jmp xprintf_mainloop
+
 
 xprintf_get_next_param
         lda (cc64_frameptr), y
