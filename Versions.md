@@ -8,12 +8,15 @@ of declared parmeter types
 in the function definition and actual parmeter
 types in calls to that function.
 
-Also more parser unit tests, some bug fixes,
+Also there are now more parser unit tests, some bug fixes,
 and binary sizes are now tracked in
 [bin-size-register](bin-size-register).
 
-A start has been made to port parts of PDCLib to cc64, incl. tests.
-So far there is most of <string.h>, available in precompiled runtime
+A basic libc is now available, incl. tests. Much of it is
+ported from
+[PDCLib](https://pdclib.rootdirectory.de/), and some parts are
+hand-coded 6502 assembly.
+The cc64 libc is available in precompiled runtime
 modules libc-*.[hio], to be used instead of rt-*.[hio].
 
 Naming scheme for the basic runtime libraries rt-*.[hio] now includes
