@@ -200,22 +200,25 @@ stdlib/rand-expect.c: rand-oracle rand-oracle.sh
 
 rand-oracle: rand-oracle.c
 
-stdio/printf-test.c: stdio/printf-test-src.c stdio/xprintf-test-inc.c
-	PRINTF="p(printf(" awk -f xprintf-test.awk $< > $@
+printf/printf-test.c: printf/printf-test-src.c \
+    printf/xprintf-test-inc.c xprintf-test.awk
+	PRINTF="p(printf(" SUBDIR=printf awk -f xprintf-test.awk $< > $@
 
-stdio/fprintf-test.c: stdio/fprintf-test-src.c stdio/xprintf-test-inc.c
-	PRINTF="fp(fprintf(fh, " awk -f xprintf-test.awk $< > $@
+printf/fprintf-test.c: printf/fprintf-test-src.c \
+    printf/xprintf-test-inc.c xprintf-test.awk
+	PRINTF="fp(fprintf(fh," SUBDIR=printf awk -f xprintf-test.awk $< > $@
 
-stdio/sprintf-test.c: stdio/sprintf-test-src.c stdio/xprintf-test-inc.c
-	PRINTF="sp(sprintf(s, " awk -f xprintf-test.awk $< > $@
+printf/sprintf-test.c: printf/sprintf-test-src.c \
+    printf/xprintf-test-inc.c xprintf-test.awk
+	PRINTF="sp(sprintf(s," SUBDIR=printf awk -f xprintf-test.awk $< > $@
 
-stdio/printf.golden: stdio/xprintf-golden.src
+printf/printf.golden: printf/xprintf-golden.src xprintf-golden.awk
 	awk -f xprintf-golden.awk $< > $@
 
-stdio/fprintf.out1.golden: stdio/xprintf-golden.src
+printf/fprintf.out1.golden: printf/xprintf-golden.src xprintf-golden.awk
 	awk -f xprintf-golden.awk $< > $@
 
-stdio/sprintf.golden: stdio/xprintf-golden.src
+printf/sprintf.golden: printf/xprintf-golden.src xprintf-golden.awk
 	awk -f xprintf-golden.awk $< > $@
 
 
