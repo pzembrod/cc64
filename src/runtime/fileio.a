@@ -455,5 +455,41 @@ fputs_param_error
         rts
 
 
-; +cc64_static_int ~cc64_symbol_fileio_debug, 0
-; cc64_type_fileio_debug = int_var
+cc64_type_putchar = int_fastcall
+cc64_symbol_putchar
+        cpx #0
+        bne +
+        jsr CHROUT
+        bcs +
+        rts
+
++       lda #$ff
+        tax
+        rts
+
+
+cc64_type_puts = int_fastcall
+cc64_symbol_puts
+        stx tmp_zp1 + 1
+        sta tmp_zp1
+        ora tmp_zp1 + 1
+        beq puts_error
+        ldy #0
+puts_nextchar
+        lda (tmp_zp1),y
+        beq puts_done
+        jsr CHROUT
+        bcs puts_error
+        iny
+        bne +
+        inc tmp_zp1 + 1
++       bne puts_nextchar
+
+puts_error
+        lda #$ff
+        !byte $2c  ; bit absolute address
+
+puts_done
+        lda #0
+        tax
+        rts
