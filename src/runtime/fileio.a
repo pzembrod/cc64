@@ -38,7 +38,7 @@ cc64_symbol_cbm_k_readst
 +cc64_static_char ~cc64_symbol_fnunit, 8
 cc64_type_fnunit = char_var
 
-; int remove(char* filename);
+; __fastcall int remove(char* filename);
 cc64_type_remove = int_fastcall
 cc64_symbol_remove
         sta tmp_zp1
@@ -146,6 +146,7 @@ cc64_symbol__cc64_last_readst
         rts
 
 
+; int fopen(char* filename, char* mode);
 cc64_type_fopen = int_func
 cc64_symbol_fopen
         ; stash away param count
@@ -236,6 +237,8 @@ fopen_readst_error
 +cc64_static_char ~cc64_symbol_errno, 0
 cc64_type_errno = char_var
 
+
+; __fastcall int fclose(int fh);
 cc64_type_fclose = int_fastcall
 cc64_symbol_fclose
         ldx #0
@@ -259,6 +262,7 @@ fclose_readst_error
         bne fclose_done
 
 
+; __fastcall int fgetc(int fh);
 cc64_type_fgetc = int_fastcall
 cc64_symbol_fgetc
         tax
@@ -291,6 +295,7 @@ fgetc_eof_error
         rts
 
 
+; int fputc(int c, int fh);
 cc64_type_fputc = int_func
 cc64_symbol_fputc
         cpy #2
@@ -321,6 +326,7 @@ cc64_symbol_fputc
         rts
 
 
+; char* fgets(char* str, int count, int fh);
 cc64_type_fgets = char_ptr_func
 cc64_symbol_fgets
         cpy #3
@@ -404,6 +410,7 @@ fgets_finish
         rts
 
 
+; char* fputs(char* str, int fh);
 cc64_type_fputs = int_func
 cc64_symbol_fputs
         cpy #2
@@ -455,6 +462,7 @@ fputs_param_error
         rts
 
 
+; __fastcall int putchar(int c);
 cc64_type_putchar = int_fastcall
 cc64_symbol_putchar
         cpx #0
@@ -467,7 +475,7 @@ cc64_symbol_putchar
         tax
         rts
 
-
+; __fastcall int puts(char* str);
 cc64_type_puts = int_fastcall
 cc64_symbol_puts
         stx tmp_zp1 + 1

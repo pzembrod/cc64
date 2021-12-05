@@ -16,6 +16,7 @@ xprintf_fmt_ptr = cc64_zp
 xprintf_param_val = tmp_zp1
 xprintf_sprintf_ptr = tmp_zp2
 
+; int printf(char* fmtstr, ...);
 cc64_type_printf = int_func
 cc64_symbol_printf
         ; stash away param count
@@ -33,6 +34,7 @@ cc64_symbol_printf
         rts
 
 
+; int fprintf(int fh, char* fmtstr, ...);
 cc64_type_fprintf = int_func
 cc64_symbol_fprintf
         ; stash away param count
@@ -66,7 +68,7 @@ fprintf_readst_error
         tax
         rts
 
-
+; int sprintf(char* buffer, char* fmtstr, ...);
 cc64_type_sprintf = int_func
 cc64_symbol_sprintf
         ; stash away param count
