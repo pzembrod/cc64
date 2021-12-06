@@ -33,6 +33,7 @@ cc64_symbol_cbm_k_readst
         ldx #0
         rts
 
++cc64_static_char ~passed_param_count, 0
 
 ; char fnunit = 8;
 +cc64_static_char ~cc64_symbol_fnunit, 8
@@ -149,10 +150,9 @@ cc64_symbol__cc64_last_readst
 ; int fopen(char* filename, char* mode);
 cc64_type_fopen = int_func
 cc64_symbol_fopen
-        ; stash away param count
-        tya
-        ldy #4
-        sta (cc64_frameptr),y
+        sty passed_param_count
+        cpy #0
+        beq fopen_error
 
         ldy #0
         sty cc64_symbol_errno
@@ -179,7 +179,10 @@ fopen_check_mode
         tya
         tax
 
-        ldy #2
+        ldy #1
+        cpy passed_param_count
+        beq fopen_filename_ok
+        iny
         lda (cc64_frameptr),y
         sta tmp_zp2
         iny
@@ -227,6 +230,7 @@ fopen_open_error
         pla
 fopen_readst_error
         jsr release_file_no
+fopen_error
         lda #0
         beq fopen_done
 

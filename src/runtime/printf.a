@@ -1,6 +1,5 @@
 
 ; static variables used by printf
-+cc64_static_char ~xprintf_param_count, 0
 +cc64_static_int ~xprintf_putc_ptr, 0
 +cc64_static_int ~xprintf_count, 0
 +cc64_static_char ~xprintf_d_count, 0
@@ -20,7 +19,7 @@ xprintf_sprintf_ptr = tmp_zp2
 cc64_type_printf = int_func
 cc64_symbol_printf
         ; stash away param count
-        sty xprintf_param_count
+        sty passed_param_count
         lda #<CHROUT
         sta xprintf_putc_ptr
         lda #>CHROUT
@@ -38,7 +37,7 @@ cc64_symbol_printf
 cc64_type_fprintf = int_func
 cc64_symbol_fprintf
         ; stash away param count
-        sty xprintf_param_count
+        sty passed_param_count
         lda #<CHROUT
         sta xprintf_putc_ptr
         lda #>CHROUT
@@ -72,7 +71,7 @@ fprintf_readst_error
 cc64_type_sprintf = int_func
 cc64_symbol_sprintf
         ; stash away param count
-        sty xprintf_param_count
+        sty passed_param_count
         lda #<sprintf_chrout
         sta xprintf_putc_ptr
         lda #>sprintf_chrout

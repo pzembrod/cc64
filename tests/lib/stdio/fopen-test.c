@@ -7,12 +7,14 @@ fopen_basic_test() {
   int fh1, fh2, fh3, c;
   static char buffer[100], *p;
 
+  assertEq(fopen(), 0, "fopen()");
+  assertEq(fopen(0), 0, "fopen(0)");
   assertEq(fopen(0, 0), 0, "fopen(0, 0)");
   assertEq(fopen(0, "w"), 0, "fopen(0, \"w\")");
   assertEq(fopen("", 0), 0, "fopen(\"\", 0)");
   assertEq(fopen("", "w"), 0, "fopen(\"\", \"w\")");
 
-  assertTrue((fh1 = fopen("libc-c16.h,s,r", 0)) != 0,
+  assertTrue((fh1 = fopen("libc-c16.h,s,r")) != 0,
       "fopen(libc.h, 0)");
   assertEq(fh1, 7, "fh1");
   assertEq(tst_kernal_fnam_len, 14, "tst_kernal_fnam_len");
@@ -62,7 +64,7 @@ fopen_copy_test() {
   remove(outfile2);
   remove(outfile3);
 
-  assertTrue((fh1 = fopen("fopen.in2", ",s,r")) != 0,
+  assertTrue((fh1 = fopen("fopen.in2,s,r", 0)) != 0,
       "fopen(\"fopen.in2\", \",s,r\")");
   assertTrue((fh2 = fopen(outfile2, ",s,w")) != 0,
       "fopen(outfile2, \",s,w\")");
