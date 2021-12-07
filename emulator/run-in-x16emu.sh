@@ -89,7 +89,7 @@ wait %1 || echo "x16emu returned $?"
 for outfile in ${OUTFILES}
 do
   sdfile="$(echo "${outfile}"|ascii2petscii - |tr -d '\r')"
-  mcopy -i "${sdcard}" "::${sdfile}" "${x16filesdir}/${outfile}"
+  mcopy -n -i "${sdcard}" "::${sdfile}" "${x16filesdir}/${outfile}"
   # Timestamps on the sdcard from x16emu seem to not be reliable.
   # Touch the outfiles so make's dependency analysis works.
   touch "${x16filesdir}/${outfile}"
