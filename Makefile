@@ -30,22 +30,24 @@ lib_files = \
   libc-c16.h libc-c16.i libc-c16.o \
   libc-x16.h libc-x16.i libc-x16.o
 
+lib_headers = ctype.h stdio.h stdlib.h string.h
+
 sample_files = helloworld-c64.c helloworld-c16.c helloworld-x16.c \
   kernal-io-c64.c kernal-io-c16.c sieve-c64.c
 
 # c64files content
 c64dir_content = $(cc64_binaries) $(rt_files) $(lib_files) \
-  $(sample_files) c-charset
+  $(lib_headers) $(sample_files) c-charset
 c64dir_files = $(patsubst %, c64files/% , $(c64dir_content))
 
 # c16files content
 c16dir_content = $(cc64_binaries) $(rt_files) $(lib_files) \
-  $(sample_files) c-charset
+  $(lib_headers) $(sample_files) c-charset
 c16dir_files = $(patsubst %, c16files/% , $(c16dir_content))
 
 # x16files content
 x16dir_content = cc64 $(rt_files) $(lib_files) \
-  $(sample_files) c-charset
+  $(lib_headers) $(sample_files) c-charset
 x16dir_files = $(patsubst %, x16files/% , $(x16dir_content))
 
 # PETSCII sources and VolksForth bases for manual recompile
@@ -367,6 +369,9 @@ lib/libc-%.h lib/libc-%.i lib/libc-%.o: lib/libc-%.c \
   autostart-c64/cc64.T64 \
   runtime/lib-cio-%.h runtime/lib-cio-%.i runtime/lib-cio-%.o
 	emulator/compile-lib.sh libc-$*
+
+lib/%.h: src/lib/include/%.h
+	cp $< $@
 
 
 # Charset rules
