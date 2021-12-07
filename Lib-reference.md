@@ -44,8 +44,8 @@ converts 0x41-0x5a to 0xc1-0xda.
 is slightly inconsistent with PETSCII as it recognizes
 ASCII space and HT to CR (0x09 to 0x0d) as whitespace.
 
-Source: src/runtime/ctype-petscii.a (acme 6502 assembly)  
-Tests: tests/lib/ctype/*-test.c
+Source: ```src/runtime/ctype-petscii.a``` (acme 6502 assembly)  
+Tests: ```tests/lib/ctype/*-test.c```
 
 ## ```stdio.h```
 
@@ -103,8 +103,8 @@ Since there is no stdout, ```puts(str)``` writes string str
 to the current output channel, by default the screen.
 Return value follows the standard.
 
-Source: src/runtime/fileio.a (acme 6502 assembly)  
-Tests: tests/lib/stdio/*-test.c
+Source: ```src/runtime/fileio.a``` (acme 6502 assembly)  
+Tests: ```tests/lib/stdio/*-test.c```
 
 ```int printf(char* fmtstr, ...);```
 
@@ -119,5 +119,107 @@ modifiers are supported.
 
 Return value follows the standard.
 
-Source: src/runtime/printf.a (acme 6502 assembly)  
-Tests: tests/lib/printf/*-test.c
+Source: ```src/runtime/printf.a``` (acme 6502 assembly)  
+Tests: ```tests/lib/printf/*-test.c```
+
+## stdlib.h
+
+```int abs(int j);```
+
+follows standard.
+
+```int atoi(char *s);```
+
+follows standard.
+
+Source: ```src/lib/stdlib/*.c```  
+Tests: ```tests/lib/stdlib/*-test.c```
+
+```int rand();```
+
+```int srand(int seed);```
+
+follows standard.
+
+Source: ```src/runtime/rand.a``` (acme 6502 assembly)  
+Tests: ```tests/lib/stdlib/rand-test.c```
+
+## string.h
+
+```char *memchr(char *s, int c, int n);```
+
+follows standard.
+
+```int memcmp(char *s1, char *s2, int n);```
+
+follows standard.
+
+```char *memcpy(char *s1, char *s2, int n);```
+
+follows standard.
+
+```char memmove(char *s1, char *s2, int n);```
+
+follows standard.
+
+```char *memset(char* s, int c, int n);```
+
+follows standard.
+
+Source: ```src/lib/string/*.c```  
+Tests: ```tests/lib/strmem/*-test.c```
+
+```char *strcat(char *s1, char *s2);```
+
+follows standard.
+
+```char *strchr(char *s, int c);```
+
+follows standard.
+
+```int strcmp(char *s1, char *s2);```
+
+follows standard.
+
+```char *strcpy(char *s1, char *s2);```
+
+follows standard.
+
+```int strcspn(char *s1, char *s2);```
+
+follows standard.
+
+```int strlen(char *s);```
+
+follows standard.
+
+```char *strncat(char *s1, char *s2, int n);```
+
+follows standard.
+
+```int strncmp(char *s1, char *s2, int n);```
+
+follows standard.
+
+```char *strncpy(char *s1, char *s2, int n);```
+
+follows standard.
+
+```char *strpbrk(char *s1, char *s2);```
+
+follows standard.
+
+```char *strrchr(char *s, int c);```
+
+follows standard.
+
+```int strspn(char *s1, char *s2);```
+
+follows standard.
+
+```char *strstr(char *s1, char *s2);```
+
+follows standard.
+
+Source: ```src/lib/string/*.c```  
+Tests: ```tests/lib/string/*-test.c```

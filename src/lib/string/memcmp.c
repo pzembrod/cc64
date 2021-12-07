@@ -1,5 +1,5 @@
 
-int memcmp( char *s1, char *s2, int n ) {
+int memcmp(char *s1, char *s2, int n) {
   char * p1 = s1;
   char * p2 = s2;
 
