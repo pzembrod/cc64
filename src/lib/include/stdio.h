@@ -7,7 +7,7 @@ __fastcall extern int fclose(int fh); /* */
 __fastcall extern int fgetc(int fh); /* */
 extern int fputc(int c, int fh);
 extern char* fgets(char* str, int count, int fh);
-extern char* fputs(char* str, int fh);
+extern int fputs(char* str, int fh);
 /*
 __fastcall extern int putchar(int c); /* */
 /*

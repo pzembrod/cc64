@@ -2,11 +2,14 @@
 
 # imput:
 # $target $hostfiles $targetfiles
-# $test_paths $suiteshort $extra_setup_paths
+# $subdir $test_paths $suiteshort $extra_setup_paths
 
 # Build test binary
 (
   cat "include-libc-${target}.h"
+  if [[ -f "${subdir}/include.h" ]]; then
+    cat "${subdir}/include.h"
+  fi
   cat "test-setup-${target}.h"
   echo "char *name(){ return \"${suiteshort}.out,s,w\"; }"
   for es in $extra_setup_paths; do
