@@ -1,12 +1,12 @@
 
-extern tst_putc() *= 0xffd2;
+extern _fastcall tst_putc() *= 0xffd2;
 /* At 0xfcaf the C16 Kernal has a rts opcode.
  * This makes for a convenient fast function that returns its parameter
  * as a non-constant value. */
-extern int noconst() *= 0xfcaf;
+extern _fastcall int noconst() *= 0xfcaf;
 
-extern tst__chkout() *= 0xffc9 ;
-extern tst_clrchn() *= 0xffcc ;
+extern _fastcall tst__chkout() *= 0xffc9 ;
+extern _fastcall tst_clrchn() *= 0xffcc ;
 
 tst_chkout(lfn)
 int lfn;
@@ -33,14 +33,14 @@ char *s;
   tst_clrchn();
 }
 
-extern tst_close() *= 0xffc3 ;
-extern tst__open() *= 0xffc0 ;
+extern _fastcall tst_close() *= 0xffc3 ;
+extern _fastcall tst__open() *= 0xffc0 ;
 
-extern char tst_kernal_fnam_len /= 0xab;
-extern char tst_kernal_lfn /= 0xac;
-extern char tst_kernal_sa /= 0xad;
-extern char tst_kernal_fa /= 0xae;
-extern int tst_kernal_fnam /= 0xaf;
+extern char tst_kernal_fnam_len *= 0xab;
+extern char tst_kernal_lfn *= 0xac;
+extern char tst_kernal_sa *= 0xad;
+extern char tst_kernal_fa *= 0xae;
+extern int tst_kernal_fnam *= 0xaf;
 
 tst_open(lfn, fa, sa, fnam)
 char lfn, fa, sa;

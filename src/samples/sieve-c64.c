@@ -1,6 +1,6 @@
 #include "rt-c64-08-9f.h"
 
-extern putc() *= 0xffd2;
+extern _fastcall putc() *= 0xffd2;
 
 print(s)
 char *s;

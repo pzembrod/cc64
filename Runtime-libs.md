@@ -27,9 +27,9 @@ For details about the `#pragma cc64` directive see the section about the
 
 A runtime module consists of 3 files:
 
-- *module-name*.h contains the `#pragma cc64` directive and /= declarations for
+- *module-name*.h contains the `#pragma cc64` directive and *= declarations for
 all global symbols (functions and variables) contained in the module.
-See [extern declarations with /=](C-lang-subset.md#extern-declarations-with-)
+See [extern declarations with *=](C-lang-subset.md#extern-declarations-with-)
 for details.
 - *module-name*.o contains the binary executable code of the module.
 - *module-name*.i contains the initialization values for the module's static

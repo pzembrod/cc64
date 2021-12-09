@@ -1,12 +1,12 @@
 
-extern tst_putc() *= 0xffd2;
+extern _fastcall tst_putc() *= 0xffd2;
 /* At 0xfd0f the C64 Kernal has a rts opcode.
  * This makes for a convenient fast function that returns its parameter
  * as a non-constant value. */
-extern int noconst() *= 0xfd0f;
+extern _fastcall int noconst() *= 0xfd0f;
 
-extern tst__chkout() *= 0xffc9 ;
-extern tst_clrchn() *= 0xffcc ;
+extern _fastcall tst__chkout() *= 0xffc9 ;
+extern _fastcall tst_clrchn() *= 0xffcc ;
 
 tst_chkout(int lfn)
 { tst__chkout(lfn<<8); }
@@ -30,14 +30,14 @@ tst_println(char *s)
   tst_clrchn();
 }
 
-extern tst_close() *= 0xffc3 ;
-extern tst__open() *= 0xffc0 ;
+extern _fastcall tst_close() *= 0xffc3 ;
+extern _fastcall tst__open() *= 0xffc0 ;
 
-extern char tst_kernal_fnam_len /= 0xb7;
-extern char tst_kernal_lfn /= 0xb8;
-extern char tst_kernal_sa /= 0xb9;
-extern char tst_kernal_fa /= 0xba;
-extern int tst_kernal_fnam /= 0xbb;
+extern char tst_kernal_fnam_len *= 0xb7;
+extern char tst_kernal_lfn *= 0xb8;
+extern char tst_kernal_sa *= 0xb9;
+extern char tst_kernal_fa *= 0xba;
+extern int tst_kernal_fnam *= 0xbb;
 
 tst_open(char lfn, char fa, char sa, char *fnam)
 {

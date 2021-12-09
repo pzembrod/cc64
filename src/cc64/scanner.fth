@@ -36,7 +36,7 @@
 
 \   scanner:                   12jan91pz
 
-|| 18 string-tab keywords
+|| 19 string-tab keywords
 
 ~ x <do>       x" do"
 ~ x <if>       x" if"
@@ -56,10 +56,11 @@
 ~ x <default>  x" default"
 ~ x <cont>     x" continue"
 ~ x <register> x" register"
+~ x <fastcall> x" _fastcall"
 
 end-tab
 
-|| keywords 2 8 length-index keywords-index
+|| keywords 2 9 length-index keywords-index
   <do> idx,
   <for> idx,
   <auto> idx,
@@ -67,6 +68,7 @@ end-tab
   <extern> idx,
   <default> idx,
   <cont> idx,
+  <fastcall> idx,
 end-index
 
 \ *** Block No. 39, Hexblock 27

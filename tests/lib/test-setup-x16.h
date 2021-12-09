@@ -1,12 +1,12 @@
 
-extern tst_putc() *= 0xffd2;
+extern _fastcall tst_putc() *= 0xffd2;
 
 int noconst(i)
 int i;
 { return i; }
 
-extern tst__chkout() *= 0xffc9 ;
-extern tst_clrchn() *= 0xffcc ;
+extern _fastcall tst__chkout() *= 0xffc9 ;
+extern _fastcall tst_clrchn() *= 0xffcc ;
 
 tst_chkout(int lfn)
 { tst__chkout(lfn<<8); }
@@ -31,14 +31,14 @@ char *s;
   tst_clrchn();
 }
 
-extern tst_close() *= 0xffc3 ;
-extern tst__open() *= 0xffc0 ;
+extern _fastcall tst_close() *= 0xffc3 ;
+extern _fastcall tst__open() *= 0xffc0 ;
 
-extern char tst_kernal_fnam_len /= 0x28e;
-extern char tst_kernal_lfn /= 0x28f;
-extern char tst_kernal_sa /= 0x290;
-extern char tst_kernal_fa /= 0x291;
-extern int tst_kernal_fnam /= 0x8c;
+extern char tst_kernal_fnam_len *= 0x28e;
+extern char tst_kernal_lfn *= 0x28f;
+extern char tst_kernal_sa *= 0x290;
+extern char tst_kernal_fa *= 0x291;
+extern int tst_kernal_fnam *= 0x8c;
 
 tst_open(lfn, fa, sa, fnam)
 char lfn, fa, sa;

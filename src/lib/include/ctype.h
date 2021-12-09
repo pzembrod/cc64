@@ -1,18 +1,10 @@
 
-/* As yet there is no way to declare fastcall functions without
- * defining them.
-__fastcall extern int isdigit(int c); /* */
-/*
-__fastcall extern int isalnum(int c); /* */
-/*
-__fastcall extern int isalpha(int c); /* */
-/*
-__fastcall extern int isspace(int c); /* */
-/*
-__fastcall extern int islower(int c); /* */
-/*
-__fastcall extern int isupper(int c); /* */
-/*
-__fastcall extern int tolower(int c); /* */
-/*
-__fastcall extern int toupper(int c); /* */
+extern _fastcall int isdigit(int c);
+extern _fastcall int isdigit(int c);
+extern _fastcall int isalnum(int c);
+extern _fastcall int isalpha(int c);
+extern _fastcall int isspace(int c);
+extern _fastcall int islower(int c);
+extern _fastcall int isupper(int c);
+extern _fastcall int tolower(int c);
+extern _fastcall int toupper(int c);

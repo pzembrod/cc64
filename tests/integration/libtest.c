@@ -1,8 +1,8 @@
 
 #include "rt-c64-08-9f.h"
 
-extern up /= 0xfb;
-static vp /= 0xfd;
+extern up *= 0xfb;
+static vp *= 0xfd;
 
 int i, x;
 char *p;

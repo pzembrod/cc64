@@ -109,9 +109,9 @@
   test-end
 
   src-begin test-define-extern
-    src@ int k /= 1234; @
-    src@ char lex() /= 0x5678; @
-    src@ char* moot() *= 017; @
+    src@ int k *= 1234; @
+    src@ char lex() *= 0x5678; @
+    src@ _fastcall char* moot() *= 017; @
   test-begin
     T{ definition? -> true }T
     T{ definition? -> true }T

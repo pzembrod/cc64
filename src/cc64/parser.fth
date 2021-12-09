@@ -587,6 +587,8 @@ variable function :does> 0 ;
 \   parser: type-specifiers    14mar91pz
 
 : type-name? ( type -- type' flag )
+     <fastcall> #keyword# comes?
+        IF %fastcall set THEN
      <char> #keyword# comes?
         IF set-char true
         ELSE <int> #keyword# comes?
@@ -843,15 +845,6 @@ do$: init$ ( -- values )
         IF >type @ check-types-equal
         ELSE drop *undef* error THEN ;
 
-: extern-op?
-     ( type -- type' flag )
-     <*=> #oper# comes?
-        IF function?
-           IF %fastcall set
-           ELSE *syntax* error THEN
-        true
-        ELSE </=> #oper# comes? THEN ;
-
 : define-extern ( id-buf type -- )
     function? IF unnestlocal THEN
     swap putglobal
@@ -1030,7 +1023,7 @@ variable protos2resolve
         ELSE local define-data THEN ;
 
 : definition' ( id-buf type -- )
-     extern-op?
+     <*=> #oper# comes?
         IF define-extern exit THEN
      function?
         IF define-function

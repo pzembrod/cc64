@@ -1,11 +1,11 @@
 
 #include "rt-c64-08-9f.h"
 
-extern putc() *= 0xffd2;
+extern _fastcall putc() *= 0xffd2;
 /* At 0xfd0f the C64 Kernal has a rts opcode.
  * This makes for a convenient fast function that returns its parameter
  * as a non-constant value. */
-extern int noconst() *= 0xfd0f;
+extern _fastcall int noconst() *= 0xfd0f;
 
 print(char *s)
 {
@@ -18,20 +18,20 @@ println(char *s)
   print(s); putc('\n');
 }
 
-extern __chkout() *= 0xffc9 ;
+extern _fastcall __chkout() *= 0xffc9 ;
 
 _chkout(int lfn)
 { __chkout(lfn<<8); }
 
-extern _close() *= 0xffc3 ;
-extern _clrchn() *= 0xffcc ;
-extern __open() *= 0xffc0 ;
+extern _fastcall _close() *= 0xffc3 ;
+extern _fastcall _clrchn() *= 0xffcc ;
+extern _fastcall __open() *= 0xffc0 ;
 
-extern char _kernal_fnam_len /= 0xb7;
-extern char _kernal_lfn /= 0xb8;
-extern char _kernal_sa /= 0xb9;
-extern char _kernal_fa /= 0xba;
-extern int _kernal_fnam /= 0xbb;
+extern char _kernal_fnam_len *= 0xb7;
+extern char _kernal_lfn *= 0xb8;
+extern char _kernal_sa *= 0xb9;
+extern char _kernal_fa *= 0xba;
+extern int _kernal_fnam *= 0xbb;
 
 _open(char lfn, char fa, char sa, char *fnam)
 {

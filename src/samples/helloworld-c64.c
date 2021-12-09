@@ -1,7 +1,7 @@
 
 #include "rt-c64-08-9f.h"
 
-extern putchar() *= 0xffd2 ;
+extern _fastcall putchar() *= 0xffd2 ;
 
 int puts(s)
 char *s;

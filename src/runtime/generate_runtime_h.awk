@@ -12,18 +12,18 @@ BEGIN {
   statics_end = "";
   lib_name = "";
 
-  type_formats["1"] = "int %s() *= ";
-  type_formats["2"] = "char %s() *= ";
-  type_formats["3"] = "int *%s() *= ";
-  type_formats["4"] = "char *%s() *= ";
-  type_formats["5"] = "int %s() /= ";
-  type_formats["6"] = "char %s() /= ";
-  type_formats["7"] = "int *%s() /= ";
-  type_formats["8"] = "char *%s() /= ";
-  type_formats["9"] = "int %s /= ";
-  type_formats["a"] = "char %s /= ";
-  type_formats["b"] = "int *%s /= ";
-  type_formats["c"] = "char *%s /= ";
+  type_formats["1"] = "_fastcall int %s()";
+  type_formats["2"] = "_fastcall char %s()";
+  type_formats["3"] = "_fastcall int *%s()";
+  type_formats["4"] = "_fastcall char *%s()";
+  type_formats["5"] = "int %s()";
+  type_formats["6"] = "char %s()";
+  type_formats["7"] = "int *%s()";
+  type_formats["8"] = "char *%s()";
+  type_formats["9"] = "int %s";
+  type_formats["a"] = "char %s";
+  type_formats["b"] = "int *%s";
+  type_formats["c"] = "char *%s";
 }
 
 /cc64_frameptr/ {
@@ -86,10 +86,10 @@ END {
       value = symbols[name]
       if (name in symbol_formats) {
         printf(symbol_formats[name], name);
-        printf("0x%s;\n", value);
       } else {
-        printf("%s /= 0x%s;\n", name, value);
+        printf("%s", name);
       }
+      printf(" *= 0x%s;\n", value);
     }
   } else {
     printf("Somethings missing when parsing %s\n" \

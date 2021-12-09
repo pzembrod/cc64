@@ -17,8 +17,8 @@
   src-begin test-global-definitions
     src@ int i = 0; @
     src@ static char x; @
-    src@ extern char a /= 0x0a; @
-    src@ static int e /= 0x0e; @
+    src@ extern char a *= 0x0a; @
+    src@ static int e *= 0x0e; @
     src@ char *p; @
   test-begin
     T{ definition? -> true }T

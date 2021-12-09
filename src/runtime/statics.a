@@ -55,18 +55,18 @@
         }
 }
 
-;  type_formats["1"] = "int %s() *= ";
-;  type_formats["2"] = "char %s() *= ";
-;  type_formats["3"] = "int *%s() *= ";
-;  type_formats["4"] = "char *%s() *= ";
-;  type_formats["5"] = "int %s() /= ";
-;  type_formats["6"] = "char %s() /= ";
-;  type_formats["7"] = "int *%s() /= ";
-;  type_formats["8"] = "char *%s() /= ";
-;  type_formats["9"] = "int %s /= ";
-;  type_formats["a"] = "char %s /= ";
-;  type_formats["b"] = "int *%s /= ";
-;  type_formats["c"] = "char *%s /= ";
+;  type_formats["1"] = "_fastcall int %s() *= ";
+;  type_formats["2"] = "_fastcall char %s() *= ";
+;  type_formats["3"] = "_fastcall int *%s() *= ";
+;  type_formats["4"] = "_fastcall char *%s() *= ";
+;  type_formats["5"] = "int %s() *= ";
+;  type_formats["6"] = "char %s() *= ";
+;  type_formats["7"] = "int *%s() *= ";
+;  type_formats["8"] = "char *%s() *= ";
+;  type_formats["9"] = "int %s *= ";
+;  type_formats["a"] = "char %s *= ";
+;  type_formats["b"] = "int *%s *= ";
+;  type_formats["c"] = "char *%s *= ";
 
 !set int_fastcall = 1
 !set char_fastcall = 2

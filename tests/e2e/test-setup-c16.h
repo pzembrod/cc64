@@ -1,11 +1,11 @@
 
 #include "rt-c16-10-7f.h"
 
-extern putc() *= 0xffd2;
+extern _fastcall putc() *= 0xffd2;
 /* At 0xfcaf the C16 Kernal has a rts opcode.
  * This makes for a convenient fast function that returns its parameter
  * as a non-constant value. */
-extern int noconst() *= 0xfcaf;
+extern _fastcall int noconst() *= 0xfcaf;
 
 print(s)
 char *s;
@@ -20,21 +20,21 @@ char *s;
   print(s); putc('\n');
 }
 
-extern __chkout() *= 0xffc9 ;
+extern _fastcall __chkout() *= 0xffc9 ;
 
 _chkout(lfn)
 int lfn;
 { __chkout(lfn<<8); }
 
-extern _close() *= 0xffc3 ;
-extern _clrchn() *= 0xffcc ;
-extern __open() *= 0xffc0 ;
+extern _fastcall _close() *= 0xffc3 ;
+extern _fastcall _clrchn() *= 0xffcc ;
+extern _fastcall __open() *= 0xffc0 ;
 
-extern char _kernal_fnam_len /= 0xab;
-extern char _kernal_lfn /= 0xac;
-extern char _kernal_sa /= 0xad;
-extern char _kernal_fa /= 0xae;
-extern int _kernal_fnam /= 0xaf;
+extern char _kernal_fnam_len *= 0xab;
+extern char _kernal_lfn *= 0xac;
+extern char _kernal_sa *= 0xad;
+extern char _kernal_fa *= 0xae;
+extern int _kernal_fnam *= 0xaf;
 
 _open(lfn, fa, sa, fnam)
 char lfn, fa, sa;
