@@ -17,11 +17,38 @@ ported from
 [PDCLib](https://pdclib.rootdirectory.de/), and some parts are
 hand-coded 6502 assembly.
 The cc64 libc is available in precompiled runtime
-modules libc-*.[hio], to be used instead of rt-*.[hio].
+modules libc-\*.[hio], to be used instead of rt-\*.[hio].
 
-Naming scheme for the basic runtime libraries rt-*.[hio] now includes
+Naming scheme for the basic runtime libraries rt-\*.[hio] now includes
 both start and end address, to facilitate version e.g. using the RAM
 under the BASIC ROM on the C64.
+
+To allow the libc header files ctype.h, stdio.h and stdlib.h to
+declare functions that are implemented in assembly, v0.10 introduces
+a BREAKING CHANGE with regard to the format of the rt-\*.h and
+libc-\*.h files: Previously, \*= set the address of assembly-implemented single-param no-stack-frame library functions, and /=
+set the address of regular C library functions and variables.
+Now, \*= assigns addresses for all library functions and variables,
+and assembly-implemented single-param no-stack-frame functions are
+additionally marked with the new keyword `_fastcall`.
+
+- fastcall functions:
+  - until v0.9:
+     - `extern char _chrin() *= 0xFFD2;`
+  - from v0.10:
+     - `extern _fastcall char _chrin() *= 0xFFD2;`
+- regular functions and variables:
+  - until v0.9:
+     - `extern int fopen() /= 0xB7E;`
+     - `extern char errno /= 0x9FDB;`
+  - from v0.10:
+     - `extern int fopen() *= 0xB7E;`
+     - `extern char errno *= 0x9FDB;`
+
+Reasons for this change: I find new form much more expressive than the
+old form (I was always somewhat unhappy with /= in this context), and
+in the old form \*= combined both type and address definition, which
+meant that type declaration without address definition was impossible.
 
 ## v0.9
 

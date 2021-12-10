@@ -34,9 +34,12 @@ described in [runtime libraries](Runtime-libs.md).
 
 cc64 supports two non-standard extensions.
 
-### extern declarations with *=
+Note: v0.10 introduced a breaking change regarding these extensions.
+See [Versions](Versions.md) for details.
 
-*= assigns an explicit value to a symbol in an extern declaration:
+### extern declarations with \*=
+
+\*= assigns an explicit value to a symbol in an extern declaration:
 
 ```
 extern int i *= 0x9ffe;
@@ -58,7 +61,7 @@ for functions that are implemented in assembly elsewhere.
 cc64 calls `_fastcall` functions with a simple and fast `jsr`
 without allocating a stack frame on the local variable stack.
 
-`_fastcall` functions must be assigned their address with *=
+`_fastcall` functions must be assigned their address with \*=
 declarations. E.g.
 
 ```
