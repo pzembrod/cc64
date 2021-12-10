@@ -16,6 +16,9 @@ cc64 supports.
 [Code layout and library concept](Runtime-libs.md) explains, among others, how
 to create a new target.
 
+[LibC Reference](Lib-reference.md) describes the LibC subset that comes with cc64,
+plus the lib's deviations from the standard.
+
 [Emulator and file formats](File-formats.md) describes the emulator setup I use for developing and testing.
 
 [Design](Design.md) is a first stab at documenting the compiler's
