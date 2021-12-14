@@ -132,8 +132,6 @@ doer assign
      BEGIN mark >r
      ascii ( #char# comes?
         IF primary() THEN
-     %fastcall is?
-        IF drop %default THEN
      ascii [ #char# comes?
         IF primary[] THEN
      r> advanced? not UNTIL ;
