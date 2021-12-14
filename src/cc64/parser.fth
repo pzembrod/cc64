@@ -233,13 +233,13 @@ create unary-tab2  2  4 * ,
      bit-or
      BEGIN  <l-and> #oper# comes? WHILE
      do-l-and.1  bit-or
-     do-l-and.2  REPEAT ;
+     do-l-and/or.2  REPEAT ;
 
 : l-or ( -- obj )
      l-and
      BEGIN  <l-or> #oper# comes? WHILE
      do-l-or.1  l-and
-     do-l-or.2  REPEAT ;
+     do-l-and/or.2  REPEAT ;
 
 
 \ *** Block No. 58, Hexblock 3a

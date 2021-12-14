@@ -517,17 +517,15 @@ binop do-shr
      .jmz-ahead
      release-accu ;
 
-: do-l-and.2 ( adr obj1 -- obj2 )
-     value non-constant  2drop
-     .resolve-jmp
-     0 %default ;
-
 : do-l-or.1 ( obj -- )
      value non-constant  2drop
      .jmn-ahead
      release-accu ;
 
-' do-l-and.2 ALIAS do-l-or.2
+: do-l-and/or.2 ( adr obj1 -- obj2 )
+     value non-constant  2drop
+     .resolve-jmp
+     0 %default ;
 
 
 \ *** Block No. 36, Hexblock 24
