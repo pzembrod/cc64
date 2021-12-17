@@ -1,4 +1,6 @@
 
++cc64_static_int ~fastcallptr, 0
+
 cc64_lib_jumplist
 main_adr      !word 0  ; the start addr of the main() function
 code_last     !word 0
@@ -11,6 +13,7 @@ statics_last  !word 0
         jmp divmod
         jmp shl
         jmp shr
+        jmp (fastcallptr)
 
 init    lda code_last
         sta cc64_frameptr

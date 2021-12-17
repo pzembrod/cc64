@@ -125,8 +125,8 @@
   test-end
 
   src-begin test-defdata-global
-    src@ int i, *j, k[]; @
-    src@ char o, *p, q[]; @
+    src@ int i, *j, k[], (*l)(), *(*m)(); @
+    src@ char o, *p, q[], (*r)(), *(*t)(); @
   test-begin
     T{ definition? -> true }T
     T{ definition? -> true }T
@@ -134,14 +134,39 @@
     T{ fetchglobal" i" nip -> %int %l-value + %extern + }T
     T{ fetchglobal" j" nip -> %int %l-value + %extern + %pointer + }T
     T{ fetchglobal" k" nip -> %int %l-value + %extern + %pointer + }T
+    T{ fetchglobal" l" nip
+       -> %int %l-value + %extern + %function + }T
+    T{ fetchglobal" m" nip
+       -> %int %l-value + %extern + %pointer + %function + }T
     T{ fetchglobal" o" nip -> %l-value %extern + }T
     T{ fetchglobal" p" nip -> %l-value %extern + %pointer + }T
     T{ fetchglobal" q" nip -> %l-value %extern + %pointer + }T
+    T{ fetchglobal" r" nip
+       -> %l-value %extern + %function + }T
+    T{ fetchglobal" t" nip
+       -> %l-value %extern + %pointer + %function + }T
+  test-end
+
+  src-begin test-fastcall-fptr-global
+    src@ _fastcall int (*f)(), *(*g)(); @
+    src@ _fastcall char (*p)(), *(*q)(); @
+  test-begin
+    T{ definition? -> true }T
+    T{ definition? -> true }T
+    T{ locals-empty? -> true }T
+    T{ fetchglobal" f" nip
+       -> %int %l-value + %extern + %function + %fastcall + }T
+    T{ fetchglobal" g" nip
+       -> %int %l-value + %extern + %pointer + %function + %fastcall + }T
+    T{ fetchglobal" p" nip
+       -> %l-value %extern + %function + %fastcall + }T
+    T{ fetchglobal" q" nip
+       -> %l-value %extern + %pointer + %function + %fastcall + }T
   test-end
 
   src-begin test-defdata-globalstatic
-    src@ static int i, *j, k[]; @
-    src@ static char o, *p, q[]; @
+    src@ static int i, *j, k[], (*l)(), *(*m)(); @
+    src@ static char o, *p, q[], (*r)(), *(*t)(); @
   test-begin
     T{ definition? -> true }T
     T{ definition? -> true }T
@@ -149,14 +174,18 @@
     T{ fetchglobal" i" nip -> %int %l-value + }T
     T{ fetchglobal" j" nip -> %int %l-value + %pointer + }T
     T{ fetchglobal" k" nip -> %int %l-value + %pointer + }T
+    T{ fetchglobal" l" nip -> %int %l-value + %function + }T
+    T{ fetchglobal" m" nip -> %int %l-value + %pointer + %function + }T
     T{ fetchglobal" o" nip -> %l-value }T
     T{ fetchglobal" p" nip -> %l-value %pointer + }T
     T{ fetchglobal" q" nip -> %l-value %pointer + }T
+    T{ fetchglobal" r" nip -> %l-value %function + }T
+    T{ fetchglobal" t" nip -> %l-value %pointer + %function + }T
   test-end
 
   src-begin test-defdata-local
-    src@ int i, *j, k[]; @
-    src@ char o, *p, q[]; @
+    src@ int i, *j, k[], (*l)(), *(*m)(); @
+    src@ char o, *p, q[], (*r)(), *(*t)(); @
   test-begin
     T{ declaration? -> true }T
     T{ declaration? -> true }T
@@ -164,14 +193,18 @@
     T{ fetchlocal" i" nip -> %int %l-value + %offset + }T
     T{ fetchlocal" j" nip -> %int %l-value + %offset + %pointer + }T
     T{ fetchlocal" k" nip -> %int %l-value + %offset + %pointer + }T
+    T{ fetchlocal" l" nip -> %int %l-value + %offset + %function + }T
+    T{ fetchlocal" m" nip -> %int %l-value + %offset + %pointer + %function + }T
     T{ fetchlocal" o" nip -> %l-value %offset + }T
     T{ fetchlocal" p" nip -> %l-value %offset + %pointer + }T
     T{ fetchlocal" q" nip -> %l-value %offset + %pointer + }T
+    T{ fetchlocal" r" nip -> %l-value %offset + %function + }T
+    T{ fetchlocal" t" nip -> %l-value %offset + %pointer + %function + }T
   test-end
 
   src-begin test-defdata-localstatic
-    src@ static int i, *j, k[]; @
-    src@ static char o, *p, q[]; @
+    src@ static int i, *j, k[], (*l)(), *(*m)(); @
+    src@ static char o, *p, q[], (*r)(), *(*t)(); @
   test-begin
     T{ declaration? -> true }T
     T{ declaration? -> true }T
@@ -179,9 +212,13 @@
     T{ fetchlocal" i" nip -> %int %l-value + }T
     T{ fetchlocal" j" nip -> %int %l-value + %pointer + }T
     T{ fetchlocal" k" nip -> %int %l-value + %pointer + }T
+    T{ fetchlocal" l" nip -> %int %l-value + %function + }T
+    T{ fetchlocal" m" nip -> %int %l-value + %pointer + %function + }T
     T{ fetchlocal" o" nip -> %l-value }T
     T{ fetchlocal" p" nip -> %l-value %pointer + }T
     T{ fetchlocal" q" nip -> %l-value %pointer + }T
+    T{ fetchlocal" r" nip -> %l-value %function + }T
+    T{ fetchlocal" t" nip -> %l-value %pointer + %function + }T
   test-end
 
   src-begin test-defdata-localarrays

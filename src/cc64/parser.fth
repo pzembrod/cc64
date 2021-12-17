@@ -97,26 +97,25 @@ doer assign
 
 \   parser: primary            26apr20pz
 
-: fast-arguments ( -- )
-     assign put-fast-argument
-     BEGIN ascii , #char# comes? WHILE
-     assign drop-fast-argument REPEAT ;
 
 : arguments  ( -- )
      BEGIN assign put-argument
      ascii , #char# comes? not UNTIL ;
 
 : primary() ( obj1 -- obj2 )
+     function? not *nofunc* ?error
      %fastcall is?
-        IF ascii ) #char# comes? not
-           IF fast-arguments
+        IF prepare-fast-call
+        ascii ) #char# comes? not
+           IF assign put-fast-argument
            expect')' THEN
         do-fast-call
         ELSE prepare-call
         ascii ) #char# comes? not
            IF arguments
            expect')' THEN
-        do-call THEN ;
+        do-call THEN
+      %constant %function + %fastcall + clr ;
 
 
 \ *** Block No. 53, Hexblock 35

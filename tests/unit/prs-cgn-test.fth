@@ -1,4 +1,6 @@
 
+\ parser + codegen unit tests
+
 ' noop alias \log
 
 \log include logtofile.fth
@@ -135,6 +137,48 @@
     T{ fetchlocal" e" nip -> %l-value %offset + %int + }T
     T{ fetchlocal" f" nip -> %l-value %offset + }T
     T{ fetchlocal" g" nip -> %l-value %offset + %pointer + }T
+  test-end
+
+  src-begin test-func-call
+    src@ int f() *= 0x8004; @
+    src@ int main() { @
+    src@   f(0x41); @
+    src@ } @
+  test-begin
+    T{ definition? -> true }T
+    T{ definition? -> true }T
+  test-end
+
+  src-begin test-func-fastcall
+    src@ _fastcall int f() *= 0x8007; @
+    src@ int main() { @
+    src@   f(0x42); @
+    src@ } @
+  test-begin
+    T{ definition? -> true }T
+    T{ definition? -> true }T
+  test-end
+
+  src-begin test-func-ptr-call
+    src@ int f() *= 0x800a; @
+    src@ int main() { @
+    src@   int (*g)() = f;
+    src@   (*g)(0x43); @
+    src@ } @
+  test-begin
+    T{ definition? -> true }T
+    T{ definition? -> true }T
+  test-end
+
+  src-begin test-func-ptr-fastcall
+    src@ _fastcall int f() *= 0x800d; @
+    src@ int main() { @
+    src@   _fastcall int (*g)() = f;
+    src@   (*g)(0x44); @
+    src@ } @
+  test-begin
+    T{ definition? -> true }T
+    T{ definition? -> true }T
   test-end
 
   cr .( GOLDEN-SECTION-END) cr

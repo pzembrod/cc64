@@ -10,6 +10,7 @@
 ~ : dyn-allot ( n -- offs )
      dyn-offs  swap >tos-offs +! ;
 
+  variable statics.last
 
   variable staticadr
 
@@ -19,7 +20,7 @@
   : >staticadr ( adr -- )
      staticadr  ! ;
 
-  : init-static  $a000 >staticadr ;
+  : init-static  $a000 dup >staticadr  statics.last ! ;
   init: init-static
 
   : stat,   . ." stat, "   -2 staticadr +! ;

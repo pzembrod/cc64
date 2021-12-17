@@ -62,4 +62,54 @@ TEST-LOCAL-NO-INIT
 
 
 
+TEST-FUNC-CALL
+*label*: 1 
+size: 2 
+lda.s #65 
+size: 2 
+sta.s (base),#0 
+link# 0 
+1 arguments
+jsr  32772 
+link# 0 
+rts
+TEST-FUNC-FASTCALL
+*label*: 1 
+size: 2 
+lda.s #66 
+jsr  32775 
+rts
+TEST-FUNC-PTR-CALL
+*label*: 1 
+size: 2 
+lda.s #32778 
+size: 2 
+sta.s (base),#0 
+size: 2 
+lda.s (base),#0 
+pha'
+size: 2 
+lda.s #67 
+size: 2 
+sta.s (base),#2 
+sta $zp
+link# 2 
+1 arguments
+jsr (zp)
+link# -2 
+rts
+TEST-FUNC-PTR-FASTCALL
+*label*: 1 
+size: 2 
+lda.s #32781 
+size: 2 
+sta.s (base),#0 
+size: 2 
+lda.s (base),#0 
+size: 2 
+sta.s  40958 
+size: 2 
+lda.s #68 
+jsr (fastcall)
+rts
 

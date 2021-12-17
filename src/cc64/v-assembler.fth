@@ -36,7 +36,7 @@ rt $mult
 rt $divmod
 rt $shl
 rt $shr
-
+rt $jmp(fastcall)
 
 \ *** Block No. 86, Hexblock 56
 
@@ -133,6 +133,7 @@ a: .pla     pla     tax pla      ;a
 
 a&: .jsr    & jsr  ;a
 a:  .jsr(zp)  $jmp(zp) jsr ;a
+a:  .jsr(fastcall)  $jmp(fastcall) jsr ;a
 a:  .rts    rts ;a
 
 a&: .ldy#   <& # ldy ;a

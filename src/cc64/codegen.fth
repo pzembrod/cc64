@@ -213,15 +213,17 @@ variable vector
 
 \ codegen: primary             22aug94pz
 
+: prepare-fast-call ( obj1 -- obj2 )
+     %constant isn't?
+     IF 2 .size statics.last @ 2- .sta.s
+     release-accu THEN ;
+
 : put-fast-argument ( obj -- )
      value non-constant 2drop ;
 
-: drop-fast-argument ( obj -- )
-     value non-constant 2drop .pla ;
-
 : do-fast-call ( obj1 -- obj2 )
-     %fastcall %constant + clr
-     over .jsr ;
+     %constant is? IF over .jsr
+     ELSE .jsr(fastcall) THEN ;
 
 
 \ *** Block No. 22, Hexblock 16
@@ -229,7 +231,6 @@ variable vector
 \   codegen: primary           27may91pz
 
 : prepare-call ( obj1 -- obj2 #args )
-     function? not *nofunc* ?error
      value 0 ;
 
 : put-argument  ( #args obj -- #args' )
@@ -252,8 +253,7 @@ variable vector
      %constant is?
         IF over .jsr
         ELSE .jsr(zp) THEN
-     dyn-offs negate .link#
-     %constant %function + clr ;
+     dyn-offs negate .link# ;
 
 
 \ *** Block No. 24, Hexblock 18

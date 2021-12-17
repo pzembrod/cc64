@@ -15,6 +15,7 @@
                               ?cr ;
   : .jsr  ( n )  ." jsr  " u. cr ;
   : .jsr(zp)     ." jsr (zp)" cr ;
+  : .jsr(fastcall) ." jsr (fastcall)" cr ;
   : .rts         ." rts"      cr ;
   : .args        u. ." arguments" cr ;
   : .link# ( n ) ." link# " . cr ;
