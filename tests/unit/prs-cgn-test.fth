@@ -181,6 +181,20 @@
     T{ definition? -> true }T
   test-end
 
+  src-begin test-nested-fastcall-ptr
+    src@ _fastcall int f() *= 0x8010; @
+    src@ int main() { @
+    src@   _fastcall int (*g)() = f;
+    src@   _fastcall int (*h)(), (*i)();
+    src@   i = h = f;
+    src@   (*g)((*h)(0x45)); @
+    src@   (*g)((*h)((*i)(0x45))); @
+    src@ } @
+  test-begin
+    T{ definition? -> true }T
+    T{ definition? -> true }T
+  test-end
+
   cr .( GOLDEN-SECTION-END) cr
   cr hex .( here, s0: ) here u. s0 @ u.
 

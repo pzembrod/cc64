@@ -213,17 +213,26 @@ variable vector
 
 \ codegen: primary             22aug94pz
 
+variable #ptr-fastcalls
+: init-fastcalls  #ptr-fastcalls off ;
+     init: init-fastcalls
+
 : prepare-fast-call ( obj1 -- obj2 )
      %constant isn't?
-     IF 2 .size statics.last @ 2- .sta.s
-     release-accu THEN ;
+     IF #ptr-fastcalls @
+       IF .pha' ELSE 2 .size statics.last @ 2- .sta.s THEN
+     release-accu
+     1 #ptr-fastcalls +! THEN ;
 
 : put-fast-argument ( obj -- )
      value non-constant 2drop ;
 
 : do-fast-call ( obj1 -- obj2 )
-     %constant is? IF over .jsr
-     ELSE .jsr(fastcall) THEN ;
+     %constant is? IF over .jsr ELSE
+     -1 #ptr-fastcalls +!
+     #ptr-fastcalls @
+       IF .jsr(stack) ELSE .jsr(laststatic) THEN
+     THEN ;
 
 
 \ *** Block No. 22, Hexblock 16

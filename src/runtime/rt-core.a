@@ -14,6 +14,7 @@ statics_last  !word 0
         jmp shl
         jmp shr
         jmp (fastcallptr)
+        jmp jmpviastack
 
 init    lda code_last
         sta cc64_frameptr
@@ -278,3 +279,20 @@ shr1    dey
         pla
         ror
         jmp shr1
+
+jmpviastack
+        tay
+        pla
+        sta tmp_zp1
+        pla
+        sta tmp_zp1 + 1
+        pla
+        sta tmp_zp2 + 1
+        pla
+        sta tmp_zp2
+        lda tmp_zp1 + 1
+        pha
+        lda tmp_zp1
+        pha
+        tya
+        jmp (tmp_zp2)

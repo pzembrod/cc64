@@ -110,6 +110,45 @@ size: 2
 sta.s  40958 
 size: 2 
 lda.s #68 
-jsr (fastcall)
+jsr (laststatic)
+rts
+TEST-NESTED-FASTCALL-PTR
+*label*: 1 
+size: 2 
+lda.s #32784 
+size: 2 
+sta.s (base),#0 
+size: 2 
+lda.s #32784 
+size: 2 
+sta.s (base),#2 
+size: 2 
+sta.s (base),#4 
+size: 2 
+lda.s (base),#0 
+size: 2 
+sta.s  40958 
+size: 2 
+lda.s (base),#2 
+pha'
+size: 2 
+lda.s #69 
+jsr (stack)
+jsr (laststatic)
+size: 2 
+lda.s (base),#0 
+size: 2 
+sta.s  40958 
+size: 2 
+lda.s (base),#2 
+pha'
+size: 2 
+lda.s (base),#4 
+pha'
+size: 2 
+lda.s #69 
+jsr (stack)
+jsr (stack)
+jsr (laststatic)
 rts
 
