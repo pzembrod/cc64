@@ -25,7 +25,7 @@ under the BASIC ROM on the C64.
 
 To allow the libc header files ctype.h, stdio.h and stdlib.h to
 declare functions that are implemented in assembly, v0.10 introduces
-a BREAKING CHANGE with regard to the format of the rt-\*.h and
+a **BREAKING CHANGE** with regard to the format of the rt-\*.h and
 libc-\*.h files: Previously, \*= set the address of assembly-implemented single-param no-stack-frame library functions, and /=
 set the address of regular C library functions and variables.
 Now, \*= assigns addresses for all library functions and variables,
@@ -53,6 +53,10 @@ meant that type declaration without address definition was impossible.
 Additionally, this change allowed the implementation of `_fastcall`
 function pointers as first class citizens. This required the
 addition of two new calls to the runtime library interface jumplist.
+
+`_fastcall` function calls now only allow the one parameter that the
+function can actually receive. Before, additional parameters were
+silently dropped.
 
 ## v0.9
 
