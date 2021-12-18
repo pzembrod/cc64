@@ -1,6 +1,6 @@
 
 char *memchr(char *s, int c, int n) {
-  char *p; p = s;
+  static char *p; p = s;
 
   while (n--) {
     if (*p == c) {

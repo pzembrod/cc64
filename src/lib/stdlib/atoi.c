@@ -11,9 +11,11 @@ static char _digits[] = "0123456789";
 extern char *memchr();
 
 int atoi(char *s) {
-  int rc = 0;
-  char sign = '+';
-  char *x;
+  static int rc;
+  static char sign;
+  static char *x;
+  rc = 0;
+  sign = '+';
 
   /* TODO: In other than "C" locale, additional patterns may be defined     */
   while (isspace(*s)) {

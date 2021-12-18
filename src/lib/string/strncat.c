@@ -1,6 +1,6 @@
 
 char *strncat(char *s1, char *s2, int n) {
-  char *rc = s1;
+  static char *rc; rc = s1;
 
   while (*s1) {
     ++s1;

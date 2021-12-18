@@ -1,7 +1,8 @@
 
 char *strstr(char *s1, char *s2) {
-  char * p1 = s1;
-  char * p2;
+  static char *p1;
+  static char *p2;
+  p1 = s1;
 
   while (*s1) {
     p2 = s2;

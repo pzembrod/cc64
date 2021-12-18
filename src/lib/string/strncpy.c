@@ -1,6 +1,6 @@
 
 char *strncpy(char *s1, char *s2, int n) {
-  char *rc = s1;
+  static char *rc; rc = s1;
 
   while (n && (*s1++ = *s2++)) {
     /* Note: In the original PDCLib code, n is size_t which cc64 does

@@ -1,6 +1,6 @@
 
 char *strrchr(char *s, int c) {
-  int i = 0;
+  static int i; i = 0;
 
   while (s[i++]) {}
 

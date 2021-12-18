@@ -1,6 +1,6 @@
 
 int strlen(char *s) {
-  int rc = 0;
+  static int rc; rc = 0;
 
   while (s[rc]) {
     ++rc;
