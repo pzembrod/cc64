@@ -50,6 +50,10 @@ old form (I was always somewhat unhappy with /= in this context), and
 in the old form \*= combined both type and address definition, which
 meant that type declaration without address definition was impossible.
 
+Additionally, this change allowed the implementation of `_fastcall`
+function pointers as first class citizens. This required the
+addition of two new calls to the runtime library interface jumplist.
+
 ## v0.9
 
 Main topic of v0.9 is compile speed. With the help of a simple profiler

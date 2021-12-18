@@ -74,10 +74,20 @@ Note that the return type of chrout() has been chosen as char though the
 routine doesn't return anything except in case of an error which is signaled
 by the Kernal via a set carry flag, but cc64 can't check that.
 
-One caveat: A `_fastcall` function's name will evaluate to its address, but it
-can't be called through a function pointer variable, as the parameter wouldn't
-be passed properly. `_fastcall` function pointers should be possible but don't
-work yet.
+`_fastcall` functions can be called through correspondingly
+declared function pointers, too. Example:
+
+```
+extern _fastcall char chrout() *= 0xffd2;
+main() {
+  _fastcall char (*fp)();
+  fp = chrout;
+  (*fp)('a');_
+}
+```
+It is the programmer's responsibility to use the right kind of
+pointer for function calls, as the compiler doesn't do any type
+checking on assignments.
 
 Obviously it would also be attractive to enable `_fastcall` parameter passing even
-for C functions that don't have local variables and only one parameter.
+for C functions that don't have local variables and only one parameter. This may be an extension for the future.

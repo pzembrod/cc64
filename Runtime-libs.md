@@ -82,23 +82,26 @@ to generate code from the `#pragma cc64` directive.
 `#pragma cc64` takes 7 integer parameters, all memory addresses usually given
 in hex, and one string parameter, a file base name. It has the following form:
 
-`#pragma cc64` *cc-sp*, *zp*, *rt-start*, *rt-jumplist*, *rt-end*,
-*statics-start*, *statics-end*, *rt-basename*
+`#pragma cc64` *cc-sp*, *zp*, *rt-first*, *rt-jumplist*, *rt-last*,
+*statics-first*, *statics-last*, *rt-basename*
 
 - *cc-sp*:
   - a zero page address pair used as stack pointer for C local variables
 - *zp*:
   - a second zero page address pair that the compiled code may use
-- *rt-start*:
+- *rt-first*:
   - the first code address of the runtime module
 - *rt-jumplist*:
   - the address of the runtime modules jump list (see below)
-- *rt-end*:
+- *rt-last*:
   - the first free code address after the end of the runtime module
-- *statics-start*:
-  - the lowest address of the runtime module's static vars
-- *statics-end*:
-  - the hightest address + 1 of the runtime module's static vars
+- *statics-first*:
+  - the lowest address of the runtime module's static vars.
+    Max *statics-last* - 2.
+- *statics-last*:
+  - the hightest address + 1 of the runtime module's static vars.
+    At *statics-last* - 2 lives the jump pointer `fastcallptr` that
+    the compiled code directly writes to. See jmp (fastcallptr).
 - *rt-basename*:
   - the base filename of the runtime module. *basename*.o is then the
 code, *basename*.i the initialzation values of the module's static vars. (Of
@@ -121,6 +124,8 @@ statics_last  .word 0
            jmp divmod
            jmp shl
            jmp shr
+           jmp (fastcallptr)
+           jmp jmpviastack
 ```
 
 The first part of the jumplist is a list of 4 addresses:
@@ -140,12 +145,15 @@ runtime module's initialization calls main() with a jmp (main.adr).
 
 As described above, statics are allocated from the end of the used memory
 downwards. The statics' initialization values are placed by the
-compiler from code_last upwards and in reversed order.
-The initialization routine copies (code_last) to (init_last) - 1,
-(code_last) + 1 to  (init_last) - 2 and so an to reverse the order again.
-In case of no static variables, init_first will be equal to init_last.
+compiler from `code_last` upwards and in reversed order.
+The initialization routine copies `(code_last)` to `(init_last) - 1`,
+`(code_last) + 1` to `(init_last) - 2` and so an to reverse the order again.
 
-After the addresses follows a list of 6 jmp instructions:
+The uppermost int static variable must be allocated by the runtime
+library itself and is used as jump vector when calling `_fastcall`
+functions through a function pointer. See jmp (fastcallptr).
+
+After the addresses follows a jump list with 8 jmp instructions:
 
 - `jmp (zp)`
   - This it is used to emulate `jsr (zp)`. zp is the second zero
@@ -173,6 +181,25 @@ remainder in zp/zp+1.
   - Arithmetically shifts left a/x by y bits.
 - jmp shr
   - Arithmetically shifts right a/x by y bits.
+- jmp (fastcallptr)
+  - Similar to jmp (zp) above, this is used to emulate
+  `jsr (fastcallptr)`. `fastcallptr` is the uppermost static
+  variable, living at `statics_last` - 2. Code for calling
+  `_fastcall` functions via function pointer write the function
+  address directly to this address, and then, after evaluating
+  the one parameter, call the function by a jsr to this jumplist
+  routine.
+- jmp jmpviastack
+  - This routine is used if `_fastcall` function calls via function
+  pointer are nested, i.e. after storing the address of a function
+  to `fastcallptr`, the param evaluation again contains a call via a
+  `_fastcall` function pointer. Since now `fastcallptr` is already
+  occupied, the compiled code pushes the function pointer value onto
+  the stack and does a jsr to this jumplist routine.  
+  This routine pulls the return address off the stack, stashes it
+  away, pulls the function pointer value off the stack and stores
+  it in `tmp_zp2`, retrieves the returns address and pushes it onto
+  the stack again, and then calls the function via `jmp (tmp_zp2)`.
 
 The jumplist may be positioned anywhere in the library.
 
