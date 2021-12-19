@@ -4,3 +4,4 @@
 2021-05-08-2238 18691 c16files/peddi enabled non-constant initializers of non-static local vars
 2021-06-05-2251 18691 c16files/peddi added memory overflow check in pass2
 2021-09-05-1622 18691 c16files/peddi compiler fixes applied while porting pdclib
+2021-09-24-1009 18691 c16files/peddi fastcall declarations and function pointers implemented

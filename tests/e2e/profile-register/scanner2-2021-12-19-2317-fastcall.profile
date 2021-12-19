@@ -1,0 +1,21 @@
+2021-12-19T23:17:38+01:00
+fastcall declarations and function pointers implemented
+
+profiler report PROFILE-SCANNER2
+timestamps
+587.523.136 750.202.746 
+countstamps
+5.300.211 6.757.636 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15742 65535      6081752   675381700  (etc)
+1 23607 23652        54064     5787814  [SCANNER-ALPHANUM]
+2 23972 24127        66807     7284539  [SCANNER-IDENTIFIER]
+3 24131 24711        94045    10201681  [SCANNER-OPERATOR]
+4 24715 24955        27340     3534296  [SCANNER-NUMBER]
+5 24959 25473       238983    26643075  [SCANNER-CHAR/STRING]
+6 25477 25637       150680    16118072  [SCANNER-(NEXTWORD]
+7 25641 25787        43951     5249926  [SCANNER-COMMENT]
+8 26060 26274           14        1522  [SCANNER-REST]
+

@@ -1,0 +1,21 @@
+2021-12-19T23:17:38+01:00
+fastcall declarations and function pointers implemented
+
+profiler report PROFILE-CC64-1
+timestamps
+587.081.446 749.594.535 
+countstamps
+5.300.211 6.757.636 
+
+buckets
+b# addr[  ]addr  nextcounts  clockticks  name
+0 15742 65535       216848    23255415  (etc)
+1 19259 19467       113486    12971420  [STRINGS]
+2 19479 21698       744114    83580348  [MEMMAN-ETC]
+3 21702 22922      1396466   156440776  [FILE-HANDLING]
+4 22926 23583       315320    34958368  [INPUT]
+5 23587 26274       829111    91606152  [SCANNER]
+6 26278 27669       153929    17618048  [SYMTAB]
+7 27673 35588      1875549   205369624  [PARSER]
+8 35592 37238      1112813   123794263  [PASS2]
+
