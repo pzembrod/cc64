@@ -23,9 +23,11 @@ static char _digits[] = "0123456789";
 extern char *memchr();
 
 int atoi(char *s) {
-  int rc = 0;
-  char sign = '+';
-  char *x;
+  static int rc;
+  static char sign;
+  static char *x;
+  rc = 0;
+  sign = '+';
 
   /* TODO: In other than "C" locale, additional patterns may be defined     */
   while (isspace(*s)) {
@@ -48,7 +50,7 @@ int atoi(char *s) {
 }
 
 char *memchr(char *s, int c, int n) {
-  char *p; p = s;
+  static char *p; p = s;
 
   while (n--) {
     if (*p == c) {
@@ -59,9 +61,11 @@ char *memchr(char *s, int c, int n) {
   return NULL;
 }
 
-int memcmp( char *s1, char *s2, int n ) {
-  char * p1 = s1;
-  char * p2 = s2;
+int memcmp(char *s1, char *s2, int n) {
+  static char *p1;
+  static char *p2;
+  p1 = s1;
+  p2 = s2;
 
   while ( n-- ) {
     if ( *p1 != *p2 ) {
@@ -74,8 +78,10 @@ int memcmp( char *s1, char *s2, int n ) {
 }
 
 char *memcpy(char *s1, char *s2, int n) {
-  char * dest = s1;
-  char * src = s2;
+  static char *dest;
+  static char *src;
+  dest = s1;
+  src = s2;
 
   while ( n-- ) {
     *dest++ = *src++;
@@ -85,8 +91,10 @@ char *memcpy(char *s1, char *s2, int n) {
 }
 
 char memmove(char *s1, char *s2, int n) {
-  char *dest = s1;
-  char *src = s2;
+  static char *dest;
+  static char *src;
+  dest = s1;
+  src = s2;
 
   if (dest <= src) {
     while (n--) {
@@ -106,7 +114,7 @@ char memmove(char *s1, char *s2, int n) {
 }
 
 char *memset(char* s, int c, int n) {
-  char *p = s;
+  char *p; p = s;
 
   while (n--) {
     *p++ = c;
@@ -116,7 +124,7 @@ char *memset(char* s, int c, int n) {
 }
 
 char *strcat(char *s1, char *s2) {
-  char *rc = s1;
+  static char *rc; rc = s1;
 
   if ( *s1 ) {
     while (*++s1) {}
@@ -147,7 +155,7 @@ int strcmp(char *s1, char *s2) {
 }
 
 char *strcpy(char *s1, char *s2) {
-  char *rc = s1;
+  static char *rc; rc = s1;
 
   while ((*s1++ = *s2++)) {}
 
@@ -155,8 +163,9 @@ char *strcpy(char *s1, char *s2) {
 }
 
 int strcspn(char *s1, char *s2) {
-  int len = 0;
-  char *p;
+  static int len;
+  static char *p;
+  len = 0;
 
   while ( s1[len] ) {
     p = s2;
@@ -174,7 +183,7 @@ int strcspn(char *s1, char *s2) {
 }
 
 int strlen(char *s) {
-  int rc = 0;
+  static int rc; rc = 0;
 
   while (s[rc]) {
     ++rc;
@@ -184,7 +193,7 @@ int strlen(char *s) {
 }
 
 char *strncat(char *s1, char *s2, int n) {
-  char *rc = s1;
+  static char *rc; rc = s1;
 
   while (*s1) {
     ++s1;
@@ -217,7 +226,7 @@ int strncmp(char *s1, char *s2, int n) {
 }
 
 char *strncpy(char *s1, char *s2, int n) {
-  char *rc = s1;
+  static char *rc; rc = s1;
 
   while (n && (*s1++ = *s2++)) {
     /* Note: In the original PDCLib code, n is size_t which cc64 does
@@ -238,8 +247,9 @@ char *strncpy(char *s1, char *s2, int n) {
 }
 
 char *strpbrk(char *s1, char *s2) {
-  char *p1 = s1;
-  char *p2;
+  static char *p1;
+  static char *p2;
+  p1 = s1;
 
   while (*p1) {
     p2 = s2;
@@ -257,7 +267,7 @@ char *strpbrk(char *s1, char *s2) {
 }
 
 char *strrchr(char *s, int c) {
-  int i = 0;
+  static int i; i = 0;
 
   while (s[i++]) {}
 
@@ -271,8 +281,9 @@ char *strrchr(char *s, int c) {
 }
 
 int strspn(char *s1, char *s2) {
-  int len = 0;
-  char *p;
+  static int len;
+  static char *p;
+  len = 0;
 
   while (s1[len]) {
     p = s2;
@@ -296,8 +307,9 @@ int strspn(char *s1, char *s2) {
 }
 
 char *strstr(char *s1, char *s2) {
-  char * p1 = s1;
-  char * p2;
+  static char *p1;
+  static char *p2;
+  p1 = s1;
 
   while (*s1) {
     p2 = s2;
