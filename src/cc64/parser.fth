@@ -767,7 +767,9 @@ make (declarator ( type -- id-handle type' )
 defer 'declarator ( type' -- )
 
 : declarator ( type -- )
-     id-buf off  (declarator 'declarator ;
+     id-buf off  (declarator
+     %function isn't? IF %fastcall is? *fastcall* ?error THEN
+     'declarator ;
 
 
 \ *** Block No. 82, Hexblock 52
@@ -993,7 +995,8 @@ variable protos2resolve
         IF dup ascii ; = swap ascii , = or
            IF prototype exit THEN THEN
      1st?
-        IF .label swap rot find/putglobal 2!
+        IF %fastcall is? *fastcall* ?error
+        .label swap rot find/putglobal 2!
          declare-parameters
           ascii { #char# expect  \ }
           compound
