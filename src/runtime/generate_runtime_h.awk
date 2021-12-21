@@ -11,6 +11,7 @@ BEGIN {
   statics_start = "";
   statics_end = "";
   lib_name = "";
+  fastcallptr = "";
 
   type_formats["1"] = "_fastcall int %s()";
   type_formats["2"] = "_fastcall char %s()";
@@ -56,6 +57,10 @@ BEGIN {
   split($2, a, /\s+/); statics_end = a[1];
 }
 
+/fastcallptr/ {
+  split($2, a, /\s+/); fastcallptr = a[1];
+}
+
 /cc64_symbol_/ {
   name = $1;
   gsub(/\s+/, "", name);
@@ -78,7 +83,14 @@ BEGIN {
 
 END {
   if (cc64_frameptr && cc64_zp && lib_start && lib_jumplist &&
-      lib_end && statics_start && statics_end && lib_name) {
+      lib_end && statics_start && statics_end && lib_name &&
+      fastcallptr) {
+    if (strtonum(sprintf("0x%s", fastcallptr)) + 2 != \
+        strtonum(sprintf("0x%s", statics_end))) {
+      printf("fastcallptr (%s) + 2 != statics_end (%s)\n", \
+             fastcallptr, statics_end) > "/dev/stderr";
+      exit 1;
+    }
     printf("#pragma cc64 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s 0x%s %s\n",
            cc64_frameptr, cc64_zp, lib_start, lib_jumplist, lib_end,
            statics_start, statics_end, lib_name);
