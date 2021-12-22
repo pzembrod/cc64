@@ -5,3 +5,4 @@
 2021-06-18-1106 32558 c16files/cc64 added memory overflow check in pass2
 2021-09-05-1621 32558 c16files/cc64 compiler fixes applied while porting pdclib
 2021-12-19-2235 32600 c16files/cc64 fastcall declarations and function pointers implemented
+2021-12-22-2332 32608 c16files/cc64 v0.10 release

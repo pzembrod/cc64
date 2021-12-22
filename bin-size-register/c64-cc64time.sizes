@@ -1,2 +1,3 @@
 2021-09-05-1143 32675 c64files/cc64time compiler fixes applied while porting pdclib
 2021-12-19-0012 32755 c64files/cc64time fastcall declarations and function pointers implemented
+2021-12-21-1614 32726 c64files/cc64time v0.10 release

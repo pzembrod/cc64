@@ -5,3 +5,4 @@
 2021-06-18-1105 36127 c64files/cc64prof added memory overflow check in pass2
 2021-09-05-1620 36211 c64files/cc64prof compiler fixes applied while porting pdclib
 2021-12-19-2237 36339 c64files/cc64prof fastcall declarations and function pointers implemented
+2021-12-22-2334 36349 c64files/cc64prof v0.10 release

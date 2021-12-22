@@ -5,3 +5,4 @@
 2021-06-05-2250 18623 c64files/peddi added memory overflow check in pass2
 2021-09-05-1621 18623 c64files/peddi compiler fixes applied while porting pdclib
 2021-09-24-1008 18623 c64files/peddi fastcall declarations and function pointers implemented
+2021-12-22-2332 18619 c64files/peddi v0.10 release
