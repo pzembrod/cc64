@@ -1,36 +1,50 @@
 # cc64 versions
 
-## v0.10-dev
+## v0.10
 
-ANSI style function definitions are now possible.
-There's no matching or checking, however,
-of declared parmeter types
-in the function definition and actual parmeter
-types in calls to that function.
+The three main changes that v0.10 brings are ANSI syntax for
+function definitions, a basic libc, and proper support
+for `_fastcall` functions, with a related breaking change
+in runtime module .h file format.
 
-Also there are now more parser unit tests, some bug fixes,
-and binary sizes are now tracked in
-[bin-size-register](bin-size-register).
+ANSI style function definitions (```char f(int a) {...}```) are
+implemented as a syntactic alternative to K&R style function
+definitions (```char f(a) int a; {...}```) with exactly the same
+semantics, i.e. there is no matching or checking of declared
+parameter types and actual parameter types in function calls.
 
-A basic libc is now available, incl. tests. Much of it is
-ported from
-[PDCLib](https://pdclib.rootdirectory.de/), and some parts are
-hand-coded 6502 assembly.
-The cc64 libc is available in precompiled runtime
-modules libc-\*.[hio], to be used instead of rt-\*.[hio].
+The new basic libc, incl. tests, is based on
+[PDCLib](https://pdclib.rootdirectory.de/) (thanks go to Martin
+"Solar" Baute and to Erin Shepherd). Of course,
+only a limited range of standard libc functions make sense on an
+int/char only compiler on the C64, C16 or X16. E.g. wchar, float,
+time, locale or signal related functions were left out completely.
+In the end, 18 ```string.h``` functions and
+2 ```stdlib.h``` functions were ported from PDCLib,
+and 2 functions from ```stdlib.h```, 8 functions
+from ```ctype.h``` and 12 functions from ```stdio.h``` were
+reimplemented in 6502 assembly, while often porting the PDCLib
+tests. The cc64 libc is available in precompiled runtime modules
+`libc-*.[hio]`, to be used instead of `rt-*.[hio]`.
 
-Naming scheme for the basic runtime libraries rt-\*.[hio] now includes
-both start and end address, to facilitate version e.g. using the RAM
-under the BASIC ROM on the C64.
+cc64 always could call a type of assembly-implemented single-param
+functions which need no own stack frame and get the param passed in
+a/x. However, this type wasn't properly named, and such functions
+could be defined by stating their address, but not declared,
+nor could they be called through pointers. Initial purpose of these
+functions was to interact with the Kernal.
 
-To allow the libc header files ctype.h, stdio.h and stdlib.h to
-declare functions that are implemented in assembly, v0.10 introduces
-a **BREAKING CHANGE** with regard to the format of the rt-\*.h and
-libc-\*.h files: Previously, \*= set the address of assembly-implemented single-param no-stack-frame library functions, and /=
-set the address of regular C library functions and variables.
-Now, \*= assigns addresses for all library functions and variables,
-and assembly-implemented single-param no-stack-frame functions are
-additionally marked with the new keyword `_fastcall`.
+Now many libc functions are implemented as this function type,
+named "fastcall" going forward. To allow the libc header files
+ctype.h, stdio.h and stdlib.h to declare these functions,
+v0.10 introduces a **BREAKING CHANGE** with regard to the format of
+the `rt-*.h` and `libc-*.h` files:
+
+Previously, \*= defined a function to be fastcall, and set its
+address,
+and /= set the address of regular C library functions and variables.
+Now, \*= sets the addresses of all library functions and variables,
+and fastcall functions are additionally marked with the new keyword `_fastcall`.
 
 - fastcall functions:
   - until v0.9:
@@ -45,18 +59,33 @@ additionally marked with the new keyword `_fastcall`.
      - `extern int fopen() *= 0xB7E;`
      - `extern char errno *= 0x9FDB;`
 
-Reasons for this change: I find new form much more expressive than the
-old form (I was always somewhat unhappy with /= in this context), and
-in the old form \*= combined both type and address definition, which
-meant that type declaration without address definition was impossible.
+Reasons for making this a breaking change:
+I was always somewhat unhappy with /= for regular functions, as
+I found \*= (sets the starting address with many assemblers)
+to be very expressive, and /= to be very unimpressive, so I was
+happy to retire it quickly. Also, a breaking change saved compiler
+code size (which is tight), and I figured there shouldn't be much
+usage of \*= and /= out there yet.
 
-Additionally, this change allowed the implementation of `_fastcall`
-function pointers as first class citizens. This required the
-addition of two new calls to the runtime library interface jumplist.
+The new keyword `_fastcall` allows declaring fastcall function
+pointers. Implementing them required the addition of two new calls
+to the runtime library interface jumplist.
 
-`_fastcall` function calls now only allow the one parameter that the
-function can actually receive. Before, additional parameters were
-silently dropped.
+Fastcall function can now only be called with the one parameter that
+the function can actually receive. Previously, additional parameters
+were silently dropped, which a) I now consider wrong, and b) was a
+waste of scarce compiler code size. On that note, a few compiler
+error messages were shortened.
+
+The naming scheme for the basic runtime libraries `rt-*.[hio]` now
+includes both start and end address, to facilitate different
+versions, e.g. using or not using the RAM under the BASIC ROM
+on the C64.
+
+Finally, there are now more parser unit tests, some compiler bugs
+discovered while implementing the libc were fixed,
+and binary sizes are now tracked in
+[bin-size-register](bin-size-register).
 
 ## v0.9
 
