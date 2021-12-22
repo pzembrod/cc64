@@ -4,7 +4,9 @@ fputs_test() {
   int fh;
   char filename[] = "fputs.out1";
 
-  remove(filename);
+  fnunit = 8;
+
+  assertEq(remove(filename), 0, "remove(filename)");
 
   fh = fopen(filename, ",s,w");
   assertTrue(fh != NULL, "fopen(fputs.out1) != NULL");

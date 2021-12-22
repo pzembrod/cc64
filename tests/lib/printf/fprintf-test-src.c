@@ -11,7 +11,9 @@ INCLUDE
 }
 
 fprintf_test() {
-  remove(fprintf_file);
+  fnunit = 8;
+
+  assertEq(remove(fprintf_file), 0, "remove(fprintf_file)");
 
   assertTrue((fh = fopen(fprintf_file, ",s,w")) != 0,
       "fopen(fprintf_file, \",s,w\")");

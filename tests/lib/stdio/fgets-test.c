@@ -5,7 +5,9 @@ fgets_test() {
   char *fgets_test = "foo\nbar\0baz\nweenie";
   char filename[] = "fgets.tmp";
 
-  remove(filename);
+  fnunit = 8;
+
+  assertEq(remove(filename), 0, "remove(filename)");
   
   fhw = fopen(filename, ",s,w");
   assertTrue(fhw != NULL, "fhw != NULL");

@@ -44,29 +44,46 @@ cc64_type_remove = int_fastcall
 cc64_symbol_remove
         sta tmp_zp1
         stx tmp_zp1 + 1
+        lda #0
+        sta tmp_zp2
         lda cc64_symbol_fnunit
         jsr LISTEN
+        jsr READST
+        bne remove_error
         lda #$ff
         jsr SECOND
+        jsr READST
+        bne remove_error
         ldx #0
 remove_1
         lda s0colon,x
         beq remove_2
         jsr CIOUT
+        jsr READST
+        bne remove_error
         inx
         bne remove_1
 remove_2
         ldy #0
 remove_3
         lda (tmp_zp1),y
-        beq remove_4
+        beq remove_unlsn
         jsr CIOUT
+        jsr READST
+        bne remove_error
         iny
         bne remove_3
-remove_4
+
+remove_error
+        dec tmp_zp2
+remove_unlsn
         jsr UNLSN
-        lda #1
-        ldx #0
+        jsr READST
+        beq remove_done
+        dec tmp_zp2
+remove_done
+        lda tmp_zp2
+        tax
         rts
 
 s0colon !pet "s0:", 0

@@ -46,7 +46,7 @@ fopen_basic_test() {
       "strcmp(buffer+56, \"libc-c64\\n\")");
   assertEq(fclose(fh2), 0, "flcose(fh2)");
 
-  remove(outfile1);
+  assertEq(remove(outfile1), 0, "remove(outfile1)");
 
   assertTrue((fh3 = fopen(outfile1, ",s,w")) != 0,
       "fopen(outfile1, \",s,w\")");
@@ -61,8 +61,8 @@ fopen_basic_test() {
 fopen_copy_test() {
   int fh1, fh2, fh3, c;
 
-  remove(outfile2);
-  remove(outfile3);
+  assertEq(remove(outfile2), 0, "remove(outfile2)");
+  assertEq(remove(outfile3), 0, "remove(outfile3)");
 
   assertTrue((fh1 = fopen("fopen.in2,s,r", 0)) != 0,
       "fopen(\"fopen.in2\", \",s,r\")");
@@ -91,6 +91,8 @@ fopen_append_test() {
 }
 
 fopen_test() {
+  fnunit = 8;
+
   fopen_basic_test();
   fopen_copy_test();
   fopen_append_test();

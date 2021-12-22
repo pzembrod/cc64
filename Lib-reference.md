@@ -103,6 +103,13 @@ Since there is no stdout, ```puts(str)``` writes string str
 to the current output channel, by default the screen.
 Return value follows the standard.
 
+```int remove(char* filename);```
+
+follows standard, with the caveat that only direct problems with
+the serial bus are detected and signaled via a non-zero return
+value. A zero return value doesn't make a statement about the
+success of the actual file remove operation.
+
 Source: ```src/runtime/fileio.a``` (acme 6502 assembly)  
 Tests: ```tests/lib/stdio/*-test.c```
 
