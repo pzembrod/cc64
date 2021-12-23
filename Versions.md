@@ -74,8 +74,8 @@ to the runtime library interface jumplist.
 Fastcall function can now only be called with the one parameter that
 the function can actually receive. Previously, additional parameters
 were silently dropped, which a) I now consider wrong, and b) was a
-waste of scarce compiler code size. On that note, a few compiler
-error messages were shortened.
+waste of scarce compiler code size. On that note, I shortened a few
+compiler error messages to fit the new feature into the X16.
 
 The naming scheme for the basic runtime libraries `rt-*.[hio]` now
 includes both start and end address, to facilitate different
