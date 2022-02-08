@@ -49,7 +49,7 @@ Tests: ```tests/lib/ctype/*-test.c```
 
 ## ```stdio.h```
 
-Since cc64 has no typedef or strucht, file handles (short ```fh```)
+Since cc64 has no typedef or struct, file handles (short ```fh```)
 are int values, namely the CBM logical file number.
 
 No default file handles stdin, stdout or stderr are defined.
