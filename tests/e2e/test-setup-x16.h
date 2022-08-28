@@ -28,11 +28,11 @@ extern _fastcall _close() *= 0xffc3 ;
 extern _fastcall _clrchn() *= 0xffcc ;
 extern _fastcall __open() *= 0xffc0 ;
 
-extern char _kernal_fnam_len *= 0x28e;
-extern char _kernal_lfn *= 0x28f;
-extern char _kernal_sa *= 0x290;
-extern char _kernal_fa *= 0x291;
-extern int _kernal_fnam *= 0x8c;
+extern char _kernal_fnam_len *= 0x291;
+extern char _kernal_lfn *= 0x292;
+extern char _kernal_sa *= 0x293;
+extern char _kernal_fa *= 0x294;
+extern int _kernal_fnam *= 0x8a;
 
 _open(lfn, fa, sa, fnam)
 char lfn, fa, sa;

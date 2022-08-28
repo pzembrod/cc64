@@ -34,11 +34,11 @@ char *s;
 extern _fastcall tst_close() *= 0xffc3 ;
 extern _fastcall tst__open() *= 0xffc0 ;
 
-extern char tst_kernal_fnam_len *= 0x28e;
-extern char tst_kernal_lfn *= 0x28f;
-extern char tst_kernal_sa *= 0x290;
-extern char tst_kernal_fa *= 0x291;
-extern int tst_kernal_fnam *= 0x8c;
+extern char tst_kernal_fnam_len *= 0x291;
+extern char tst_kernal_lfn *= 0x292;
+extern char tst_kernal_sa *= 0x293;
+extern char tst_kernal_fa *= 0x294;
+extern int tst_kernal_fnam *= 0x8a;
 
 tst_open(lfn, fa, sa, fnam)
 char lfn, fa, sa;
