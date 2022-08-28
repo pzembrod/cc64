@@ -6,3 +6,4 @@
 2021-09-05-1621 18623 c64files/peddi compiler fixes applied while porting pdclib
 2021-09-24-1008 18623 c64files/peddi fastcall declarations and function pointers implemented
 2021-12-22-2332 18619 c64files/peddi v0.10 release
+2022-08-28-2139 18651 c64files/peddi v0.11 release

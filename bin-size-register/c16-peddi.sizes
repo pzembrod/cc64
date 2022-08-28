@@ -6,3 +6,4 @@
 2021-09-05-1622 18691 c16files/peddi compiler fixes applied while porting pdclib
 2021-09-24-1009 18691 c16files/peddi fastcall declarations and function pointers implemented
 2021-12-22-2333 18687 c16files/peddi v0.10 release
+2022-08-28-2140 18736 c16files/peddi v0.11 release
