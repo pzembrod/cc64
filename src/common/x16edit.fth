@@ -1,5 +1,5 @@
 
-$9f60 || constant RomBank
+$0001 || constant RomBank
 
 || Code (xed?  ( -- n )
   $c000 lda  pha  $c003 lda  Push jmp  end-code

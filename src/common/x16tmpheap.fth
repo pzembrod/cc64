@@ -13,7 +13,7 @@
 ~ User tmpheap>
 ~ User ]tmpheap
 
- 1 $9f61 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> !
+ 1 $0000 c!  $a000 tmpheap[ !  $c000 dup ]tmpheap ! tmpheap> !
 
 ~ : tmp-hallot  ( size -- addr )
     tmpheap> @ swap -
