@@ -1,5 +1,12 @@
 # cc64 versions
 
+## v0.11
+
+v0.11 updates the VolksForth build base from 3.9.3 to 3.9.4 which
+migrates the Commander X16 version of cc64 to the Kernal version R41
+and the new prototype #2 board. For C64 and C16 the change should
+be a no-op.
+
 ## v0.10
 
 The three main changes that v0.10 brings are ANSI syntax for
