@@ -5,9 +5,11 @@
 create prevTime  4 allot
 create deltaTime 4 allot
 variable currentBucket
-variable currentBucketOpen
 variable metric-name
 
+\ Separte arrays for low and high byte of bucket start and end with
+\ #buckets + 1 elements. Bucket #0 start contains the upper limit of
+\ the Forth kernel. Bucket #0 end isn't used.
 create <buckets[    #buckets 1+ allot
 create >buckets[    #buckets 1+ allot
 create <]buckets    #buckets 1+ allot
@@ -60,21 +62,30 @@ Assembler also definitions
      mainCount inc 0= ?[ mainCount 1+ inc  ]? ]? ]?
 ;
 
+\ Compares instruction pointer IP to the start of the bucket indexed by
+\   the X register, 0 <= X <= 8.
+\ Result in carry and zero flag:
+\   CC if IP < bucket start, CS if IP >= bucket start
+\   EQ if IP = bucket start, NE if IP != bucket start
 : compareIp
   IP 1+ lda  >buckets[ ,x cmp  0= ?[ IP lda  <buckets[ ,x cmp ]?
 ;
 
+\ Finds the bucket into which current IP falls.
+\ Result: bucket number * 4 in X register and in currentBucket.
 : findBucket
-  0 # ldx  compareIp  CC ?[
+  0 # ldx  compareIp  CC ?[  \ start of bucket 0 contains end of kernel
     currentBucket ldx
   ][ inx  compareIp  CC ?[
-      dex
+      dex  \ If IP < start of bucket 1 then return default bucket 0.
     ][
       5 # ldx
       compareIp  0<> ?[  CC ?[ dex dex ][ inx inx ]?
       compareIp  0<> ?[  CC ?[ dex     ][ inx     ]?
       compareIp          CC ?[ dex     ]?             ]? ]?
 
+      \ After finding bucket start, check against end of that bucket.
+      \ If IP > end of that bucket, then return default bucket 0.
       IP 1+ lda  >]buckets ,x cmp  0= ?[ IP lda  <]buckets ,x cmp ]?
         CS ?[ 0 # ldx ]?
 
@@ -115,7 +126,7 @@ Code end-profiler
 Code init-prevTime  setPrevTime  Next jmp end-code
 
 : profiler-init-buckets
-  currentBucket off  currentBucketOpen off  init-prevTime
+  currentBucket off  init-prevTime
   <buckets[    #buckets 2+ $ff fill
   >buckets[    #buckets 2+ $ff fill
   <]buckets    #buckets 2+ $ff fill
