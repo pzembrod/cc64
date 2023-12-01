@@ -33,9 +33,7 @@ suite_results_c16_hosted = \
     $(patsubst %, cc64-%, $(suite_c16_suffixes)) \
     $(patsubst %, cc64pe-%, $(suite_c16_suffixes))
 suite_results_x16_hosted = \
-    $(patsubst %, cc64-%, $(suite_x16_suffixes)) \
-    cc64r39-suite-x16_x16.result
-# TODO: Remove line above again once X16 R39 is standard.
+    $(patsubst %, cc64-%, $(suite_x16_suffixes))
 
 c64_rt_files = \
     $(patsubst $(basedir)/runtime/%, c64files/%, $(wildcard $(basedir)/runtime/rt-*.[hio]))
@@ -192,13 +190,6 @@ suite.profile: *-test.c $(c64_profile_scripts)
 %.profile: *-test.c c64files/%.pfs
 	rm -f c64files/$*.profile
 	./profile-suite.sh cc64prof $*
-
-
-# TODO: Remove rule again once X16 R39 is standard.
-cc64r39-suite-x16_x16.result: *-test.c *.golden
-	rm -f cc64-suite-x16_x16.result $@
-	./compile-run-suite-r39.sh cc64 x16_x16
-	cp cc64-suite-x16_x16.result $@
 
 
 clean:
