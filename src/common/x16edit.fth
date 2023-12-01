@@ -11,6 +11,6 @@ $0001 || constant RomBank
 
 ~ : xed  ( -- )
    bl word count $4 c!  $2 !
-   RomBank c@  7 RomBank c!
+   RomBank c@  13 RomBank c!
    (xed? $4c4c = IF (xed RomBank c!
    ELSE RomBank c! ." no x16edit" THEN ;
