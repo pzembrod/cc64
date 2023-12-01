@@ -58,10 +58,15 @@ else
   debug="-debug"
 fi
 
+rom=""
+# temporarily disable -rom so r46 uses its default rom until I have
+# figured out a new/better way to generate and set a C charset rom.
+# rom=-rom "${x16rom}"
+
 x16emu \
   -keymap de \
   -sdcard "${sdcard}" \
-  -rom "${x16rom}" \
+  $rom \
   $autostart \
   $script \
   $warp \
