@@ -61,7 +61,10 @@ fi
 rom=""
 # temporarily disable -rom so r46 uses its default rom until I have
 # figured out a new/better way to generate and set a C charset rom.
-# rom=-rom "${x16rom}"
+if [ -s "${x16rom}" ]
+then
+  rom="-rom ${x16rom}"
+fi
 
 x16emu \
   -keymap de \

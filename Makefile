@@ -61,6 +61,9 @@ recompile_forths = $(patsubst forth/%, $(recompile_dir)/%, \
 forth_binaries = devenv-uF83
 forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
 
+# emulator files
+x16emu_rom = $(shell emulator/which-x16emu-rom.sh)
+
 
 all: c64 c16 x16 etc
 
@@ -276,7 +279,7 @@ sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
   autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \
   autostart-c64/peddi.T64 autostart-c16/peddi.T64 \
   autostart-c64/cc64prof.T64 \
-  $(c64dir_files) $(c16dir_files) $(x16dir_files)
+  $(c64dir_files) $(c16dir_files) $(x16dir_files) emulator/x16-c-rom.bin
 
 # cc64 build rules
 
@@ -400,6 +403,9 @@ emulator/c-chargen: emulator/c-char-rom-gen
 	x64 -virtualdev +truedrive -drive8type 1541 -fs8 emulator \
 	-keybuf 'load"c-char-rom-gen",8\nrun\n'
 
+emulator/x16-c-rom.bin: $(x16emu_rom)
+	patch-c-charset -n 99328 $< $@
+	touch -m -r $< $@
 
 # Generic T64 tape image rules
 

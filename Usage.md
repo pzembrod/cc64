@@ -333,7 +333,7 @@ The first 2k contain the upper/graphics charset, the second the lower/upper,
 first normal followed by inverse:
 
 ```
-patch-c-charset chargen-orig chargen-patched -n 2048 -i 3072
+patch-c-charset -n 2048 -i 3072 chargen-orig chargen-patched
 ```
 
 #### C16:
@@ -346,7 +346,7 @@ the normal charset needs to be patched; the lower/upper case charset starts
 at $d400, so 5k into the image:
 
 ```
-patch-c-charset kernal-orig kernal-patched -n 5120
+patch-c-charset -n 5120 kernal-orig kernal-patched
 ```
 
 #### X16:
@@ -364,7 +364,7 @@ the lower/upper case charset starts right after the 1k-long upper/graphics
 charset, so it is 97k into the image:
 
 ```
-patch-c-charset rom-orig.bin rom-patched.bin -n 99328
+patch-c-charset -n 99328 rom-orig.bin rom-patched.bin
 ```
 
 You'll find these calls in the main Makefile, with the ROM image paths as
