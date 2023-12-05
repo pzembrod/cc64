@@ -61,8 +61,12 @@ recompile_forths = $(patsubst forth/%, $(recompile_dir)/%, \
 forth_binaries = devenv-uF83
 forth_t64_files = $(patsubst %, autostart-c64/%.T64, $(forth_binaries))
 
-# emulator files
+# Location of emulators' ROM files containing their chargen
+vice_c64_chargen = ~/.config/vice/C64/chargen
+vice_c16_kernal = ~/.config/vice/PLUS4/kernal
 x16emu_rom = $(shell emulator/which-x16emu-rom.sh)
+c_charset_roms = $(patsubst %, emulator/% , \
+    c64-c-chargen c16-c-kernal x16-c-rom.bin)
 
 
 all: c64 c16 x16 etc
@@ -177,16 +181,6 @@ cc64-doc.zip: $(wildcard *.md) COPYING
 
 etc: $(forth_t64_files) emulator/c-char-rom-gen
 
-# The following utility build rule is based on my current setup of
-# where VICE and x16emu have their default ROMs.
-c-char-roms:
-	patch-c-charset ~/.config/vice/C64/chargen \
-	    emulator/c64-c-chargen -n 2048 -i 3072
-	patch-c-charset ~/.config/vice/PLUS4/kernal \
-	    emulator/c16-c-kernal -n 5120
-	patch-c-charset ~/bin/rom.bin \
-	    emulator/x16-c-rom.bin -n 99328
-
 
 # PETSCII sources and VolksForth bases for manual recompile
 
@@ -279,7 +273,7 @@ sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
   autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \
   autostart-c64/peddi.T64 autostart-c16/peddi.T64 \
   autostart-c64/cc64prof.T64 \
-  $(c64dir_files) $(c16dir_files) $(x16dir_files) emulator/x16-c-rom.bin
+  $(c64dir_files) $(c16dir_files) $(x16dir_files) $(c_charset_roms)
 
 # cc64 build rules
 
@@ -399,13 +393,18 @@ x16files/c-charset: src/runtime/c-charset-x16.a
 emulator/c-char-rom-gen: src/runtime/c-char-rom-gen.a
 	acme -f cbm -o $@ $<
 
-emulator/c-chargen: emulator/c-char-rom-gen
-	x64 -virtualdev +truedrive -drive8type 1541 -fs8 emulator \
-	-keybuf 'load"c-char-rom-gen",8\nrun\n'
+emulator/c64-c-chargen: $(vice_c64_chargen)
+	patch-c-charset  -n 2048 -i 3072 $< $@
+	touch -m -r $< $@
+
+emulator/c16-c-kernal: $(vice_c16_kernal)
+	patch-c-charset -n 5120 $< $@
+	touch -m -r $< $@
 
 emulator/x16-c-rom.bin: $(x16emu_rom)
 	patch-c-charset -n 99328 $< $@
 	touch -m -r $< $@
+
 
 # Generic T64 tape image rules
 
