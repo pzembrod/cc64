@@ -174,6 +174,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   dup 3 mod 0= IF ascii . emit THEN REPEAT 2drop bl emit ;
 
 : profiler-report
+    base push
     cr ." profiler report " metric-name @ count $1f and type cr
     ." timestamps" cr
     timestamps[ BEGIN dup timestamp> @ < WHILE
@@ -183,8 +184,8 @@ Code init-prevTime  setPrevTime  Next jmp end-code
     dup 2@ d.. 4+ REPEAT drop cr
     cr ." buckets" cr
     ." b# addr[  ]addr  nextcounts  clockticks  name" cr
-    #buckets 1+ 0 DO
-      I .  I bucket[ u.  I ]bucket u.
+    #buckets 1+ 0 DO  decimal
+      I .  hex I bucket[ u.  I ]bucket u.  decimal
       bucketCounts I d[].  bucketTimes I d[].
       I IF I bucket[ 1+ IF ."   " I bucket[ count $1f and type THEN
       ELSE ."   (etc)" THEN
