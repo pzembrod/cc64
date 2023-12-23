@@ -7,6 +7,9 @@
 || CIA $e + >label timerActrl
 || CIA $f + >label timerBctrl
 
+~ create prevTime  4 allot
+~ create deltaTime 4 allot
+
 ~ Code reset-32bit-timer  ( -- )
     $ff # lda  timerAlo sta  timerAhi sta  timerBlo sta  timerBhi sta
     %11011001 # lda  timerBctrl sta
@@ -34,3 +37,23 @@
 
 ~ : ms.  ( u -- )
       20 u/mod u. 5 * u. ." sec ms" ;
+
+current @ context @
+Assembler also definitions
+
+: calcTime
+  sec
+  prevTime 2+ lda  timerAlo sbc  deltaTime 2+ sta
+  prevTime 3+ lda  timerAhi sbc  deltaTime 3+ sta
+  prevTime    lda  timerBlo sbc  deltaTime    sta
+  prevTime 1+ lda  timerBhi sbc  deltaTime 1+ sta
+;
+
+: setPrevTime
+  timerAlo lda  prevTime 2+ sta
+  timerAhi lda  prevTime 3+ sta
+  timerBlo lda  prevTime    sta
+  timerBhi lda  prevTime 1+ sta
+;
+
+toss  context ! current !

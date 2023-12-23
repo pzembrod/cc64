@@ -2,8 +2,6 @@
 8 constant #buckets
 4 constant #timestamps
 
-create prevTime  4 allot
-create deltaTime 4 allot
 variable currentBucket
 variable metric-name
 
@@ -27,22 +25,8 @@ create countstamps[  #timestamps 4 * allot
 here constant ]countstamps
 variable countstamps>
 
+current @ context @
 Assembler also definitions
-
-: calcTime
-  sec
-  prevTime 2+ lda  timerAlo sbc  deltaTime 2+ sta
-  prevTime 3+ lda  timerAhi sbc  deltaTime 3+ sta
-  prevTime    lda  timerBlo sbc  deltaTime    sta
-  prevTime 1+ lda  timerBhi sbc  deltaTime 1+ sta
-;
-
-: setPrevTime
-  timerAlo lda  prevTime 2+ sta
-  timerAhi lda  prevTime 3+ sta
-  timerBlo lda  prevTime    sta
-  timerBhi lda  prevTime 1+ sta
-;
 
 : addTimeToBucket
   clc
@@ -107,7 +91,8 @@ Label prNext
   pla  timerActrl sta
   0 # ldx  clc  IP lda  Next $c + jmp
 
-onlyforth
+
+toss  context ! current !
 
 Code install-prNext
  prNext 0 $100 m/mod
