@@ -41,7 +41,7 @@
 current @ context @
 Assembler also definitions
 
-: calcTime
+~ : calcTime
   sec
   prevTime 2+ lda  timerAlo sbc  deltaTime 2+ sta
   prevTime 3+ lda  timerAhi sbc  deltaTime 3+ sta
@@ -49,7 +49,7 @@ Assembler also definitions
   prevTime 1+ lda  timerBhi sbc  deltaTime 1+ sta
 ;
 
-: setPrevTime
+~ : setPrevTime
   timerAlo lda  prevTime 2+ sta
   timerAhi lda  prevTime 3+ sta
   timerBlo lda  prevTime    sta
