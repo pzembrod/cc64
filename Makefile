@@ -316,8 +316,20 @@ c64files/cc64pftm: $(cc64srcs_c64) \
  autostart-c64/vf-build-base.T64
 	emulator/build-binary.sh c64 cc64pftm
 
+%files/cc64size: $(cc64srcs_c64) $(cc64srcs_c16)  $(cc64srcs_x16) \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
+ autostart-%/vf-build-base.T64
+	emulator/build-binary.sh $* cc64size
 
-# build base rule
+
+# profiler bucket size rule
+
+%-bucket-sizes: autostart-%/cc64size.T64 \
+ emulator/run-in-%emu.sh
+	emulator/run-in-$*emu.sh cc64size
+
+
+# build base rules
 
 c64files/vf-build-base: forth/v4th-c64
 	cp $< $@

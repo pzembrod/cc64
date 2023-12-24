@@ -1,6 +1,7 @@
 
 ~ create prevTime  4 allot
 ~ create deltaTime 4 allot
+~ variable timerActrl
 
 ~ ' noop alias reset-32bit-timer  ( -- )
 ~ : read-32bit-timer  ( -- ud )  0. ;

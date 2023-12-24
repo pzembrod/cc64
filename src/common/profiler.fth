@@ -4,6 +4,7 @@
 
 variable currentBucket
 variable metric-name
+variable all-buckets  all-buckets off
 
 \ Separte arrays for low and high byte of bucket start and end with
 \ #buckets + 1 elements. Bucket #0 start contains the upper limit of
@@ -119,9 +120,16 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   ['] forth-83 >lo/hi >buckets[ c! <buckets[ c! ;
 
 : profiler-bucket
-  create  last @ ,  0 , ;
+  create  here  all-buckets @ ,  all-buckets !  last @ ,  0 ,
+  does> 2+ ;
 
 : end-bucket  ( bucket -- )  here swap 2+ ! ;
+
+: reverse-all-buckets  ( -- )
+  all-buckets @ 0  ( this-bucket last-link)
+  BEGIN over WHILE over @ ( this-bucket last-link next-link ) >r
+    over ! r> ( this-bucket next-link) swap REPEAT ( 0 this-bucket )
+  all-buckets !  drop ;
 
 : activate-bucket  ( bucket -- )
   currentBucket @ 1+ dup >r currentBucket ! \ check for #buckets
@@ -152,6 +160,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   mainCount 2@  countstamps> @  dup 4+ countstamps> !  2! ;
 
 : profiler-start
+  currentBucket off
   bucketTimes  #buckets 1+ 4 * erase
   bucketCounts #buckets 1+ 4 * erase
   prevTime 4 erase   timestamps[ timestamp> !
@@ -191,3 +200,13 @@ Code init-prevTime  setPrevTime  Next jmp end-code
       ELSE ."   (etc)" THEN
       cr
     LOOP ;
+
+: bucket-size-report
+    base push  cr ." from to    size  bucket" cr
+    all-buckets @ BEGIN dup WHILE dup
+      \ 2+ dup u.  dup 2+ @ u.
+      2+ dup dup 2+ @  2dup hex u. u.  swap - decimal 5 u.r
+      @ count $1f and ."   " type cr
+    @ REPEAT drop ;
+
+    
