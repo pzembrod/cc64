@@ -2,6 +2,8 @@
 
 \ parser loadscreen            21sep94pz
 
+\prof profiler-bucket [parser-basics]
+
 ~ variable protos2patch
 
 ||on
@@ -41,8 +43,11 @@
 \ : skipword ( -- )
 \    *ignored* error nextword word. ;
 
+\prof [parser-basics] end-bucket
 
 \ *** Block No. 50, Hexblock 32
+
+\prof ||off profiler-bucket [parser-expr] ||on
 
   cr .( submodule expression ) cr
 
@@ -312,10 +317,13 @@ create assign-oper  11  4 * ,
      expression value non-constant
      2drop release-accu ;
 
+\prof [parser-expr] end-bucket
 
 \ *** Block No. 62, Hexblock 3e
 
 \ parser: statement            12mar91pz
+
+\prof ||off profiler-bucket [parser-stmt] ||on
 
   .( submodule statement ) cr
 
@@ -543,10 +551,13 @@ create statement-tab  10  4 * ,
   statement? not
      IF ." statement" *expected* error THEN ;
 
+\prof [parser-stmt] end-bucket
 
 \ *** Block No. 73, Hexblock 49
 
 \ parser: declaration basics   14mar91pz
+
+\prof ||off profiler-bucket [parser-decl] ||on
 
   .( submodule definition ) cr
 
@@ -1052,9 +1063,13 @@ variable protos2resolve
 
 ||off
 
+\prof [parser-decl] end-bucket
+
 \ *** Block No. 96, Hexblock 60
 
 \ parser: compound, program    09may94pz
+
+\prof profiler-bucket [parser-main]
 
   make compound ( -- )
      nestlocal
@@ -1073,3 +1088,5 @@ variable protos2resolve
      2@ function?
         IF drop main()-adr ! exit THEN
      *bad-main* fatal ;
+
+\prof [parser-main] end-bucket

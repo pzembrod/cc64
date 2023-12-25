@@ -2,6 +2,8 @@
 
 \ vassembler loadscreen        20sep94pz
 
+\prof profiler-bucket [v-asm]
+
 \ assembler for the virtual machine on which codegen is based
 \ basicalls a slight abstraction, 16 bit, of the 6502.
 
@@ -426,3 +428,5 @@ a: .skip0=    $zp stx  $zp ora
 : .jmn-ahead  .skip0=   .jmp-ahead ;
 
 ||off
+
+\prof [v-asm] end-bucket

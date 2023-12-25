@@ -2,6 +2,8 @@
 
 \ listman: loadscreen          20sep94pz
 
+\prof profiler-bucket [listman]
+
 \ terminology / interface:
 \ hook-into     hook-out
 \ heap>         >heap
@@ -42,3 +44,5 @@
      /link +LOOP ;
 
   init: init-heap
+
+\prof [listman] end-bucket

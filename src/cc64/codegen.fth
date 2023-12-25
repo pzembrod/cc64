@@ -2,6 +2,8 @@
 
 \ codegen loadscreen           21sep94pz
 
+\prof profiler-bucket [codegen]
+
 \ *** Block No. 13, Hexblock d
 
 \ codegen: objects             13jan91pz
@@ -593,3 +595,5 @@ binop do-shr
         THEN ;
 
 ||off
+
+\prof [codegen] end-bucket

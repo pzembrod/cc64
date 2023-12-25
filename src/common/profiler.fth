@@ -213,8 +213,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 : bucket-size-report
     base push  cr ." from  to   size  bucket" cr
     all-buckets @ BEGIN dup WHILE dup
-      \ 2+ dup u.  dup 2+ @ u.
-      2+ dup dup 2+ @  2dup hex u. u.  swap - decimal 5 u.r
+      2+ dup 2+ @ over  2dup hex u. u.  - decimal 5 u.r
       @ count $1f and ."   " type cr
     @ REPEAT drop ;
 
