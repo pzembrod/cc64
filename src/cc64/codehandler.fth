@@ -2,6 +2,8 @@
 
 \ codehandler: loadscreen      20sep94pz
 
+\prof profiler-bucket [codehandler]
+
 \ terminology / interface:
 
 \ fuer programmcode:
@@ -147,3 +149,5 @@ make flushstatic ( -- )
 \ noch schlecht modularisiert:
 \    greift auf interne worte des
 \    codehandlers zurueck.
+
+\prof [codehandler] end-bucket

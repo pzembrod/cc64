@@ -2,6 +2,8 @@
 
 \ file-i/o                     20sep94pz
 
+\prof profiler-bucket [fileio]
+
 \ *** Block No. 113, Hexblock 71
 
 \   file-i/o                   21sep94pz
@@ -98,3 +100,5 @@
 | : cr!  ( -- )  $0d fputc ;
 
 | : str! ( string -- ) count fputs ;
+
+\prof [fileio] end-bucket

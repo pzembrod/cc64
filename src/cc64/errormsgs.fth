@@ -2,6 +2,8 @@
 
 \ errormessages              20sep94pz
 
+\prof profiler-bucket [memman-errmsg]
+
 \ *** Block No. 25, Hexblock 19
 
 \ errormessages                11sep94pz
@@ -74,3 +76,5 @@ end-tab
 \      1024 * + [compile] literal
 \      compile err-blk  compile !
 \      compile (*compiler* ; immediate
+
+\prof [memman-errmsg] end-bucket

@@ -2,6 +2,8 @@
 
 \ init                         18apr94pz
 
+\prof profiler-bucket [memman-init]
+
 || variable inits  inits off
 
 ~ : init  ( -- )
@@ -11,3 +13,5 @@
 ~ : init: ( name )
      inits BEGIN dup @ WHILE @ REPEAT
      here swap !  0 ,  ' , ;
+
+\prof [memman-init] end-bucket

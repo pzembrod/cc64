@@ -2,6 +2,8 @@
 
 \ fileman: loadscreen          20sep94pz
 
+\prof profiler-bucket [fileman]
+
 \ terminology / interface:
 
 \ source-file
@@ -89,3 +91,5 @@ make scratchfiles ( -- )
   " s0:%%code" count bustype busoff
   dev 15 busout
   " s0:%%init" count bustype busoff ;
+
+\prof [fileman] end-bucket

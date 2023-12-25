@@ -2,6 +2,8 @@
 
 \ symtab: loadscreen           20sep94pz
 
+\prof profiler-bucket [symtab]
+
 \ terminology / interface:
 \ findlocal    putlocal
 \ nestlocal    unnestlocal
@@ -150,3 +152,5 @@
         dup  /symbol + globals> !
         ELSE 2drop dummy
         *symovfl* error THEN ;
+
+\prof [symtab] end-bucket

@@ -2,6 +2,8 @@
 
 \ errorhandler : loadscreen    20sep94pz
 
+\prof profiler-bucket [memman-errhdlr]
+
 \ *** Block No. 55, Hexblock 37
 
 \   errorhandler               11sep94pz
@@ -44,3 +46,5 @@
 
 ~ : ?fatal ( flag errnum -- )
      swap IF fatal ELSE drop THEN ;
+
+\prof [memman-errhdlr] end-bucket

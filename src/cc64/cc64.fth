@@ -57,11 +57,11 @@
   \prof profiler-bucket [scanner]
   include scanner.fth
   \prof [scanner] end-bucket
-  \prof profiler-bucket [symtab]
+  \prof profiler-bucket [symtab-etc]
   include symboltable.fth
   include preprocessor.fth
   tmp-clear
-  \prof [symtab] end-bucket
+  \prof [symtab-etc] end-bucket
 
   \prof profiler-bucket [parser]
   include listman.fth

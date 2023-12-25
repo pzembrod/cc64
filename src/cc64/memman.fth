@@ -2,6 +2,8 @@
 
 \ memman: loadscreen           20sep94pz
 
+\prof profiler-bucket [memman-mem]
+
 \ terminology / interface:
 \    himem
 \    heap[    ]heap
@@ -149,3 +151,5 @@
  dup relocate-tasks
  up@ 1+ @   origin   1+ !        \ task
        6 -  origin  8 + ! cold ; \ s0
+
+  \prof [memman-mem] end-bucket

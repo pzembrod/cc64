@@ -1,5 +1,7 @@
 \ enums and string tables
 
+\prof profiler-bucket [memman-strtab]
+
 ~ : enum ( -- next-idx 30 )  0 30 ;
 ~ : y ( last-idx 30 -- next-idx 30 )
     30 ?pairs  dup constant  1+ 30 ;
@@ -46,3 +48,5 @@
      DO ( adr str[len-1] )
        2dup >string streq IF 2drop I true UNLOOP exit THEN
        +string LOOP 2drop false ;
+
+\prof [memman-strtab] end-bucket

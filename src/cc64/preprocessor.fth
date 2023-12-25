@@ -2,6 +2,8 @@
 
 \ preprocessor loadscreen      20sep94pz
 
+\prof profiler-bucket [preproc]
+
 \ terminology / interface:
 
 \  preprocess
@@ -173,3 +175,5 @@ make preprocess ( -- )
       IF 2* cpp-commands + perform
       exit THEN
    cpp-error ;
+
+\prof [preproc] end-bucket
