@@ -316,10 +316,17 @@ c64files/cc64pftm: $(cc64srcs_c64) \
  autostart-c64/vf-build-base.T64
 	emulator/build-binary.sh c64 cc64pftm
 
-%files/cc64size: $(cc64srcs_c64) $(cc64srcs_c16)  $(cc64srcs_x16) \
+%files/cc64size: $(cc64srcs_c64) $(cc64srcs_c16) \
  emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
 	emulator/build-binary.sh $* cc64size
+
+# X16 sizes rule disabled because X16 doesn't have enough regular RAM
+# for the profiler on top of cc64.
+# x16files/cc64size: $(cc64srcs_x16) \
+#  emulator/build-binary.sh emulator/run-in-x16emu.sh \
+#  x16files/vf-build-base
+#	emulator/build-binary.sh x16 cc64size
 
 
 # profiler bucket size rule
