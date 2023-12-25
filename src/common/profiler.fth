@@ -108,8 +108,19 @@ Code end-profiler
   IP # lda  Next $b + sta
  Next jmp   end-code
 
-
 Code init-prevTime  setPrevTime  Next jmp end-code
+
+
+: end-of-list  ( list-node -- last-node )
+  BEGIN dup @ WHILE @ REPEAT ;
+
+: reverse-list  ( list-root-var -- )
+  dup >r  @ 0       ( node[0] 0 )
+  BEGIN over WHILE  ( node[i] node[i-1] )
+    over @          ( node[i] node[i-1] node[i+1] )
+    >r over ! r>    ( node[i] node[i+1] )
+  swap REPEAT       ( 0 node[n] )
+  r> !  drop ;
 
 : profiler-init-buckets
   currentBucket off  init-prevTime
@@ -120,19 +131,11 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   ['] forth-83 >lo/hi >buckets[ c! <buckets[ c! ;
 
 : profiler-bucket
-  create  here  all-buckets @ ,  all-buckets !
+  create  here  all-buckets end-of-list  dup @ ,  !
   last @ ,  0 ,
   does> 2+ ;
 
 : end-bucket  ( bucket -- )  here swap 2+ ! ;
-
-: reverse-list  ( list-root-var -- )
-  dup >r  @ 0       ( node[0] 0 )
-  BEGIN over WHILE  ( node[i] node[i-1] )
-    over @          ( node[i] node[i-1] node[i+1] )
-    >r over ! r>    ( node[i] node[i+1] )
-  swap REPEAT       ( 0 node[n] )
-  r> !  drop ;
 
 : reverse-all-buckets  ( -- )
   all-buckets reverse-list ;
