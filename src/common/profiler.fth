@@ -120,16 +120,22 @@ Code init-prevTime  setPrevTime  Next jmp end-code
   ['] forth-83 >lo/hi >buckets[ c! <buckets[ c! ;
 
 : profiler-bucket
-  create  here  all-buckets @ ,  all-buckets !  last @ ,  0 ,
+  create  here  all-buckets @ ,  all-buckets !
+  last @ ,  0 ,
   does> 2+ ;
 
 : end-bucket  ( bucket -- )  here swap 2+ ! ;
 
+: reverse-list  ( list-root-var -- )
+  dup >r  @ 0       ( node[0] 0 )
+  BEGIN over WHILE  ( node[i] node[i-1] )
+    over @          ( node[i] node[i-1] node[i+1] )
+    >r over ! r>    ( node[i] node[i+1] )
+  swap REPEAT       ( 0 node[n] )
+  r> !  drop ;
+
 : reverse-all-buckets  ( -- )
-  all-buckets @ 0  ( this-bucket last-link)
-  BEGIN over WHILE over @ ( this-bucket last-link next-link ) >r
-    over ! r> ( this-bucket next-link) swap REPEAT ( 0 this-bucket )
-  all-buckets !  drop ;
+  all-buckets reverse-list ;
 
 : activate-bucket  ( bucket -- )
   currentBucket @ 1+ dup >r currentBucket ! \ check for #buckets
