@@ -56,13 +56,15 @@
 | : loadadr!  ( handle -- )
      fsetout 0 fputc 64 fputc funset ;
 
+~ : write-loadadrs  ( -- )
+     code-file loadadr!
+     static-file loadadr! ;
+
 ~ : open-outfiles  ( -- )
      ascii w ascii p code-name
      code-file fopen
-     code-file loadadr!
      ascii w ascii p static-name
-     static-file fopen
-     static-file loadadr! ;
+     static-file fopen ;
 
 ~ : close-outfiles  ( -- )
      code-file   fclose

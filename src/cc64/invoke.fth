@@ -8,6 +8,7 @@
 
 || : pass1 ( -- )
      open-outfiles
+     write-loadadrs
      ." source file: "
      source-name count type cr
      source-name open-input

@@ -295,6 +295,12 @@ sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
 	emulator/build-binary.sh $* peddi
 
 
+%files/cc64v: $(cc64srcs_c64) $(cc64srcs_c16) \
+ emulator/build-binary.sh emulator/run-in-vice.sh \
+ autostart-%/vf-build-base.T64
+	emulator/build-binary.sh $* cc64v
+
+
 x16files/cc64: $(cc64srcs_x16) \
  emulator/build-binary.sh emulator/run-in-x16emu.sh \
  x16files/vf-build-base

@@ -21,9 +21,13 @@ testsrcs_c64 = $(patsubst %, c64files/%, $(testsrcs_ascii))
 tests: libtest.result
 
 
-libtest.result: libtest.c libtest.golden compile-lib.sh \
+libtest.result: libtest.c libtest.golden *.sh *.shlib \
     $(basedir)/autostart-c64/cc64.T64 $(c64_rt_files)
 	./compile-lib.sh libtest
+
+vasm.out: libtest.c libtest.golden *.sh *.shlib \
+    $(basedir)/autostart-c64/cc64v.T64 $(c64_rt_files)
+	./compile-vasm.sh libtest
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
