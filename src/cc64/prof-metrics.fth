@@ -53,6 +53,5 @@ profiler-metric:[ profile-scanner-nextword
 
 ' profiler-report alias profile
 ' bucket-size-report alias sizes
-' reverse-all-buckets alias reverse
 
 \log : profile2file  logfile profiler-report logclose ;

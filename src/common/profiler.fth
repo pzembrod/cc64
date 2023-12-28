@@ -1,10 +1,10 @@
 
-8 constant #buckets
-4 constant #timestamps
+|| 8 constant #buckets
+|| 4 constant #timestamps
 
-variable currentBucket
-variable metric-name
-variable all-buckets  all-buckets off
+|| variable currentBucket
+|| variable metric-name
+|| variable all-buckets  all-buckets off
 
 \ Separte arrays for low and high byte of bucket start and end with
 \ #buckets + 1 elements. Bucket #0 start contains the upper limit of
@@ -16,20 +16,20 @@ create >]buckets    #buckets 1+ allot
 create bucketTimes  #buckets 1+ 4 * allot
 create bucketCounts #buckets 1+ 4 * allot
 
-create initialTimeStamp 4 allot
-create timestamps[  #timestamps 4 * allot
-here constant ]timestamps
-variable timestamp>
+|| create initialTimeStamp 4 allot
+|| create timestamps[  #timestamps 4 * allot
+|| here constant ]timestamps
+|| variable timestamp>
 
-create mainCount 4 allot
-create countstamps[  #timestamps 4 * allot
-here constant ]countstamps
-variable countstamps>
+|| create mainCount 4 allot
+|| create countstamps[  #timestamps 4 * allot
+|| here constant ]countstamps
+|| variable countstamps>
 
 current @ context @
 Assembler also definitions
 
-: addTimeToBucket
+|| : addTimeToBucket
   clc
   bucketTimes 2+ ,x lda  deltaTime 2+ adc  bucketTimes 2+ ,x sta
   bucketTimes 3+ ,x lda  deltaTime 3+ adc  bucketTimes 3+ ,x sta
@@ -37,12 +37,12 @@ Assembler also definitions
   bucketTimes 1+ ,x lda  deltaTime 1+ adc  bucketTimes 1+ ,x sta
 ;
 
-: incCountOfBucket
+|| : incCountOfBucket
   bucketCounts 2+ ,x inc 0= ?[ bucketCounts 3+ ,x inc 0= ?[
      bucketCounts ,x inc 0= ?[ bucketCounts 1+ ,x inc  ]? ]? ]?
 ;
 
-: incMainCount
+|| : incMainCount
   mainCount 2+ inc 0= ?[ mainCount 3+ inc 0= ?[
      mainCount inc 0= ?[ mainCount 1+ inc  ]? ]? ]?
 ;
@@ -52,13 +52,13 @@ Assembler also definitions
 \ Result in carry and zero flag:
 \   CC if IP < bucket start, CS if IP >= bucket start
 \   EQ if IP = bucket start, NE if IP != bucket start
-: compareIp
+|| : compareIp
   IP 1+ lda  >buckets[ ,x cmp  0= ?[ IP lda  <buckets[ ,x cmp ]?
 ;
 
 \ Finds the bucket into which current IP falls.
 \ Result: bucket number * 4 in X register and in currentBucket.
-: findBucket
+|| : findBucket
   0 # ldx  compareIp  CC ?[  \ start of bucket 0 contains end of kernel
     currentBucket ldx
   ][ inx  compareIp  CC ?[
@@ -111,16 +111,8 @@ Code end-profiler
 Code init-prevTime  setPrevTime  Next jmp end-code
 
 
-: end-of-list  ( list-node -- last-node )
+|| : end-of-list  ( list-node -- last-node )
   BEGIN dup @ WHILE @ REPEAT ;
-
-: reverse-list  ( list-root-var -- )
-  dup >r  @ 0       ( node[0] 0 )
-  BEGIN over WHILE  ( node[i] node[i-1] )
-    over @          ( node[i] node[i-1] node[i+1] )
-    >r over ! r>    ( node[i] node[i+1] )
-  swap REPEAT       ( 0 node[n] )
-  r> !  drop ;
 
 : profiler-init-buckets
   currentBucket off  init-prevTime
@@ -137,10 +129,7 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 
 : end-bucket  ( bucket -- )  here swap 2+ ! ;
 
-: reverse-all-buckets  ( -- )
-  all-buckets reverse-list ;
-
-: activate-bucket  ( bucket -- )
+|| : activate-bucket  ( bucket -- )
   currentBucket @ 1+ dup >r currentBucket ! \ check for #buckets
   dup @ >lo/hi  >buckets[ r@ + c!  <buckets[ r@ + c!
   2+  @ >lo/hi  >]buckets r@ + c!  <]buckets r> + c! ;
@@ -179,15 +168,15 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 
 : profiler-end  end-profiler  profiler-timestamp ;
 
-: d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
+|| : d[].  ( addr I -- ) 2* 2* + 2@ 12 d.r ;
 
-: bucket[  ( I -- addr )
+|| : bucket[  ( I -- addr )
     <buckets[ over + c@ swap >buckets[ + c@ $100 * + ;
 
-: ]bucket  ( I -- addr )
+|| : ]bucket  ( I -- addr )
     <]buckets over + c@ swap >]buckets + c@ $100 * + ;
 
-: d..  ( d -- )
+|| : d..  ( d -- )
   <# # #s #>  BEGIN swap dup c@ emit 1+ swap 1- dup WHILE
   dup 3 mod 0= IF ascii . emit THEN REPEAT 2drop bl emit ;
 
