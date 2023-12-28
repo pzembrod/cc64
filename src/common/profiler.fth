@@ -9,12 +9,12 @@
 \ Separte arrays for low and high byte of bucket start and end with
 \ #buckets + 1 elements. Bucket #0 start contains the upper limit of
 \ the Forth kernel. Bucket #0 end isn't used.
-create <buckets[    #buckets 1+ allot
-create >buckets[    #buckets 1+ allot
-create <]buckets    #buckets 1+ allot
-create >]buckets    #buckets 1+ allot
-create bucketTimes  #buckets 1+ 4 * allot
-create bucketCounts #buckets 1+ 4 * allot
+|| create <buckets[    #buckets 1+ allot
+|| create >buckets[    #buckets 1+ allot
+|| create <]buckets    #buckets 1+ allot
+|| create >]buckets    #buckets 1+ allot
+|| create bucketTimes  #buckets 1+ 4 * allot
+|| create bucketCounts #buckets 1+ 4 * allot
 
 || create initialTimeStamp 4 allot
 || create timestamps[  #timestamps 4 * allot
@@ -116,10 +116,10 @@ Code init-prevTime  setPrevTime  Next jmp end-code
 
 : profiler-init-buckets
   currentBucket off  init-prevTime
-  <buckets[    #buckets 2+ $ff fill
-  >buckets[    #buckets 2+ $ff fill
-  <]buckets    #buckets 2+ $ff fill
-  >]buckets    #buckets 2+ $ff fill
+  <buckets[    #buckets 1+ $ff fill
+  >buckets[    #buckets 1+ $ff fill
+  <]buckets    #buckets 1+ $ff fill
+  >]buckets    #buckets 1+ $ff fill
   ['] forth-83 >lo/hi >buckets[ c! <buckets[ c! ;
 
 : profiler-bucket
