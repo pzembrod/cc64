@@ -32,8 +32,7 @@ lib_files = \
 
 libc_headers = ctype.h stdio.h stdlib.h string.h
 
-sample_files = helloworld-c64.c helloworld-c16.c helloworld-x16.c \
-  kernal-io-c64.c kernal-io-c16.c sieve-c64.c
+sample_files = $(patsubst src/samples/%, %, $(wildcard src/samples/*.c))
 
 # c64files content
 c64dir_content = $(cc64_binaries) $(rt_files) $(lib_files) \
