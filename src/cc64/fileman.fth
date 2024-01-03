@@ -13,7 +13,8 @@
 \ /filename
 \ dev             dev#
 
-\ close-files     scratchfiles
+\ close-files     scratch-all
+\ scratch-outs    scratch-tmps
 \ open-outfiles   close-outfiles
 \ reopen-outfiles
 
@@ -80,16 +81,37 @@
 
 \   fileman:                   13apr20pz
 
+~ create code.suffix ," .o"
+~ create init.suffix ," .i"
+~ create decl.suffix ," .h"
+~ : cut-suffix  ( str -- )
+     dup c@ 2- swap c! ;
+
+|| : s!  ( str -- )  count bustype ;
+|| : s0:!  ( -- )  dev 15 busout " s0:" s! ;
+|| : scratch1  ( fname -- )
+     s0:!  s!  busoff ;
+|| : scratch2  ( fname-part2 fname-part1 -- )
+     s0:!  s! s!  busoff ;
+
+~ : scratch-outs  ( -- )
+     dev 15 busout " s0:" s!
+                 exe-name scratch1
+     code.suffix exe-name scratch2
+     init.suffix exe-name scratch2
+     decl.suffix exe-name scratch2 ;
+
+~ : scratch-tmps ( -- )
+  ." scratching temporary files" cr
+     code-name   scratch1
+     static-name scratch1 ;
+
 make close-files  ( -- )
       source-file  fclose
       exe-file     fclose
       close-outfiles ;
 
-make scratchfiles ( -- )
-  ." scratching temporary files" cr
-  dev 15 busout
-  " s0:%%code" count bustype busoff
-  dev 15 busout
-  " s0:%%init" count bustype busoff ;
+make scratch-all ( -- )
+  scratch-tmps  scratch-outs ;
 
 \prof [fileman] end-bucket

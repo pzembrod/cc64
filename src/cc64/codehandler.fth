@@ -117,12 +117,6 @@
 ~ variable lib.codename  15 allot
 ~ variable lib.initname  15 allot
 
-~ create code.suffix ," .o"
-~ create init.suffix ," .i"
-~ create decl.suffix ," .h"
-~ : cut-suffix  ( str -- )
-     dup c@ 2- swap c! ;
-
 ~ : codelayout.ok  nolayout off ;
 
 ~ : end-of-code  ( -- )

@@ -23,22 +23,6 @@
 
 \   invoke :  start compiler   11sep94pz
 
-|| : wait-scratch  ( -- )
-     dev 15 busin BEGIN bus@ drop
-     i/o-status? UNTIL busoff ;
-
-|| : s!  count bustype ;
-|| : ,!  ascii , bus! ;
-
-|| : scratch-exe  ( -- )
-     dev 15 busout " s0:" s!
-     exe-name s!        ,!
-     exe-name s! code.suffix s! ,!
-     exe-name s! init.suffix s! ,!
-     exe-name s! decl.suffix s!
-     busoff
-     wait-scratch ;
-
 
 \ *** Block No. 103, Hexblock 67
 
@@ -58,18 +42,18 @@
      dup exe-name c!  + @
     [ ascii . ascii c 256 * + ] literal
      -  ?usage
-     scratch-exe
+     scratch-outs
      cr cr ." pass 1:" cr
      pass1  cr
      any-errors? @
         IF ." error(s) occured" cr
-        close-files scratchfiles exit
+        close-files scratch-all exit
         THEN
      \prof profiler-timestamp
      ." pass 2:" cr
      pass2  cr
      ." compilation done" cr
-     scratchfiles
+     scratch-tmps
      \time read-50ms-timer - ms. cr
      \prof profiler-end
      ;

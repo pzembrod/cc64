@@ -17,7 +17,7 @@
     init: init-error
 
 ~ doer close-files  ( -- )
-~ doer scratchfiles ( -- )
+~ doer scratch-all  ( -- )
 
 
 \ *** Block No. 56, Hexblock 38
@@ -41,7 +41,7 @@
      \   IF err-blk @ dup 1024 /
      \  swap 1023 and ." location: blk "
      \   . ."  line " . cr THEN
-     close-files scratchfiles
+     close-files scratch-all
      true abort" fatal error" ;
 
 ~ : ?fatal ( flag errnum -- )
