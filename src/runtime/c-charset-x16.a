@@ -17,8 +17,8 @@
 !addr   char_ram = $a000
 src_char_pages = $4
 
-!addr   rom_bank = $9f60
-!addr   ram_bank = $9f61
+!addr   ram_bank = $0000
+!addr   rom_bank = $0001
 
 !addr   screen_set_charset = $ff62
 
