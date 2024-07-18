@@ -1,0 +1,1 @@
+#INCLUDE <RT-C64-08-9F.H>EXTERN _FASTCALL PUTCHAR() *= 0XFFD2 ;INT MAIN() Û  STATIC INT I, J;  FOR (I=3;I<22;++I) Û    FOR (J=0;J<19;++J) Û      PUTCHAR((I+J)%6&&(I-J)%6?' ':'*');    Ý    PUTCHAR('\N');  ÝÝ
