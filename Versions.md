@@ -1,5 +1,28 @@
 # cc64 versions
 
+## v0.13
+
+v0.13 updates the VolksForth build base from 3.9.5 to 3.9.6 which
+slightly reduces the size for the Commander X16 version of cc64 and also
+should make it much more robust against new Commander X16 ROM releases.
+A visible consequence of this change is that cc64's command line now uses
+the regular Commodore screen editor.
+
+For the records: v0.13 was tested with ROM R47. v0.12 worked with R47, too.
+
+The Commander X16 version of [`c-charset`](Usage.md#c-charset-x16) is now
+working correctly; in v0.11 I had forgotten to adapt it to use the changed
+bank switching address of prototype #2 and subsequent boards. Thanks to leop
+for pointing this out to me.
+
+Minor changes: Scratching of temp and output files before, during and after
+each compile run was fixed and refactored. The [`src/samples/`](src/samples)
+dir contains some code I wrote inspired by the
+[Vintage Computing Christmas Challenge 2023](https://logiker.com/Vintage-Computing-Christmas-Challenge-2023).
+And the [`run-in-x16emu.sh`](emulator/run-in-x16emu.sh) script doesn't use
+the generated SDCard image anymore but runs directly off the `x16files/` dir
+using x16emu's `-fsroot` option.
+
 ## v0.12
 
 v0.12 updates the VolksForth build base from 3.9.4 to 3.9.5 which
