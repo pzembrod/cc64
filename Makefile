@@ -218,6 +218,7 @@ clean:
 	rm -rf release tmp/*
 	rm -rf $(recompile_dir) $(recompile_dir).zip
 	rm -rf lib/cbmfiles/*
+	rm -f c[16][64]files/cc64size autostart-c[16][64]/cc64size.T64
 	$(MAKE) -C emulator clean
 	$(MAKE) -C tests/e2e clean
 	$(MAKE) -C tests/integration clean
@@ -267,6 +268,15 @@ slowtests: sut
 	$(MAKE) -C tests/integration tests
 	$(MAKE) -C tests/peddi tests
 	$(MAKE) -C tests/lib alltests
+
+fastcrosstests: sut
+	$(MAKE) -C tests/e2e fastcrosstests
+
+slowcrosstests: sut
+	$(MAKE) -C tests/e2e slowcrosstests
+
+proftests: sut
+	$(MAKE) -C tests/e2e proftests
 
 sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
   autostart-c64/cc64pe.T64 autostart-c16/cc64pe.T64 \

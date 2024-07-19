@@ -6,6 +6,9 @@ name="$1"
 shift
 description="$@"
 
+e2e_dir="$(dirname "${BASH_SOURCE[0]}")"
+cd "${e2e_dir}"
+
 date_full="$(date -Iseconds)"
 date_name="$(date -d "${date_full}" +%F-%H%M)"
 
