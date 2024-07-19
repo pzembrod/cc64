@@ -45,5 +45,16 @@ are still in the old or possibly an intermediate state, and
 * Review and finalize new version description in `Versions.md`. This will also
   become the release description on GitHub. Commit `Versions.md`.
 * Run `git push origin` to push changes to GitHub.
-* Create release on GitHub.
-* 
+* Create release on GitHub:
+    * Use name "cc64 vX.YZ" and tag "vX.YZ" which then will be created by
+    GitHub.
+    * Copy/paste the markdown text from `Versions.md` into the GitHub
+    release description text. Check it in Preview, esp. check that the
+    links work. Relative source links don't work here; they need to be
+    full work https links. Also, line breaks in the markdown of the
+    description are rendered as line breaks in the resulting html page.
+    * Save the release as draft.
+* Run `make release`. Open the directory `./release/` in the file manager
+  and drag them to the field on the GitHub release page marked by
+  "Attach binaries by dropping them here or selecting them."
+* Publish the release.
