@@ -1,5 +1,13 @@
 # cc64 versions
 
+## v0.13.1
+
+v0.13.1 contains no code changes. The only change is around the .d64 distribution files in the release:
+
+For the Commander X16, there's a new d64 image `cc64-x16files.d64` for
+Commander X16 setups with 1541 drive(s).
+And to the `cc64-c64files.d64` and `cc64-c16files.d64` images, a few newer sample files were added that had not been included in these images before.
+
 ## v0.13
 
 v0.13 updates the VolksForth build base from 3.9.5 to 3.9.6 which

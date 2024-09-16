@@ -73,7 +73,7 @@ all: c64 c16 x16 etc
 release: cc64-doc.zip \
   cc64-c64files.zip cc64-c64files.d64 \
   cc64-c16files.zip cc64-c16files.d64 \
-  cc64-x16files.zip cc64-x16files-sdcard.zip \
+  cc64-x16files.zip cc64-x16files-sdcard.zip cc64-x16files.d64 \
   $(recompile_dir).zip
 	rm -rf release
 	mkdir release
@@ -86,7 +86,8 @@ c64: cc64-c64-t64 $(c64dir_files) cc64-c64files.zip cc64-c64files.d64
 
 c16: cc64-c16-t64 $(c16dir_files) cc64-c16files.zip cc64-c16files.d64
 
-x16: $(x16dir_files) cc64-x16files.zip cc64-x16files-sdcard.zip
+x16: $(x16dir_files) cc64-x16files.zip cc64-x16files-sdcard.zip \
+    cc64-x16files.d64
 
 cc64-c64-t64: $(cc64_c64_t64_files) $(profiler_t64_files)
 
@@ -131,6 +132,11 @@ cc64-c64files.d64: $(c64dir_files) tmp/copying
 	c1541 -attach $@ -write c64files/kernal-io-c64.c kernal-io-c64.c,s
 	c1541 -attach $@ -write c64files/helloworld-c16.c helloworld-c16.c,s
 	c1541 -attach $@ -write c64files/kernal-io-c16.c kernal-io-c16.c,s
+	c1541 -attach $@ -write c64files/helloworld-x16.c helloworld-x16.c,s
+	c1541 -attach $@ -write c64files/sieve-c64.c sieve-c64.c,s
+	c1541 -attach $@ -write c64files/vccc2023-c64.c vccc2023-c64.c,s
+	c1541 -attach $@ -write c64files/vccc2023-c16.c vccc2023-c16.c,s
+	c1541 -attach $@ -write c64files/vccc2023-x16.c vccc2023-x16.c,s
 	c1541 -attach $@ -write tmp/copying
 
 cc64-c16files.d64: $(c16dir_files) tmp/copying
@@ -160,6 +166,45 @@ cc64-c16files.d64: $(c16dir_files) tmp/copying
 	c1541 -attach $@ -write c16files/kernal-io-c64.c kernal-io-c64.c,s
 	c1541 -attach $@ -write c16files/helloworld-c16.c helloworld-c16.c,s
 	c1541 -attach $@ -write c16files/kernal-io-c16.c kernal-io-c16.c,s
+	c1541 -attach $@ -write c16files/helloworld-x16.c helloworld-x16.c,s
+	c1541 -attach $@ -write c16files/sieve-c64.c sieve-c64.c,s
+	c1541 -attach $@ -write c16files/vccc2023-c64.c vccc2023-c64.c,s
+	c1541 -attach $@ -write c16files/vccc2023-c16.c vccc2023-c16.c,s
+	c1541 -attach $@ -write c16files/vccc2023-x16.c vccc2023-x16.c,s
+	c1541 -attach $@ -write tmp/copying
+
+cc64-x16files.d64: $(x16dir_files) tmp/copying
+	rm -f $@
+	c1541 -format cc64-x16,cc d64 $@
+	c1541 -attach $@ -write x16files/cc64 cc64
+	c1541 -attach $@ -write x16files/rt-c64-08-9f.h rt-c64-08-9f.h,s
+	c1541 -attach $@ -write x16files/rt-c64-08-9f.i
+	c1541 -attach $@ -write x16files/rt-c64-08-9f.o
+	c1541 -attach $@ -write x16files/rt-c16-10-7f.h rt-c16-10-7f.h,s
+	c1541 -attach $@ -write x16files/rt-c16-10-7f.i
+	c1541 -attach $@ -write x16files/rt-c16-10-7f.o
+	c1541 -attach $@ -write x16files/rt-x16-08-9e.h rt-x16-08-9e.h,s
+	c1541 -attach $@ -write x16files/rt-x16-08-9e.i
+	c1541 -attach $@ -write x16files/rt-x16-08-9e.o
+	c1541 -attach $@ -write x16files/libc-c64.h libc-c64.h,s
+	c1541 -attach $@ -write x16files/libc-c64.i
+	c1541 -attach $@ -write x16files/libc-c64.o
+	c1541 -attach $@ -write x16files/libc-c16.h libc-c16.h,s
+	c1541 -attach $@ -write x16files/libc-c16.i
+	c1541 -attach $@ -write x16files/libc-c16.o
+	c1541 -attach $@ -write x16files/libc-x16.h libc-x16.h,s
+	c1541 -attach $@ -write x16files/libc-x16.i
+	c1541 -attach $@ -write x16files/libc-x16.o
+	c1541 -attach $@ -write x16files/c-charset
+	c1541 -attach $@ -write x16files/helloworld-c64.c helloworld-c64.c,s
+	c1541 -attach $@ -write x16files/kernal-io-c64.c kernal-io-c64.c,s
+	c1541 -attach $@ -write x16files/helloworld-c16.c helloworld-c16.c,s
+	c1541 -attach $@ -write x16files/kernal-io-c16.c kernal-io-c16.c,s
+	c1541 -attach $@ -write x16files/helloworld-x16.c helloworld-x16.c,s
+	c1541 -attach $@ -write x16files/sieve-c64.c sieve-c64.c,s
+	c1541 -attach $@ -write x16files/vccc2023-c64.c vccc2023-c64.c,s
+	c1541 -attach $@ -write x16files/vccc2023-c16.c vccc2023-c16.c,s
+	c1541 -attach $@ -write x16files/vccc2023-x16.c vccc2023-x16.c,s
 	c1541 -attach $@ -write tmp/copying
 
 cc64-x16files-sdcard.zip: $(x16dir_files) emulator/copy-to-sd-img.sh \
