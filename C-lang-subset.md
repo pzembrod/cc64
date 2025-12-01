@@ -18,7 +18,6 @@ parameter declarations.
 - Only one level of pointer (nothing like `char **p`). Only 1-dim arrays,
 accordingly.
 - No goto.
-- No nested switch statements.
 - No implicit `int f(int i)` function declaration.
 All functions must be declared or defined before first calling them.
 - No real preprocessor.
@@ -32,7 +31,7 @@ described in [runtime libraries](Runtime-libs.md).
 
 ## C extensions
 
-cc64 supports two non-standard extensions.
+cc64 uses two non-standard language extensions.
 
 Note: v0.10 introduced a breaking change regarding these extensions.
 See [Versions](Versions.md) for details.

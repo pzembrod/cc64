@@ -373,9 +373,9 @@ end-enum
 \prof [scanner-nextword-vars] end-bucket
 \prof profiler-bucket [scanner-fetchword]
 
-~ : fetchword ( -- tokenvalue token )
+~ : fetchword ( -- )
      BEGIN (nextword is-comment? WHILE
-     2drop skip-comment REPEAT \ ."  fetchword: " 2dup u. u.
+     2drop skip-comment REPEAT
      word' 2! ;
 
 ~ : accept ( -- )
