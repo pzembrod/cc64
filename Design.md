@@ -69,8 +69,9 @@ whereas the start of the memory for variables is typically equal to the end
 of the executable code, which of course is only know after compilation ends.
 
 To set these addresses before compiling, cc64 provides the
-[`#pragma cc64`](Runtime-libs.md#pragma-cc64) preprocessor command
-which passes all the needed addresses plus the file name of the runtime module
+[`#pragma cc64`](Runtime-libs.md#the-pragma-cc64-directive) preprocessor
+command which passes all the needed addresses plus the file name of the runtime
+module 
 to the compiler before the first function or variable is defined.
 Usually the `#pragma cc64` line lives at the top of the header file that
 comes with the runtime module, and the main program just needs to include the
