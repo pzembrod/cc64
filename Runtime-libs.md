@@ -8,7 +8,7 @@ cc64 generates non-relocatable code, using the end address of
 a non-relocatable runtime module as start address for the generated code.
 
 
-## The #pragma cc64 directive {#pragma-cc64}
+## The #pragma cc64 directive
 
 The choice of the runtime module to use as starting point for code generation
 happens with the `#pragma cc64` preprocessor directive which contains the
