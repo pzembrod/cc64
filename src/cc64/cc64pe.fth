@@ -57,9 +57,9 @@
   include v-assembler.fth
   include codegen.fth
   include parser.fth
-  include p2write-decl.fth
+  include write-decl.fth
   tmp-clear
-  include pass2.fth
+  include minilinker.fth
   include invoke.fth
   \ words
 

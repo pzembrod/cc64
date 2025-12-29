@@ -7,7 +7,7 @@ profiler-metric:[ profile-cc64-1
   [scanner]
   [symtab]
   [parser]
-  [pass2]
+  [minilinker]
 ]profiler-metric
 
 profiler-metric:[ profile-scanner1

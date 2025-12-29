@@ -1,10 +1,5 @@
-\ *** Block No. 108, Hexblock 6c
 
-\ pass2 :  loadscreen          21sep94pz
-
-\ *** Block No. 109, Hexblock 6d
-
-\   pass2 :                    11sep94pz
+\ minilinker, formerly mis-named pass2
 
 || variable #toread
 || variable #inbuf
@@ -28,10 +23,6 @@
      p2in> @ c@  1 p2in> +! ;
 
 
-\ *** Block No. 110, Hexblock 6e
-
-\   pass2 :                    13sep94pz
-
 || variable p2out>
 || ' static[ ALIAS p2out[
 || ' ]static ALIAS ]p2out
@@ -53,10 +44,6 @@
 
     init: init-p2i/o
 
-
-\ *** Block No. 111, Hexblock 6f
-
-\   pass2 :                    13sep94pz
 
 || : p2copy  ( last.adr+1 first.adr -- )
      ?DO p2code@ p2code! LOOP ;
@@ -80,10 +67,6 @@
      *compiler* ?fatal ;
 
 
-\ *** Block No. 112, Hexblock 70
-
-\   pass2 :                    21sep94pz
-
 || : link-runtimemodule  ( -- )
      ascii w ascii p exe-name
      exe-file fopen
@@ -101,10 +84,6 @@
      p2flush exe-file fclose
      code-file p2closefile ;
 
-
-\ *** Block No. 113, Hexblock 71
-
-\   pass2 :                    21sep94pz
 
 || variable p2pc
 
@@ -127,10 +106,6 @@
      code-file p2closefile ;
 
 
-\ *** Block No. 114, Hexblock 72
-
-\   pass2 :                    14jan96pz
-
 || : (link-statics  ( n filename -- )
      over 0=
         IF ." no need to link "
@@ -151,10 +126,6 @@
      - static-name (link-statics ;
 
 
-\ *** Block No. 115, Hexblock 73
-
-\   pass2 :                    21sep94pz
-
 || : (link-lib ( n in-name w/a -- )
      dup >r
      ascii p exe-name exe-file fopen
@@ -173,10 +144,6 @@
    statics.libfirst @ statics.first @ -
    static-name   ascii a (link-lib ;
 
-
-\ *** Block No. 116, Hexblock 74
-
-\   pass2 :                    07may95pz
 
 || : write-libheader ( -- )
      cr!
@@ -198,14 +165,6 @@
        2dup - . ." free dyn mem" cr
        $100 + u< *codetoolong* ?fatal THEN ;
 
-\ *** Block No. 117, Hexblock 75
-
-\   pass2 :                    11sep94pz
-
-
-\ *** Block No. 118, Hexblock 76
-
-\   pass2 :                    11sep94pz
 
 || : write-declarations  ( -- )
      ." creating " exe-name count
@@ -231,15 +190,11 @@
      write-declarations ;
 
 
-\ *** Block No. 119, Hexblock 77
-
-\   pass2 :                    11sep94pz
-
 || : link-exe  ( -- )
      link-runtimemodule  link-code
      link-statics ;
 
-~ : pass2  ( -- )
+~ : link-all  ( -- )
      checksize
      main()-adr @
         IF link-exe

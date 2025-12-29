@@ -190,7 +190,7 @@ new file _name_
 
 - `1 list!`
 - `0 list!`
-  - switches listing the C source while compiling on respectively off. Default is off. Listing can cause ~25% increase in pass1 compile time.
+  - switches listing the C source while compiling on respectively off. Default is off. Listing can cause up to ~25% increase in compile time.
 - `list?`
   - shows whether listing is currently on or off.
 - `exec` _file_

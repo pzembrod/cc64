@@ -78,8 +78,8 @@
   include parser.fth
   \prof [parser] end-bucket
 
-  \prof profiler-bucket [pass2]
-  include p2write-decl.fth
+  \prof profiler-bucket [minilinker]
+  include write-decl.fth
   tmp-clear
 
   \ From here on everything can go onto
@@ -90,9 +90,9 @@
   \ becomes tight.
   || ' || alias ~
 
-  include pass2.fth
+  include minilinker.fth
   include invoke.fth
-  \prof [pass2] end-bucket
+  \prof [minilinker] end-bucket
 
   forth definitions
   include savesystem.fth

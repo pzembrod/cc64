@@ -1,4 +1,10 @@
 
+\ write-decl is a special interface between codegen and minilinker.
+
+\ (write-decl is a sub-function of minilinker's write-declarations
+\ but needs codegen's symbol type evaluation words: all the %-constants
+\ and the words is? and isn't? - therefore it lives in its own file.
+
 ~ : (write-decl ( name val type -- )
      %extern isn't? IF 2drop drop exit THEN
      %function %l-value %pointer + + isn't?
