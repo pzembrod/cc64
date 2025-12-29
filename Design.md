@@ -28,6 +28,10 @@ much for me. So I decided that the compiler would generate executable binary
 code directly from the parsed C source code. I figured that Turbo Pascal up to
 version 3 did something similar.
 
+Finally I decided to make the preprocessor very simple and only support
+`#define` statements for simple constants, and '#include`, nothing else.
+Out of necessity I later added one `#pragma` command, but that was it.
+
 ### 1-pass source to binary
 
 cc64 is a 1-pass compiler, going over the source code just once,
@@ -71,8 +75,7 @@ of the executable code, which of course is only know after compilation ends.
 To set these addresses before compiling, cc64 provides the
 [`#pragma cc64`](Runtime-libs.md#the-pragma-cc64-directive) preprocessor
 command which passes all the needed addresses plus the file name of the runtime
-module 
-to the compiler before the first function or variable is defined.
+module to the compiler before the first function or variable is defined.
 Usually the `#pragma cc64` line lives at the top of the header file that
 comes with the runtime module, and the main program just needs to include the
 runtime module header file and automatically gets the right address and file

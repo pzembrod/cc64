@@ -139,9 +139,9 @@ runtime module's initialization calls main() with a jmp (main.adr).
 - `code_last`
   - Here the last address + 1 of the generated code is inserted by the compiler.
 - `statics_first`
-  - Here the first address of the generated code is inserted by the compiler.
+  - Here the first address of the static variable memory is inserted by the compiler.
 - `statics_last`
-  - Here the last address + 1 of the generated code is inserted by the compiler.
+  - Here the last address + 1 of the static variable memory is inserted by the compiler.
 
 As described above, statics are allocated from the end of the used memory
 downwards. The statics' initialization values are placed by the
