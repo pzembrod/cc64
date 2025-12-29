@@ -3,64 +3,64 @@
 
 || variable #toread
 || variable #inbuf
-|| variable p2in>
-|| ' code[ ALIAS p2in[
-|| ' ]code ALIAS ]p2in
+|| variable link-in>
+|| ' code[ ALIAS link-in[
+|| ' ]code ALIAS ]link-in
 
 
-|| : p2readcode  ( -- )
+|| : read-in[]  ( -- )
      #toread @ 0=     *compiler* ?fatal
      code-file feof? *obj-short* ?fatal
-     code-file fsetin   p2in[ p2in> !
-     p2in[  ]p2in over - #toread @ umin
+     code-file fsetin   link-in[ link-in> !
+     link-in[  ]link-in over - #toread @ umin
      fgets  dup #inbuf !
          negate #toread +!   funset ;
 
-|| : p2code@ ( -- 8b )
+|| : link@ ( -- 8b )
      (CX enable-code[]-bank C)
-     #inbuf @ 0= IF p2readcode THEN
+     #inbuf @ 0= IF read-in[] THEN
      -1 #inbuf +!
-     p2in> @ c@  1 p2in> +! ;
+     link-in> @ c@  1 link-in> +! ;
 
 
-|| variable p2out>
-|| ' static[ ALIAS p2out[
-|| ' ]static ALIAS ]p2out
+|| variable link-out>
+|| ' static[ ALIAS link-out[
+|| ' ]static ALIAS ]link-out
 
 
-|| : p2flush  ( -- )
+|| : link-flush  ( -- )
      exe-file fsetout
-     p2out[ p2out> @ over - fputs
+     link-out[ link-out> @ over - fputs
      funset
-     p2out[ p2out> ! ;
+     link-out[ link-out> ! ;
 
-|| : p2code!  ( 8b -- )
-     p2out> @  under  c!
-     1+ dup p2out> !
-     ]p2out = IF p2flush THEN ;
+|| : link!  ( 8b -- )
+     link-out> @  under  c!
+     1+ dup link-out> !
+     ]link-out = IF link-flush THEN ;
 
-|| : init-p2i/o  ( -- )
-     p2out[  p2out> ! ;
+|| : init-link  ( -- )
+     link-out[  link-out> ! ;
 
-    init: init-p2i/o
+    init: init-link
 
 
-|| : p2copy  ( last.adr+1 first.adr -- )
-     ?DO p2code@ p2code! LOOP ;
+|| : link-copy  ( last.adr+1 first.adr -- )
+     ?DO link@ link! LOOP ;
 
-|| : p2wcode!  ( 16b -- )
-     >lo/hi swap p2code! p2code! ;
+|| : linkw!  ( 16b -- )
+     >lo/hi swap link! link! ;
 
-|| : p2wcode@drop  ( -- )
-     p2code@ p2code@ 2drop ;
+|| : linkw@drop  ( -- )
+     link@ link@ 2drop ;
 
-|| : p2openfile
+|| : link-open
     ( len mode type name handle -- )
      ." linking " over count type cr
      fopen  2+ #toread !  #inbuf off
-     p2readcode ;
+     read-in[] ;
 
-|| : p2closefile  ( handle -- )
+|| : link-close  ( handle -- )
      dup fclose
      feof? 0= *obj-long* ?fatal
      #toread @ #inbuf @ or
@@ -72,38 +72,38 @@
      exe-file fopen
      code.first @ lib.first @ -
      ascii r ascii p lib.codename
-     code-file p2openfile
+     code-file link-open
      >runtime @  lib.first @
-     2- p2copy  \ copy load adress, too
-     8 0 DO p2code@ drop LOOP
-     main()-adr @    p2wcode!
-     code.last @     p2wcode!
-     statics.first @ p2wcode!
-     statics.last @  p2wcode!
-     code.first @ >runtime @ 8 + p2copy
-     p2flush exe-file fclose
-     code-file p2closefile ;
+     2- link-copy  \ copy load adress, too
+     8 0 DO link@ drop LOOP
+     main()-adr @    linkw!
+     code.last @     linkw!
+     statics.first @ linkw!
+     statics.last @  linkw!
+     code.first @ >runtime @ 8 + link-copy
+     link-flush exe-file fclose
+     code-file link-close ;
 
 
-|| variable p2pc
+|| variable patch>
 
 || : link-code  ( -- )
      ascii a ascii p exe-name
      exe-file fopen
      code.last @ code.first @ -
      ascii r ascii p code-name
-     code-file p2openfile
-     p2wcode@drop \ drop load address
-     code.first @ p2pc !
+     code-file link-open
+     linkw@drop \ drop load address
+     code.first @ patch> !
      BEGIN protos2patch hook-out ?dup
      WHILE dup 4 + @  ( list patchadr )
-     dup  p2pc @  p2copy ( dito )
-     2+ p2pc !  p2wcode@drop  ( list )
-     2+ @ >lo/hi swap p2code! p2code!
+     dup  patch> @  link-copy ( dito )
+     2+ patch> !  linkw@drop  ( list )
+     2+ @ >lo/hi swap link! link!
      REPEAT
-     code.last @  p2pc @ p2copy
-     p2flush exe-file fclose
-     code-file p2closefile ;
+     code.last @  patch> @ link-copy
+     link-flush exe-file fclose
+     code-file link-close ;
 
 
 || : (link-statics  ( n filename -- )
@@ -113,11 +113,11 @@
      ascii a ascii p exe-name
                       exe-file fopen
      >r dup ascii r ascii p r>
-               code-file  p2openfile
-     p2wcode@drop  \ drop load address
-     0 p2copy
-     p2flush exe-file fclose
-     code-file p2closefile ;
+               code-file  link-open
+     linkw@drop  \ drop load address
+     0 link-copy
+     link-flush exe-file fclose
+     code-file link-close ;
 
 || : link-statics  ( -- )
      statics.last @ statics.libfirst @
@@ -130,13 +130,13 @@
      dup >r
      ascii p exe-name exe-file fopen
      >r dup ascii r ascii p r>
-                 code-file p2openfile
+                 code-file link-open
      r> ascii w =
         IF 2+ \ copy load adress
-        ELSE p2wcode@drop THEN
-     0 p2copy
-     p2flush exe-file fclose
-     code-file p2closefile ;
+        ELSE linkw@drop THEN
+     0 link-copy
+     link-flush exe-file fclose
+     code-file link-close ;
 
 || : link-libstatics  ( -- )
    statics.last @ statics.libfirst  @ -
