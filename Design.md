@@ -25,8 +25,10 @@ linker or relocatable object code format available for the C64 at that time.
 Also I knew of no available assembler that I could have easily bundled with
 the compiler. Writing both myself on top of the compiler felt to be way too
 much for me. So I decided that the compiler would generate executable binary
-code directly from the parsed C source code. I figured that Turbo Pascal up to
-version 3 did something similar.
+code directly from the parsed C source code. I took inspiration for this
+approach from Turbo Pascal up to version 3 which seemed to do something
+similar. This way I only need a mini linker that joins the code of a runtime
+library with the generated binary code into a single executable file.
 
 Finally I decided to make the preprocessor very simple and only support
 `#define` statements for simple constants, and '#include`, nothing else.
@@ -60,8 +62,8 @@ known because the `jmp 0` statement is still in memory.
 Calls to not-yet-compiled functions must be handled differently; for these
 cc64 maintains a list of locations with forward calls. These unresolved
 forward calls are why the generated code is only "almost" executable.
-They get resolved during the minimalistic link step which joins the code of the
-runtime module with the generated binary code into a single executable file.
+They get resolved by the mini linker while copying the generated binary code
+into the executable file.
 
 Another prerequisite for generating runnable binary code directly from the
 parser is this: the addresses of global and static variables need to be
@@ -79,7 +81,7 @@ module to the compiler before the first function or variable is defined.
 Usually the `#pragma cc64` line lives at the top of the header file that
 comes with the runtime module, and the main program just needs to include the
 runtime module header file and automatically gets the right address and file
-name config for code generator and the mini-linker.
+name config for code generator and the mini linker.
 
 More details about the runtime module, its interface used by
 the compiled code, and how to write new runtime modules, are
@@ -124,32 +126,74 @@ interface between codegen.fth and v-assembler.fth, may offer an opportunity
 for a relocatable intermediate code format, and thereby for a more flexible
 linker.
 
-### Module structure
+## Source structure
 
-The main and most interesting pieces of the compiler live in 2 groups
-of 4 modules.
+Most sources for cc64 live in [src/cc64](src/cc64). Some sources which are
+shared with peddi, a small text editor that comes with cc64, live in
+[src/common]}(src/common). For building cc64 the sources are all copied
+into the same virtual disk drive so the include statements e.g. in
+[cc64.fth](src/cc64/cc64.fth) don't reflect the subdirs cc64/ or common/.
 
-#### The symtab-scanner module group
+### Source groups, coupling, interfaces and word headers
 
-The interface of the symtab-scanner module group consist of two services:
+Most source files intend to be a module with a well-define interface.
+Often this interface is explicitly listed at the top of the file.
 
-* Putting and finding local and global symbols
-* Viewing and consuming the current input token
+Two sources, however, namely v-assembler.fth and codegen.fth,
+have interfaces so wide that it wouldn't make sense to list them.
+Together with parser.fth they form a tightly coupled group of sources where
+codegen's interface is just used by parser and v-assembler's interface is
+used by codegen and parser. The interface that parser.fth exposes to the
+compiler's top level is again very small.
 
-Both services are used by the parser-codegen module group.
+This has technical significance because of VolksForth's ability make some
+word headers transient by putting them on its heap, and to drop them
+if they aren't needed anymore by clearing the heap. cc64 makes extensive use
+of this feature; almost all words except those by which the user invokes the
+compiler have transient headers which are not part of the final cc64 binary.
 
-##### symboltable.fth
+However, tight memory on the Commander X16 made me go one step further and
+create a 2-stage heap that allows me to drop the headers of the implementation
+words of a source file after that file is fully loaded while keeping the
+headers of the interface words until all of cc64 is loaded. This 2-stage
+heap called tmpheap is described in [Vierte Dimension 3/2021](https://forth-ev.de/wiki/res/lib/exe/fetch.php/vd-archiv:4d2021-03.pdf).
+
+Now the tight coupling within the group of v-assembler, codegen and parser
+and the small interface of that group towards the rest of cc64 means that
+I can treat the wide interfaces of v-assembler and codegen as implementation
+detail of the whole source group and drop the interface headers after the
+group is loaded. It turned out that this saved enough memory to make cc64
+buildable on the X16.
+
+The following overview lists the main sources of the compiler:
+
+### symboltable.fth
+
 This contains the global and the local symbol
 table. Both symbol tables share the same memory block, with the
 globals growing from the start upwards and the locals growing
 from the end downwards. The globals additionally have a hash
 table for faster access.
 
-##### input.fth
+The symbol table's interface allows putting and finding local and global
+variables as well as function parameters, and words for nesting and unnesting
+local variable scopes.
+
+The symbol table is used by parser, codegen and by the preprocessor.
+
+### The input-preprocess-scanner source group
+
+These are three somewhat tightly coupled source files which together expose
+an interface to the parser that allows viewing and consuming the current
+input token.
+
+#### input.fth
+
 reads source files line by line, calls the preprocessor, gives the scanner
 a char-by-char view of the source, and transparently handles include files.
 
-##### preprocess.fth
+#### preprocess.fth
+
 The cc64 preprocessor is very simple and a bit of a hack. It doesn't
 process entire source files; instead it is called by input.fth for each
 source line and handles the following preprocessor commands: ***(directives?)
@@ -161,19 +205,20 @@ source line and handles the following preprocessor commands: ***(directives?)
   to use; this is needed for generating executable binary code with
   absolute addresses right in the one compile pass.
 
-##### scanner.fth
+#### scanner.fth
+
 The scanner splits the source code into tokens - keywords,
 identifies, numbers, operators and other characters. Its interface allows
 the parser to view the current token without consuming it, and to move
 to the next token.
 
-#### The parser-codegen module group
+### The parser-codegen source group
 
-This module group consists of 4 modules layered on top of each other.
-Each module uses the service of the module underneath or, in the case of
-parser.fth, of the two modules underneath. The interfaces between the modules
-are extremely wide, representing entire instruction sets at increasing
-levels of abstraction.
+This module group consists of a number of source files layered on top of
+each other, each file or module using the service of the module underneath or,
+in the case of parser.fth, of the two modules underneath.
+The interfaces between the modules are extremely wide, representing entire
+instruction sets or sets of grammar nodes.
 
 The interface of the overall module group, however, is very narrow.
 It consists of the parser's main entry point `compile-program`.
@@ -181,14 +226,16 @@ Its output is binary code and static
 variable initialization data written into two files, a list of forward
 function calls to resolve, and the main function's address.
 
-The 4 modules are:
+#### trns6502asm.fth respectively tmp6502asm.fth
 
-##### 6502asm.fth
-This is the transient Forth 6502 assembler of VolksForth. It is only present
+This is the transient Forth 6502 assembler of VolksForth, loaded onto the
+heap (trns6502asm.fth) or, in the case of the X16, onto the tmpheap
+(tmp6502asm.fth). It is only present
 while the cc64 compiler itself is compiled; it is not part of the cc64 binary.
 It is used to assemble the 6502 code templates of v-assembler.fth.
 
-##### v-assembler.fth
+#### v-assembler.fth
+
 v-assembler is a template engine for binary code snippets implementing
 something like a virtual CPU with a 16-bit accumulator.
 The VM inherits the 6502 hardware stack which cc64 uses when it converts
@@ -197,7 +244,8 @@ The VM also has a software stack via a stack frame "register", really
 a 6502 zero page pointer, which is used for local variables and
 function parameters.
 
-##### codegen.fth
+#### codegen.fth
+
 codegen.fth contains the code generating logic for C expressions.
 It uses v-assembler's virtual 16-bit CPU and has a structure that
 mirrors that of the expression parser: Many parser words have a
@@ -208,7 +256,8 @@ consumed again by the codegen so that the actual tree never materializes.
 codegen.fth also precalculates the constant parts of expressions where
 the value can already be determined at compile time.
 
-##### parser.fth
+#### parser.fth
+
 cc64 has a conventional recursive descent parser.
 It consists or 3 parts, for expressions, statements and definitions,
 respectively. The expression parser generated its code through codegen.fth.
@@ -219,25 +268,33 @@ need for an extra codegen layer.
 Besides codegen and v-assembler, the parser mainly depends on scanner and
 the symbol table.
 
-### Coupling within and between module groups
+### The mini linker
 
-Esp. within the parser-codegen module group the coupling
-between the individual modules is very tight, and the interfaces between
-the modules are wide.
+#### minilinker.fth
 
-However, the interface that each module group exposes to its clients is very
-narrow. This is of course nice from a general design point of view, but it
-is also of very specific technical value: it allows cc64 to be compiled
-in the limited main memory of the Commander X16. This is because while
-compiling each module group, the many word headers for the wide intra-group
-interfaces need to be kept in memory. But after each module group is loaded,
-the inner interfaces aren't needed anymore, the word headers can be dropped,
-and only the headers for the narrow inter-group interface needs to be kept
-until cc64 is fully built. After that, also the inter-group interface
-headers can be dropped as they aren't needed users run cc64 to compile their
-C code.
+This is the mini linker mentioned above. The parser/codegen group outputs
+two files, `%%code` which contains the generated binary code, and `%%init`
+which contains the initialazation values for static variables.
+A runtime module also has a code file postfixed `.o` and a
+static vars initialization file postfixed `.i`. If the mini linker creates
+an executable binary, all for files will get merged into one. If it creates
+a new library, the code files get joined into a new `.o` file and the
+initialization files get joined into a new `.i` file. In both cases the
+unresolved forward calls in `%%code` are resolved.
 
-Dropping word headers of course refers to  VolksForth's heap with its transient
-headers, and the mechanism for doing this in two stages, for intra-group and
-for inter-group interfaces is the tmpheap that was described in [Vierte Dimension 3/2021](https://forth-ev.de/wiki/res/lib/exe/fetch.php/vd-archiv:4d2021-03.pdf).
+In the case of creating a new library, a third file is written, a `.h` header
+file containing the correct `#pragma cc64` line and defining all symbol that
+the library exports.
 
+#### write-decl.fth
+
+Contains just one word, `(write-decl`, which writes a single definition
+exported by a library. Because it requires knowledge of a few internal
+words of `codegen.fth`, it is loaded as part of the parser-codegen source
+group. So, while in terms of functionality it belongs to the mini linker,
+it can also be regarded as a linker-specific interface of codegen.
+
+### invoke.fth
+
+This contains the top level word `cc` which invokes compiler and linker
+and ties everything together.
