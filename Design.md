@@ -175,11 +175,12 @@ globals growing from the start upwards and the locals growing
 from the end downwards. The globals additionally have a hash
 table for faster access.
 
-The symbol table's interface allows putting and finding local and global
-variables as well as function parameters, and words for nesting and unnesting
-local variable scopes.
+The symbol table's interface has words for putting and finding local and global
+variables as well as functions and function parameters,
+and words for nesting and unnesting local variable scopes.
 
-The symbol table is used by parser, codegen and by the preprocessor.
+The symbol table is used by parser, codegen, by the preprocessor and by the
+mini linker.
 
 ### The input-preprocess-scanner source group
 
@@ -226,7 +227,7 @@ Its output is binary code and static
 variable initialization data written into two files, a list of forward
 function calls to resolve, and the main function's address.
 
-#### trns6502asm.fth respectively tmp6502asm.fth
+#### trns6502asm.fth or tmp6502asm.fth
 
 This is the transient Forth 6502 assembler of VolksForth, loaded onto the
 heap (trns6502asm.fth) or, in the case of the X16, onto the tmpheap
