@@ -9,7 +9,9 @@
 | ' |off  alias ~off
 
   (64 include trnstmpheap.fth C)
-  (64 $2000 mk-tmp-heap C)
+  \ (64 $1e80 mk-tmp-heap C)
+  \ (64 $0f80 mk-tmp-heap C)
+  (64 $1800 mk-tmp-heap C)
   (16 include notmpheap.fth C)
   (CX include x16trnstmphp.fth C)
 
@@ -17,7 +19,8 @@
   \ | : include  include base push hex cr here u. heap u. up@ u. ;
 
   include util-words.fth
-  (64  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
+  \ (64  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
+  (64  include trns6502asm.fth C)  \ 6502 assembler on tmpheap
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
   \6526 include 6526timer.fth
@@ -28,6 +31,10 @@
   \prof profiler-bucket [strings]
   include strings.fth
   \prof [strings] end-bucket
+  include lowlevel.fth
+  (CX include x16edit.fth  C)
+  tmp-clear
+
 ~ vocabulary compiler
   compiler also definitions
 
@@ -68,12 +75,13 @@
   tmp-clear
 
   onlyforth
-  (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
+  \ (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
-  include lowlevel.fth
-  (CX include x16edit.fth  C)
+  \ include lowlevel.fth
+  \ (CX include x16edit.fth  C)
   onlyforth compiler also definitions
   include v-assembler.fth
+  \ tmp-clear
   include codegen.fth
   include parser.fth
   \prof [parser] end-bucket
@@ -121,10 +129,12 @@
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
   s0 @ here - u. .( dictionary bytes to spare pre save ) cr
+  .( before save: ) heap u. cr
   tmp-clear
 \log display
   save
 \log alsologtofile
+  .(  after save: ) heap u. cr
   s0 @ here - u. .( dictionary bytes to spare post save ) cr
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !

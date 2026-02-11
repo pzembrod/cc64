@@ -11,7 +11,7 @@ heap cr .( trnstmpheap max end: ) u. cr
 
 here
 
-$200 hallot  heap dp !
+$230 hallot  heap dp !
 
 variable tmpheap[
 variable tmpheap>
@@ -57,6 +57,8 @@ up@ dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
   \ Uncomment the following line to help determine the ideal tmpheap
   \ size for your project.
   \ tmpheap> @ tmpheap[ @ - cr u. ." spare tmpheap bytes"
+  \ [ order ]
+  ]tmpheap @ tmpheap> @ - cr u. ." used tmpheap bytes"
   ]tmpheap @ tmpheap> !  last off ;
 
 here cr .( trnstmpheap act end: ) u. cr
