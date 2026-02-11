@@ -4,6 +4,14 @@
 
 \prof profiler-bucket [parser-basics]
 
+\ terminology / interface:
+\    compile-program
+\    main()-addr
+\    protos2patch
+
+
+\ list of calls to function prototypes i.e. forward references
+\ that must be patched during the mini linker step.
 ~ variable protos2patch
 
 ||on
@@ -1078,8 +1086,10 @@ variable protos2resolve
      ascii } #char# expect
      unnestlocal ;
 
+\ the address of the main() function, or 0 if no main() exists
 ~ variable main()-adr
 
+\ main parser entry point: compiles the main source
 ~ : compile-program ( -- )
      fetchword
      BEGIN definition? not UNTIL
