@@ -9,7 +9,7 @@
 | ' |off  alias ~off
 
   (64 include trnstmpheap.fth C)
-  (64 $2000 mk-tmp-heap C)
+  (64 $1e80 mk-tmp-heap C)
   (16 include notmpheap.fth C)
   (CX include x16trnstmphp.fth C)
 
@@ -20,6 +20,7 @@
   (64  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
   (16 include trns6502asm.fth  C) \ 6502 assembler on heap
   (CX  include tmp6502asm.fth C)  \ 6502 assembler on tmpheap
+  include lowlevel.fth
   \6526 include 6526timer.fth
   \prof \needs deltaTime include faketimer.fth
   \prof \time include mock32timer.fth
@@ -30,6 +31,8 @@
   \prof [strings] end-bucket
 ~ vocabulary compiler
   compiler also definitions
+
+  (CX include x16edit.fth  C)
 
   \prof profiler-bucket [memman-etc]
   include init.fth
@@ -70,8 +73,6 @@
   onlyforth
   (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
   (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
-  include lowlevel.fth
-  (CX include x16edit.fth  C)
   onlyforth compiler also definitions
   include v-assembler.fth
   include codegen.fth
