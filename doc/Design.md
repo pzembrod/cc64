@@ -126,44 +126,13 @@ interface between codegen.fth and v-assembler.fth, may offer an opportunity
 for a relocatable intermediate code format, and thereby for a more flexible
 linker.
 
-## Source structure
+## Sources overview
 
 Most sources for cc64 live in [src/cc64](src/cc64). Some sources which are
 shared with peddi, a small text editor that comes with cc64, live in
 [src/common]}(src/common). For building cc64 the sources are all copied
 into the same virtual disk drive so the include statements e.g. in
 [cc64.fth](src/cc64/cc64.fth) don't reflect the subdirs cc64/ or common/.
-
-### Source groups, coupling, interfaces and word headers
-
-Most source files intend to be a module with a well-define interface.
-Often this interface is explicitly listed at the top of the file.
-
-Two sources, however, namely v-assembler.fth and codegen.fth,
-have interfaces so wide that it wouldn't make sense to list them.
-Together with parser.fth they form a tightly coupled group of sources where
-codegen's interface is just used by parser and v-assembler's interface is
-used by codegen and parser. The interface that parser.fth exposes to the
-compiler's top level is again very small.
-
-This has technical significance because of VolksForth's ability make some
-word headers transient by putting them on its heap, and to drop them
-if they aren't needed anymore by clearing the heap. cc64 makes extensive use
-of this feature; almost all words except those by which the user invokes the
-compiler have transient headers which are not part of the final cc64 binary.
-
-However, tight memory on the Commander X16 made me go one step further and
-create a 2-stage heap that allows me to drop the headers of the implementation
-words of a source file after that file is fully loaded while keeping the
-headers of the interface words until all of cc64 is loaded. This 2-stage
-heap called tmpheap is described in [Vierte Dimension 3/2021](https://forth-ev.de/wiki/res/lib/exe/fetch.php/vd-archiv:4d2021-03.pdf).
-
-Now the tight coupling within the group of v-assembler, codegen and parser
-and the small interface of that group towards the rest of cc64 means that
-I can treat the wide interfaces of v-assembler and codegen as implementation
-detail of the whole source group and drop the interface headers after the
-group is loaded. It turned out that this saved enough memory to make cc64
-buildable on the X16.
 
 The following overview lists the main sources of the compiler:
 
@@ -215,7 +184,7 @@ to the next token.
 
 ### The parser-codegen source group
 
-This module group consists of a number of source files layered on top of
+This source group consists of a number of source files layered on top of
 each other, each file or module using the service of the module underneath or,
 in the case of parser.fth, of the two modules underneath.
 The interfaces between the modules are extremely wide, representing entire
@@ -226,14 +195,6 @@ It consists of the parser's main entry point `compile-program`.
 Its output is binary code and static
 variable initialization data written into two files, a list of forward
 function calls to resolve, and the main function's address.
-
-#### trns6502asm.fth or tmp6502asm.fth
-
-This is the transient Forth 6502 assembler of VolksForth, loaded onto the
-heap (trns6502asm.fth) or, in the case of the X16, onto the tmpheap
-(tmp6502asm.fth). It is only present
-while the cc64 compiler itself is compiled; it is not part of the cc64 binary.
-It is used to assemble the 6502 code templates of v-assembler.fth.
 
 #### v-assembler.fth
 
@@ -269,9 +230,7 @@ need for an extra codegen layer.
 Besides codegen and v-assembler, the parser mainly depends on scanner and
 the symbol table.
 
-### The mini linker
-
-#### minilinker.fth
+### minilinker.fth
 
 This is the mini linker mentioned above. The parser/codegen group outputs
 two files, `%%code` which contains the generated binary code, and `%%init`
@@ -287,6 +246,99 @@ In the case of creating a new library, a third file is written, a `.h` header
 file containing the correct `#pragma cc64` line and defining all symbol that
 the library exports.
 
+### invoke.fth
+
+This contains the top level word `cc` which invokes compiler and linker
+and ties everything together.
+
+## Transient word headers
+
+cc64 makes extensive use of VolksForth's feature of transient word headers.
+VolksForth has a special temp memory area called the heap. It's outside the
+dictionary and has little to do with the heap of languages like C or Java.
+When words are compiled, their VolksForth can place their header onto the
+heap instead of into the dictionary. The heap can later be cleared, which
+removes all word headers on the heap but leaves the compiled code, hence
+transient headers.
+
+Almost all words in cc64 have transient headers; the only exception are
+the words that make up the user interface, i.e. words by which the user
+invokes the compiler. The overall size of cc64's transient headers is over
+14 kB which thus aren't part of the final compiler binary. That's significant
+given a binary size of 32 kB, consisting of 14 kB VolksForth base system and
+18 kB cc64 code.
+
+## Interfaces, coupling, and source groups
+
+Most source files intend to be a module with a well-define interface.
+Often this interface is explicitly listed at the top of the file.
+
+Two sources, however, namely v-assembler.fth and codegen.fth,
+have interfaces so wide that it wouldn't make sense to list them.
+Together with parser.fth they form a tightly coupled group of sources where
+codegen's interface is just used by parser and v-assembler's interface is
+used by codegen and parser. The interface that parser.fth exposes to the
+compiler's top level is again very small, so that the three sources togehter
+can be seen as one module or source group with a small interface.
+
+The interface size has technical significance because esp. on the
+Commander X16 the main, non-banked memory is so limited that there isn't
+enough space for all the 14 kB of transient headers while the compiler is
+built. The solution for this came when I realized that not all 14 kB are
+needed in memory at the same time, and that the pattern of keeping the
+headers of cc64's user interface words while discarding the headers of words
+actually implement cc64 can be repeated on a smaller scale: keep the
+headers of module interface words in memory until building all of cc64
+is done, and discard the headers of implementation words of a module as soon
+as that module is built.
+
+### tmpheap
+
+Thus the idea of a two-staged heap called tmpheap was born. The reuse of
+heap memory for implementation word headers relieved the memory pressure, but
+only by a surprisingly small amount of about 1.8 kB - which wouldn't have
+been enough to fir the build process into the X16 main memory.
+
+The reason for this unexpectedly small win turned out to be the large size of
+the v-assembler/codegen/parser source group, which together use 6 kB of tmpheap
+space for implementation word headers. Add to this 2 kB for the transient
+6502 assembler, needed to build v-assembler and therefore also placed on the
+tmpheap, yields a required tmpheap size of almost 8 kB. And most of those
+8 kB aren't reused by the other source files, most of which only need around
+or even below 100-200 bytes for implementation word headers.
+
+However, the introduction of the
+tmpheap enabled something else on the X16: The tmpheap can be placed into one
+bank of the X16's banked memory and thus win an additional 8 kB while
+building cc64, and that made the difference between buildable and
+dictionary overflow.
+
+### tmpheap related sources
+
+#### tmpheap.fth and x16tmpheap.fth
+
+These two files contain the implementation of the tmpheap mentioned above.
+tmpheap.fth is the default implementation that places the tmpheap onto
+VolksForth's regular heap. x16tmpheap.fth places the tmpheap into the
+Commander X16's banked RAM.
+
+Thanks to the design of the heap of VolksForth it
+could be implemented in just 50 lines, though it did need one small
+incompatible change in the VolksForth kernel, though I think that barely
+anyone was really affected by the incompatibility.
+
+tmpheap is described in
+[Vierte Dimension 3/2021](https://forth-ev.de/wiki/projects:4dinhalt#heft_4d2021-03).
+
+#### trns6502asm.fth and tmp6502asm.fth
+
+This is the transient Forth 6502 assembler of VolksForth, loaded onto the
+heap (trns6502asm.fth) or, in the case of the X16, onto the tmpheap
+(tmp6502asm.fth). It is only present
+while the cc64 compiler itself is compiled; it is not part of the cc64 binary.
+
+It is used to assemble the 6502 code templates of v-assembler.fth.
+
 #### write-decl.fth
 
 Contains just one word, `(write-decl`, which writes a single definition
@@ -294,8 +346,3 @@ exported by a library. Because it requires knowledge of a few internal
 words of `codegen.fth`, it is loaded as part of the parser-codegen source
 group. So, while in terms of functionality it belongs to the mini linker,
 it can also be regarded as a linker-specific interface of codegen.
-
-### invoke.fth
-
-This contains the top level word `cc` which invokes compiler and linker
-and ties everything together.
