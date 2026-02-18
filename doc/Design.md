@@ -230,6 +230,14 @@ need for an extra codegen layer.
 Besides codegen and v-assembler, the parser mainly depends on scanner and
 the symbol table.
 
+#### write-decl.fth
+
+Contains just one word, `(write-decl`, which is a mini linker-specific
+interface of codegen. It writes a header file definition for a single
+symbol exported by a library. Because it requires knowledge of a few internal
+words of `codegen.fth`, it is implemented as part of the parser-codegen source
+group.
+
 ### minilinker.fth
 
 This is the mini linker mentioned above. The parser/codegen group outputs
@@ -243,8 +251,8 @@ initialization files get joined into a new `.i` file. In both cases the
 unresolved forward calls in `%%code` are resolved.
 
 In the case of creating a new library, a third file is written, a `.h` header
-file containing the correct `#pragma cc64` line and defining all symbol that
-the library exports.
+file which contains the correct `#pragma cc64` line and which defines all
+symbols that the library exports.
 
 ### invoke.fth
 
@@ -338,11 +346,3 @@ heap (trns6502asm.fth) or, in the case of the X16, onto the tmpheap
 while the cc64 compiler itself is compiled; it is not part of the cc64 binary.
 
 It is used to assemble the 6502 code templates of v-assembler.fth.
-
-#### write-decl.fth
-
-Contains just one word, `(write-decl`, which writes a single definition
-exported by a library. Because it requires knowledge of a few internal
-words of `codegen.fth`, it is loaded as part of the parser-codegen source
-group. So, while in terms of functionality it belongs to the mini linker,
-it can also be regarded as a linker-specific interface of codegen.
