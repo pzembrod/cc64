@@ -111,11 +111,28 @@ anyone was really affected by the incompatibility.
 tmpheap is described in
 [Vierte Dimension 3/2021](https://forth-ev.de/wiki/projects:4dinhalt#heft_4d2021-03).
 
+### trnstmpheap.fth and x16trnstmphp.fth
+
+The tmpheap mechanism is only needed during the building process of cc64.
+This means that even the code that creates and manages the tmpheap can
+be transient, i.e. put onto the regular heap, and be cleared out before
+the cc64 binary is written to disk. That is what trnstmpheap.fth and
+x16trnstmphp.fth do.
+
 ### trns6502asm.fth and tmp6502asm.fth
 
 This is the transient Forth 6502 assembler of VolksForth, loaded onto the
-heap (trns6502asm.fth) or, in the case of the X16, onto the tmpheap
+heap (trns6502asm.fth) or, in the case of C64 or X16, onto the tmpheap
 (tmp6502asm.fth). It is only present
 while the cc64 compiler itself is compiled; it is not part of the cc64 binary.
 
-It is used to assemble the 6502 code templates of v-assembler.fth.
+It is used to assemble the 6502 code templates of
+`[v-assembler.fth](Sources-overview.md#v-assemblerfth)` as well as several
+code words in `lowlevel.fth`, `strings.fth` and `x16edit.fth`.
+
+When the assembler is loaded onto the tmpheap, the
+facts that the tmpheap gets cleared several times after groups of source
+files are loaded, and that the files with low level code words live in
+a different source group than v-assembler, have the consequence
+that tmp6502asm.fth must be loaded twice during the overall compile run,
+once for each source group that needs it.
