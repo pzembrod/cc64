@@ -34,7 +34,8 @@
 \ es muss /name < )block < )local < 256
 
 || : cutname ( name -- )
-     dup c@ /name umin swap c! ;
+     dup c@   dup 0= *compiler* ?fatal
+     /name umin swap c! ;
 
 || create dummy  /symbol allot
 
@@ -80,7 +81,6 @@
 \   symtab: locals             14feb91pz
 
 ~ : putlocal ( name -- dfa )
-     dup c@ 0= IF drop dummy exit THEN
      dup cutname   dup )block (findloc)
         IF drop dummy
         *doubledef* error  exit THEN
@@ -138,7 +138,6 @@
      dup cutname  (findglb) and ;
 
 ~ : putglobal  ( name -- dfa )
-     dup c@ 0= IF drop dummy exit THEN
      dup cutname  dup (findglb)
         IF 2drop dummy
         *doubledef* error exit THEN
