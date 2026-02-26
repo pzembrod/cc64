@@ -117,18 +117,33 @@
 \ 0: hash table full
 || : (findglb) ( name -- dfa   true )
               ( name -- adr/0 false )
-     dup hash #globals u/mod drop
-     2* hash[ + dup
-     DO I ]hash u< not
-        IF hash[ >I THEN
-     I @ ?dup
-        IF over streq
-           IF drop I @ count +  true
+     dup hash #globals u/mod drop  ( name hash-idx )
+     2* hash[ + dup  ( name hash[]-startadr hash[]-startadr )
+     DO I ]hash u< not  ( name at-]hash? )
+        IF hash[ >I THEN  ( name )
+     I @ ?dup  ( name symtab[]-name> symtab[]-name> | name 0 )
+        IF over streq  ( name equal? )
+           IF drop I @ count +  true  ( dfa true )
            UNLOOP exit THEN
-        ELSE drop I  false UNLOOP exit
-        THEN
+        ELSE drop I  false UNLOOP exit  ( dfa false )
+        THEN  ( name )
      2 +LOOP drop 0  false ;
 
+\ true/false flag: found name in global symbols
+\ dfa: data field address of found symbol
+\ adr: address in hash table or link field in previous symbol
+\      where address of new symbol could be stored.
+\ || : (findglb) ( name -- dfa   true )
+\               ( name -- adr false )
+\      dup >r  hash #globals u/mod drop  ( hash-idx )
+\      cells hash[ +  ( hash[]-startadr )
+\         BEGIN dup @ 0= IF rdrop false exit THEN
+\         ( hash[]-startadr | link-adr )
+\         @  dup r@ streq  ( name-adr equal? )
+\            IF count +  true  rdrop exit ( dfa ) THEN
+\            ( name-adr )
+\            count + /symbol +  ( link-adr )
+\         REPEAT ;
 
 \ *** Block No. 65, Hexblock 41
 
@@ -145,10 +160,12 @@
         IF drop dummy
         *glbovfl* error exit THEN
      over c@ 1+ /symbol +  spacious?
+     \ over c@ 1+ /symbol + cell+ spacious?
         IF globals> @ swap !
         globals> @ over c@ 1+ cmove
         globals> @ count +
         dup  /symbol + globals> !
+        \ dup  /symbol +  dup off cell+ globals> !
         ELSE 2drop dummy
         *symovfl* error THEN ;
 
