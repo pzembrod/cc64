@@ -172,11 +172,9 @@
      exe-name exe-file fopen
      exe-file fsetout
      write-libheader
-     ]hash hash[
-     DO I @ ?dup
-        IF dup count + 2@
-        (write-decl THEN
-     2 +LOOP
+        symtab[ BEGIN dup globals> @ u< WHILE
+        dup count + under 2@ (write-decl
+        /symbol + cell+ REPEAT drop
      funset  exe-file fclose ;
 
 || : link-lib  ( -- )
