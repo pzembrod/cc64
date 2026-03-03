@@ -11,6 +11,7 @@ test -n "${OUTFILES}" || export OUTFILES="${program} ${program}.log"
 emulatordir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 source "${emulatordir}/basedir.shlib"
 hostfiles="$(realpath --relative-to="$PWD" "${basedir}/${CC64HOST}files")"
+test -n "${HOSTFILES}" && hostfiles="${HOSTFILES}"
 
 rm -f "${hostfiles}/${program}.log"
 keybuf="logfile ${program}.log\ncc ${program}.c\nlogclose\ndos s0:notdone"
