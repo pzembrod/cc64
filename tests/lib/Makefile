@@ -226,7 +226,7 @@ clean:
 	rm -f c64files/* c16files/* x16files/*
 	rm -f *-suite-[cx]??_[cx]??.*
 	rm -f suite.joined-*
-	rm -f *.out *.out? *.T64 *.result *-generated.c
+	rm -f *.out *.out? *.log *.T64 *.result *-generated.c
 	rm -f printf/printf-test.c printf/printf.golden
 	rm -f printf/fprintf-test.c printf/fprintf.out1.golden
 	rm -f printf/sprintf-test.c printf/sprintf.golden

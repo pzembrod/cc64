@@ -29,8 +29,8 @@ source "${testdir}/concat-suite.shlib"
 
 # Build test binary
 rm -f "${hostfiles}/${suiteshort}" "${targetfiles}/${suiteshort}.T64"
-CC64HOST="${host}" OUTFILES="${suiteshort}" \
-  ./compile-in-emu.sh "${suiteshort}"
+CC64HOST="${host}" ./compile-in-emu.sh "${suiteshort}"
+petscii2ascii "${hostfiles}/${suiteshort}.log" "${suitename}.log"
 
 if [ "${hostfiles}" != "${targetfiles}" ]
 then

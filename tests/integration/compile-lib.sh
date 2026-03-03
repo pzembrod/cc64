@@ -17,9 +17,9 @@ test -d "${hostfiles}" || mkdir "${hostfiles}"
 
 rm -f "${hostfiles}/${testname}"*
 ascii2petscii "${testname}.c" "${hostfiles}/${testname}.c"
-CC64HOST="${host}" OUTFILES="${testname}.h" \
+CC64HOST="${host}" OUTFILES="${testname}.h ${testname}.log" \
   ./compile-in-emu.sh "${testname}"
-
+petscii2ascii "${hostfiles}/${testname}.log" "${testname}.log"
 petscii2ascii "${hostfiles}/${testname}.h" "${testname}.h.out"
 
 # Evaluate test output

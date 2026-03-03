@@ -25,8 +25,7 @@ source "${testdir}/concat-suite.shlib"
 
 # Build test binary
 rm -f "${hostfiles}/suite" "${targetfiles}/suite.T64"
-CC64HOST="${host}" OUTFILES="suite suite.log" \
-  ./compile-in-emu.sh "suite" "$cc64"
+CC64HOST="${host}" ./compile-in-emu.sh "suite" "$cc64"
 petscii2ascii "${hostfiles}/suite.log" "${suitename}.log"
 
 if [ "${hostfiles}" != "${targetfiles}" ]

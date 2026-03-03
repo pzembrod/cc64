@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-test -n "${CC64HOST}" || export CC64HOST=c64
-test -n "${OUTFILES}" || export OUTFILES=""
-
 testname="${1}"
 cc64="${2}"
 test -n "${cc64}" || cc64="cc64"
+
+test -n "${CC64HOST}" || export CC64HOST=c64
+test -n "${OUTFILES}" || export OUTFILES="${testname} ${testname}.log"
 
 testdir="$(realpath --relative-to="$PWD" "$(dirname "${BASH_SOURCE[0]}")")"
 source "${testdir}/basedir.shlib"

@@ -27,7 +27,7 @@ libtest.result: libtest.c libtest.golden compile-lib.sh \
 
 clean:
 	rm -f c64files/* c16files/* x16files/*
-	rm -f *.result *.out *-generated.c
+	rm -f *.result *.out *.log *-generated.c
 
 c64files/rt-%: $(basedir)/c64files/rt-%
 	test -d c64files || mkdir c64files
