@@ -13,6 +13,7 @@
      IF ." usage: cc file.c" cr
      rdrop THEN ;
 
+|| : .errors-occurred  ." error(s) occured" ;
 
 ~ : cc  ( -- )
      clearstack
@@ -30,14 +31,16 @@
      cr cr ." compiling" cr
      compile-source  cr
      any-errors? @
-        IF ." error(s) occured" cr
+        IF .errors-occurred cr
         close-files scratch-all exit
         THEN
      \prof profiler-timestamp
      ." linking" cr
      link-all  cr
-     ." done" cr
      scratch-tmps
+     any-errors? @
+        IF .errors-occurred
+        ELSE ." done" THEN cr
      \time read-50ms-timer - ms. cr
      \prof profiler-end
      ;
