@@ -13,8 +13,17 @@ source "${emulatordir}/basedir.shlib"
 hostfiles="$(realpath --relative-to="$PWD" "${basedir}/${CC64HOST}files")"
 test -n "${HOSTFILES}" && hostfiles="${HOSTFILES}"
 
-rm -f "${hostfiles}/${program}.log"
+logfile="${hostfiles}/${program}.log"
+rm -f "${logfile}"
 keybuf="logfile ${program}.log\ncc ${program}.c\nlogclose\ndos s0:notdone"
 
 export CBMFILES="${hostfiles}"
 "${emulatordir}/run-in-${CC64HOST}emu.sh" "${cc64}" "${keybuf}"
+
+petscii2ascii "${logfile}" | \
+  grep '^done$' || \
+  (echo "Compile did not complete: ${logfile}" && exit 1)
+
+petscii2ascii "${logfile}" | \
+  grep -F 'error(s) occured' && \
+  echo "Compilation error(s): ${logfile}" && exit 1 || true
