@@ -1,14 +1,8 @@
-\ *** Block No. 24, Hexblock 18
-
-\ errormessages              20sep94pz
+\ error messages
 
 \prof profiler-bucket [memman-errmsg]
 
-\ *** Block No. 25, Hexblock 19
-
-\ errormessages                11sep94pz
-
-~ 42 string-tab errormessage
+~ 43 string-tab errormessage
 
 ~ x *syntax*      x" syntax error"
 ~ x *eof*         x" end of file"
@@ -23,11 +17,6 @@
 ~ x *nofctnptr*   x" function ptr needed"
 ~ x *noptr*       x" pointer needed"
 ~ x *noconst*     x" const expression needed"
-
-
-\ *** Block No. 26, Hexblock 1a
-
-\   errormessages              11sep94pz
 
 ~ x *noswitch*    x" no active switch"
 ~ x *ill-brk*     x" nothing to break/continue"
@@ -47,11 +36,6 @@
 ~ x *longline*    x" overlong line"
 ~ x *preprocessor* x" preprocessor"
 
-
-\ *** Block No. 27, Hexblock 1b
-
-\   errormessages              10may20pz
-
 ~ x *preprocess-in-string*
      x" preprocessor in string"
 ~ x *memsetup*  x" low mem for statics"
@@ -65,6 +49,7 @@
 ~ x *compiler*   x" compiler error"
 ~ x *codetoolong*  x" code too long"
 ~ x *fastcall*  x" fastcall error"
+~ x *unbalanced* x" unbalanced stack"
 
 end-tab
 

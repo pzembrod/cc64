@@ -13,7 +13,7 @@
      IF ." usage: cc file.c" cr
      rdrop THEN ;
 
-|| : .errors-occurred  ." error(s) occured" ;
+|| : .errors-occurred  ." error(s) occured" cr ;
 
 ~ : cc  ( -- )
      clearstack
@@ -38,9 +38,10 @@
      ." linking" cr
      link-all  cr
      scratch-tmps
+     .s depth *unbalanced* ?error
      any-errors? @
         IF .errors-occurred
-        ELSE ." done" THEN cr
+        ELSE ." done" cr THEN
      \time read-50ms-timer - ms. cr
      \prof profiler-end
      ;
