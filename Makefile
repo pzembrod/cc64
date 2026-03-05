@@ -331,47 +331,42 @@ sut: autostart-c64/cc64.T64 autostart-c16/cc64.T64 x16files/cc64 \
 
 # cc64 build rules
 
-%files/cc64: $(cc64srcs_c64) $(cc64srcs_c16) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
+%files/cc64: emulator/* \
+ $(cc64srcs_c64) $(cc64srcs_c16) \
  autostart-%/vf-build-base.T64
 	emulator/build-binary.sh $* cc64
 
-%files/cc64pe: \
+%files/cc64pe: emulator/* \
  $(cc64srcs_c64) $(cc64srcs_c16) \
  $(peddisrcs_c64) $(peddisrcs_c16) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
  autostart-%/vf-build-base.T64
 	emulator/build-binary.sh $* cc64pe
 
-%files/peddi: $(peddisrcs_c64) $(peddisrcs_c16) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
+%files/peddi: emulator/* \
+ $(peddisrcs_c64) $(peddisrcs_c16) \
  autostart-%/vf-build-base.T64
 	emulator/build-binary.sh $* peddi
 
 
-x16files/cc64: $(cc64srcs_x16) \
- emulator/build-binary.sh emulator/run-in-x16emu.sh \
+x16files/cc64: emulator/* \
+ $(cc64srcs_x16) \
  x16files/vf-build-base
 	emulator/build-binary.sh x16 cc64
 
 
-c64files/cc64prof: $(cc64srcs_c64) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
+c64files/cc64prof: emulator/* $(cc64srcs_c64) \
  autostart-c64/vf-build-base.T64
 	emulator/build-binary.sh c64 cc64prof
 
-c64files/cc64time: $(cc64srcs_c64) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
+c64files/cc64time: emulator/* $(cc64srcs_c64) \
  autostart-c64/vf-build-base.T64
 	emulator/build-binary.sh c64 cc64time
 
-c64files/cc64pftm: $(cc64srcs_c64) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
+c64files/cc64pftm: emulator/* $(cc64srcs_c64) \
  autostart-c64/vf-build-base.T64
 	emulator/build-binary.sh c64 cc64pftm
 
-%files/cc64size: $(cc64srcs_c64) $(cc64srcs_c16) \
- emulator/build-binary.sh emulator/run-in-vice.sh \
+%files/cc64size: emulator/* $(cc64srcs_c64) $(cc64srcs_c16) \
  autostart-%/vf-build-base.T64
 	emulator/build-binary.sh $* cc64size
 
@@ -385,8 +380,7 @@ c64files/cc64pftm: $(cc64srcs_c64) \
 
 # profiler bucket size rule
 
-%-buckets.sizes: autostart-%/cc64size.T64 \
- emulator/run-in-%emu.sh
+%-buckets.sizes: emulator/* autostart-%/cc64size.T64 \
 	rm -f $*files/buckets.sizes
 	emulator/run-in-$*emu.sh cc64size \
 	    "logfile buckets.sizes  sizes  logclose dos s0:notdone"
@@ -438,9 +432,9 @@ lib/libc-c16.c: $(libc_files) runtime/*
 lib/libc-x16.c: $(libc_files) runtime/*
 	echo '#include <lib-cio-x16.h>' | cat - $(libc_files) >$@
 
-lib/libc-%.h lib/libc-%.i lib/libc-%.o: lib/libc-%.c \
-  autostart-c64/cc64.T64 \
-  runtime/lib-cio-%.h runtime/lib-cio-%.i runtime/lib-cio-%.o
+lib/libc-%.h lib/libc-%.i lib/libc-%.o: emulator/* lib/libc-%.c \
+ runtime/lib-cio-%.h runtime/lib-cio-%.i runtime/lib-cio-%.o \
+ autostart-c64/cc64.T64
 	emulator/compile-lib.sh libc-$*
 
 lib_libc_headers = $(patsubst %, lib/% , $(libc_headers))
