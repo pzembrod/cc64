@@ -9,7 +9,7 @@
 | ' |off  alias ~off
 
   (64 include trnstmpheap.fth C)
-  (64 $1e80 mk-tmp-heap C)
+  (64 $1700 mk-tmp-heap C)
   (16 include notmpheap.fth C)
   (CX include x16trnstmphp.fth C)
 
@@ -71,16 +71,22 @@
   tmp-clear
 
   onlyforth
-  (64 include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
-  (CX include tmp6502asm.fth  C)  \ 6502 assembler on tmpheap
+  (16 \ C) include tmpx6502asm.fth  \ 6502 assembler on special tmpheap
   onlyforth compiler also definitions
+  (16 \ C) cr .( clean tmpheap> ) tmpheap> @ u.
   include v-assembler.fth
+  (16 \ C) cr .( v-assembler tmpheap> ) tmpheap> @ u.
+  (16 \ C) clear-tmpx6502asm C)
   include codegen.fth
+  (16 \ C) cr .( codegen tmpheap> ) tmpheap> @ u.
   include parser.fth
+  (16 \ C) cr .( parser tmpheap> ) tmpheap> @ u.
   \prof [parser] end-bucket
 
   \prof profiler-bucket [minilinker]
   include write-decl.fth
+  (16 \ C) cr .( write-decl tmpheap> ) tmpheap> @ u.
+  (16 \ C) cr .( tmpheap free space ) tmpheap> @ tmpheap[ @ - u.
   tmp-clear
 
   \ From here on everything can go onto
@@ -121,12 +127,12 @@
   cr
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
-  s0 @ here - u. .( dictionary bytes to spare pre save ) cr
+  s0 @ here - u. .( dictionary bytes free pre save ) cr
   tmp-clear
 \log display
   save
 \log alsologtofile
-  s0 @ here - u. .( dictionary bytes to spare post save ) cr
+  s0 @ here - u. .( dictionary bytes free post save ) cr
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
 
