@@ -57,7 +57,7 @@
 
 \prof ||off profiler-bucket [parser-expr] ||on
 
-  cr .( submodule expression ) cr
+  cr .( submodule expression )
 
 \ parser: atom                 13sep94pz
 
@@ -333,7 +333,7 @@ create assign-oper  11  4 * ,
 
 \prof ||off profiler-bucket [parser-stmt] ||on
 
-  .( submodule statement ) cr
+  cr .( submodule statement )
 
 doer compound
 doer statement
@@ -567,7 +567,7 @@ create statement-tab  10  4 * ,
 
 \prof ||off profiler-bucket [parser-decl] ||on
 
-  .( submodule definition ) cr
+  cr .( submodule definition )
 
 variable #/obj
 variable []dim'd

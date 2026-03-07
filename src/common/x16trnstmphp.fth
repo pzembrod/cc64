@@ -7,9 +7,9 @@
 \ it anymore, and so the compile time space saving that tmpheap offers
 \ comes at zero cost in turnkey application size.
 
-heap cr .( trnstmpheap max end: ) u. cr
-
 here
+
+heap cr .( trnstmpheap max end: ) u.
 
 $200 hallot  heap dp !
 
@@ -56,6 +56,6 @@ variable ]tmpheap
   \ tmpheap> @ tmpheap[ @ - cr u. ." tmpheap spare"
   ]tmpheap @ tmpheap> !  last off ;
 
-here cr .( trnstmpheap act end: ) u. cr
+here cr .( trnstmpheap act end: ) u.
 
 dp !
