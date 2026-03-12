@@ -7,13 +7,10 @@
 \ it anymore, and so the compile time space saving that tmpheap offers
 \ comes at zero cost in turnkey application size.
 
+here heap
+$220 hallot  heap dp !
 here
-
-heap cr .( trnstmpheap max end: ) u.
-
-$200 hallot  heap dp !
-
-here
+( old-here old-heap new-here )
 
 variable tmpheap[
 variable tmpheap>
@@ -61,7 +58,12 @@ up@ dup ]tmpheap !  dup tmpheap> !  tmpheap[ !
   \ tmpheap> @ tmpheap[ @ - cr u. ." spare tmpheap bytes"
   ]tmpheap @ tmpheap> !  last off ;
 
-here swap - cr .( trnstmpheap size: ) u.
-here cr .( trnstmpheap act end: ) u.
+: ?\  ( flag -- )  IF [compile] \ THEN ;
 
+( old-here old-heap new-here )
+here swap - cr .( trnstmpheap ) .( code size: ) u.
+( old-here old-heap )
+here 2dup - cr .( transient ) .( free space: ) .
+80 + u> ?\ .(  overflow ) abort
+( old-here )
 dp !
