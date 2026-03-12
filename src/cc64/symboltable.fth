@@ -49,7 +49,7 @@
 ~  variable globals>
 || variable locals>
 
-~ : init-symtab
+|| : init-symtab
      (CX \ C) ]symtab symtab[ - min-free !  #collisions off
      hash[ ]hash over - erase
      symtab[ globals> !

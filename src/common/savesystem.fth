@@ -4,7 +4,7 @@
 
   cr .( savesystem ) cr
 
-| : (savsys ( adr len -- )
+|| : (savsys ( adr len -- )
  [ Assembler ] Next  [ Forth ]
  ['] pause  dup push  !  \ singletask
  i/o push  i/o off  bustype ;

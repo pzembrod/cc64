@@ -47,10 +47,7 @@
   \prof profiler-bucket [file-handling]
   include fileio.fth
   include fileman.fth
-  tmp-clear
-
   include codehandler.fth
-  tmp-clear
   include rt-ptrs.fth
   \prof [file-handling] end-bucket
 

@@ -41,7 +41,7 @@
 ~ create aux#  8 c,
 ~ : aux   ( -- aux )  aux# c@ ;
 
-~ : init-files
+|| : init-files
      dev 2 source-file  set-fhandle
      aux 3 code-file    set-fhandle
      aux 4 static-file  set-fhandle
@@ -54,7 +54,7 @@
 
 \   fileman:                   11sep94pz
 
-| : loadadr!  ( handle -- )
+|| : loadadr!  ( handle -- )
      fsetout 0 fputc 64 fputc funset ;
 
 ~ : open-outfiles  ( -- )

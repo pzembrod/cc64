@@ -1,11 +1,11 @@
 
-| : init-shell  ( -- )
+|| : init-shell  ( -- )
      only shell ;
 
 ' init-shell IS 'cold
 
 
-| : .logo  ( -- )
+|| : .logo  ( -- )
      $e con!  \ switch to lowercase charset
      ."     running" cr
      .binary-name .version cr

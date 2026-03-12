@@ -12,7 +12,7 @@
 ~ variable context?
 ~ doer printcontext
 
-~ : init-error  any-errors? off
+|| : init-error  any-errors? off
                 context? off ;
     init: init-error
 
