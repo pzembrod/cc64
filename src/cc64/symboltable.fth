@@ -31,7 +31,14 @@
 || 63 constant /name
 || 255 constant )local   \ marken
 || 254 constant )block   \
-\ es muss /name < )block < )local < 256
+\ necessary: /name < )block < )local < 256
+
+(CX \ C) || variable min-free
+(CX \ C) || variable #collisions
+
+(CX \ C) ~ : .symtab-status  ( -- )
+(CX \ C)      min-free @ u. ." symtab bytes free" cr
+(CX \ C)      #collisions @ u. ." hash collisions" cr ;
 
 || : cutname ( name -- )
      dup c@   dup 0= *compiler* ?fatal
@@ -43,6 +50,7 @@
 || variable locals>
 
 ~ : init-symtab
+     (CX \ C) ]symtab symtab[ - min-free !  #collisions off
      hash[ ]hash over - erase
      symtab[ globals> !
      ]symtab 1-  )local over c!
@@ -73,6 +81,7 @@
      dup cutname  )block (findloc) ;
 
 || : spacious? ( n -- flag )
+     (CX \ C) locals> @ globals> @ - min-free @ umin  min-free !
      locals> @ globals> @ - u> 0= ;
 
 
@@ -115,7 +124,7 @@
 \ dfa: data field address of found symbol
 \ adr: address in hash table or link field in previous symbol
 \      where address of new symbol could be stored.
-|| : (findglb) ( name -- dfa   true )
+|| : (findglb) ( name -- dfa  true )
                ( name -- adr false )
      dup >r  hash #globals u/mod drop  ( hash-idx )
      cells hash[ +  ( hash[]-startadr )
@@ -138,9 +147,7 @@
      dup cutname  dup (findglb)
         IF 2drop dummy
         *doubledef* error exit THEN
-     ?dup 0=
-        IF drop dummy
-        *glbovfl* error exit THEN
+     (CX \ C) dup hash[ ]hash uwithin 0= IF 1 #collisions +! THEN
      over c@ 1+ /symbol + cell+ spacious?
         IF globals> @ swap !
         globals> @ over c@ 1+ cmove

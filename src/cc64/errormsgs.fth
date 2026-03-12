@@ -2,13 +2,12 @@
 
 \prof profiler-bucket [memman-errmsg]
 
-~ 43 string-tab errormessage
+~ 42 string-tab errormessage
 
 ~ x *syntax*      x" syntax error"
 ~ x *eof*         x" end of file"
 ~ x *symovfl*     x" symtab full"
 ~ x *doubledef*   x" double defined symbol"
-~ x *glbovfl*     x" hash table full"
 ~ x *functoolong* x" function too long"
 ~ x *undef*       x" undefined symbol"
 ~ x *nofunc*      x" bad function call"

@@ -22,7 +22,7 @@
 
 \ doer/make (interaktiv)       02sep94pz
 
-  here 0 ] ;
+  here 0 ] ;  \ compile an UNNEST and leave its addr on stack
 ~ : doer  ( -- )
       create  [ swap ] literal ,
       does> @ [ assembler ] ip
