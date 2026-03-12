@@ -34,10 +34,8 @@
 
   include fileio.fth
   include fileman.fth
-  tmp-clear
 
   include codehandler.fth
-  tmp-clear
   include rt-ptrs.fth
 
   include input.fth
