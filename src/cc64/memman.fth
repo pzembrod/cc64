@@ -28,9 +28,9 @@
 
 \   memman: variable           03sep94pz
 
-|| create cc64mem  100   ,
-(CX \ C)      1000  , 4000  , 5000 ,
-(CX           500   , 2000  , 8192 , C)
+|| create cc64mem  200   ,
+(CX \ C)      200   , 5000  , 5000 ,
+(CX           200   , 2500  , 8192 , C)
               0 , 0 , 0 , 0 , 0 ,
 
 ~  ' limit alias himem
