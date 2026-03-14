@@ -33,12 +33,12 @@
 || 254 constant )block   \
 \ necessary: /name < )block < )local < 256
 
-(CX \ C) || variable min-free
-(CX \ C) || variable #collisions
+|| variable min-free
+|| variable #collisions
 
-(CX \ C) ~ : .symtab-status  ( -- )
-(CX \ C)      min-free @ u. ." symtab bytes free" cr
-(CX \ C)      #collisions @ u. ." hash collisions" cr ;
+~ : .symtab-status  ( -- )
+     min-free @ u. ." symtab bytes free" cr
+     #collisions @ u. ." hash collisions" cr ;
 
 || : cutname ( name -- )
      dup c@   dup 0= *compiler* ?fatal
@@ -50,7 +50,7 @@
 || variable locals>
 
 || : init-symtab
-     (CX \ C) ]symtab symtab[ - min-free !  #collisions off
+     ]symtab symtab[ - min-free !  #collisions off
      hash[ ]hash over - erase
      symtab[ globals> !
      ]symtab 1-  )local over c!
@@ -81,7 +81,7 @@
      dup cutname  )block (findloc) ;
 
 || : spacious? ( n -- flag )
-     (CX \ C) locals> @ globals> @ - min-free @ umin  min-free !
+     locals> @ globals> @ - min-free @ umin  min-free !
      locals> @ globals> @ - u> 0= ;
 
 
@@ -147,7 +147,7 @@
      dup cutname  dup (findglb)
         IF 2drop dummy
         *doubledef* error exit THEN
-     (CX \ C) dup hash[ ]hash uwithin 0= IF 1 #collisions +! THEN
+     dup hash[ ]hash uwithin 0= IF 1 #collisions +! THEN
      over c@ 1+ /symbol + cell+ spacious?
         IF globals> @ swap !
         globals> @ over c@ 1+ cmove
