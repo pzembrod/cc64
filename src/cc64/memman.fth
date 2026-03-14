@@ -36,7 +36,7 @@
 
 
 \ cc64mem data structure with offsets:
-\ 0: #links 2: #globals 4: symtabsize 6: codesize
+\ 0: #links 2: #globals 4: unused 6: unused
 \ 8: heap[/]hash 10: hash[/]symtab 12:symtab[/]code
 \ 14: code[/]static 16: static[
 
@@ -61,17 +61,23 @@
 
 || 0 get-mem: #links
 ~  2 get-mem: #globals
-|| 4 get-mem: symtabsize
-|| 6 get-mem: codesize
+\ || 4 get-mem: symtabsize
+\ || 6 get-mem: codesize
 
 || 250 constant static-size
 
 ' himem
+\ The order of the following lines determines the layout, from top
+\ to bottom, of the buffers in memory, between hime and lomem.
+\ This must match the initialization in (conf?.
+\ Note: This order is not the same as the order of the pointers in
+\ the cc64mem struct.
+~ ALIAS ]static  ~ 16 get-mem: static[    ' static[
 ~ ALIAS ]heap    ~  8 get-mem:   heap[    ' heap[
-~ ALIAS ]hash    ~ 10 get-mem:   hash[    ' hash[
-~ ALIAS ]symtab  ~ 12 get-mem: symtab[    ' symtab[
 (CX \ C) ~ ALIAS ]code  ~ 14 get-mem: code[  ' code[
-~ ALIAS ]static    ~ 16 get-mem: static[
+~ ALIAS ]symtab  ~ 12 get-mem: symtab[    ' symtab[
+~ ALIAS ]hash    ~ 10 get-mem:   hash[    ' hash[
+drop
 ~ ' lomem ALIAS   linebuf
 
 (CX ~ $a000 constant code[   ~ $c000 constant ]code  C)
@@ -79,8 +85,8 @@
 
 ~ 0 set-mem: #links!
 ~ 2 set-mem: #globals!
-~ 4 set-mem: symtabsize!
-(CX \ C) ~ 6 set-mem: codesize!
+\ ~ 4 set-mem: symtabsize!
+\ (CX \ C) ~ 6 set-mem: codesize!
 ||  8 set-mem: heap[!
 || 10 set-mem: hash[!
 || 12 set-mem: symtab[!
@@ -94,14 +100,19 @@
 
 \ cc64mem configuration
 
+\ The order of the lines matter; they lay out static[] then heap[] down
+\ from himem, then linebuf and hash[ up from lomem, then hash[],
+\ symtab[] and (except on the X16) code[] are fit into the free space
+\ in between. The layout reflects the definition order of the
+\ get-mem: accessors above.
 || : (conf?  ( -- flag )
-     himem  #links /link *  -  heap[!
-     linebuf /linebuf +   static[!
-     static[  static-size +  (CX symtab[! \ C) code[!
-     ]static 100 + heap[ u> IF true exit THEN
-     heap[ ]static - \ size for symtab + hash + (except X16) code
-     (CX \ C) 2/ code[ + symtab[!  heap[ ]code - \ size for symtab + hash
-     8 / $fffe and ]hash over - hash[! 2/ #globals!
+     ]static static-size     -  static[! \ ]static == himem
+     ]heap   #links /link *  -  heap[!   \ ]heap == static[
+     linebuf /linebuf        +  hash[!   \ linebuf == lomem
+     hash[ 100 + heap[ u> IF true exit THEN
+     heap[ hash[ - (CX \ C) 2/  \ size for hash + symtab
+     dup 8 / $fffe and dup hash[ + symtab[! 2/ #globals!
+     (CX drop \ C) hash[ + code[!
      false ;
 
 ~ : configure  ( -- )
@@ -116,20 +127,21 @@
 
 ~ : .mem ( -- )
      (conf? cr
-    ." stack  : " s0 @ pad - 256  - .bytes
-    ." rstack : " r0 @ s0 @       - .bytes
+    ." stack:   " s0 @ pad - 256  - .bytes
+    ." rstack:  " r0 @ s0 @       - .bytes
     ." statics: " ]static static[ - .bytes
-    ." code   : " ]code code[     - .bytes
-    ." symtab : " ]symtab symtab[ - .bytes
-    ." hashtab: " #globals . ." elements" cr
-    ." heap   : " #links   . ." links" cr
-    ." memtop : " himem    u. cr
+    ." code:    " ]code code[     - .bytes
+    ." symtab:  " ]symtab symtab[ - .bytes
+    ." hashtab: " #globals . ." buckets" cr
+    ." heap:    " #links   . ." links" cr
+    ." memtop:  " himem    u. cr
+    \ useful for debugging; uncomment if needed:
     \ base push hex
-    \ ." static[ ]static: " static[ u. ]static u. cr
-    \ ." code[   ]code:   " code[ u. ]code u. cr
-    \ ." symtab[ ]symtab: " symtab[ u. ]symtab u. cr
-    \ ." hash[   ]hash:   " hash[ u. ]hash u. cr
-    \ ." heap[   ]heap:   " heap[ u. ]heap u. cr
+    \ ." hash[]:   " hash[ u. ]hash u. cr
+    \ ." symtab[]: " symtab[ u. ]symtab u. cr
+    \ ." code[]:   " code[ u. ]code u. cr
+    \ ." heap[]:   " heap[ u. ]heap u. cr
+    \ ." static[]: " static[ u. ]static u. cr
    IF
     ." bad memory setup"
    cr THEN ;
