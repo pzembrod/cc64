@@ -64,6 +64,8 @@
 || 4 get-mem: symtabsize
 || 6 get-mem: codesize
 
+|| 250 constant static-size
+
 ' himem
 ~ ALIAS ]heap    ~  8 get-mem:   heap[    ' heap[
 ~ ALIAS ]hash    ~ 10 get-mem:   hash[    ' hash[
@@ -82,20 +84,25 @@
 ||  8 set-mem: heap[!
 || 10 set-mem: hash[!
 || 12 set-mem: symtab[!
-|| 14 set-mem: code[!
+(CX \ C) || 14 set-mem: code[!
 || 16 set-mem: static[!
+
+\ (CX ' symtab[! \ C)  ' code[!
+\ || ALIAS ]static!
+\ (CX \ C)  ' symtab[!  || ALIAS ]code!
 
 
 \ cc64mem configuration
 
 || : (conf?  ( -- flag )
-     himem  #links /link *  -
-                      dup heap[!
-     #globals 2*  -   dup hash[!
-     symtabsize -     dup symtab[!
-(CX drop \ C) codesize -  code[!
+     himem  #links /link *  -  heap[!
      linebuf /linebuf +   static[!
-     static[ 11 + ]static u> ;
+     static[  static-size +  (CX symtab[! \ C) code[!
+     ]static 100 + heap[ u> IF true exit THEN
+     heap[ ]static - \ size for symtab + hash + (except X16) code
+     (CX \ C) 2/ code[ + symtab[!  heap[ ]code - \ size for symtab + hash
+     8 / $fffe and ]hash over - hash[! 2/ #globals!
+     false ;
 
 ~ : configure  ( -- )
      (conf?   *memsetup* ?fatal ;
@@ -109,21 +116,22 @@
 
 ~ : .mem ( -- )
      (conf? cr
-    ." data stack  : " s0 @ pad - 256 -
-                       .bytes
-    ." return stack: " r0 @ s0 @ -
-                       .bytes
-    ." staticbuffer: " ]static static[
-                       - .bytes
-    ." codebuffer  : " codesize  .bytes
-    ." symbol table: " symtabsize .bytes
-    ." hash table  : " #globals .
-                       ." elements" cr
-    ." heap        : " #links .
-                       ." links" cr
-    ." memory limit: " himem   u. cr
+    ." stack  : " s0 @ pad - 256  - .bytes
+    ." rstack : " r0 @ s0 @       - .bytes
+    ." statics: " ]static static[ - .bytes
+    ." code   : " ]code code[     - .bytes
+    ." symtab : " ]symtab symtab[ - .bytes
+    ." hashtab: " #globals . ." elements" cr
+    ." heap   : " #links   . ." links" cr
+    ." memtop : " himem    u. cr
+    \ base push hex
+    \ ." static[ ]static: " static[ u. ]static u. cr
+    \ ." code[   ]code:   " code[ u. ]code u. cr
+    \ ." symtab[ ]symtab: " symtab[ u. ]symtab u. cr
+    \ ." hash[   ]hash:   " hash[ u. ]hash u. cr
+    \ ." heap[   ]heap:   " heap[ u. ]heap u. cr
    IF
-    ." bad memory setup: staticbuffer !"
+    ." bad memory setup"
    cr THEN ;
 
 
