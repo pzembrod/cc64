@@ -1,8 +1,7 @@
-\ *** Block No. 12, Hexblock c
-
-\ memman: loadscreen           20sep94pz
 
 \prof profiler-bucket [memman-mem]
+
+\ memman - provides memory buffers for different cc64 modules
 
 \ terminology / interface:
 \    himem
@@ -24,22 +23,7 @@
 \    .mem
 
 
-\ *** Block No. 13, Hexblock d
-
-\   memman: variable           03sep94pz
-
-|| create cc64mem  200   ,
-(CX \ C)      200   , 5000  , 5000 ,
-(CX           200   , 2500  , 8192 , C)
-              0 , 0 , 0 , 0 , 0 ,
-
-~  ' limit alias himem
-
-|| : #links        cc64mem @ ;
-~  : #globals      cc64mem 2+ @ ;
-|| : symtabsize    cc64mem 4 + @ ;
-|| : codesize      cc64mem 6 + @ ;
-~  : lomem          r0 @ ;
+\ sizes:
 
 ~ 6 constant /link   \ listenknoten
 
@@ -51,64 +35,75 @@
 ~ 133 constant /linebuf
 
 
-\ *** Block No. 14, Hexblock e
+\ cc64mem data structure with offsets:
+\ 0: #links 2: #globals 4: symtabsize 6: codesize
+\ 8: heap[/]hash 10: hash[/]symtab 12:symtab[/]code
+\ 14: code[/]static 16: static[
 
-\   memman: configure          03sep94pz
+|| create cc64mem  200   ,
+(CX \ C)      200   , 5000  , 5000 ,
+(CX           200   , 2500  , 8192 , C)
+              0 , 0 , 0 , 0 , 0 ,
+
+\ get-mem: set-mem: - defining words for cc64mem access words
+
+|| : get-mem:  ( n -- ) create c, does>
+  ( dfa -- n ) c@ cc64mem + @ ;
+
+|| : set-mem:  ( n -- ) create c, does>
+  ( n dfa -- ) c@ cc64mem + ! ;
+
+
+\ cc64mem access words
+
+~  ' limit alias himem
+~  : lomem          r0 @ ;
+
+|| 0 get-mem: #links
+~  2 get-mem: #globals
+|| 4 get-mem: symtabsize
+|| 6 get-mem: codesize
 
 ' himem
-~ ALIAS ]heap
-~     : heap[    cc64mem  8 + @ ;  ' heap[
-~ ALIAS ]hash
-~     : hash[    cc64mem 10 + @ ;  ' hash[
-~ ALIAS ]symtab
-~     : symtab[  cc64mem 12 + @ ;  ' symtab[
-(CX \ C) ~ ALIAS ]code
-(CX \ C) ~     : code[    cc64mem 14 + @ ;  ' code[
-~ ALIAS ]static
-~     : static[  cc64mem 16 + @ ;
+~ ALIAS ]heap    ~  8 get-mem:   heap[    ' heap[
+~ ALIAS ]hash    ~ 10 get-mem:   hash[    ' hash[
+~ ALIAS ]symtab  ~ 12 get-mem: symtab[    ' symtab[
+(CX \ C) ~ ALIAS ]code  ~ 14 get-mem: code[  ' code[
+~ ALIAS ]static    ~ 16 get-mem: static[
 ~ ' lomem ALIAS   linebuf
 
-(CX ~ : code[  $a000 ;      ~ : ]code  $c000 ; C)
+(CX ~ $a000 constant code[   ~ $c000 constant ]code  C)
 (CX ~ : enable-code[]-bank ( -- ) 1 $9f61 c! ; C)
+
+~ 0 set-mem: #links!
+~ 2 set-mem: #globals!
+~ 4 set-mem: symtabsize!
+(CX \ C) ~ 6 set-mem: codesize!
+||  8 set-mem: heap[!
+|| 10 set-mem: hash[!
+|| 12 set-mem: symtab[!
+|| 14 set-mem: code[!
+|| 16 set-mem: static[!
+
+
+\ cc64mem configuration
 
 || : (conf?  ( -- flag )
      himem  #links /link *  -
-                      dup cc64mem  8 + !
-     #globals 2*  -   dup cc64mem 10 + !
-     symtabsize -     dup cc64mem 12 + !
-(CX drop \ C) codesize -  cc64mem 14 + !
-     linebuf /linebuf +   cc64mem 16 + !
+                      dup heap[!
+     #globals 2*  -   dup hash[!
+     symtabsize -     dup symtab[!
+(CX drop \ C) codesize -  code[!
+     linebuf /linebuf +   static[!
      static[ 11 + ]static u> ;
-
-
-\ *** Block No. 15, Hexblock f
-
-\   memman: .mem               24aug94pz
 
 ~ : configure  ( -- )
      (conf?   *memsetup* ?fatal ;
 
    init: configure
 
-|| : set-mem:  ( n -- ) create c, does>
-  ( n dfa -- ) c@ cc64mem + ! ;
 
-~ 0 set-mem: #links!
-~ 2 set-mem: #globals!
-~ 4 set-mem: symtabsize!
-(CX \ C) ~ 6 set-mem: codesize!
-
-
-\ | create (default-mem  $20   ,
-\                $10   , $100  , $100  ,
-
-\ ~ : default-mem  ( -- )
-\   (default-mem cc64mem 8 cmove configure ;
-
-
-\ *** Block No. 16, Hexblock 10
-
-\   memman:                    09sep94pz
+\ memory layout display
 
 || : .bytes  ( n -- )  . ." bytes" cr ;
 
@@ -132,9 +127,7 @@
    cr THEN ;
 
 
-\ *** Block No. 17, Hexblock 11
-
-\   memman:                    24aug94pz
+\ changing data and return stack sizes
 
 || : relocate-tasks  ( newUP -- )
  up@ dup BEGIN  1+ under @ 2dup -
