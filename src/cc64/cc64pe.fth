@@ -116,7 +116,6 @@
 
   (64 $cbd0 ' limit >body ! C)
   (16 $f000 ' limit >body ! C)
-  (64 2000 set-symtab C)
   cr .( compile successful) cr
 \log logclose
   512 512 set-stacks
