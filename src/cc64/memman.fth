@@ -36,14 +36,18 @@
 
 
 \ cc64mem data structure with offsets:
-\ 0: #links 2: #globals 4: unused 6: unused
-\ 8: heap[/]hash 10: hash[/]symtab 12:symtab[/]code
-\ 14: code[/]static 16: static[
+\ 0: #links   2: #globals  4: #globals
+\ 6: static[  8: heap[    10: hash[    12: symtab[
+\ (except on X16:) 14: symtab%  16: code[
+\ The offsets must correspond to the accessors defined with
+\ get-mem: and set-mem:
+\ Note: The order of values and pointers in cc64mem is different
+\ from the layout of the actual buffers in memory.
 
-|| create cc64mem  200   ,
-(CX \ C)      200   , 5000  , 5000 ,
-(CX           200   , 2500  , 8192 , C)
-              0 , 0 , 0 , 0 , 0 ,
+|| create cc64mem
+  ( #links = ) 200 , ( hash% = ) 13 , ( #globals = ) 0 ,
+  ( static[ ) 0 , ( heap[ ) 0 , ( hash[ ) 0 , ( symtab[ ) 0 ,
+  (CX \ C) ( symtab% = ) 40 , ( code[ ) 0 ,
 
 \ get-mem: set-mem: - defining words for cc64mem access words
 
@@ -59,10 +63,10 @@
 ~  ' limit alias himem
 ~  : lomem          r0 @ ;
 
-|| 0 get-mem: #links
-~  2 get-mem: #globals
-\ || 4 get-mem: symtabsize
-\ || 6 get-mem: codesize
+||  0 get-mem: #links
+||  2 get-mem: hash%
+~   4 get-mem: #globals
+|| 14 get-mem: symtab%
 
 || 250 constant static-size
 
@@ -72,9 +76,9 @@
 \ This must match the initialization in (conf?.
 \ Note: This order is not the same as the order of the pointers in
 \ the cc64mem struct.
-~ ALIAS ]static  ~ 16 get-mem: static[    ' static[
+~ ALIAS ]static  ~  6 get-mem: static[    ' static[
 ~ ALIAS ]heap    ~  8 get-mem:   heap[    ' heap[
-(CX \ C) ~ ALIAS ]code  ~ 14 get-mem: code[  ' code[
+(CX \ C) ~ ALIAS ]code  ~ 16 get-mem: code[  ' code[
 ~ ALIAS ]symtab  ~ 12 get-mem: symtab[    ' symtab[
 ~ ALIAS ]hash    ~ 10 get-mem:   hash[    ' hash[
 drop
@@ -83,15 +87,15 @@ drop
 (CX ~ $a000 constant code[   ~ $c000 constant ]code  C)
 (CX ~ : enable-code[]-bank ( -- ) 1 $9f61 c! ; C)
 
-~ 0 set-mem: #links!
-~ 2 set-mem: #globals!
-\ ~ 4 set-mem: symtabsize!
-\ (CX \ C) ~ 6 set-mem: codesize!
+~  0 set-mem: #links!
+~  2 set-mem: hash%!
+||  4 set-mem: #globals!
+||  6 set-mem: static[!
 ||  8 set-mem: heap[!
 || 10 set-mem: hash[!
 || 12 set-mem: symtab[!
-(CX \ C) || 14 set-mem: code[!
-|| 16 set-mem: static[!
+(CX \ C) ~ 14 set-mem: symtab%!
+(CX \ C) || 16 set-mem: code[!
 
 \ (CX ' symtab[! \ C)  ' code[!
 \ || ALIAS ]static!
@@ -109,9 +113,10 @@ drop
      ]static static-size     -  static[! \ ]static == himem
      ]heap   #links /link *  -  heap[!   \ ]heap == static[
      linebuf /linebuf        +  hash[!   \ linebuf == lomem
-     hash[ 100 + heap[ u> IF true exit THEN
-     heap[ hash[ - (CX \ C) 2/  \ size for hash + symtab
-     dup 8 / $fffe and dup hash[ + symtab[! 2/ #globals!
+     \ 200 = arbitrary minimal remaining memory
+     hash[ 200 + heap[ u> IF true exit THEN
+     heap[ hash[ - (CX \ C) symtab% 100 */  \ size for hash + symtab
+     dup hash% 100 */ $fffe and dup hash[ + symtab[! 2/ #globals!
      (CX drop \ C) hash[ + code[!
      false ;
 

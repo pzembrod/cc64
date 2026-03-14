@@ -15,9 +15,8 @@
 ' savesystem         alias saveall
 ' .mem               alias mem
 ' #links!            alias set-heap
-\ ' #globals!          alias set-hash
-\ ' symtabsize!        alias set-symtab
-\ (CX \ C) ' codesize! alias set-code
+(CX \ C) ' symtab%!  alias set-symtab%
+' hash%!             alias set-hash%
 ' relocate           alias set-stacks
 
 : auxdev ( n -- )             aux# c! ;
