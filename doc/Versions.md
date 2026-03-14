@@ -1,5 +1,28 @@
 # cc64 versions
 
+## v1.0 (in preparation)
+
+v1.0 is primarily motivated by the fact that for further feature development,
+I need to move code to banked memory on the Commander X16. cc64's code
+size has reached the limit of what I can compile in the X16's limited
+main memory, so v1.0 is the final version not using bank switching on
+the X16.
+
+That being said, V1.0 contains a number of small improvements and code
+cleanups:
+
+- The max number of global symbols cc64 can handle is now determined
+  by the size of the symbol table, not by the size of the hash table:
+  Hash collision resolution in the global symbol table was changed from
+  open addressing with linear probing to separate chaining.
+- The sizes of code buffer, symbol table and hash table are calculated
+  from available memory based on configurable split ratios, rather than
+  being directly defined by default or the user.
+- The remaining free symbol table space and the number of hash collisions
+  are printed at the end of each compile run.
+
+v1.0 was tested with Commander X16 ROM R48 and R49.
+
 ## v0.13.1
 
 v0.13.1 contains no code changes. The only change is around the .d64 distribution files in the release:
