@@ -16,7 +16,7 @@ rm -f "${logfile}"
 
 keybuf="include enable-log.fth\nlogopen ${main_include}.log\n"
 keybuf="${keybuf}include ${main_include}.fth\nsaveall ${target}\n"
-keybuf="${keybuf}dos s0:notdone"
+keybuf="${keybuf}mem\ndos s0:notdone"
 if [ "${platform}" == "c64" ]; then
   keybuf="include set-d000.fth\ncold\n${keybuf}"
 fi

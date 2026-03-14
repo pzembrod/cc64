@@ -31,11 +31,6 @@
   include savesystem.fth
 
   shell also definitions
-
-' ed ALIAS ed
-
-' bye ALIAS bye
-
   include peddi-shell.fth  \ shell & savesystem
   include version.fth
   | : .binary-name  ." peddi text editor" ;

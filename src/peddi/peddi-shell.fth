@@ -1,4 +1,8 @@
 
+' ed ALIAS ed
+
+' bye ALIAS bye
+
 : dir  ( -- )
    dev 0 busopen  ascii $ bus! busoff
    dev 0 busin bus@ bus@ 2drop
@@ -28,6 +32,9 @@
 : device?  ( -- )
   ." actual device number is "
   dev# c@ . ;
+
+: mem  ( -- )
+  cr ." text[]: " ]text text[ - u. ." bytes" cr ;
 
 : help  ( -- )
   ." available commands:" cr words ;
