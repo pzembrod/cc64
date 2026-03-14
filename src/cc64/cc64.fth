@@ -128,16 +128,14 @@
   tmp-clear
 \log display
   save
-\log alsologtofile
+\log display+log
   s0 @ here - u. .( dictionary bytes free post save ) cr
   .( here/heap/up@ = )
   base @  hex here u. heap u. up@ u. cr  base !
 
-  cr .( compile successful) cr
-
-\log logclose
-
+  (64 $cbd0 ' limit >body ! C)
+  (16 $f000 ' limit >body ! C)
   shell
-  (64 $cbd0 set-himem C)
-  (16 $f000 set-himem C)
+  cr .( compile successful) cr
+\log logclose
   512 512 set-stacks

@@ -98,8 +98,6 @@
 ~ 4 set-mem: symtabsize!
 (CX \ C) ~ 6 set-mem: codesize!
 
-~ : himem!  ['] limit >body ! ;
-
 
 \ | create (default-mem  $20   ,
 \                $10   , $100  , $100  ,

@@ -28,7 +28,6 @@
   include ed-frame.fth  \ editor framework
 
   forth definitions
-  |  ' | alias ~
   include savesystem.fth
 
   shell also definitions
@@ -45,7 +44,7 @@
 
 \log display
   save
-\log alsologtofile
+\log display+log
 
 | : relocate-tasks  ( newUP -- )
  up@ dup BEGIN  1+ under @ 2dup -
@@ -61,11 +60,11 @@
  up@ 1+ @   origin   1+ !        \ task
        6 -  origin  8 + ! cold ; \ s0
 
-  cr .( compile successful) cr
-
-\log logclose
 
   $cbd0 ' limit >body !
   (64 0 ink-pot !  15  ink-pot 2+ c! C)
   (16 0 ink-pot !  125 ink-pot 2+ c! C)
+
+  cr .( compile successful) cr
+\log logclose
   256 256 relocate

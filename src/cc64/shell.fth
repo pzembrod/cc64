@@ -14,7 +14,6 @@
 
 ' savesystem         alias saveall
 ' .mem               alias mem
-' himem!             alias set-himem
 ' #links!            alias set-heap
 ' #globals!          alias set-hash
 ' symtabsize!        alias set-symtab
@@ -60,7 +59,7 @@
    i/o-status? UNTIL busoff
    dev 2 busclose ;
 
-\log : logfile  logopen alsologtofile ;
+\log ' logopen alias logfile
 
 \log ' logclose alias logclose
 
