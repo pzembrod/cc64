@@ -32,8 +32,6 @@
 ~ vocabulary compiler
   compiler also definitions
 
-  (CX include x16edit.fth  C)
-
   \prof profiler-bucket [memman-etc]
   include init.fth
 
@@ -41,7 +39,6 @@
   include errormsgs.fth
   include errorhandler.fth
   include memman.fth
-  tmp-clear
   \prof [memman-etc] end-bucket
 
   \prof profiler-bucket [file-handling]
@@ -50,6 +47,12 @@
   include codehandler.fth
   include rt-ptrs.fth
   \prof [file-handling] end-bucket
+
+  \ x16edit needs both dev from fileman and tmp6502asm.
+  \ in case in future I need a tmpclear between the two,
+  \ x16edit.fth can be split in a code part needing tmp6502asm
+  \ and a forth part needing dev.
+  (CX include x16edit.fth  C)
 
   \prof profiler-bucket [input]
   include input.fth
