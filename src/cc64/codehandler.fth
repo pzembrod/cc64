@@ -45,11 +45,14 @@
 
 
 || variable nolayout
+|| variable code-max-use
 
-|| : init-codehandler  nolayout on ;
+|| : init-codehandler  nolayout on  code-max-use off ;
 
    init: init-codehandler
 
+~ : .code-status  ( -- )
+     ]code code[ - code-max-use @ - u. ." code bytes free" cr ;
 
 \ *** Block No. 74, Hexblock 4a
 
@@ -131,8 +134,9 @@
 
 make flushcode ( -- )
    code-file fsetout
-   code[  pc >codeadr  over -  fputs
-   funset  clearcode ;
+   code[  pc >codeadr  over -
+   dup code-max-use @ umax  code-max-use !
+   fputs  funset  clearcode ;
 
 make flushstatic ( -- )
    static-file fsetout

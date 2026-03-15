@@ -42,7 +42,7 @@
      any-errors? @
         IF .errors-occurred
         ELSE ." done" cr THEN
-     .symtab-status
+     .symtab-status  .code-status
      \time read-50ms-timer - ms. cr
      \prof profiler-end
      ;
