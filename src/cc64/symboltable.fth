@@ -33,11 +33,15 @@
 || 254 constant )block   \
 \ necessary: /name < )block < )local < 256
 
-|| variable min-free
+|| variable symtab-min-free
 || variable #collisions
 
 ~ : .symtab-status  ( -- )
-     min-free @ u. ." symtab bytes free" cr
+     symtab-min-free @ u. ." symtab bytes free" cr
+     \ handy code to view the effect of the used hash function if needed
+     \ 0 ]hash hash[ DO I @ 0= IF 1+ ascii . emit ELSE ascii x emit THEN
+     \ 2 +LOOP cr u.
+     \ ." hash free buckets" cr
      #collisions @ u. ." hash collisions" cr ;
 
 || : cutname ( name -- )
@@ -50,7 +54,7 @@
 || variable locals>
 
 || : init-symtab
-     ]symtab symtab[ - min-free !  #collisions off
+     ]symtab symtab[ - symtab-min-free !  #collisions off
      hash[ ]hash over - erase
      symtab[ globals> !
      ]symtab 1-  )local over c!
@@ -81,7 +85,7 @@
      dup cutname  )block (findloc) ;
 
 || : spacious? ( n -- flag )
-     locals> @ globals> @ - min-free @ umin  min-free !
+     locals> @ globals> @ - symtab-min-free @ umin  symtab-min-free !
      locals> @ globals> @ - u> 0= ;
 
 
