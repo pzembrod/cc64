@@ -15,7 +15,7 @@ for f in "${runtimedir}"/* "${libdir}/${lib}.c"; do
 done
 
 rm -f "${cbmfiles}/${lib}".[hio]
-export OUTFILES="${lib}.h ${lib}.i ${lib}.o"
+export OUTFILES="${lib}.h ${lib}.i ${lib}.o ${lib}.log"
 
 export CBMFILES="${cbmfiles}"
 "${emulatordir}/compile-in-emu.sh" "${lib}" cc64

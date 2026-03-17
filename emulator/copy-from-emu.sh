@@ -10,7 +10,8 @@ if [[ "${src}" =~ \.[io]$ ]]; then
   exit 0
 fi
 
-if [[ "${src}" =~ \.[ch]$ ]] || [[ "${src}" =~ \.fth$ ]]
+if [[ "${src}" =~ \.[ch]$ ]] || [[ "${src}" =~ \.fth$ ]] || \
+   [[ "${src}" =~ \.log$ ]]
 then
   petscii2ascii "${src}" "${dst}"
   touch -r  "${src}" "${dst}"

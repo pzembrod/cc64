@@ -262,7 +262,7 @@ clean:
 	rm -f [cx][16][64]files/notdone cc64-doc.zip
 	rm -rf release tmp/*
 	rm -rf $(recompile_dir) $(recompile_dir).zip
-	rm -rf lib/cbmfiles/*
+	rm -rf lib/cbmfiles/* lib/*.log
 	rm -f c[16][64]files/cc64size autostart-c[16][64]/cc64size.T64
 	$(MAKE) -C emulator clean
 	$(MAKE) -C tests/e2e clean
