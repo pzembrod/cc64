@@ -19,12 +19,19 @@
 
 cc64_lib_start
         !word baslink
-        !word 2020
-        !byte $9e
-        !pet " 2081:"
-        !byte $8f
-        !pet " cc64 rt-lib v0.6", 0
+        !word 2026
+        !byte $9e      ; sys
+        !pet           " 2081:" ; the string address here must match ...
+        !addr sys_addr = 2081   ; ... the int address here for checking
+        !byte $8f      ; rem
+        !pet " cc64 rt-lib v1.0", 0
 baslink !word 0
+
+!ifndef cc64_generate_statics {
+  !if * != sys_addr {
+          !error "sys address ", sys_addr, " should be ", *
+  }
+}
 
         jmp init
 
