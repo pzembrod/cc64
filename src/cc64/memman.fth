@@ -104,6 +104,10 @@ drop
 
 \ cc64mem configuration
 
+\ scales value n1 with percentage n% after forcing n% to be between
+\ 5% and 95%.
+|| : %-scale  ( n1 n% -- n2 )   5 max 95 min  100 */ ;
+
 \ The order of the lines matter; they lay out static[] then heap[] down
 \ from himem, then linebuf and hash[ up from lomem, then hash[],
 \ symtab[] and (except on the X16) code[] are fit into the free space
@@ -113,11 +117,13 @@ drop
      ]static static-size     -  static[! \ ]static == himem
      ]heap   #links /link *  -  heap[!   \ ]heap == static[
      linebuf /linebuf        +  hash[!   \ linebuf == lomem
-     \ 200 = arbitrary minimal remaining memory
+     \     200 = arbitrary minimal remaining memory
      hash[ 200 + heap[ u> IF true exit THEN
-     heap[ hash[ - (CX \ C) symtab% 100 */  \ size for hash + symtab
-     dup hash% 100 */ $fffe and dup hash[ + symtab[! 2/ #globals!
-     (CX drop \ C) hash[ + code[!
+     heap[ hash[ -  ( free-mem )
+     (CX \ C) symtab%  %-scale    ( mem-for-hash+symtab )
+     (CX \ C) dup hash[ + code[!  \ set code[ i.e. ]symtab
+     hash% %-scale $fffe and 2 max  ( mem-for-hash )
+     dup hash[ + symtab[!  ( mem-for-hash ) 2/ #globals!
      false ;
 
 ~ : configure  ( -- )
@@ -139,6 +145,8 @@ drop
     ." symtab:  " ]symtab symtab[ - .bytes
     ." hashtab: " #globals . ." buckets" cr
     ." heap:    " #links   . ." links" cr
+    ." hash%:   " hash%    . ." %" cr
+(CX \ C) ." symtab%: " symtab%  . ." %" cr
     ." memtop:  " himem    u. cr
     \ useful for debugging; uncomment if needed:
     \ base push hex
@@ -148,7 +156,7 @@ drop
     \ ." heap[]:   " heap[ u. ]heap u. cr
     \ ." static[]: " static[ u. ]static u. cr
    IF
-    ." bad memory setup"
+    ." ** bad memory setup"
    cr THEN ;
 
 
