@@ -26,7 +26,7 @@
 
 ~ : error ( errnum -- )
      errormessage swap string[]
-     cr >string count type  cr
+     cr ." ** " >string count type  cr
      printcontext  any-errors? on ;
 
 ~ : ?error ( flag errnum -- )

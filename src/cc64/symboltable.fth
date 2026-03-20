@@ -84,9 +84,9 @@
 ~ : findparam ( name -- dfa/0 )
      dup cutname  )block (findloc) ;
 
-|| : spacious? ( n -- flag )
+|| : check-space ( n -- )
      locals> @ globals> @ - symtab-min-free @ umin  symtab-min-free !
-     locals> @ globals> @ - u> 0= ;
+     locals> @ globals> @ - u> *symovfl* ?fatal ;
 
 
 \ *** Block No. 63, Hexblock 3f
@@ -97,17 +97,14 @@
      dup cutname   dup )block (findloc)
         IF drop dummy
         *doubledef* error  exit THEN
-     dup c@ 1+ /symbol + spacious?
-        IF locals> @ /symbol - under
-        over c@ 1+ under - under
-        locals> !  cmove
-        ELSE drop dummy
-        *symovfl* error THEN ;
+     dup c@ 1+ /symbol + check-space
+     locals> @ /symbol - under
+     over c@ 1+ under - under
+     locals> !  cmove ;
 
 ~ : nestlocal ( -- )
-     1 spacious? IF locals> @ 1-
-     )block over c!  locals> !
-     ELSE *symovfl* error THEN ;
+     1 check-space
+     locals> @ 1- )block over c!  locals> ! ;
 
 ~ : unnestlocal ( -- )
      ]symtab locals> @ ?DO
@@ -123,6 +120,9 @@
 || : hash ( name -- n )
      0 swap count bounds
         ?DO 2* I c@ + LOOP ;
+        \ for the records: I tried 3 *, 7 *, 17 *, 101 *, and xor
+        \ instead of +, and saw no significant performance change
+        \ when compiling libc, and the e2e suites.
 
 \ true/false flag: found name in global symbols
 \ dfa: data field address of found symbol
@@ -152,12 +152,10 @@
         IF 2drop dummy
         *doubledef* error exit THEN
      dup hash[ ]hash uwithin 0= IF 1 #collisions +! THEN
-     over c@ 1+ /symbol + cell+ spacious?
-        IF globals> @ swap !
-        globals> @ over c@ 1+ cmove
-        globals> @ count +
-        dup  /symbol +  dup off cell+ globals> !
-        ELSE 2drop dummy
-        *symovfl* error THEN ;
+     over c@ 1+ /symbol + cell+ check-space
+     globals> @ swap !
+     globals> @ over c@ 1+ cmove
+     globals> @ count +
+     dup  /symbol +  dup off cell+ globals> ! ;
 
 \prof [symtab] end-bucket
