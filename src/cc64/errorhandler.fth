@@ -24,25 +24,20 @@
 
 \   errorhandler               10may20pz
 
-~ : error ( errnum -- )
-     errormessage swap string[]
-     cr ." ** " >string count type  cr
+|| : (error ( errnum fatal? -- )
+     swap  errormessage swap string[]
+     cr ." ** " >string count type
+     IF ."  fatal" THEN ."  error" cr
      printcontext  any-errors? on ;
+
+~ : error ( errnum -- )  false (error ;
 
 ~ : ?error ( flag errnum -- )
     swap IF error ELSE drop THEN ;
 
-
 ~ : fatal ( errnum -- )
-     error
-     \ *compiler* error handling was
-     \ broken. See issue 11.
-     \ dup error  (*compiler* =
-     \   IF err-blk @ dup 1024 /
-     \  swap 1023 and ." location: blk "
-     \   . ."  line " . cr THEN
      close-files scratch-all
-     true abort" fatal error" ;
+     true (error abort ;
 
 ~ : ?fatal ( flag errnum -- )
      swap IF fatal ELSE drop THEN ;

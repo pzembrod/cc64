@@ -2,10 +2,11 @@
 
 \prof profiler-bucket [memman-errmsg]
 
-~ 42 string-tab errormessage
+~ 43 string-tab errormessage
 
 ~ x *syntax*      x" syntax error"
 ~ x *eof*         x" end of file"
+~ x *fileio*      x" file i/o"
 ~ x *symovfl*     x" symtab full"
 ~ x *doubledef*   x" double defined symbol"
 ~ x *functoolong* x" function too long"

@@ -13,7 +13,7 @@
      IF ." usage: cc file.c" cr
      rdrop THEN ;
 
-|| : .errors-occurred  ." error(s) occured" cr ;
+|| : .errors-occurred  ." ** error(s) occured" cr ;
 
 ~ : cc  ( -- )
      clearstack

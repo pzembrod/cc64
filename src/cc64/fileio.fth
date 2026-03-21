@@ -8,13 +8,14 @@
 
 \   file-i/o                   21sep94pz
 
+\ fhandle contains: i/o-status 2nd dev
 ~ : fhandle  create 6 allot ;
 
 ~ : set-fhandle  ( dev 2nd handle -- )
      dup off  2+ 2! ;
 
-|| variable >handle
-|| : handle  >handle @ ;
+|| variable handle>
+|| : handle  handle> @ ;
 ~ -1 constant #eof
 
 ~ : feof?  ( handle -- flag ) @ ;
@@ -32,20 +33,30 @@
 
 \   file-i/o                   21sep94pz
 
+| 15 constant 15
+
+| : 15bus!  ( adr count dev -- )  15 busout bustype busoff cr ;
+|| : (bus@.  ( -- )  BEGIN bus@ con! i/o-status? UNTIL busoff ;
+| : 15bus@.  ( dev -- )  15 busin  (bus@. ;
+| : 15bus@check.  ( dev -- )
+     15 busin bus@ dup ascii 0 = IF drop busoff exit THEN
+     con! (bus@. *fileio* fatal ;
+
 | : fopen  ( mode type name handle -- )
-     dup off
+     dup handle> ! dup off
      2+ 2@ busopen  count bustype
      ascii , bus!  bus!
-     ascii , bus!  bus!  busoff ;
+     ascii , bus!  bus!  busoff
+     handle 2+ 2+ @ 15bus@check. ;
 
 | : fclose  ( handle -- )
      2+ 2@ busclose ;
 
 | : fsetin  ( handle -- )
-     dup >handle ! 2+ 2@ busin ;
+     dup handle> ! 2+ 2@ busin ;
 
 | : fsetout  ( handle -- )
-     dup >handle ! 2+ 2@ busout ;
+     dup handle> ! 2+ 2@ busout ;
 
 | ' busoff ALIAS funset  ( -- )
 

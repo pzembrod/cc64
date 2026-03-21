@@ -46,11 +46,8 @@
 
 : dos  ( -- )
    bl word count ?dup
-      IF dev 15 busout bustype
-      busoff cr ELSE drop THEN
-   dev 15 busin
-   BEGIN bus@ con! i/o-status? UNTIL
-   busoff ;
+      IF dev 15bus! ELSE drop THEN
+   dev 15bus@. ;
 
 : cat   ( -- ) cr
    dev 2 busopen  bl word count bustype
