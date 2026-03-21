@@ -88,23 +88,20 @@
      dup c@ 2- swap c! ;
 
 || : s!  ( str -- )  count bustype ;
-|| : s0:!  ( -- )  dev 15 busout " s0:" s! ;
-|| : scratch1  ( fname -- )
-     s0:!  s!  busoff ;
-|| : scratch2  ( fname-part2 fname-part1 -- )
-     s0:!  s! s!  busoff ;
+|| : s0:!  ( dev -- )  15 busout " s0:" s! ;
+|| : scratch  ( fname dev -- )  s0:!  s!  busoff ;
+|| : scratch-exe.suffix  ( suffix -- )
+     dev s0:!  exe-name s! ( suffix ) s!  busoff ;
 
 ~ : scratch-outs  ( -- )
-     dev 15 busout " s0:" s!
-                 exe-name scratch1
-     code.suffix exe-name scratch2
-     init.suffix exe-name scratch2
-     decl.suffix exe-name scratch2 ;
+     exe-name dev scratch
+     code.suffix scratch-exe.suffix
+     init.suffix scratch-exe.suffix
+     decl.suffix scratch-exe.suffix ;
 
 ~ : scratch-tmps ( -- )
-  ." scratching temporary files" cr
-     code-name   scratch1
-     static-name scratch1 ;
+     code-name   aux scratch
+     static-name aux scratch ;
 
 make close-files  ( -- )
       source-file  fclose
