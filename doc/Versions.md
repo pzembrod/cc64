@@ -17,9 +17,13 @@ cleanups:
   open addressing with linear probing to separate chaining.
 - The sizes of code buffer, symbol table and hash table are calculated
   from available memory based on configurable split ratios, rather than
-  being directly defined by default or the user.
+  being directly defined by default or the user. Together with a fixed
+  small static[] buffer size this makes better memory usage easier to
+  configure.
 - The remaining free symbol table space and the number of hash collisions
   are printed at the end of each compile run.
+- `xed` now opens files from the device number set with
+  [`device`](Usage.md#disk-commands).
 
 v1.0 was tested with Commander X16 ROM R48 and R49.
 
