@@ -1,4 +1,4 @@
 
-~ : .version  ."  V1.0dev"  \ src/runtime/bas*.a also has a version
+~ : .version  ."  V1.0rc1"  \ src/runtime/bas*.a also has a version
 \prof ."  profiling"
 ;
