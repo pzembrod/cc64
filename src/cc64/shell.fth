@@ -14,6 +14,7 @@
 
 ' savesystem         alias saveall
 ' .mem               alias mem
+' himem!             alias set-himem
 ' #links!            alias set-heap
 (CX \ C) ' symtab%!  alias set-symtab%
 ' hash%!             alias set-hash%

@@ -25,12 +25,13 @@
 
 \ sizes:
 
-~ 6 constant /link   \ listenknoten
+~ 6 constant /link   \ list node size
 
-~ 4 constant /symbol \ datenfeldgroesse
+~ 4 constant /symbol \ symbol table payload size
 
-~ 31 constant /id  \ darf nicht kleiner
-   \ als das kuerzeste keyword sein !!!
+~ 31 constant /id  \ max significant size of identifiers
+\ must not be smaller than the longest keyword's length
+\ see string-tab keywords in scanner.fth
 
 ~ 133 constant /linebuf
 
@@ -97,9 +98,7 @@ drop
 (CX \ C) ~ 14 set-mem: symtab%!
 (CX \ C) || 16 set-mem: code[!
 
-\ (CX ' symtab[! \ C)  ' code[!
-\ || ALIAS ]static!
-\ (CX \ C)  ' symtab[!  || ALIAS ]code!
+~ : himem!  ['] limit >body ! ;
 
 
 \ cc64mem configuration
