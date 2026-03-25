@@ -80,8 +80,6 @@
 ~ : findlocal ( name -- dfa/0 )
      dup cutname  )local (findloc) ;
 
-~ : findparam ( name -- dfa/0 )
-     dup cutname  )block (findloc) ;
 
 || : check-space ( n -- )
      locals> @ globals> @ - symtab-min-free @ umin  symtab-min-free !

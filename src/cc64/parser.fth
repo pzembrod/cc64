@@ -667,6 +667,8 @@ defer 'class?
 
 \   parser: declarator         08mar91pz
 
+\ TODO: figure out if this is needed or if scanner's id-buf is
+\ sufficient.
 create id-buf /id 1+ allot
 
 : expect-id,ok?  ( -- tokenvalue true / -- false)
@@ -692,7 +694,7 @@ doer (declarator ( type -- id-handle type' )
 
 : parameter' ( id-buf type -- )
     param-ok? IF
-      swap findparam ?dup 0=
+      swap findlocal ?dup 0=
         IF *undef* error drop ELSE >type ! THEN
     THEN ;
 
