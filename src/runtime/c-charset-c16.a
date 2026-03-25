@@ -30,11 +30,16 @@ char_pages = $8
 
         !word baslink
         !word 2020
-        !byte $9e
-        !pet " 4129:"
-        !byte $8f
+        !byte $9e      ; sys
+        !pet           " 4129:" ; the string address here must match ...
+        !addr sys_addr = 4129   ; ... the int address here for checking
+        !byte $8f      ; rem
         !pet " cc64   c charset", 0
 baslink !word 0
+
+!if * != sys_addr {
+        !error "sys address ", sys_addr, " should be ", *
+}
 
         jmp init
 
