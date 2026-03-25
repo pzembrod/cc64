@@ -28,10 +28,9 @@
 
 \ symtab: div.                 11mar91pz
 
-|| 63 constant /name
 || 255 constant )local   \ marken
 || 254 constant )block   \
-\ necessary: /name < )block < )local < 256
+\ necessary: /id < )block < )local < 256
 
 || variable symtab-min-free
 || variable #collisions
@@ -46,7 +45,7 @@
 
 || : cutname ( name -- )
      dup c@   dup 0= *compiler* ?fatal
-     /name umin swap c! ;
+     /id umin swap c! ;
 
 || create dummy  /symbol allot
 
@@ -71,7 +70,7 @@
      ]symtab locals> @
      ?DO dup I c@ > not
         IF 2drop 0 UNLOOP exit THEN
-     I c@ /name > IF 1
+     I c@ /id > IF 1
         ELSE over I streq
            IF 2drop I count +
            UNLOOP exit THEN
