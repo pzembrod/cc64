@@ -2,6 +2,7 @@
 
 \ parser loadscreen            21sep94pz
 
+\prof profiler-bucket [parser-proper]
 \prof profiler-bucket [parser-basics]
 
 \ terminology / interface:
@@ -1094,3 +1095,4 @@ variable protos2resolve
      *bad-main* fatal ;
 
 \prof [parser-main] end-bucket
+\prof [parser-proper] end-bucket
