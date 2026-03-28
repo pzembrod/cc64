@@ -576,14 +576,6 @@ variable []init'd
 
 variable extern
 
-: >type  ( desc -- desc.type )
-          ; immediate
-
-\ haengt von der wirkungsweise von
-\ 2@ u. 2! ab, mit denen normalerweise
-\ auf die symboltabelle zugegriffen
-\ wird.
-
 
 \ *** Block No. 74, Hexblock 4a
 
@@ -695,17 +687,17 @@ doer (declarator ( type -- id-handle type' )
 : parameter' ( id-buf type -- )
     param-ok? IF
       swap findlocal ?dup 0=
-        IF *undef* error drop ELSE >type ! THEN
+        IF *undef* error drop ELSE sym.type! THEN
     THEN ;
 
 : typed-parameters) ( -- )
      handle-id-xt push  ['] id-to-local handle-id-xt !
      BEGIN %local register-or-type? not IF 2drop exit THEN
-     (declarator  param-ok? IF 2 dyn-allot swap rot 2! THEN
+     (declarator  param-ok? IF 2 dyn-allot swap rot sym! THEN
      ascii , #char# comes? not UNTIL ;
 
 : id-parameters) ( -- )
-     BEGIN expect-id,ok? IF putlocal  2 dyn-allot %local  rot 2! THEN
+     BEGIN expect-id,ok? IF putlocal  2 dyn-allot %local  rot sym! THEN
      ascii , #char# comes? not UNTIL ;
 
 : [parameters]) ( -- )
@@ -862,13 +854,13 @@ do$: init$ ( -- values )
 
 : declare ( id-buf type -- )
      swap findglobal ?dup
-        IF >type @ check-types-equal
+        IF sym.type@ check-types-equal
         ELSE drop *undef* error THEN ;
 
 : define-extern ( id-buf type -- )
     function? IF unnestlocal THEN
     swap putglobal
-    constant-expression -rot 2! ;
+    constant-expression -rot sym! ;
 
 
 \ *** Block No. 86, Hexblock 56
@@ -936,7 +928,7 @@ defer 'putsymbol
       ELSE <=> #oper# comes? IF dup >r static-init r> THEN
       array? IF dim-array THEN
       create-static THEN
-    rot 'putsymbol 2! ;
+    rot 'putsymbol sym! ;
 
 
 \ *** Block No. 90, Hexblock 5a
@@ -948,9 +940,9 @@ variable protos2resolve
 : prototype ( id-buf type -- )
      unnestlocal
      over findglobal ?dup
-        IF >type @ check-types-equal drop
+        IF sym.type@ check-types-equal drop
         ELSE %proto set  .label swap
-        rot putglobal  dup >r  2!
+        rot putglobal  dup >r  sym!
         heap> ?dup
            IF dup 2+  r> over !
                   2+  .jmp-ahead 1+ swap !
@@ -990,7 +982,7 @@ variable protos2resolve
 
 : find/putglobal ( obj id-buf -- obj desc )
      dup findglobal ?dup
-        IF dup >type @ %proto is?
+        IF dup sym.type@ %proto is?
            IF rot drop adjust-prototype exit
            ELSE 2drop THEN THEN
      putglobal ;
@@ -1017,7 +1009,7 @@ variable protos2resolve
            IF prototype exit THEN THEN
      1st?
         IF %fastcall is? *fastcall* ?error
-        .label swap rot find/putglobal 2!
+        .label swap rot find/putglobal sym!
          declare-parameters
           ascii { #char# expect  \ }
           compound
@@ -1097,7 +1089,7 @@ variable protos2resolve
      BEGIN definition? not UNTIL
      " main" findglobal ?dup 0=
         IF main()-adr off exit THEN
-     2@ function?
+     sym@ function?
         IF drop main()-adr ! exit THEN
      *bad-main* fatal ;
 

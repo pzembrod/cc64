@@ -8,15 +8,28 @@
 
 \ codegen: objects             13jan91pz
 
-\ an object is 8 or 16 bit numerical
+\ An object is an 8 or 16 bit numerical
 \ value on the runtime-stack.
-\ at compile time it is represented by
-\ a 16 bit desciptor and a 16 bit
-\ value  ( obj ) = ( val desc ).
-
-\ the descriptor constists of data type
+\ At compile time it is represented by
+\ a 16 bit type desciptor and a 16 bit
+\ value  ( obj ) = ( val type ).
 
 ||on
+
+\ how to store ( obj ) = ( val type ) to the dfa of
+\ a symbol table entry:
+\ currently this is just aliased to 2! and 2@
+
+' 2! alias sym!      ( obj dfa -- )
+' 2@ alias sym@      ( dfa -- obj )
+\ the way 2@ and 2! are implemented, they place type from obj
+\ at dfa and val from obj to dfa + 2.
+' ! alias sym.type!  ( type dfa -- )
+' @ alias sym.type@  ( dfa -- type )
+
+\ type definitions
+\ currently the lower byte of type is used for data types,
+\ int or char.
 
 1 constant %int
 
@@ -200,7 +213,7 @@ variable vector
         ELSE findglobal ?dup 0=
            IF *undef* error
            0 do-numatom exit THEN
-        THEN 2@
+        THEN sym@
      %expr.mask and
      %offset isn't?
         IF ['] do-lda(a)  IS 'value
