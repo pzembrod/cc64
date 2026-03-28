@@ -173,7 +173,7 @@
      exe-file fsetout
      write-libheader
         symtab[ BEGIN dup globals> @ u< WHILE
-        dup count + under 2@ (write-decl
+        dup count + under sym@ (write-decl
         /symbol + cell+ REPEAT drop
      funset  exe-file fclose ;
 

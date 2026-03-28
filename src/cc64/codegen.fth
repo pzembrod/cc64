@@ -14,18 +14,18 @@
 \ a 16 bit type desciptor and a 16 bit
 \ value  ( obj ) = ( val type ).
 
-||on
-
 \ how to store ( obj ) = ( val type ) to the dfa of
 \ a symbol table entry:
 \ currently this is just aliased to 2! and 2@
 
-' 2! alias sym!      ( obj dfa -- )
-' 2@ alias sym@      ( dfa -- obj )
+~ ' 2! alias sym!      ( obj dfa -- )
+~ ' 2@ alias sym@      ( dfa -- obj )
 \ the way 2@ and 2! are implemented, they place type from obj
 \ at dfa and val from obj to dfa + 2.
-' ! alias sym.type!  ( type dfa -- )
-' @ alias sym.type@  ( dfa -- type )
+~ ' ! alias sym.type!  ( type dfa -- )
+~ ' @ alias sym.type@  ( dfa -- type )
+
+||on
 
 \ type definitions
 \ currently the lower byte of type is used for data types,
