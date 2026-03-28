@@ -27,8 +27,6 @@
 
 ~ 6 constant /link   \ list node size
 
-~ 4 constant /symbol \ symbol table payload size
-
 ~ 31 constant /id  \ max significant size of identifiers
 \ must not be smaller than the longest keyword's length
 \ see string-tab keywords in scanner.fth

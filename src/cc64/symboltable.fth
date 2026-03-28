@@ -26,6 +26,8 @@
 
 \ *** Block No. 61, Hexblock 3d
 
+~ 4 constant /symbol \ symbol table payload size
+
 \ symtab: div.                 11mar91pz
 
 || 255 constant )local   \ marken
