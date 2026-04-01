@@ -11,7 +11,7 @@
 \ ( init-symtab )
 
 \ symbol format:
-\  [ name$(counted)][ /symbol bytes data ]
+\  [ name$(counted)][ /sym-payload bytes data ]
 
 \ symbol table format:
 \  symtab[//globals//   //locals//]symtab
@@ -26,7 +26,16 @@
 
 \ *** Block No. 61, Hexblock 3d
 
-~ 4 constant /symbol \ symbol table payload size
+\ symbol table core payload size
+|| 2 cells             constant /sym-payload
+\ global symbols have an additional cell for the
+\ hash collision resolution link chain.
+|| /sym-payload cell+  constant /glb-payload
+|| : /sym-pl+  /sym-payload + ;
+|| : /glb-pl+  /glb-payload + ;
+\ length of a symbol's name, incl. count byte.
+|| : name-len  ( symbol -- len )  c@ 1+ ;
+~ : >next-global  ( global -- next-global )  count + /glb-pl+ ;
 
 \ symtab: div.                 11mar91pz
 
@@ -45,11 +54,11 @@
      \ ." hash free buckets" cr
      #collisions @ u. ." hash collisions" cr ;
 
-|| : cutname ( name -- )
+|| : trimname ( name -- )
      dup c@   dup 0= *compiler* ?fatal
      /id umin swap c! ;
 
-|| create dummy  /symbol allot
+|| create dummy  /sym-payload allot
 
 ~  variable globals>
 || variable locals>
@@ -68,7 +77,7 @@
 
 \ symtab: locals               14feb91pz
 
-|| : (findloc) ( name endmark -- dfa/0 )
+|| : (findloc) ( name endmark -- spfa/0 )
      ]symtab locals> @
      ?DO dup I c@ > not
         IF 2drop 0 UNLOOP exit THEN
@@ -76,11 +85,11 @@
         ELSE over I streq
            IF 2drop I count +
            UNLOOP exit THEN
-        I c@ 1+ /symbol + THEN
+        I name-len /sym-pl+ THEN
      +LOOP  *compiler* fatal ;
 
-~ : findlocal ( name -- dfa/0 )
-     dup cutname  )local (findloc) ;
+~ : findlocal ( name -- spfa/0 )
+     dup trimname  )local (findloc) ;
 
 
 || : check-space ( n -- )
@@ -92,14 +101,17 @@
 
 \   symtab: locals             14feb91pz
 
-~ : putlocal ( name -- dfa )
-     dup cutname   dup )block (findloc)
+~ : putlocal ( name -- spfa )
+     dup trimname   dup )block (findloc)
         IF drop dummy
         *doubledef* error  exit THEN
-     dup c@ 1+ /symbol + check-space
-     locals> @ /symbol - under
-     over c@ 1+ under - under
-     locals> !  cmove ;
+     ( name )  dup name-len /sym-pl+ check-space
+     ( name )  locals> @ /sym-payload - under
+     ( spfa name spfa )  over name-len under
+     ( spfa name /name spfa /name )  - under
+     ( spfa name new-symbol /name new-symbol )  locals> !
+     ( spfa name new-symbol /name )  cmove
+     ( spfa ) ;
 
 ~ : nestlocal ( -- )
      1 check-space
@@ -123,38 +135,44 @@
         \ instead of +, and saw no significant performance change
         \ when compiling libc, and the e2e suites.
 
-\ true/false flag: found name in global symbols
-\ dfa: data field address of found symbol
-\ adr: address in hash table or link field in previous symbol
-\      where address of new symbol could be stored.
-|| : (findglb) ( name -- dfa  true )
-               ( name -- adr false )
+\ true/false flag: name was found in global symbols
+\ spfa: symbol payload field address of found symbol
+\ hash[]-or-glf-adr: address in hash table or global link field in
+\      previous global where address of new global could be stored.
+|| : (findglb) ( name -- spfa  true )
+               ( name -- hash[]-or-glf-adr false )
      dup >r  hash #globals u/mod drop  ( hash-idx )
-     cells hash[ +  ( hash[]-startadr )
+     cells hash[ +  ( hash[]-adr )
         BEGIN dup @ 0= IF rdrop false exit THEN
-        ( hash[]-startadr | link-adr )
+        ( hash[]-or-glf-adr )
         @  dup r@ streq  ( name-adr equal? )
-           IF count +  true  rdrop exit ( dfa ) THEN
+           IF count +  true  rdrop exit ( spfa ) THEN
            ( name-adr )
-           count + /symbol + ( link-adr )
+           count + /sym-pl+ ( link-adr )
         dup cell+ globals> @ u> UNTIL *compiler* fatal ;
 
 \ *** Block No. 65, Hexblock 41
 
 \   symtab: globals            14feb91pz
 
-~ : findglobal ( name -- dfa/0 )
-     dup cutname  (findglb) and ;
+~ : findglobal ( name -- spfa/0 )
+     dup trimname  (findglb) and ;
 
-~ : putglobal  ( name -- dfa )
-     dup cutname  dup (findglb)
-        IF 2drop dummy
+~ : putglobal  ( name -- spfa )
+     dup trimname  dup (findglb)
+        IF ( name spfa ) 2drop dummy
         *doubledef* error exit THEN
+     ( name hash[]-or-glf-adr )
      dup hash[ ]hash uwithin 0= IF 1 #collisions +! THEN
-     over c@ 1+ /symbol + cell+ check-space
-     globals> @ swap !
-     globals> @ over c@ 1+ cmove
-     globals> @ count +
-     dup  /symbol +  dup off cell+ globals> ! ;
+     ( name hash[]-or-glf-adr )  over name-len /glb-pl+ check-space
+     ( name hash[]-or-glf-adr )  globals> @ swap !
+     \ new global (at globals> @) has been stored in hash[] table or
+     \ global link field of previous global in same hash[] bucket.
+     \ now new global starts being populated: name, spf, glf
+     ( name )  globals> @ over name-len cmove
+     ( )  globals> @ count +
+     ( spfa )  dup  /sym-pl+
+     ( spfa glf-adr )  dup off  cell+
+     ( spfa end-of-symbol )  globals> ! ;
 
 \prof [symtab] end-bucket

@@ -172,9 +172,7 @@
      exe-name exe-file fopen
      exe-file fsetout
      write-libheader
-        symtab[ BEGIN dup globals> @ u< WHILE
-        dup count + under sym@ (write-decl
-        /symbol + cell+ REPEAT drop
+     write-symbols  \ from write-decl.fth
      funset  exe-file fclose ;
 
 || : link-lib  ( -- )

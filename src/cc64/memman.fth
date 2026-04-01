@@ -15,7 +15,6 @@
 \    /linebuf
 \    #globals
 \    /link
-\    /symbol
 \    /id
 
 \    init-mem
@@ -51,10 +50,10 @@
 \ get-mem: set-mem: - defining words for cc64mem access words
 
 || : get-mem:  ( n -- ) create c, does>
-  ( dfa -- n ) c@ cc64mem + @ ;
+  ( pfa -- n ) c@ cc64mem + @ ;
 
 || : set-mem:  ( n -- ) create c, does>
-  ( n dfa -- ) c@ cc64mem + ! ;
+  ( n pfa -- ) c@ cc64mem + ! ;
 
 
 \ cc64mem access words
