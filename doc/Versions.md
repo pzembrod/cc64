@@ -15,6 +15,10 @@ cleanups:
   by the size of the symbol table, not by the size of the hash table:
   Hash collision resolution in the global symbol table was changed from
   open addressing with linear probing to separate chaining.
+- In general the code of and around the symbol table was refactored, mostly
+  renaming words and extracting common patterns in separate words.
+  Shared knowledge between symbol table, codegen and minilinker was encoded
+  more clearly.
 - The sizes of code buffer, symbol table and hash table are calculated
   from available memory based on configurable split ratios, rather than
   being directly defined by default or the user. Together with a fixed
