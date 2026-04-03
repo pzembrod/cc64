@@ -4,16 +4,37 @@
 
 \prof profiler-bucket [symtab]
 
+
 \ terminology / interface:
 \ findlocal    putlocal
 \ nestlocal    unnestlocal
 \ findglobal   putglobal
 \ ( init-symtab )
 
-\ symbol format:
-\  [ name$(counted)][ /sym-payload bytes data ]
 
-\ symbol table format:
+\ local symbol layout:
+\   name: counted string
+\   symbol payload field: 2 cells, /sym-payload bytes
+
+\ global symbol layout:
+\   name: counted string, max length: /id
+\   global payload field: 3 cells, /glb-payload bytes
+\   containing:
+\     symbol payload field: 2 cells, /sym-payload bytes
+\     global link field: 1 cell, forms the linked list for
+\       hash collision resolution. pointer in hash[] points to first
+\       global symbol with the given hash value. The symbol's glf
+\       points to the next symbol with the same hash value. glf = 0
+\       terminates the list.
+
+\ relate stack comments:
+\ symbol: the address of the entire symbol == the address of the
+\       count byte of the name.
+\ spfa: symbol payload field address, the default pointer through which
+\       the symbol table communicates with parser and codegen
+\ glfa: global link field address
+
+\ symbol table layout:
 \  symtab[//globals//   //locals//]symtab
 \           globals>^   ^locals>
 
@@ -23,8 +44,6 @@
 \  end of block local table:  )block
 \  end of total local table:  )local
 
-
-\ *** Block No. 61, Hexblock 3d
 
 \ symbol table core payload size
 || 2 cells             constant /sym-payload
@@ -37,10 +56,12 @@
 || : name-len  ( symbol -- len )  c@ 1+ ;
 ~ : >next-global  ( global -- next-global )  count + /glb-pl+ ;
 
-\ symtab: div.                 11mar91pz
 
-|| 255 constant )local   \ marken
-|| 254 constant )block   \
+\ the mark )block is used for limiting search through the local
+\ to only the current block. searching until the mark )local searches
+\ the entire local symbol table. 
+|| 255 constant )local   \ marks the scope of the current function
+|| 254 constant )block   \ marks the scope of the current block
 \ necessary: /id < )block < )local < 256
 
 || variable symtab-min-free
@@ -72,10 +93,6 @@
 
     init: init-symtab
 
-
-\ *** Block No. 62, Hexblock 3e
-
-\ symtab: locals               14feb91pz
 
 || : (findloc) ( name endmark -- spfa/0 )
      ]symtab locals> @
