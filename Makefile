@@ -380,7 +380,9 @@ c64files/cc64pftm: emulator/* $(cc64srcs_c64) \
 
 # profiler bucket size rule
 
-%-buckets.sizes: emulator/* autostart-%/cc64size.T64 \
+buckets.sizes: c64-buckets.sizes c16-buckets.sizes
+
+%-buckets.sizes: emulator/* autostart-%/cc64size.T64
 	rm -f $*files/buckets.sizes
 	emulator/run-in-$*emu.sh cc64size \
 	    "logfile buckets.sizes  sizes  logclose dos s0:notdone"
