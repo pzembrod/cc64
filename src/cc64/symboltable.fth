@@ -52,17 +52,24 @@
 || /sym-payload cell+  constant /glb-payload
 || : /sym-pl+  /sym-payload + ;
 || : /glb-pl+  /glb-payload + ;
-\ length of a symbol's name, incl. count byte.
-|| : name-len  ( symbol -- len )  c@ 1+ ;
-~ : >next-global  ( global -- next-global )  count + /glb-pl+ ;
-
 
 \ the mark )block is used for limiting search through the local
 \ to only the current block. searching until the mark )local searches
 \ the entire local symbol table. 
-|| 255 constant )local   \ marks the scope of the current function
-|| 254 constant )block   \ marks the scope of the current block
 \ necessary: /id < )block < )local < 256
+|| 255 constant )local   \ marks the scope of the current function
+|| 254 constant )block   \ marks the scope of the current {} block
+
+\ length of a symbol's name, incl. count byte.
+|| : >name-len  ( symbol -- len )  c@ 1+ ;
+\ length of a local symbol with payload, incl. cases )local and )block
+|| : >local-sym-len  ( symbol -- len )
+     c@  dup /id > IF drop 1 ELSE 1+ /sym-pl+ THEN ;
+\ from one global to the following one
+~  : >next-global  ( global -- next-global )  count + /glb-pl+ ;
+
+|| : <=    > 0= ;
+
 
 || variable symtab-min-free
 || variable #collisions
@@ -93,17 +100,15 @@
 
     init: init-symtab
 
-
-|| : (findloc) ( name endmark -- spfa/0 )
-     ]symtab locals> @
-     ?DO dup I c@ > not
-        IF 2drop 0 UNLOOP exit THEN
-     I c@ /id > IF 1
-        ELSE over I streq
-           IF 2drop I count +
-           UNLOOP exit THEN
-        I name-len /sym-pl+ THEN
-     +LOOP  *compiler* fatal ;
+|| : (findloc)  ( name end-marker -- spfa/0 )
+     ]symtab locals> @ ?DO
+        dup I c@ <= IF 2drop 0 UNLOOP exit THEN
+        ( name end-marker )
+        I c@ /id <= IF over I streq
+           ( name end-marker eq-flag )
+           IF 2drop I count +  ( spfa )  UNLOOP exit THEN
+        THEN
+     I >local-sym-len +LOOP  *compiler* fatal ;
 
 ~ : findlocal ( name -- spfa/0 )
      dup trimname  )local (findloc) ;
@@ -122,9 +127,9 @@
      dup trimname   dup )block (findloc)
         IF drop dummy
         *doubledef* error  exit THEN
-     ( name )  dup name-len /sym-pl+ check-space
+     ( name )  dup >name-len /sym-pl+ check-space
      ( name )  locals> @ /sym-payload - under
-     ( spfa name spfa )  over name-len under
+     ( spfa name spfa )  over >name-len under
      ( spfa name /name spfa /name )  - under
      ( spfa name new-symbol /name new-symbol )  locals> !
      ( spfa name new-symbol /name )  cmove
@@ -136,9 +141,8 @@
 
 ~ : unnestlocal ( -- )
      ]symtab locals> @ ?DO
-     I c@ )block = IF I 1+ locals> !
-                   UNLOOP exit THEN
-     LOOP *compiler* fatal ;
+     I c@ )block = IF I 1+ locals> !  UNLOOP exit THEN
+     I >local-sym-len +LOOP *compiler* fatal ;
 
 
 \ *** Block No. 64, Hexblock 40
@@ -181,12 +185,12 @@
         *doubledef* error exit THEN
      ( name hash[]-or-glf-adr )
      dup hash[ ]hash uwithin 0= IF 1 #collisions +! THEN
-     ( name hash[]-or-glf-adr )  over name-len /glb-pl+ check-space
+     ( name hash[]-or-glf-adr )  over >name-len /glb-pl+ check-space
      ( name hash[]-or-glf-adr )  globals> @ swap !
      \ new global (at globals> @) has been stored in hash[] table or
      \ global link field of previous global in same hash[] bucket.
      \ now new global starts being populated: name, spf, glf
-     ( name )  globals> @ over name-len cmove
+     ( name )  globals> @ over >name-len cmove
      ( )  globals> @ count +
      ( spfa )  dup  /sym-pl+
      ( spfa glf-adr )  dup off  cell+
