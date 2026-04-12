@@ -68,8 +68,6 @@
 \ from one global to the following one
 ~  : >next-global  ( global -- next-global )  count + /glb-pl+ ;
 
-|| : <=    > 0= ;
-
 
 || variable symtab-min-free
 || variable #collisions

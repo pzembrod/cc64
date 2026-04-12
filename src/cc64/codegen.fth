@@ -497,11 +497,7 @@ binop do-or
 
 \   codegen: binary            03sep94pz
 
-\ > und < sollten 0 oder -1 ergeben !
-
-: <=  swap > ;
-: >=  swap < ;
-: !=  = 0= ;
+\ all 6 Forth comparison operators should yield 0 or -1
 
    ' < ' .gt# ' .lt# ' .lt
 binop do-lt
