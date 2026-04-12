@@ -166,9 +166,10 @@ end-index
 ||off
 
 make preprocess ( -- )
-   $pending @
-      IF *preprocess-in-string* error
-      clearline  exit THEN
+   \ TODO: reactivate once strings can be multi-line.
+   \ $pending @
+   \    IF *preprocess-in-string* error
+   \    clearline  exit THEN
    comment-state @ ?exit
    char> ascii # - ?exit  +char
    cpp-nextword cpp-keywords-index find-via-index

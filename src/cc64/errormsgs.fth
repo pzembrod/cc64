@@ -2,7 +2,7 @@
 
 \prof profiler-bucket [memman-errmsg]
 
-~ 43 string-tab errormessage
+~ 42 string-tab errormessage
 
 ~ x *syntax*      x" syntax error"
 ~ x *eof*         x" end of file"
@@ -36,9 +36,9 @@
 ~ x *longline*    x" overlong line"
 ~ x *preprocessor* x" preprocessor"
 
-~ x *preprocess-in-string*
-     x" preprocessor in string"
-~ x *memsetup*  x" low mem for statics"
+\ ~ x *preprocess-in-string*
+\      x" preprocessor in string"
+~ x *memsetup*  x" bad mem setup"
 ~ x *nolayout*  x" no #pragma cc64"
 ~ x *bad-main*  x" main is no function"
 ~ x *link*      x" linker file error"
