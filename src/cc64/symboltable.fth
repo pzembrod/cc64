@@ -169,7 +169,7 @@
 \      previous global where address of new global could be stored.
 || : (findglb) ( name -- spfa  true )
                ( name -- hash[]-or-glf-adr false )
-     dup >r  hash #globals u/mod drop  ( hash-idx )
+     dup >r  hash #buckets u/mod drop  ( hash-idx )
      cells hash[ +  ( hash[]-adr )
         BEGIN dup @ 0= IF rdrop false exit THEN
         ( hash[]-or-glf-adr )

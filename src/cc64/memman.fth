@@ -13,7 +13,7 @@
 \    linebuf
 
 \    /linebuf
-\    #globals
+\    #buckets
 \    /link
 \    /id
 
@@ -34,7 +34,7 @@
 
 
 \ cc64mem data structure with offsets:
-\ 0: #links   2: #globals  4: #globals
+\ 0: #links   2: hash%  4: #buckets
 \ 6: static[  8: heap[    10: hash[    12: symtab[
 \ (except on X16:) 14: symtab%  16: code[
 \ The offsets must correspond to the accessors defined with
@@ -43,7 +43,7 @@
 \ from the layout of the actual buffers in memory.
 
 || create cc64mem
-  ( #links = ) 200 , ( hash% = ) 13 , ( #globals = ) 0 ,
+  ( #links = ) 200 , ( hash% = ) 13 , ( #buckets = ) 0 ,
   ( static[ ) 0 , ( heap[ ) 0 , ( hash[ ) 0 , ( symtab[ ) 0 ,
   (CX \ C) ( symtab% = ) 40 , ( code[ ) 0 ,
 
@@ -63,7 +63,7 @@
 
 ||  0 get-mem: #links
 ||  2 get-mem: hash%
-~   4 get-mem: #globals
+~   4 get-mem: #buckets
 || 14 get-mem: symtab%
 
 || 250 constant static-size
@@ -87,7 +87,7 @@ drop
 
 ~  0 set-mem: #links!
 ~  2 set-mem: hash%!
-||  4 set-mem: #globals!
+||  4 set-mem: #buckets!
 ||  6 set-mem: static[!
 ||  8 set-mem: heap[!
 || 10 set-mem: hash[!
@@ -119,7 +119,7 @@ drop
      (CX \ C) symtab%  %-scale    ( mem-for-hash+symtab )
      (CX \ C) dup hash[ + code[!  \ set code[ i.e. ]symtab
      hash% %-scale $fffe and 2 max  ( mem-for-hash )
-     dup hash[ + symtab[!  ( mem-for-hash ) 2/ #globals!
+     dup hash[ + symtab[!  ( mem-for-hash ) 2/ #buckets!
      false ;
 
 ~ : configure  ( -- )
@@ -139,7 +139,7 @@ drop
     ." statics: " ]static static[ - .bytes
     ." code:    " ]code code[     - .bytes
     ." symtab:  " ]symtab symtab[ - .bytes
-    ." hashtab: " #globals . ." buckets" cr
+    ." hashtab: " #buckets . ." buckets" cr
     ." heap:    " #links   . ." links" cr
     ." hash%:   " hash%    . ." %" cr
 (CX \ C) ." symtab%: " symtab%  . ." %" cr
