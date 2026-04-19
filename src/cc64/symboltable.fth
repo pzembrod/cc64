@@ -70,10 +70,18 @@
 
 
 || variable symtab-min-free
+(CX \ C) || variable min-locals>
 || variable #collisions
 
+~  variable globals>
+|| variable locals>
+
 ~ : .symtab-status  ( -- )
-     symtab-min-free @ u. ." symtab bytes free" cr
+     (CX symtab-min-free @ u. ." free symtab bytes" cr C)
+     (CX \ C) globals> @ symtab[ - u.
+     (CX \ C) ]symtab min-locals> @ - u.
+     (CX \ C) symtab-min-free @ u.
+     (CX \ C) ." global/local/free symtab bytes" cr
      \ handy code to view the effect of the used hash function if needed
      \ 0 ]hash hash[ DO I @ 0= IF 1+ ascii . emit ELSE ascii x emit THEN
      \ 2 +LOOP cr u.
@@ -85,9 +93,6 @@
      /id umin swap c! ;
 
 || create dummy  /sym-payload allot
-
-~  variable globals>
-|| variable locals>
 
 || : init-symtab
      ]symtab symtab[ - symtab-min-free !  #collisions off
@@ -111,9 +116,12 @@
 ~ : findlocal ( name -- spfa/0 )
      dup trimname  )local (findloc) ;
 
+|| : umin!  ( u variable -- )
+      under @  umin  swap ! ;
 
 || : check-space ( n -- )
-     locals> @ globals> @ - symtab-min-free @ umin  symtab-min-free !
+     locals> @ globals> @ - symtab-min-free umin!
+     \ locals> @ globals> @ - symtab-min-free @ umin  symtab-min-free !
      locals> @ globals> @ - u> *symovfl* ?fatal ;
 
 
@@ -129,6 +137,7 @@
      ( name )  locals> @ /sym-payload - under
      ( spfa name spfa )  over >name-len under
      ( spfa name /name spfa /name )  - under
+     (CX \ C) dup min-locals> umin!
      ( spfa name new-symbol /name new-symbol )  locals> !
      ( spfa name new-symbol /name )  cmove
      ( spfa ) ;
