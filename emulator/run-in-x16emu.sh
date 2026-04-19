@@ -61,6 +61,7 @@ fi
 x16emu \
   -keymap de \
   -fsroot "${x16filesdir}" \
+  -sound none \
   $rom \
   $autostart \
   $script \

@@ -38,6 +38,7 @@ fi
 ${emulator} \
   -virtualdev \
   +truedrive \
+  +sound \
   -drive8type 1541 \
   -fs8 "${cbmfiles}" \
   $autostart \
