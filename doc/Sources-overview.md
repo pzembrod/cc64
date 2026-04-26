@@ -23,6 +23,8 @@ and words for nesting and unnesting local variable scopes.
 The symbol table is used by parser, codegen, by the preprocessor and by the
 mini linker.
 
+For a detailed description see [Symbol-table.md](Symbol-table.md).
+
 ## The input-preprocess-scanner source group
 
 These are three somewhat tightly coupled source files which together expose
