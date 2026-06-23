@@ -343,19 +343,18 @@ end-enum
      2dup <comment> #oper# dnegate d+
      or 0= ;
 
-|| ' comment-state ALIAS st
-
 || : skip-comment ( -- )
-     line @ comment-line !
-     2 st !
+     line# @ comment-line# !
+     2 comment-state !
      BEGIN char> +char ascii * case?
-        IF 1 st !
+        IF 1 comment-state !
         ELSE ascii / case?
-           IF st @ 1 = IF st off
-                       ELSE 2 st ! THEN
-           ELSE 2 st ! 0=
+           IF comment-state @ 1 =
+              IF comment-state off
+              ELSE 2 comment-state ! THEN
+           ELSE 2 comment-state ! 0=
               IF nextline THEN THEN THEN
-     st @ 0= UNTIL ;
+     comment-state @ 0= UNTIL ;
 
 
 \ *** Block No. 50, Hexblock 32

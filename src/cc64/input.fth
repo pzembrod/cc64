@@ -5,11 +5,11 @@
 \ terminology / interface:
 
 \ nextline
-\ open-input    close-input
-\ open-include  close-include
+\ open-input
+\ open-include
 \ char>         +char
-\ line          res-inptr
-\ comment-line  comment-state
+\ line#         res-inptr
+\ comment-line# comment-state
 \ #eof
 \ source-name
 \ printcontext
@@ -22,11 +22,11 @@
 || variable include-level
 || create name[]
           /filename max-level * allot
-|| create line[]    max-level 2* allot
+|| create line#[]   max-level 2* allot
 || create filepos[] max-level 2* allot
 
 ~ variable comment-state
-~ variable comment-line
+~ variable comment-line#
 | variable eof
 
 ~ doer preprocess
@@ -47,14 +47,14 @@
 
 ~ : source-name     include-level @
                  /filename * name[] + ;
-~ : line  include-level @ 2* line[] + ;
+~ : line#  include-level @ 2* line#[] + ;
 | : filepos         include-level @
                        2* filepos[] + ;
 
 ~ : close-input ( -- )
      comment-state @
         IF *comment* error
-        comment-line @ u.
+        comment-line# @ u.
         " */" linebuf strcpy
         ELSE linebuf off THEN
      source-file fclose ;
@@ -66,7 +66,7 @@
 ~ : open-input ( name -- )
      source-name strcpy
      eof off  comment-state off
-     line off  linebuf off  filepos off
+     line# off  linebuf off  filepos off
      open-source ;
 
 
@@ -111,7 +111,7 @@
      source-file feof?
         IF close-include
         eof @ ?exit THEN
-     1 line +!
+     1 line# +!
      source-file fsetin
      linebuf /linebuf 1- #cr fget2delim
         *longline* ?error
@@ -119,7 +119,7 @@
      1- /linebuf 1- umin
      linebuf + 0 swap c!
      funset
-     listing @ IF line @ u.
+     listing @ IF line# @ u.
             ." : " printsourceline THEN
      res-inptr  preprocess ;
 

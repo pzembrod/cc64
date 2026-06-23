@@ -4,8 +4,8 @@
   variable eof
   -1 constant #eof
   variable comment-state
-  variable line
-  variable comment-line
+  variable line#
+  variable comment-line#
 
   variable inptr
   variable lineptr
@@ -17,7 +17,7 @@
 
   : src-begin  create   last @ dup , name> last-src !
       does> dup @ count type cr 2+
-      dup lineptr !  1+ inptr !    1 line !
+      dup lineptr !  1+ inptr !    1 line# !
       eof off  comment-state off  init ;
 
   : src@  ascii @ parse
