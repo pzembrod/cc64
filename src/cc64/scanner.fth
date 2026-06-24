@@ -344,7 +344,7 @@ end-enum
      or 0= ;
 
 || : skip-comment ( -- )
-     line# @ comment-line# !
+     comment-starts
      2 comment-state !
      BEGIN char> +char ascii * case?
         IF 1 comment-state !

@@ -8,9 +8,8 @@
 \ open-input
 \ open-include
 \ char>         +char
-\ line#         res-inptr
-\ comment-line# comment-state
-\ #eof
+\ res-inptr
+\ comment-starts comment-state
 \ source-name
 \ printcontext
 
@@ -22,12 +21,12 @@
 || variable include-level
 || create name[]
           /filename max-level * allot
-|| create line#[]   max-level 2* allot
-|| create filepos[] max-level 2* allot
+|| create line#[]   max-level cells allot
+|| create filepos[] max-level cells allot
 
-~ variable comment-state
-~ variable comment-line#
-| variable eof
+~  variable comment-state
+|| variable comment-line#
+|  variable eof
 
 ~ doer preprocess
 
@@ -50,6 +49,8 @@
 ~ : line#  include-level @ 2* line#[] + ;
 | : filepos         include-level @
                        2* filepos[] + ;
+
+| : comment-starts  ( -- )  line# @ comment-line# ! ;
 
 ~ : close-input ( -- )
      comment-state @
