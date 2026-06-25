@@ -1,6 +1,5 @@
-\ *** Block No. 30, Hexblock 1e
 
-\ input: loadscreen            20sep94pz
+\ input.fth - handling of C source input
 
 \ terminology / interface:
 
@@ -13,9 +12,8 @@
 \ source-name
 \ printcontext
 
-\ *** Block No. 31, Hexblock 1f
 
-\   input :  variable          14sep94pz
+\ Variables per level of nested include file
 
 || 4 constant max-level
 || variable include-level
@@ -24,33 +22,28 @@
 || create line#[]   max-level cells allot
 || create filepos[] max-level cells allot
 
-~  variable comment-state
-|| variable comment-line#
-|  variable eof
-
-~ doer preprocess
-
-|| variable inptr
-
-~ : +char  ( -- )  1 inptr +! ;
-~ : char>  ( -- c )  inptr @ c@ ;
-\ : char>  ( -- c )   eof @
-\    IF #eof ELSE inptr @ c@ THEN ;
-
-~ : res-inptr  linebuf inptr ! ;
-
-
-\ *** Block No. 32, Hexblock 20
-
-\   input: open/close-input    11sep94pz
-
 ~ : source-name     include-level @
                  /filename * name[] + ;
 ~ : line#  include-level @ 2* line#[] + ;
 | : filepos         include-level @
                        2* filepos[] + ;
 
+\ Handling of current char
+
+|  variable eof
+|| variable inptr
+
+~ : +char  ( -- )  1 inptr +! ;
+~ : char>  ( -- c )  inptr @ c@ ;
+~ : res-inptr  linebuf inptr ! ;
+
+\ Keeping track of whether and where a comment started
+
+~  variable comment-state
+|| variable comment-line#
 | : comment-starts  ( -- )  line# @ comment-line# ! ;
+
+\ Opening and closing of source and include files
 
 ~ : close-input ( -- )
      comment-state @
@@ -69,11 +62,6 @@
      eof off  comment-state off
      line# off  linebuf off  filepos off
      open-source ;
-
-
-\ *** Block No. 33, Hexblock 21
-
-\   input: open/close-include  11sep94pz
 
 ~ : close-include ( -- )
      close-input
@@ -96,10 +84,9 @@
         ELSE *inc-nest* error  2drop
         THEN ;
 
+\ Handling of current line
 
-\ *** Block No. 34, Hexblock 22
-
-\   input :  nextline           14sep94pz
+~ doer preprocess
 
 ~ variable listing  listing off
 
@@ -124,10 +111,7 @@
             ." : " printsourceline THEN
      res-inptr  preprocess ;
 
-
-\ *** Block No. 35, Hexblock 23
-
-\   input :  printcontext      11sep94pz
+\ Providing context for error messages
 
 make printcontext  ( -- )
       context? @ 0= ?exit
@@ -136,13 +120,13 @@ make printcontext  ( -- )
       inptr @ linebuf - 1- 0 max
       spaces ASCII ^ emit  cr ;
 
+\ context? is defined in errorhandler
+\ and shall avoid context printing
+\ if an error occurs during init while
+\ no valid linebuf content exists.
+
 || : init-input ( -- )
      include-level off
      linebuf off  res-inptr
      context? on ;
     init: init-input
-
-\ context? is defined in errorhandler
-\ and shall avoid context printing
-\ if an error occurs during init while
-\ no valid linebuf content exists.
