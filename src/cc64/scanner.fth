@@ -318,8 +318,8 @@ end-enum
      $pending @  *compiler* ?fatal
      BEGIN
       BEGIN skipblanks  char> 0=
-      eof @ 0= and WHILE nextline REPEAT
-     eof @ #eof = IF #eof#  exit THEN
+      main-eof @ 0= and WHILE nextline REPEAT
+     main-eof @ IF #eof#  exit THEN
      char> alpha? IF id exit THEN
      char> num?   IF number exit THEN
      char> operator?

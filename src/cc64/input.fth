@@ -3,11 +3,10 @@
 
 \ terminology / interface:
 
+\ char>  +char  clearline  main-eof
 \ nextline
 \ open-input
 \ open-include
-\ char>         +char
-\ res-inptr
 \ comment-starts comment-state
 \ source-name
 \ printcontext
@@ -30,12 +29,13 @@
 
 \ Handling of current char
 
-|  variable eof
+|  variable main-eof
 || variable inptr
 
-~ : +char  ( -- )  1 inptr +! ;
-~ : char>  ( -- c )  inptr @ c@ ;
-~ : res-inptr  linebuf inptr ! ;
+~  : +char  ( -- )  1 inptr +! ;
+~  : char>  ( -- c )  inptr @ c@ ;
+~  : clearline ( -- )  linebuf  dup off  inptr ! ;
+
 
 \ Keeping track of whether and where a comment started
 
@@ -53,26 +53,26 @@
         ELSE linebuf off THEN
      source-file fclose ;
 
-|| : open-source  ( -- )
+|| : (re-)open-source  ( -- )
      ascii r ascii s source-name
-     source-file fopen  res-inptr ;
+     source-file fopen  clearline ;
 
 ~ : open-input ( name -- )
      source-name strcpy
-     eof off  comment-state off
-     line# off  linebuf off  filepos off
-     open-source ;
+     main-eof off  comment-state off
+     line# off  filepos off
+     (re-)open-source ;
 
 ~ : close-include ( -- )
      close-input
      include-level @
         IF -1 include-level +!
         ." end of include file" cr
-        reopen-outfiles  open-source
+        reopen-outfiles  (re-)open-source
         source-file fsetin
         filepos @ fskip  funset
         ELSE ." end of source file" cr
-        #eof eof ! THEN ;
+        main-eof on THEN ;
 
 ~ : open-include  ( name -- )
      ." include-file: "
@@ -98,8 +98,8 @@
 ~ : nextline ( -- )
      source-file feof?
         IF close-include
-        eof @ ?exit THEN
-     1 line# +!
+        main-eof @ ?exit THEN
+     1 line# +!  clearline
      source-file fsetin
      linebuf /linebuf 1- #cr fget2delim
         *longline* ?error
@@ -109,7 +109,7 @@
      funset
      listing @ IF line# @ u.
             ." : " printsourceline THEN
-     res-inptr  preprocess ;
+     preprocess ;
 
 \ Providing context for error messages
 
@@ -127,6 +127,6 @@ make printcontext  ( -- )
 
 || : init-input ( -- )
      include-level off
-     linebuf off  res-inptr
+     clearline
      context? on ;
     init: init-input

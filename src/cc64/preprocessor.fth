@@ -21,9 +21,6 @@
 
 ||on
 
-  : clearline ( -- )
-     linebuf off res-inptr ;
-
   : cpp-error  ( -- )
      *preprocessor* error  clearline ;
 
@@ -83,8 +80,7 @@
      char> alpha? 0= ?cpp-errorexit
      get-id
      id-buf keyword?
-        IF drop *preprocessor* error
-        clearline  exit THEN
+        IF drop cpp-error exit THEN
      char> bl - ?cpp-errorexit
      check-eol
      1  char> ascii - =

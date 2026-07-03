@@ -1,11 +1,10 @@
 
 \ fake for input.fth
 
-  variable eof
-  -1 constant #eof
+  variable main-eof
   variable comment-state
   variable line#
-  variable comment-line#
+  : comment-starts  ( -- ) ;
 
   variable inptr
   variable lineptr
@@ -18,7 +17,7 @@
   : src-begin  create   last @ dup , name> last-src !
       does> dup @ count type cr 2+
       dup lineptr !  1+ inptr !    1 line# !
-      eof off  comment-state off  init ;
+      main-eof off  comment-state off  init ;
 
   : src@  ascii @ parse
      here over 1+  allot place  0 c, ;
@@ -26,7 +25,7 @@
   : src-end  0 c, ;
 
   : nextline  lineptr @ count + 1+  dup lineptr !
-      dup c@ IF 1+ ELSE #eof eof ! THEN inptr ! ;
+      dup c@ IF 1+ ELSE main-eof on THEN inptr ! ;
 
   : printsourceline  ( -- )
      lineptr @ 80 bounds
@@ -34,7 +33,7 @@
      emit LOOP cr ;
 
 make printcontext  ( -- )
-      eof @ #eof = ?exit
+      main-eof @ ?exit
       printsourceline
       inptr @ lineptr @ - 1- 0 max
       spaces ASCII ^ emit  cr ;
