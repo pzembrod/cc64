@@ -243,6 +243,32 @@
   \  T{ fetchlocal" z" nip -> %int %pointer + %offset + }T
   test-end
 
+  src-begin test-doubledef-global
+    src@ int ijk, *ijk; @
+  test-begin
+    T{ definition? -> true }T
+    T{ fetchglobal" ijk" nip -> %int %l-value + %extern + }T
+    *doubledef* expect-error
+  test-end
+
+  src-begin test-doubledef-local
+    src@ int lmn, *lmn; @
+  test-begin
+    T{ declaration? -> true }T
+    T{ fetchlocal" lmn" nip -> %int %offset + %l-value + }T
+    *doubledef* expect-error
+  test-end
+
+  src-begin test-neted-nondoubledef-local
+    src@ int x; @
+    src@ { char x; } @
+  test-begin
+    T{ declaration? -> true }T
+    T{ fetchlocal" x" nip -> %int %offset + %l-value + }T
+    T{ statement? -> true }T
+    T{ fetchlocal" x" nip -> %int %offset + %l-value + }T
+  test-end
+
   src-begin test-bad-func-def
     src@ int f(), g(){ @
   test-begin

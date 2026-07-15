@@ -98,17 +98,19 @@
 \ If end-marker is )block, then the search will stop when it encounters
 \ the first )block pseudo entry marking the current innermost {} block
 \ scope. If end-marker is -1, all local symbols will be searched.
-|| : (findloc)  ( name end-marker/-1 -- spfa/0 )
+|| : (findloc)  ( name end-marker/-1 -- spfa true )
+                ( name end-marker/-1 -- false )
      ]symtab locals> @ ?DO
         dup I c@ = IF LEAVE THEN
         ( name end-marker )
         I c@ /id <= IF over I streq
            ( name end-marker eq-flag )
-           IF 2drop I count +  ( spfa )  UNLOOP exit THEN
+           IF 2drop I count +  ( spfa ) true UNLOOP exit THEN
         THEN
-     I >local-sym-len +LOOP  2drop 0 ;
+     I >local-sym-len +LOOP  2drop false ;
 
-~ : findlocal ( name -- spfa/0 )
+~ : findlocal ( name -- spfa true )
+              ( name -- false )
      dup trimname  -1 (findloc) ;
 
 || : umin!  ( u variable -- )
@@ -125,7 +127,7 @@
 
 ~ : putlocal ( name -- spfa )
      dup trimname   dup )block (findloc)
-        IF drop dummy
+        IF 2drop dummy
         *doubledef* error  exit THEN
      ( name )  dup >name-len /sym-pl+ check-space
      ( name )  locals> @ /sym-payload - under
@@ -176,8 +178,9 @@
 
 \   symtab: globals            14feb91pz
 
-~ : findglobal ( name -- spfa/0 )
-     dup trimname  (findglb) and ;
+~ : findglobal ( name -- spfa true )
+               ( name -- false )
+     dup trimname  (findglb)  dup 0= IF nip THEN ;
 
 ~ : putglobal  ( name -- spfa )
      dup trimname  dup (findglb)

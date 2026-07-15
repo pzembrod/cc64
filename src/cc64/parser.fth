@@ -687,7 +687,7 @@ doer (declarator ( type -- id-handle type' )
 
 : parameter' ( id-buf type -- )
     param-ok? IF
-      swap findlocal ?dup 0=
+      swap findlocal 0=
         IF *undef* error drop ELSE sym.type! THEN
     THEN ;
 
@@ -854,7 +854,7 @@ do$: init$ ( -- values )
      *!=type* ?error ;
 
 : declare ( id-buf type -- )
-     swap findglobal ?dup
+     swap findglobal
         IF sym.type@ check-types-equal
         ELSE drop *undef* error THEN ;
 
@@ -940,7 +940,7 @@ variable protos2resolve
 
 : prototype ( id-buf type -- )
      unnestlocal
-     over findglobal ?dup
+     over findglobal
         IF sym.type@ check-types-equal drop
         ELSE %proto set  .label swap
         rot putglobal  dup >r  sym!
@@ -982,7 +982,7 @@ variable protos2resolve
      dup 4 + @  sort-in  hook-into r> ;
 
 : find/putglobal ( obj id-buf -- obj desc )
-     dup findglobal ?dup
+     dup findglobal
         IF dup sym.type@ %proto is?
            IF rot drop adjust-prototype exit
            ELSE 2drop THEN THEN
@@ -1088,7 +1088,7 @@ variable protos2resolve
 ~ : compile-program ( -- )
      fetchword
      BEGIN definition? not UNTIL
-     " main" findglobal ?dup 0=
+     " main" findglobal 0=
         IF main()-adr off exit THEN
      sym@ function?
         IF drop main()-adr ! exit THEN

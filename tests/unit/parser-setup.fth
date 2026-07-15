@@ -12,5 +12,5 @@
 
   include parser.fth
 
-  : fetchglobal"  ascii " word findglobal ?dup IF 2@ THEN ;
-  : fetchlocal"  ascii " word findlocal ?dup IF 2@ THEN ;
+  : fetchglobal"  ascii " word findglobal IF 2@ THEN ;
+  : fetchlocal"  ascii " word findlocal IF 2@ THEN ;

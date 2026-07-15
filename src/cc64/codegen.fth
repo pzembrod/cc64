@@ -208,9 +208,9 @@ variable vector
      %offset clr ;
 
 : do-idatom ( name -- obj )
-     dup findlocal ?dup
+     dup findlocal
         IF nip
-        ELSE findglobal ?dup 0=
+        ELSE findglobal 0=
            IF *undef* error
            0 do-numatom exit THEN
         THEN sym@

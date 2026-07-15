@@ -8,16 +8,16 @@ limited to and implemented as global constants, also for the preprocessor.
 
 The basic interface words are
 
-* `findlocal ( name -- spfa/0 )`
+* `findlocal ( name -- spfa true / -- false )`
 * `putlocal ( name -- spfa )`
-* `findglobal ( name -- spfa/0 )`
+* `findglobal ( name -- spfa true / -- false )`
 * `putglobal ( name -- spfa )`
 
 for finding and putting a symbol in the local and global symbol table.
-Each takes a name (counted string) as a parameter and returns a
-`symbol payload field address (spfa)` from which to get or into which to
-store the symbol's data such as type and value, or 0 in case the find*
-words haven't found a symbol.
+Each takes a name (counted string) as a parameter. The
+`symbol payload field address (spfa)` which they return (the find* words
+only in case the symbol is found) is the address from which to get or into
+which to store the symbol's data such as type and value.
 
 Additionally there are two words
 
@@ -86,7 +86,7 @@ symbols of a `{}` block. It is added to the bottom of the local symbols by
 
 The actual search through the local symbol table is implemented in
 
-* `(findloc)  ( name end-marker/-1 -- spfa/0 )`
+* `(findloc)  ( name end-marker/-1 -- spfa true / -- false )`
 ´
 and it is a simple linear search,
 starting at the lower end `locals> @` and ending when `name` is found,
@@ -94,7 +94,7 @@ when the specified end marker is reached or at the end of `symtab[]`.
 -1 means no end marker; the search goes through the entire local symbol table.
 `(findloc)` returns the `spfa` if a symbol is found, and 0 if it isn't found.
 
-* `findlocal ( name -- spfa/0 )`
+* `findlocal ( name -- spfa true / -- false )`
 
 trims `name` to max `/id` length and calls `(findloc)` without end marker,
 so the whole local symbol table is searched.
@@ -176,7 +176,7 @@ A global symbol table entry in `symtab[]` has the following format in memory:
 Similar to `(findloc)` for the local symbol table, the  actual search
 through the global symbol table is implemented in
 
-* `(findglb) ( name -- spfa  true / hash[]-or-glf-adr false )`
+* `(findglb) ( name -- spfa true / -- hash[]-or-glf-adr false )`
 
 The true/false flag indicates whether `name` was found as a global symbol.
 If `true`, then `spfa` is the address of the symbol's payload field.
@@ -186,7 +186,7 @@ symbol could be stored if `(findglb)` had been called by `putglobal`.
 `hash[]` directly, or the address of global link field of the last symbol in
 the linked list attached to `name`'s bucket in `hash[]`.
 
-* `findglobal ( name -- spfa/0 )`
+* `findglobal ( name -- spfa true / -- false )`
 
 trims `name` to max `/id` length and calls `(findglb)`.
 
