@@ -2,7 +2,7 @@
   include fake-memsym.fth
   include symboltable.fth
   : globals-empty?  globals> @ symtab[ = ;
-  : locals-empty?   locals> @ 1+ ]symtab = ;
+  : locals-empty?   locals> @ ]symtab = ;
   tmp-clear
 
   include fake-input.fth

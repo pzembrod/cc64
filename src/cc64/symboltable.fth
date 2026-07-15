@@ -40,10 +40,6 @@
 
 \  hash[////pointers to globals/////]hash
 
-\ marks in the local symbol table:
-\  end of block local table:  )block
-\  end of total local table:  )local
-
 
 \ symbol table core payload size
 || 2 cells             constant /sym-payload
@@ -52,13 +48,6 @@
 || /sym-payload cell+  constant /glb-payload
 || : /sym-pl+  /sym-payload + ;
 || : /glb-pl+  /glb-payload + ;
-
-\ the mark )block is used for limiting search through the local
-\ to only the current block. searching until the mark )local searches
-\ the entire local symbol table. 
-\ necessary: /id < )block < )local < 256
-|| 255 constant )local   \ marks the scope of the current function
-|| 254 constant )block   \ marks the scope of the current {} block
 
 \ length of a symbol's name, incl. count byte.
 || : >name-len  ( symbol -- len )  c@ 1+ ;
@@ -97,31 +86,37 @@
      ]symtab symtab[ - symtab-min-free !  #collisions off
      hash[ ]hash over - erase
      symtab[ globals> !
-     ]symtab 1-  )local over c!
-     locals> ! ;
+     ]symtab locals> ! ;
 
     init: init-symtab
 
-|| : (findloc)  ( name end-marker -- spfa/0 )
+\ )block is a mark placed as pseudo-symbol into the local symbol table
+\ to limiting search through the local symtab to only the current block.
+\ required: )block > /id
+|| 254 constant )block
+
+\ If end-marker is )block, then the search will stop when it encounters
+\ the first )block pseudo entry marking the current innermost {} block
+\ scope. If end-marker is -1, all local symbols will be searched.
+|| : (findloc)  ( name end-marker/-1 -- spfa/0 )
      ]symtab locals> @ ?DO
-        dup I c@ <= IF 2drop 0 UNLOOP exit THEN
+        dup I c@ = IF LEAVE THEN
         ( name end-marker )
         I c@ /id <= IF over I streq
            ( name end-marker eq-flag )
            IF 2drop I count +  ( spfa )  UNLOOP exit THEN
         THEN
-     I >local-sym-len +LOOP  *compiler* fatal ;
+     I >local-sym-len +LOOP  2drop 0 ;
 
 ~ : findlocal ( name -- spfa/0 )
-     dup trimname  )local (findloc) ;
+     dup trimname  -1 (findloc) ;
 
 || : umin!  ( u variable -- )
       under @  umin  swap ! ;
 
 || : check-space ( n -- )
-     locals> @ globals> @ - symtab-min-free umin!
-     \ locals> @ globals> @ - symtab-min-free @ umin  symtab-min-free !
-     locals> @ globals> @ - u> *symovfl* ?fatal ;
+     locals> @ globals> @ -  dup symtab-min-free umin!
+                             u> *symovfl* ?fatal ;
 
 
 \ *** Block No. 63, Hexblock 3f
@@ -174,8 +169,7 @@
         ( hash[]-or-glf-adr )
         @  dup r@ streq  ( name-adr equal? )
            IF count +  true  rdrop exit ( spfa ) THEN
-           ( name-adr )
-           count + /sym-pl+ ( link-adr )
+        ( name-adr ) count + /sym-pl+ ( link-adr )
         dup cell+ globals> @ u> UNTIL *compiler* fatal ;
 
 \ *** Block No. 65, Hexblock 41

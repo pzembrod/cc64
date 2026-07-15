@@ -78,33 +78,26 @@ is referenced in stack comments as `spfa` (symbol payload field address).
 The address of the name is at the same time the address of the entire symbol
 in the symbol table.
 
-Two single-byte pseudo entries in the symbol table are used as search end
-markers; their values need to be larger than `/id` to distinguish them from
-count bytes of names:
-
-* `)local` = 255 marks the upper end of the local table; during
-  initialization it is placed at `]symtab - 1`.
-* `)block` = 254 marks the upper end of the symbols of the current `{}` block.
-  It is added to the bottom of the local symbols by `nestlocal` and removed
-  again by `unnestlocal`.
+Some single-byte pseudo entries in the symbol table are used as search end
+markers; its value `)block` = 254 needs to be larger than `/id` to distinguish
+marker entries from count bytes of names. `)block` marks the upper end of the
+symbols of a `{}` block. It is added to the bottom of the local symbols by
+`nestlocal` and removed again by `unnestlocal`.
 
 The actual search through the local symbol table is implemented in
 
-* `(findloc)  ( name end-marker -- spfa/0 )`
-
+* `(findloc)  ( name end-marker/-1 -- spfa/0 )`
+´
 and it is a simple linear search,
-starting at the lower end `locals> @` and ending when either `name` is found
-or when at least the specified end marker is reached. "At least" implies a
-hierarchy, meaning that `)local` implies `)block`. This saves the need to
-initialize the table with a `)block` in addition to the  `)local` marker.
-The "at least" is implemented simply with a `>=` condition to end the
-search loop and through the fact that `)local > )block`.  
+starting at the lower end `locals> @` and ending when `name` is found,
+when the specified end marker is reached or at the end of `symtab[]`.
+-1 means no end marker; the search goes through the entire local symbol table.
 `(findloc)` returns the `spfa` if a symbol is found, and 0 if it isn't found.
 
 * `findlocal ( name -- spfa/0 )`
 
-trims `name` to max `/id` length and calls `(findloc)` with end marker
-`)local`, so the whole local symbol table is searched.
+trims `name` to max `/id` length and calls `(findloc)` without end marker,
+so the whole local symbol table is searched.
 
 * `putlocal ( name -- spfa )`
 
@@ -129,11 +122,10 @@ i.e. from `locals> @`. It then discards the block scope by pointing
 `locals>` at the address above the found `)block` mark.
 
 Both `(findloc)` and `unnestlocal` limit their search to `]symtab`.
-In both cases it's an error condition (i.e. something's wrong with cc64)
-if the search actually reaches `]symtab`: `(findloc)`'s search should
-latest end at the `)local` mark at `]symtab - 1`. And if `unnestlocal`
-reaches `]symtab` without finding a `)block` mark, then `unnestlocal` was
-called without a matching prior `nestlocal` call.
+In the case of `unnestlocal` it's an error condition (i.e. something's wrong
+with cc64) if the search actually reaches `]symtab` without finding a `)block`
+mark; it means that `unnestlocal` was called without a matching prior
+`nestlocal` call.
 
 I went with simple linear search for the local symbol table because it made
 it easy to implements the nexted block scopes, and because I figured that
