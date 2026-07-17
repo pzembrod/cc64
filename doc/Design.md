@@ -13,6 +13,11 @@ The [Sources Overview page](Sources-overview.md) gives an overview of the
 compiler's architecture through a short overview of its most important
 source files.
 
+### Details Pages
+
+* [Symbol-table.md](Symbol-table.md)
+* [Input.md](Input.md)
+
 ## Transient Headers & Code
 
 The [Transient Headers & Code page](Transient-headers.md) describes

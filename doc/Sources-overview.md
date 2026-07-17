@@ -36,6 +36,8 @@ input token.
 reads source files line by line, calls the preprocessor, gives the scanner
 a char-by-char view of the source, and transparently handles include files.
 
+For a detailed description see [Input.md](Input.md).
+
 ### preprocess.fth
 
 The cc64 preprocessor is very simple and a bit of a hack. It doesn't
