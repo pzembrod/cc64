@@ -1,4 +1,7 @@
 
+; this needs to be the first static variable declared, i.e. the
+; static variable located at statics.last - 2.
+; prepare-fast-call in codegen.fth uses this.
 +cc64_static_int ~fastcallptr, 0
 
 cc64_lib_jumplist
